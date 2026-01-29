@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>発展23 メール送信通知</title>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="../style.css" />
+        <style>
+            .download-btn { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-left: auto; }
+            .code-header { display: flex; align-items: center; justify-content: space-between; }
+            .level-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; background: #fce7f3; color: #be185d; margin-right: 8px; }
+        </style>
+    </head>
+    <body>
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="../1spring-framework-tutorial.html" class="nav-logo"><span class="nav-logo-icon">🌱</span><span>Spring入門</span></a>
+                <button class="nav-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 発展レベル</div>
+                    <ul class="nav-list">
+                        <li class="nav-item"><a href="19_file_upload.html" class="nav-link"><span class="nav-chapter-num">19</span><span>ファイル添付機能</span></a></li>
+                        <li class="nav-item"><a href="20_i18n.html" class="nav-link"><span class="nav-chapter-num">20</span><span>国際化（多言語対応）</span></a></li>
+                        <li class="nav-item"><a href="21_unit_test.html" class="nav-link"><span class="nav-chapter-num">21</span><span>単体テスト</span></a></li>
+                        <li class="nav-item"><a href="22_async.html" class="nav-link"><span class="nav-chapter-num">22</span><span>非同期処理</span></a></li>
+                        <li class="nav-item"><a href="23_mail.html" class="nav-link active"><span class="nav-chapter-num">23</span><span>メール送信通知</span></a></li>
+                        <li class="nav-item"><a href="24_audit_log.html" class="nav-link"><span class="nav-chapter-num">24</span><span>監査ログ機能</span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <header class="chapter-header">
+                <div class="chapter-badge"><span class="level-badge">発展</span>📗 Expert</div>
+                <div class="chapter-number">23</div>
+                <h1 class="chapter-title">メール送信通知</h1>
+            </header>
+
+            <nav class="toc">
+                <h2 class="toc-title">📑 この章の内容</h2>
+                <ul class="toc-list">
+                    <li class="toc-item"><span class="toc-number">23-1</span><span>JavaMailSenderの設定</span></li>
+                    <li class="toc-item"><span class="toc-number">23-2</span><span>メール送信の実装</span></li>
+                    <li class="toc-item"><span class="toc-number">23-3</span><span>期限リマインダー機能</span></li>
+                </ul>
+            </nav>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 23-1</span>
+                    <h2 class="section-title">JavaMailSenderの設定</h2>
+                </div>
+                <div class="intro-text">
+                    <p><strong>JavaMailSender</strong>を使って、ToDoの期限リマインダーをメールで送信します。</p>
+                </div>
+
+                <div class="module-list">
+                    <div class="module-item"><div class="module-icon">📧</div><div class="module-content"><h4>JavaMailSender</h4><p>Springのメール送信インターフェース</p></div></div>
+                    <div class="module-item"><div class="module-icon">⏰</div><div class="module-content"><h4>@Scheduled</h4><p>定期実行のスケジューリング</p></div></div>
+                </div>
+
+                <div class="code-block" id="pom">
+                    <div class="code-header">
+                        <span class="code-title">pom.xml（依存関係）</span>
+                        <button class="download-btn" onclick="downloadCode('pom', 'pom_mail.xml')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-mail&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="config">
+                    <div class="code-header">
+                        <span class="code-title">application.properties（メール設定）</span>
+                        <button class="download-btn" onclick="downloadCode('config', 'application_mail.properties')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code># SMTPサーバー設定（Gmailの例）
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=your-email@gmail.com
+spring.mail.password=your-app-password
+
+# SMTP認証とTLS設定
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+spring.mail.properties.mail.smtp.starttls.required=true
+
+# タイムアウト設定
+spring.mail.properties.mail.smtp.connectiontimeout=5000
+spring.mail.properties.mail.smtp.timeout=5000
+spring.mail.properties.mail.smtp.writetimeout=5000
+
+# 送信元アドレス
+app.mail.from=noreply@example.com</code></pre>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-box-header"><span class="warning-box-icon">⚠️</span><span class="warning-box-title">Gmailを使用する場合</span></div>
+                    <ul>
+                        <li>2段階認証を有効にする</li>
+                        <li>アプリパスワードを生成して使用する</li>
+                        <li>本番環境ではパスワードを環境変数で管理</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 23-2</span>
+                    <h2 class="section-title">メール送信の実装</h2>
+                </div>
+
+                <div class="code-block" id="mail-service">
+                    <div class="code-header">
+                        <span class="code-title">MailService.java（シンプルなメール送信）</span>
+                        <button class="download-btn" onclick="downloadCode('mail-service', 'MailService.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
+
+@Service
+public class MailService {
+
+    private final JavaMailSender mailSender;
+
+    @Value("${app.mail.from}")
+    private String fromAddress;
+
+    public MailService(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
+
+    /**
+     * テキストメールを送信
+     */
+    public void sendSimpleMail(String to, String subject, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(fromAddress);
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+
+        mailSender.send(message);
+    }
+
+    /**
+     * ToDo作成通知
+     */
+    public void sendTodoCreatedNotification(String to, Todo todo) {
+        String subject = "【ToDo作成】" + todo.getTitle();
+        String text = String.format(
+            "ToDoが作成されました。\n\n" +
+            "タイトル: %s\n" +
+            "説明: %s\n" +
+            "期限: %s\n\n" +
+            "ToDoアプリでご確認ください。",
+            todo.getTitle(),
+            todo.getDescription(),
+            todo.getDeadline() != null ? todo.getDeadline().toString() : "未設定"
+        );
+
+        sendSimpleMail(to, subject, text);
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="html-mail">
+                    <div class="code-header">
+                        <span class="code-title">MailService.java（HTMLメール送信）</span>
+                        <button class="download-btn" onclick="downloadCode('html-mail', 'MailService_html.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.springframework.mail.javamail.MimeMessageHelper;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+
+@Service
+public class MailService {
+
+    /**
+     * HTMLメールを送信
+     */
+    public void sendHtmlMail(String to, String subject, String htmlContent)
+            throws MessagingException {
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+        helper.setFrom(fromAddress);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        helper.setText(htmlContent, true);  // true = HTML形式
+
+        mailSender.send(message);
+    }
+
+    /**
+     * 期限リマインダーメール（HTML）
+     */
+    public void sendDeadlineReminder(String to, Todo todo) throws MessagingException {
+        String subject = "【期限間近】" + todo.getTitle();
+
+        String html = """
+            &lt;html&gt;
+            &lt;body style="font-family: sans-serif;"&gt;
+                &lt;h2 style="color: #e74c3c;"&gt;期限が近づいています&lt;/h2&gt;
+                &lt;div style="background: #f5f5f5; padding: 20px; border-radius: 8px;"&gt;
+                    &lt;p&gt;&lt;strong&gt;タイトル:&lt;/strong&gt; %s&lt;/p&gt;
+                    &lt;p&gt;&lt;strong&gt;期限:&lt;/strong&gt; %s&lt;/p&gt;
+                    &lt;p&gt;&lt;strong&gt;残り:&lt;/strong&gt; あと1日&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;p style="margin-top: 20px;"&gt;
+                    &lt;a href="http://localhost:8080/todos/%d"
+                       style="background: #3498db; color: white; padding: 10px 20px;
+                              text-decoration: none; border-radius: 4px;"&gt;
+                        ToDoを確認する
+                    &lt;/a&gt;
+                &lt;/p&gt;
+            &lt;/body&gt;
+            &lt;/html&gt;
+            """.formatted(todo.getTitle(), todo.getDeadline(), todo.getId());
+
+        sendHtmlMail(to, subject, html);
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="thymeleaf-mail">
+                    <div class="code-header">
+                        <span class="code-title">Thymeleafテンプレートでメール生成</span>
+                        <button class="download-btn" onclick="downloadCode('thymeleaf-mail', 'MailService_thymeleaf.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+
+@Service
+public class MailService {
+
+    private final TemplateEngine templateEngine;
+
+    /**
+     * Thymeleafテンプレートを使用したメール送信
+     */
+    public void sendTemplatedMail(String to, String subject,
+            String templateName, Map&lt;String, Object&gt; variables)
+            throws MessagingException {
+
+        // Thymeleafコンテキストに変数をセット
+        Context context = new Context();
+        context.setVariables(variables);
+
+        // テンプレートからHTMLを生成
+        String htmlContent = templateEngine.process(templateName, context);
+
+        sendHtmlMail(to, subject, htmlContent);
+    }
+}
+
+// 使用例
+Map&lt;String, Object&gt; vars = new HashMap&lt;&gt;();
+vars.put("todo", todo);
+vars.put("user", user);
+mailService.sendTemplatedMail(
+    user.getEmail(),
+    "期限リマインダー",
+    "mail/reminder",  // templates/mail/reminder.html
+    vars
+);</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 23-3</span>
+                    <h2 class="section-title">期限リマインダー機能</h2>
+                </div>
+
+                <div class="code-block" id="scheduler">
+                    <div class="code-header">
+                        <span class="code-title">ReminderScheduler.java（定期実行）</span>
+                        <button class="download-btn" onclick="downloadCode('scheduler', 'ReminderScheduler.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+@Component
+public class ReminderScheduler {
+
+    private final TodoMapper todoMapper;
+    private final UserMapper userMapper;
+    private final MailService mailService;
+
+    /**
+     * 毎日朝9時に期限リマインダーを送信
+     * cron: 秒 分 時 日 月 曜日
+     */
+    @Scheduled(cron = "0 0 9 * * *")
+    public void sendDailyReminders() {
+        System.out.println("期限リマインダー処理開始: " + LocalDateTime.now());
+
+        // 明日が期限のToDoを取得
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+        List&lt;Todo&gt; upcomingTodos = todoMapper.findByDeadline(tomorrow);
+
+        for (Todo todo : upcomingTodos) {
+            try {
+                User user = userMapper.findById(todo.getUserId());
+                mailService.sendDeadlineReminder(user.getEmail(), todo);
+                System.out.println("リマインダー送信: " + todo.getTitle());
+            } catch (Exception e) {
+                System.err.println("送信失敗: " + todo.getId());
+            }
+        }
+
+        System.out.println("期限リマインダー処理完了");
+    }
+
+    /**
+     * 1時間ごとに期限切れをチェック
+     */
+    @Scheduled(fixedRate = 3600000)  // 1時間 = 3600000ミリ秒
+    public void checkOverdueTodos() {
+        List&lt;Todo&gt; overdueTodos = todoMapper.findOverdue(LocalDate.now());
+
+        for (Todo todo : overdueTodos) {
+            if (!todo.isNotified()) {
+                // 期限切れ通知を送信
+                sendOverdueNotification(todo);
+                // 通知済みフラグを更新
+                todoMapper.updateNotified(todo.getId(), true);
+            }
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="enable-scheduling">
+                    <div class="code-header">
+                        <span class="code-title">Application.java（スケジューリング有効化）</span>
+                        <button class="download-btn" onclick="downloadCode('enable-scheduling', 'Application_schedule.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.springframework.scheduling.annotation.EnableScheduling;
+
+@SpringBootApplication
+@EnableScheduling  // スケジューリングを有効化
+public class Application {
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <h3>@Scheduledのオプション</h3>
+                <table class="data-table">
+                    <thead><tr><th>オプション</th><th>説明</th><th>例</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>cron</code></td><td>Cron式で指定</td><td><code>"0 0 9 * * *"</code>（毎日9時）</td></tr>
+                        <tr><td><code>fixedRate</code></td><td>固定間隔（ミリ秒）</td><td><code>60000</code>（1分ごと）</td></tr>
+                        <tr><td><code>fixedDelay</code></td><td>前回完了からの間隔</td><td><code>60000</code></td></tr>
+                        <tr><td><code>initialDelay</code></td><td>初回実行の遅延</td><td><code>10000</code>（10秒後に開始）</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block" id="async-mail">
+                    <div class="code-header">
+                        <span class="code-title">非同期メール送信</span>
+                        <button class="download-btn" onclick="downloadCode('async-mail', 'MailService_async.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.springframework.scheduling.annotation.Async;
+
+@Service
+public class MailService {
+
+    /**
+     * 非同期でメール送信（ユーザーを待たせない）
+     */
+    @Async
+    public void sendMailAsync(String to, String subject, String text) {
+        try {
+            sendSimpleMail(to, subject, text);
+            System.out.println("メール送信完了: " + to);
+        } catch (Exception e) {
+            System.err.println("メール送信失敗: " + e.getMessage());
+            // 失敗時はリトライキューに入れるなど
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-header"><span class="info-box-icon">💡</span><span class="info-box-title">メール送信のベストプラクティス</span></div>
+                    <ul>
+                        <li>非同期で送信してユーザーを待たせない</li>
+                        <li>送信失敗時のリトライ機構を実装</li>
+                        <li>メール送信ログを記録</li>
+                        <li>開発環境では実際にメールを送らない設定にする</li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+
+        <footer class="footer"><p>Spring Framework 入門チュートリアル - 発展レベル</p></footer>
+
+        <div class="page-nav">
+            <a href="22_async.html" class="page-nav-btn prev"><span>←</span><div><div class="page-nav-label">前の機能</div><div class="page-nav-title">非同期処理</div></div></a>
+            <a href="24_audit_log.html" class="page-nav-btn next"><div><div class="page-nav-label">次の機能</div><div class="page-nav-title">監査ログ機能</div></div><span>→</span></a>
+        </div>
+
+        <script>
+            function toggleMenu() { document.querySelector(".nav-toggle").classList.toggle("active"); document.querySelector(".nav-menu").classList.toggle("active"); }
+            function downloadCode(id, filename) { const el = document.getElementById(id); const code = el.querySelector('code') || el.querySelector('pre'); const blob = new Blob([code.textContent], {type:'text/plain;charset=utf-8'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url); }
+        </script>
+    </body>
+</html>

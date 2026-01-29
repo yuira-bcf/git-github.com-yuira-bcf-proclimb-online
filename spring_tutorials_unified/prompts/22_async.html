@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>発展22 非同期処理</title>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="../style.css" />
+        <style>
+            .download-btn { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-left: auto; }
+            .code-header { display: flex; align-items: center; justify-content: space-between; }
+            .level-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; background: #fce7f3; color: #be185d; margin-right: 8px; }
+        </style>
+    </head>
+    <body>
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="../1spring-framework-tutorial.html" class="nav-logo"><span class="nav-logo-icon">🌱</span><span>Spring入門</span></a>
+                <button class="nav-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 発展レベル</div>
+                    <ul class="nav-list">
+                        <li class="nav-item"><a href="19_file_upload.html" class="nav-link"><span class="nav-chapter-num">19</span><span>ファイル添付機能</span></a></li>
+                        <li class="nav-item"><a href="20_i18n.html" class="nav-link"><span class="nav-chapter-num">20</span><span>国際化（多言語対応）</span></a></li>
+                        <li class="nav-item"><a href="21_unit_test.html" class="nav-link"><span class="nav-chapter-num">21</span><span>単体テスト</span></a></li>
+                        <li class="nav-item"><a href="22_async.html" class="nav-link active"><span class="nav-chapter-num">22</span><span>非同期処理</span></a></li>
+                        <li class="nav-item"><a href="23_mail.html" class="nav-link"><span class="nav-chapter-num">23</span><span>メール送信通知</span></a></li>
+                        <li class="nav-item"><a href="24_audit_log.html" class="nav-link"><span class="nav-chapter-num">24</span><span>監査ログ機能</span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <header class="chapter-header">
+                <div class="chapter-badge"><span class="level-badge">発展</span>📗 Expert</div>
+                <div class="chapter-number">22</div>
+                <h1 class="chapter-title">非同期処理</h1>
+            </header>
+
+            <nav class="toc">
+                <h2 class="toc-title">📑 この章の内容</h2>
+                <ul class="toc-list">
+                    <li class="toc-item"><span class="toc-number">22-1</span><span>@Asyncの基本</span></li>
+                    <li class="toc-item"><span class="toc-number">22-2</span><span>CompletableFutureで結果を取得</span></li>
+                    <li class="toc-item"><span class="toc-number">22-3</span><span>非同期処理の設定</span></li>
+                </ul>
+            </nav>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 22-1</span>
+                    <h2 class="section-title">@Asyncの基本</h2>
+                </div>
+                <div class="intro-text">
+                    <p><strong>@Async</strong>を使って、時間のかかる処理をバックグラウンドで実行します。</p>
+                </div>
+
+                <div class="module-list">
+                    <div class="module-item"><div class="module-icon">⚡</div><div class="module-content"><h4>@Async</h4><p>メソッドを非同期で実行するアノテーション</p></div></div>
+                    <div class="module-item"><div class="module-icon">🔄</div><div class="module-content"><h4>CompletableFuture</h4><p>非同期処理の結果を扱うクラス</p></div></div>
+                </div>
+
+                <div class="code-block" id="enable-async">
+                    <div class="code-header">
+                        <span class="code-title">Application.java（非同期処理の有効化）</span>
+                        <button class="download-btn" onclick="downloadCode('enable-async', 'Application_async.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
+
+@SpringBootApplication
+@EnableAsync  // 非同期処理を有効化
+public class Application {
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="async-service">
+                    <div class="code-header">
+                        <span class="code-title">NotificationService.java（基本的な非同期メソッド）</span>
+                        <button class="download-btn" onclick="downloadCode('async-service', 'NotificationService.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+
+@Service
+public class NotificationService {
+
+    /**
+     * 非同期でメール送信（戻り値なし）
+     * 呼び出し元はすぐに制御を返す
+     */
+    @Async
+    public void sendEmailAsync(String to, String subject, String body) {
+        System.out.println("メール送信開始: " + Thread.currentThread().getName());
+
+        try {
+            // 時間のかかる処理をシミュレート
+            Thread.sleep(5000);
+            // 実際のメール送信処理
+            emailSender.send(to, subject, body);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        System.out.println("メール送信完了");
+    }
+
+    /**
+     * 非同期でレポート生成
+     */
+    @Async
+    public void generateReportAsync(Integer userId) {
+        System.out.println("レポート生成開始");
+
+        // 大量のデータ処理
+        List&lt;Todo&gt; todos = todoMapper.findByUserId(userId);
+        // ... レポート生成処理 ...
+
+        System.out.println("レポート生成完了");
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="controller">
+                    <div class="code-header">
+                        <span class="code-title">TodoController.java（非同期処理の呼び出し）</span>
+                        <button class="download-btn" onclick="downloadCode('controller', 'TodoController_async.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>@Controller
+@RequestMapping("/todos")
+public class TodoController {
+
+    private final TodoService todoService;
+    private final NotificationService notificationService;
+
+    @PostMapping
+    public String create(@Valid TodoForm form, BindingResult result,
+                         RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            return "todo/form";
+        }
+
+        Todo todo = todoService.create(form);
+
+        // 非同期でメール送信（ユーザーを待たせない）
+        notificationService.sendEmailAsync(
+            "user@example.com",
+            "ToDo作成完了",
+            "ToDoを作成しました: " + todo.getTitle()
+        );
+
+        // 即座にリダイレクト（メール送信完了を待たない）
+        redirectAttributes.addFlashAttribute("message", "ToDoを作成しました");
+        return "redirect:/todos";
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-box-header"><span class="warning-box-icon">⚠️</span><span class="warning-box-title">@Asyncの注意点</span></div>
+                    <ul>
+                        <li>同一クラス内のメソッド呼び出しでは動作しない（プロキシの制限）</li>
+                        <li>publicメソッドにのみ適用可能</li>
+                        <li>例外は呼び出し元に伝播しない（AsyncUncaughtExceptionHandlerで処理）</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 22-2</span>
+                    <h2 class="section-title">CompletableFutureで結果を取得</h2>
+                </div>
+
+                <div class="code-block" id="completable-future">
+                    <div class="code-header">
+                        <span class="code-title">ReportService.java（結果を返す非同期処理）</span>
+                        <button class="download-btn" onclick="downloadCode('completable-future', 'ReportService.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import java.util.concurrent.CompletableFuture;
+
+@Service
+public class ReportService {
+
+    /**
+     * 非同期でレポートを生成し、結果を返す
+     */
+    @Async
+    public CompletableFuture&lt;Report&gt; generateReportAsync(Integer userId) {
+        System.out.println("レポート生成開始: " + Thread.currentThread().getName());
+
+        // 時間のかかる処理
+        Report report = new Report();
+        List&lt;Todo&gt; todos = todoMapper.findByUserId(userId);
+
+        report.setTotalCount(todos.size());
+        report.setCompletedCount(
+            (int) todos.stream().filter(Todo::isCompleted).count()
+        );
+        report.setGeneratedAt(LocalDateTime.now());
+
+        System.out.println("レポート生成完了");
+
+        return CompletableFuture.completedFuture(report);
+    }
+
+    /**
+     * 複数の非同期処理を並列実行
+     */
+    @Async
+    public CompletableFuture&lt;Statistics&gt; calculateStatisticsAsync(Integer userId) {
+        // 統計計算処理
+        Statistics stats = calculateStats(userId);
+        return CompletableFuture.completedFuture(stats);
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="wait-result">
+                    <div class="code-header">
+                        <span class="code-title">DashboardController.java（結果を待つ）</span>
+                        <button class="download-btn" onclick="downloadCode('wait-result', 'DashboardController.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import java.util.concurrent.CompletableFuture;
+
+@Controller
+@RequestMapping("/dashboard")
+public class DashboardController {
+
+    private final ReportService reportService;
+
+    @GetMapping
+    public String dashboard(Model model) throws Exception {
+        Integer userId = getCurrentUserId();
+
+        // 複数の非同期処理を並列で開始
+        CompletableFuture&lt;Report&gt; reportFuture =
+            reportService.generateReportAsync(userId);
+
+        CompletableFuture&lt;Statistics&gt; statsFuture =
+            reportService.calculateStatisticsAsync(userId);
+
+        // 両方の完了を待つ
+        CompletableFuture.allOf(reportFuture, statsFuture).join();
+
+        // 結果を取得
+        model.addAttribute("report", reportFuture.get());
+        model.addAttribute("stats", statsFuture.get());
+
+        return "dashboard";
+    }
+
+    /**
+     * タイムアウト付きで結果を待つ
+     */
+    @GetMapping("/quick")
+    public String quickDashboard(Model model) {
+        try {
+            CompletableFuture&lt;Report&gt; future =
+                reportService.generateReportAsync(getCurrentUserId());
+
+            // 3秒でタイムアウト
+            Report report = future.get(3, TimeUnit.SECONDS);
+            model.addAttribute("report", report);
+
+        } catch (TimeoutException e) {
+            model.addAttribute("error", "レポート生成がタイムアウトしました");
+        } catch (Exception e) {
+            model.addAttribute("error", "エラーが発生しました");
+        }
+
+        return "dashboard";
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-header"><span class="info-box-icon">💡</span><span class="info-box-title">CompletableFutureの主要メソッド</span></div>
+                    <ul>
+                        <li><code>get()</code>：結果が返るまでブロック</li>
+                        <li><code>get(timeout, unit)</code>：タイムアウト付きでブロック</li>
+                        <li><code>join()</code>：getと同様だがチェック例外なし</li>
+                        <li><code>thenApply()</code>：結果を変換</li>
+                        <li><code>allOf()</code>：複数のFutureの完了を待つ</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 22-3</span>
+                    <h2 class="section-title">非同期処理の設定</h2>
+                </div>
+
+                <div class="code-block" id="async-config">
+                    <div class="code-header">
+                        <span class="code-title">AsyncConfig.java（スレッドプール設定）</span>
+                        <button class="download-btn" onclick="downloadCode('async-config', 'AsyncConfig.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import java.util.concurrent.Executor;
+
+@Configuration
+@EnableAsync
+public class AsyncConfig {
+
+    /**
+     * カスタムスレッドプールの設定
+     */
+    @Bean(name = "taskExecutor")
+    public Executor taskExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+
+        // 常時稼働するスレッド数
+        executor.setCorePoolSize(5);
+
+        // 最大スレッド数
+        executor.setMaxPoolSize(10);
+
+        // キューに溜められるタスク数
+        executor.setQueueCapacity(25);
+
+        // スレッド名のプレフィックス
+        executor.setThreadNamePrefix("Async-");
+
+        // シャットダウン時にタスクの完了を待つ
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+
+        executor.initialize();
+        return executor;
+    }
+
+    /**
+     * メール送信専用のスレッドプール
+     */
+    @Bean(name = "emailExecutor")
+    public Executor emailExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(2);
+        executor.setMaxPoolSize(5);
+        executor.setQueueCapacity(100);
+        executor.setThreadNamePrefix("Email-");
+        executor.initialize();
+        return executor;
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="named-executor">
+                    <div class="code-header">
+                        <span class="code-title">指定したExecutorを使用</span>
+                        <button class="download-btn" onclick="downloadCode('named-executor', 'NotificationService_executor.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>@Service
+public class NotificationService {
+
+    /**
+     * emailExecutorを使用
+     */
+    @Async("emailExecutor")
+    public void sendEmailAsync(String to, String subject, String body) {
+        // メール送信専用スレッドプールで実行される
+        emailSender.send(to, subject, body);
+    }
+
+    /**
+     * デフォルトのtaskExecutorを使用
+     */
+    @Async
+    public void processAsync() {
+        // デフォルトスレッドプールで実行される
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="exception-handler">
+                    <div class="code-header">
+                        <span class="code-title">AsyncExceptionHandler.java（例外ハンドリング）</span>
+                        <button class="download-btn" onclick="downloadCode('exception-handler', 'AsyncExceptionHandler.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.AsyncConfigurer;
+import java.lang.reflect.Method;
+
+@Configuration
+public class AsyncExceptionHandler implements AsyncConfigurer {
+
+    @Override
+    public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
+        return new AsyncUncaughtExceptionHandler() {
+            @Override
+            public void handleUncaughtException(Throwable ex, Method method, Object... params) {
+                // ログ出力
+                System.err.println("非同期処理で例外発生");
+                System.err.println("メソッド: " + method.getName());
+                System.err.println("例外: " + ex.getMessage());
+
+                // 必要に応じて通知やリトライ処理
+            }
+        };
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <h3>スレッドプール設定のガイドライン</h3>
+                <table class="data-table">
+                    <thead><tr><th>設定</th><th>説明</th><th>推奨値</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>corePoolSize</code></td><td>常時稼働するスレッド数</td><td>CPUコア数</td></tr>
+                        <tr><td><code>maxPoolSize</code></td><td>最大スレッド数</td><td>CPUコア数 × 2</td></tr>
+                        <tr><td><code>queueCapacity</code></td><td>待機タスク数</td><td>想定負荷に応じて</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="column">
+                    <div class="column-header"><span class="column-badge">Column</span><span class="column-title">非同期処理の活用シーン</span></div>
+                    <ul class="step-list">
+                        <li>メール送信（ユーザーを待たせない）</li>
+                        <li>ファイル処理（大容量ファイルの処理）</li>
+                        <li>外部API呼び出し（レスポンスが遅いAPI）</li>
+                        <li>レポート生成（集計処理）</li>
+                        <li>通知送信（プッシュ通知など）</li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+
+        <footer class="footer"><p>Spring Framework 入門チュートリアル - 発展レベル</p></footer>
+
+        <div class="page-nav">
+            <a href="21_unit_test.html" class="page-nav-btn prev"><span>←</span><div><div class="page-nav-label">前の機能</div><div class="page-nav-title">単体テスト</div></div></a>
+            <a href="23_mail.html" class="page-nav-btn next"><div><div class="page-nav-label">次の機能</div><div class="page-nav-title">メール送信通知</div></div><span>→</span></a>
+        </div>
+
+        <script>
+            function toggleMenu() { document.querySelector(".nav-toggle").classList.toggle("active"); document.querySelector(".nav-menu").classList.toggle("active"); }
+            function downloadCode(id, filename) { const el = document.getElementById(id); const code = el.querySelector('code') || el.querySelector('pre'); const blob = new Blob([code.textContent], {type:'text/plain;charset=utf-8'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url); }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>発展21 単体テスト</title>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="../style.css" />
+        <style>
+            .download-btn { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-left: auto; }
+            .code-header { display: flex; align-items: center; justify-content: space-between; }
+            .level-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; background: #fce7f3; color: #be185d; margin-right: 8px; }
+        </style>
+    </head>
+    <body>
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="../1spring-framework-tutorial.html" class="nav-logo"><span class="nav-logo-icon">🌱</span><span>Spring入門</span></a>
+                <button class="nav-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 発展レベル</div>
+                    <ul class="nav-list">
+                        <li class="nav-item"><a href="19_file_upload.html" class="nav-link"><span class="nav-chapter-num">19</span><span>ファイル添付機能</span></a></li>
+                        <li class="nav-item"><a href="20_i18n.html" class="nav-link"><span class="nav-chapter-num">20</span><span>国際化（多言語対応）</span></a></li>
+                        <li class="nav-item"><a href="21_unit_test.html" class="nav-link active"><span class="nav-chapter-num">21</span><span>単体テスト</span></a></li>
+                        <li class="nav-item"><a href="22_async.html" class="nav-link"><span class="nav-chapter-num">22</span><span>非同期処理</span></a></li>
+                        <li class="nav-item"><a href="23_mail.html" class="nav-link"><span class="nav-chapter-num">23</span><span>メール送信通知</span></a></li>
+                        <li class="nav-item"><a href="24_audit_log.html" class="nav-link"><span class="nav-chapter-num">24</span><span>監査ログ機能</span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <header class="chapter-header">
+                <div class="chapter-badge"><span class="level-badge">発展</span>📗 Expert</div>
+                <div class="chapter-number">21</div>
+                <h1 class="chapter-title">単体テスト</h1>
+            </header>
+
+            <nav class="toc">
+                <h2 class="toc-title">📑 この章の内容</h2>
+                <ul class="toc-list">
+                    <li class="toc-item"><span class="toc-number">21-1</span><span>JUnit5の基本</span></li>
+                    <li class="toc-item"><span class="toc-number">21-2</span><span>Mockitoでモック化</span></li>
+                    <li class="toc-item"><span class="toc-number">21-3</span><span>@SpringBootTestによる統合テスト</span></li>
+                </ul>
+            </nav>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 21-1</span>
+                    <h2 class="section-title">JUnit5の基本</h2>
+                </div>
+                <div class="intro-text">
+                    <p><strong>JUnit5</strong>を使って、ToDoアプリの単体テストを作成します。</p>
+                </div>
+
+                <div class="module-list">
+                    <div class="module-item"><div class="module-icon">🧪</div><div class="module-content"><h4>JUnit5</h4><p>Javaの標準テストフレームワーク</p></div></div>
+                    <div class="module-item"><div class="module-icon">🎭</div><div class="module-content"><h4>Mockito</h4><p>モックオブジェクトを作成するライブラリ</p></div></div>
+                </div>
+
+                <div class="code-block" id="pom">
+                    <div class="code-header">
+                        <span class="code-title">pom.xml（テスト依存関係）</span>
+                        <button class="download-btn" onclick="downloadCode('pom', 'pom_test.xml')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>&lt;!-- Spring Boot Starter Test（JUnit5, Mockito, AssertJ等を含む）--&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+
+&lt;!-- MyBatis用テストサポート --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.mybatis.spring.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis-spring-boot-starter-test&lt;/artifactId&gt;
+    &lt;version&gt;3.0.3&lt;/version&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="basic-test">
+                    <div class="code-header">
+                        <span class="code-title">TodoServiceTest.java（基本的なテスト）</span>
+                        <button class="download-btn" onclick="downloadCode('basic-test', 'TodoServiceTest.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.BeforeEach;
+import static org.junit.jupiter.api.Assertions.*;
+
+class TodoServiceTest {
+
+    private TodoService todoService;
+
+    @BeforeEach
+    void setUp() {
+        // 各テストの前に実行される
+        todoService = new TodoService();
+    }
+
+    @Test
+    @DisplayName("ToDoを正常に作成できる")
+    void testCreateTodo() {
+        // Arrange（準備）
+        Todo todo = new Todo();
+        todo.setTitle("テストタスク");
+        todo.setDescription("テスト説明");
+
+        // Act（実行）
+        Todo result = todoService.create(todo);
+
+        // Assert（検証）
+        assertNotNull(result.getId());
+        assertEquals("テストタスク", result.getTitle());
+        assertFalse(result.isCompleted());
+    }
+
+    @Test
+    @DisplayName("タイトルが空の場合は例外が発生する")
+    void testCreateTodoWithEmptyTitle() {
+        Todo todo = new Todo();
+        todo.setTitle("");
+
+        // 例外がスローされることを検証
+        assertThrows(IllegalArgumentException.class, () -&gt; {
+            todoService.create(todo);
+        });
+    }
+
+    @Test
+    @DisplayName("ToDoを完了状態に更新できる")
+    void testCompleteTodo() {
+        Todo todo = new Todo();
+        todo.setId(1);
+        todo.setCompleted(false);
+
+        todoService.complete(1);
+
+        assertTrue(todo.isCompleted());
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <h3>JUnit5の主要アノテーション</h3>
+                <table class="data-table">
+                    <thead><tr><th>アノテーション</th><th>説明</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>@Test</code></td><td>テストメソッドを示す</td></tr>
+                        <tr><td><code>@DisplayName</code></td><td>テストの表示名を設定</td></tr>
+                        <tr><td><code>@BeforeEach</code></td><td>各テストの前に実行</td></tr>
+                        <tr><td><code>@AfterEach</code></td><td>各テストの後に実行</td></tr>
+                        <tr><td><code>@BeforeAll</code></td><td>全テストの前に1回実行（static）</td></tr>
+                        <tr><td><code>@Disabled</code></td><td>テストを無効化</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 21-2</span>
+                    <h2 class="section-title">Mockitoでモック化</h2>
+                </div>
+
+                <div class="code-block" id="mockito-test">
+                    <div class="code-header">
+                        <span class="code-title">TodoServiceMockTest.java（Mockitoを使用）</span>
+                        <button class="download-btn" onclick="downloadCode('mockito-test', 'TodoServiceMockTest.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+@ExtendWith(MockitoExtension.class)
+class TodoServiceMockTest {
+
+    @Mock
+    private TodoMapper todoMapper;  // モック化するオブジェクト
+
+    @InjectMocks
+    private TodoService todoService;  // テスト対象（モックが注入される）
+
+    @Test
+    @DisplayName("IDでToDoを取得できる")
+    void testFindById() {
+        // モックの振る舞いを定義
+        Todo expected = new Todo();
+        expected.setId(1);
+        expected.setTitle("テストタスク");
+
+        when(todoMapper.findById(1)).thenReturn(expected);
+
+        // 実行
+        Todo result = todoService.findById(1);
+
+        // 検証
+        assertEquals(1, result.getId());
+        assertEquals("テストタスク", result.getTitle());
+
+        // メソッドが呼ばれたことを検証
+        verify(todoMapper, times(1)).findById(1);
+    }
+
+    @Test
+    @DisplayName("存在しないIDの場合はnullを返す")
+    void testFindByIdNotFound() {
+        when(todoMapper.findById(999)).thenReturn(null);
+
+        Todo result = todoService.findById(999);
+
+        assertNull(result);
+    }
+
+    @Test
+    @DisplayName("ToDoを保存するとMapperのinsertが呼ばれる")
+    void testCreate() {
+        Todo todo = new Todo();
+        todo.setTitle("新規タスク");
+
+        // insertが呼ばれたら引数をそのまま返す
+        when(todoMapper.insert(any(Todo.class))).thenReturn(1);
+
+        todoService.create(todo);
+
+        // insertが1回呼ばれたことを検証
+        verify(todoMapper, times(1)).insert(todo);
+    }
+
+    @Test
+    @DisplayName("削除時にMapperのdeleteが呼ばれる")
+    void testDelete() {
+        todoService.delete(1);
+
+        verify(todoMapper).delete(1);
+        verifyNoMoreInteractions(todoMapper);
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-header"><span class="info-box-icon">💡</span><span class="info-box-title">Mockitoの主要メソッド</span></div>
+                    <ul>
+                        <li><code>when().thenReturn()</code>：モックの戻り値を設定</li>
+                        <li><code>verify()</code>：メソッドが呼ばれたか検証</li>
+                        <li><code>any()</code>：任意の引数にマッチ</li>
+                        <li><code>times(n)</code>：n回呼ばれたか検証</li>
+                        <li><code>never()</code>：呼ばれていないことを検証</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 21-3</span>
+                    <h2 class="section-title">@SpringBootTestによる統合テスト</h2>
+                </div>
+
+                <div class="code-block" id="integration-test">
+                    <div class="code-header">
+                        <span class="code-title">TodoControllerIntegrationTest.java</span>
+                        <button class="download-btn" onclick="downloadCode('integration-test', 'TodoControllerIntegrationTest.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+@Transactional  // テスト後にロールバック
+class TodoControllerIntegrationTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private TodoMapper todoMapper;
+
+    @Test
+    @DisplayName("ToDo一覧ページが表示される")
+    void testListPage() throws Exception {
+        mockMvc.perform(get("/todos"))
+            .andExpect(status().isOk())
+            .andExpect(view().name("todo/list"))
+            .andExpect(model().attributeExists("todoList"));
+    }
+
+    @Test
+    @DisplayName("新規作成フォームが表示される")
+    void testCreateForm() throws Exception {
+        mockMvc.perform(get("/todos/new"))
+            .andExpect(status().isOk())
+            .andExpect(view().name("todo/form"))
+            .andExpect(model().attributeExists("todoForm"));
+    }
+
+    @Test
+    @DisplayName("ToDoを作成できる")
+    void testCreate() throws Exception {
+        mockMvc.perform(post("/todos")
+                .param("title", "テストタスク")
+                .param("description", "テスト説明"))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl("/todos"));
+    }
+
+    @Test
+    @DisplayName("バリデーションエラー時はフォームに戻る")
+    void testCreateValidationError() throws Exception {
+        mockMvc.perform(post("/todos")
+                .param("title", ""))  // タイトルが空
+            .andExpect(status().isOk())
+            .andExpect(view().name("todo/form"))
+            .andExpect(model().hasErrors());
+    }
+
+    @Test
+    @DisplayName("ToDoの詳細が表示される")
+    void testDetail() throws Exception {
+        // テストデータを準備
+        Todo todo = new Todo();
+        todo.setTitle("テストタスク");
+        todoMapper.insert(todo);
+
+        mockMvc.perform(get("/todos/{id}", todo.getId()))
+            .andExpect(status().isOk())
+            .andExpect(view().name("todo/detail"))
+            .andExpect(model().attribute("todo", todo));
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="mapper-test">
+                    <div class="code-header">
+                        <span class="code-title">TodoMapperTest.java（MyBatisテスト）</span>
+                        <button class="download-btn" onclick="downloadCode('mapper-test', 'TodoMapperTest.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.junit.jupiter.api.Test;
+import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import static org.junit.jupiter.api.Assertions.*;
+
+@MybatisTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+class TodoMapperTest {
+
+    @Autowired
+    private TodoMapper todoMapper;
+
+    @Test
+    @DisplayName("ToDoを挿入して取得できる")
+    void testInsertAndFindById() {
+        Todo todo = new Todo();
+        todo.setTitle("テストタスク");
+        todo.setDescription("テスト説明");
+
+        todoMapper.insert(todo);
+        assertNotNull(todo.getId());
+
+        Todo found = todoMapper.findById(todo.getId());
+        assertEquals("テストタスク", found.getTitle());
+    }
+
+    @Test
+    @DisplayName("全件取得できる")
+    void testFindAll() {
+        // テストデータを挿入
+        Todo todo1 = new Todo();
+        todo1.setTitle("タスク1");
+        todoMapper.insert(todo1);
+
+        Todo todo2 = new Todo();
+        todo2.setTitle("タスク2");
+        todoMapper.insert(todo2);
+
+        List&lt;Todo&gt; todos = todoMapper.findAll();
+        assertTrue(todos.size() &gt;= 2);
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <h3>テストの種類と使い分け</h3>
+                <table class="data-table">
+                    <thead><tr><th>種類</th><th>アノテーション</th><th>用途</th></tr></thead>
+                    <tbody>
+                        <tr><td>単体テスト</td><td><code>@ExtendWith(MockitoExtension.class)</code></td><td>1クラスを独立してテスト</td></tr>
+                        <tr><td>統合テスト</td><td><code>@SpringBootTest</code></td><td>アプリケーション全体をテスト</td></tr>
+                        <tr><td>Webレイヤーテスト</td><td><code>@WebMvcTest</code></td><td>Controllerのみテスト</td></tr>
+                        <tr><td>データレイヤーテスト</td><td><code>@MybatisTest</code></td><td>Mapperのみテスト</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="warning-box">
+                    <div class="warning-box-header"><span class="warning-box-icon">⚠️</span><span class="warning-box-title">テストのベストプラクティス</span></div>
+                    <ul>
+                        <li>テストは独立して実行できるようにする（他のテストに依存しない）</li>
+                        <li><code>@Transactional</code>でテスト後にデータをロールバック</li>
+                        <li>テスト名は「何をテストしているか」が分かるように</li>
+                        <li>AAAパターン（Arrange, Act, Assert）で整理</li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+
+        <footer class="footer"><p>Spring Framework 入門チュートリアル - 発展レベル</p></footer>
+
+        <div class="page-nav">
+            <a href="20_i18n.html" class="page-nav-btn prev"><span>←</span><div><div class="page-nav-label">前の機能</div><div class="page-nav-title">国際化（多言語対応）</div></div></a>
+            <a href="22_async.html" class="page-nav-btn next"><div><div class="page-nav-label">次の機能</div><div class="page-nav-title">非同期処理</div></div><span>→</span></a>
+        </div>
+
+        <script>
+            function toggleMenu() { document.querySelector(".nav-toggle").classList.toggle("active"); document.querySelector(".nav-menu").classList.toggle("active"); }
+            function downloadCode(id, filename) { const el = document.getElementById(id); const code = el.querySelector('code') || el.querySelector('pre'); const blob = new Blob([code.textContent], {type:'text/plain;charset=utf-8'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url); }
+        </script>
+    </body>
+</html>

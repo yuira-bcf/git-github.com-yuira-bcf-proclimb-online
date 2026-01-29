@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>発展24 監査ログ機能</title>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="../style.css" />
+        <style>
+            .download-btn { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-left: auto; }
+            .code-header { display: flex; align-items: center; justify-content: space-between; }
+            .level-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; background: #fce7f3; color: #be185d; margin-right: 8px; }
+        </style>
+    </head>
+    <body>
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="../1spring-framework-tutorial.html" class="nav-logo"><span class="nav-logo-icon">🌱</span><span>Spring入門</span></a>
+                <button class="nav-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 発展レベル</div>
+                    <ul class="nav-list">
+                        <li class="nav-item"><a href="19_file_upload.html" class="nav-link"><span class="nav-chapter-num">19</span><span>ファイル添付機能</span></a></li>
+                        <li class="nav-item"><a href="20_i18n.html" class="nav-link"><span class="nav-chapter-num">20</span><span>国際化（多言語対応）</span></a></li>
+                        <li class="nav-item"><a href="21_unit_test.html" class="nav-link"><span class="nav-chapter-num">21</span><span>単体テスト</span></a></li>
+                        <li class="nav-item"><a href="22_async.html" class="nav-link"><span class="nav-chapter-num">22</span><span>非同期処理</span></a></li>
+                        <li class="nav-item"><a href="23_mail.html" class="nav-link"><span class="nav-chapter-num">23</span><span>メール送信通知</span></a></li>
+                        <li class="nav-item"><a href="24_audit_log.html" class="nav-link active"><span class="nav-chapter-num">24</span><span>監査ログ機能</span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <header class="chapter-header">
+                <div class="chapter-badge"><span class="level-badge">発展</span>📗 Expert</div>
+                <div class="chapter-number">24</div>
+                <h1 class="chapter-title">監査ログ機能</h1>
+            </header>
+
+            <nav class="toc">
+                <h2 class="toc-title">📑 この章の内容</h2>
+                <ul class="toc-list">
+                    <li class="toc-item"><span class="toc-number">24-1</span><span>監査ログの設計</span></li>
+                    <li class="toc-item"><span class="toc-number">24-2</span><span>AOPで自動記録</span></li>
+                    <li class="toc-item"><span class="toc-number">24-3</span><span>監査ログの検索・表示</span></li>
+                </ul>
+            </nav>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 24-1</span>
+                    <h2 class="section-title">監査ログの設計</h2>
+                </div>
+                <div class="intro-text">
+                    <p><strong>誰が、いつ、何を変更したか</strong>を記録する監査ログ機能を実装します。</p>
+                </div>
+
+                <div class="module-list">
+                    <div class="module-item"><div class="module-icon">📝</div><div class="module-content"><h4>監査ログ</h4><p>操作履歴を記録してトレーサビリティを確保</p></div></div>
+                    <div class="module-item"><div class="module-icon">🔍</div><div class="module-content"><h4>AOP</h4><p>横断的に監査ログを記録</p></div></div>
+                </div>
+
+                <div class="code-block" id="sql">
+                    <div class="code-header">
+                        <span class="code-title">schema.sql（監査ログテーブル）</span>
+                        <button class="download-btn" onclick="downloadCode('sql', 'audit_log.sql')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>-- 監査ログテーブル
+CREATE TABLE audit_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    action VARCHAR(50) NOT NULL,           -- 操作種別（CREATE, UPDATE, DELETE）
+    entity_type VARCHAR(50) NOT NULL,      -- 対象エンティティ（TODO, USER等）
+    entity_id INT,                          -- 対象のID
+    user_id INT,                            -- 操作したユーザーID
+    username VARCHAR(100),                  -- 操作したユーザー名
+    old_value TEXT,                         -- 変更前の値（JSON）
+    new_value TEXT,                         -- 変更後の値（JSON）
+    ip_address VARCHAR(45),                 -- IPアドレス
+    user_agent VARCHAR(500),                -- ユーザーエージェント
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    INDEX idx_entity (entity_type, entity_id),
+    INDEX idx_user (user_id),
+    INDEX idx_created_at (created_at)
+);
+
+-- 例: 操作ログの検索用ビュー
+CREATE VIEW v_audit_logs AS
+SELECT
+    a.id,
+    a.action,
+    a.entity_type,
+    a.entity_id,
+    u.username,
+    a.created_at,
+    CASE a.action
+        WHEN 'CREATE' THEN CONCAT(a.entity_type, 'を作成')
+        WHEN 'UPDATE' THEN CONCAT(a.entity_type, 'を更新')
+        WHEN 'DELETE' THEN CONCAT(a.entity_type, 'を削除')
+    END as action_description
+FROM audit_logs a
+LEFT JOIN users u ON a.user_id = u.id;</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="entity">
+                    <div class="code-header">
+                        <span class="code-title">AuditLog.java（エンティティ）</span>
+                        <button class="download-btn" onclick="downloadCode('entity', 'AuditLog.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>public class AuditLog {
+    private Integer id;
+    private String action;        // CREATE, UPDATE, DELETE
+    private String entityType;    // TODO, USER など
+    private Integer entityId;
+    private Integer userId;
+    private String username;
+    private String oldValue;      // JSON形式
+    private String newValue;      // JSON形式
+    private String ipAddress;
+    private String userAgent;
+    private LocalDateTime createdAt;
+
+    // Enum for action types
+    public enum Action {
+        CREATE, READ, UPDATE, DELETE
+    }
+
+    // getter/setter省略
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="service">
+                    <div class="code-header">
+                        <span class="code-title">AuditLogService.java</span>
+                        <button class="download-btn" onclick="downloadCode('service', 'AuditLogService.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class AuditLogService {
+
+    private final AuditLogMapper auditLogMapper;
+    private final ObjectMapper objectMapper;
+
+    /**
+     * 監査ログを記録
+     * REQUIRES_NEW: 本体がロールバックしても監査ログは残す
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void log(AuditLog.Action action, String entityType,
+                    Integer entityId, Object oldValue, Object newValue) {
+
+        AuditLog log = new AuditLog();
+        log.setAction(action.name());
+        log.setEntityType(entityType);
+        log.setEntityId(entityId);
+
+        // 現在のユーザー情報を取得
+        SecurityContext context = SecurityContextHolder.getContext();
+        if (context.getAuthentication() != null) {
+            log.setUserId(getCurrentUserId());
+            log.setUsername(context.getAuthentication().getName());
+        }
+
+        // オブジェクトをJSON文字列に変換
+        try {
+            if (oldValue != null) {
+                log.setOldValue(objectMapper.writeValueAsString(oldValue));
+            }
+            if (newValue != null) {
+                log.setNewValue(objectMapper.writeValueAsString(newValue));
+            }
+        } catch (Exception e) {
+            log.setOldValue(String.valueOf(oldValue));
+            log.setNewValue(String.valueOf(newValue));
+        }
+
+        // リクエスト情報を取得
+        HttpServletRequest request = getCurrentRequest();
+        if (request != null) {
+            log.setIpAddress(getClientIp(request));
+            log.setUserAgent(request.getHeader("User-Agent"));
+        }
+
+        log.setCreatedAt(LocalDateTime.now());
+
+        auditLogMapper.insert(log);
+    }
+
+    private String getClientIp(HttpServletRequest request) {
+        String ip = request.getHeader("X-Forwarded-For");
+        if (ip == null || ip.isEmpty()) {
+            ip = request.getRemoteAddr();
+        }
+        return ip;
+    }
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 24-2</span>
+                    <h2 class="section-title">AOPで自動記録</h2>
+                </div>
+
+                <div class="code-block" id="annotation">
+                    <div class="code-header">
+                        <span class="code-title">Auditable.java（カスタムアノテーション）</span>
+                        <button class="download-btn" onclick="downloadCode('annotation', 'Auditable.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import java.lang.annotation.*;
+
+/**
+ * 監査ログを記録するメソッドに付与するアノテーション
+ */
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface Auditable {
+    /**
+     * 操作種別
+     */
+    AuditLog.Action action();
+
+    /**
+     * エンティティ種別
+     */
+    String entityType();
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="aspect">
+                    <div class="code-header">
+                        <span class="code-title">AuditAspect.java（AOPで自動記録）</span>
+                        <button class="download-btn" onclick="downloadCode('aspect', 'AuditAspect.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.stereotype.Component;
+
+@Aspect
+@Component
+public class AuditAspect {
+
+    private final AuditLogService auditLogService;
+
+    @Around("@annotation(auditable)")
+    public Object audit(ProceedingJoinPoint joinPoint, Auditable auditable) throws Throwable {
+
+        // メソッド実行前の状態を取得（UPDATE/DELETEの場合）
+        Object oldValue = null;
+        Integer entityId = extractEntityId(joinPoint);
+
+        if (auditable.action() == AuditLog.Action.UPDATE ||
+            auditable.action() == AuditLog.Action.DELETE) {
+            oldValue = findExistingEntity(auditable.entityType(), entityId);
+        }
+
+        // メソッドを実行
+        Object result = joinPoint.proceed();
+
+        // 監査ログを記録
+        Object newValue = null;
+        if (auditable.action() == AuditLog.Action.CREATE ||
+            auditable.action() == AuditLog.Action.UPDATE) {
+            newValue = result;  // 戻り値を新しい値として記録
+        }
+
+        auditLogService.log(
+            auditable.action(),
+            auditable.entityType(),
+            extractEntityIdFromResult(result, entityId),
+            oldValue,
+            newValue
+        );
+
+        return result;
+    }
+
+    /**
+     * 引数からエンティティIDを抽出
+     */
+    private Integer extractEntityId(ProceedingJoinPoint joinPoint) {
+        Object[] args = joinPoint.getArgs();
+        for (Object arg : args) {
+            if (arg instanceof Integer) {
+                return (Integer) arg;
+            }
+            // エンティティの場合はgetId()を呼び出し
+            try {
+                return (Integer) arg.getClass().getMethod("getId").invoke(arg);
+            } catch (Exception e) {
+                // ignore
+            }
+        }
+        return null;
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="usage">
+                    <div class="code-header">
+                        <span class="code-title">TodoService.java（アノテーションの使用）</span>
+                        <button class="download-btn" onclick="downloadCode('usage', 'TodoService_audit.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>@Service
+public class TodoService {
+
+    private final TodoMapper todoMapper;
+
+    /**
+     * @Auditableを付与すると自動的に監査ログが記録される
+     */
+    @Auditable(action = AuditLog.Action.CREATE, entityType = "TODO")
+    @Transactional
+    public Todo create(TodoForm form) {
+        Todo todo = new Todo();
+        todo.setTitle(form.getTitle());
+        todo.setDescription(form.getDescription());
+        todoMapper.insert(todo);
+        return todo;
+    }
+
+    @Auditable(action = AuditLog.Action.UPDATE, entityType = "TODO")
+    @Transactional
+    public Todo update(Integer id, TodoForm form) {
+        Todo todo = todoMapper.findById(id);
+        todo.setTitle(form.getTitle());
+        todo.setDescription(form.getDescription());
+        todoMapper.update(todo);
+        return todo;
+    }
+
+    @Auditable(action = AuditLog.Action.DELETE, entityType = "TODO")
+    @Transactional
+    public void delete(Integer id) {
+        todoMapper.delete(id);
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-header"><span class="info-box-icon">💡</span><span class="info-box-title">AOPで監査ログを記録するメリット</span></div>
+                    <ul>
+                        <li>ビジネスロジックと監査ロジックを分離できる</li>
+                        <li>アノテーションを付けるだけで自動記録</li>
+                        <li>漏れなく一貫した形式で記録</li>
+                        <li>後から監査対象を追加・変更しやすい</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 24-3</span>
+                    <h2 class="section-title">監査ログの検索・表示</h2>
+                </div>
+
+                <div class="code-block" id="mapper">
+                    <div class="code-header">
+                        <span class="code-title">AuditLogMapper.xml</span>
+                        <button class="download-btn" onclick="downloadCode('mapper', 'AuditLogMapper.xml')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;
+&lt;mapper namespace="com.example.mapper.AuditLogMapper"&gt;
+
+    &lt;insert id="insert" useGeneratedKeys="true" keyProperty="id"&gt;
+        INSERT INTO audit_logs
+            (action, entity_type, entity_id, user_id, username,
+             old_value, new_value, ip_address, user_agent, created_at)
+        VALUES
+            (#{action}, #{entityType}, #{entityId}, #{userId}, #{username},
+             #{oldValue}, #{newValue}, #{ipAddress}, #{userAgent}, #{createdAt})
+    &lt;/insert&gt;
+
+    &lt;!-- 検索（条件付き）--&gt;
+    &lt;select id="search" resultType="AuditLog"&gt;
+        SELECT * FROM audit_logs
+        &lt;where&gt;
+            &lt;if test="entityType != null"&gt;
+                AND entity_type = #{entityType}
+            &lt;/if&gt;
+            &lt;if test="entityId != null"&gt;
+                AND entity_id = #{entityId}
+            &lt;/if&gt;
+            &lt;if test="userId != null"&gt;
+                AND user_id = #{userId}
+            &lt;/if&gt;
+            &lt;if test="action != null"&gt;
+                AND action = #{action}
+            &lt;/if&gt;
+            &lt;if test="fromDate != null"&gt;
+                AND created_at &gt;= #{fromDate}
+            &lt;/if&gt;
+            &lt;if test="toDate != null"&gt;
+                AND created_at &lt;= #{toDate}
+            &lt;/if&gt;
+        &lt;/where&gt;
+        ORDER BY created_at DESC
+        LIMIT #{limit} OFFSET #{offset}
+    &lt;/select&gt;
+
+    &lt;!-- 特定エンティティの履歴 --&gt;
+    &lt;select id="findByEntity" resultType="AuditLog"&gt;
+        SELECT * FROM audit_logs
+        WHERE entity_type = #{entityType} AND entity_id = #{entityId}
+        ORDER BY created_at DESC
+    &lt;/select&gt;
+
+&lt;/mapper&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="controller">
+                    <div class="code-header">
+                        <span class="code-title">AuditLogController.java</span>
+                        <button class="download-btn" onclick="downloadCode('controller', 'AuditLogController.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>@Controller
+@RequestMapping("/admin/audit-logs")
+@PreAuthorize("hasRole('ADMIN')")  // 管理者のみアクセス可能
+public class AuditLogController {
+
+    private final AuditLogService auditLogService;
+
+    @GetMapping
+    public String list(
+            @RequestParam(required = false) String entityType,
+            @RequestParam(required = false) Integer userId,
+            @RequestParam(required = false) String action,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
+            @RequestParam(defaultValue = "0") int page,
+            Model model) {
+
+        AuditSearchCriteria criteria = new AuditSearchCriteria();
+        criteria.setEntityType(entityType);
+        criteria.setUserId(userId);
+        criteria.setAction(action);
+        criteria.setFromDate(fromDate);
+        criteria.setToDate(toDate);
+        criteria.setPage(page);
+
+        Page&lt;AuditLog&gt; logs = auditLogService.search(criteria);
+
+        model.addAttribute("logs", logs);
+        model.addAttribute("criteria", criteria);
+
+        return "admin/audit-logs";
+    }
+
+    /**
+     * 特定ToDoの変更履歴
+     */
+    @GetMapping("/entity/{type}/{id}")
+    public String entityHistory(
+            @PathVariable String type,
+            @PathVariable Integer id,
+            Model model) {
+
+        List&lt;AuditLog&gt; history = auditLogService.findByEntity(type, id);
+        model.addAttribute("history", history);
+        model.addAttribute("entityType", type);
+        model.addAttribute("entityId", id);
+
+        return "admin/entity-history";
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="view">
+                    <div class="code-header">
+                        <span class="code-title">audit-logs.html（一覧表示）</span>
+                        <button class="download-btn" onclick="downloadCode('view', 'audit-logs.html')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>&lt;table class="data-table"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th&gt;日時&lt;/th&gt;
+            &lt;th&gt;操作&lt;/th&gt;
+            &lt;th&gt;対象&lt;/th&gt;
+            &lt;th&gt;ユーザー&lt;/th&gt;
+            &lt;th&gt;詳細&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        &lt;tr th:each="log : ${logs.content}"&gt;
+            &lt;td th:text="${#temporals.format(log.createdAt, 'yyyy/MM/dd HH:mm:ss')}"&gt;&lt;/td&gt;
+            &lt;td&gt;
+                &lt;span th:class="${'badge badge-' + log.action.toLowerCase()}"
+                      th:text="${log.action}"&gt;&lt;/span&gt;
+            &lt;/td&gt;
+            &lt;td&gt;
+                &lt;span th:text="${log.entityType}"&gt;&lt;/span&gt;
+                &lt;span th:text="'#' + ${log.entityId}"&gt;&lt;/span&gt;
+            &lt;/td&gt;
+            &lt;td th:text="${log.username}"&gt;&lt;/td&gt;
+            &lt;td&gt;
+                &lt;button onclick="showDetail(this)"
+                        th:data-old="${log.oldValue}"
+                        th:data-new="${log.newValue}"&gt;
+                    詳細
+                &lt;/button&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;!-- 詳細モーダル --&gt;
+&lt;div id="detailModal" class="modal"&gt;
+    &lt;div class="modal-content"&gt;
+        &lt;h3&gt;変更内容&lt;/h3&gt;
+        &lt;div class="diff-view"&gt;
+            &lt;div class="old-value"&gt;
+                &lt;h4&gt;変更前&lt;/h4&gt;
+                &lt;pre id="oldValue"&gt;&lt;/pre&gt;
+            &lt;/div&gt;
+            &lt;div class="new-value"&gt;
+                &lt;h4&gt;変更後&lt;/h4&gt;
+                &lt;pre id="newValue"&gt;&lt;/pre&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                    </div>
+                </div>
+
+                <h3>監査ログの活用シーン</h3>
+                <table class="data-table">
+                    <thead><tr><th>シーン</th><th>用途</th></tr></thead>
+                    <tbody>
+                        <tr><td>問題調査</td><td>いつ誰がデータを変更したか追跡</td></tr>
+                        <tr><td>コンプライアンス</td><td>法規制対応のための記録保持</td></tr>
+                        <tr><td>不正検知</td><td>異常な操作パターンの検出</td></tr>
+                        <tr><td>変更履歴</td><td>データの変遷を確認</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="column">
+                    <div class="column-header"><span class="column-badge">Column</span><span class="column-title">発展レベル完了！</span></div>
+                    <p>おめでとうございます！発展レベルの6つの機能をすべて学習しました。</p>
+                    <ol class="step-list">
+                        <li>ファイル添付機能 - MultipartFile</li>
+                        <li>国際化（多言語対応） - MessageSource</li>
+                        <li>単体テスト - JUnit5, Mockito</li>
+                        <li>非同期処理 - @Async</li>
+                        <li>メール送信通知 - JavaMailSender</li>
+                        <li>監査ログ機能 - AOP, 監査テーブル</li>
+                    </ol>
+                    <p style="margin-top: 1rem;">これで<strong>ToDoアプリの機能追加チュートリアル</strong>は完了です！<br>
+                    さらに学習を進めたい場合は、Docker, CI/CD, マイクロサービスなどに挑戦してみましょう。</p>
+                </div>
+            </section>
+        </div>
+
+        <footer class="footer"><p>Spring Framework 入門チュートリアル - 発展レベル</p></footer>
+
+        <div class="page-nav">
+            <a href="23_mail.html" class="page-nav-btn prev"><span>←</span><div><div class="page-nav-label">前の機能</div><div class="page-nav-title">メール送信通知</div></div></a>
+            <a href="../16extends-todo.html" class="page-nav-btn next"><div><div class="page-nav-label">トップに戻る</div><div class="page-nav-title">機能追加提案一覧</div></div><span>→</span></a>
+        </div>
+
+        <script>
+            function toggleMenu() { document.querySelector(".nav-toggle").classList.toggle("active"); document.querySelector(".nav-menu").classList.toggle("active"); }
+            function downloadCode(id, filename) { const el = document.getElementById(id); const code = el.querySelector('code') || el.querySelector('pre'); const blob = new Blob([code.textContent], {type:'text/plain;charset=utf-8'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url); }
+            function showDetail(btn) {
+                const modal = document.getElementById('detailModal');
+                document.getElementById('oldValue').textContent = JSON.stringify(JSON.parse(btn.dataset.old || '{}'), null, 2);
+                document.getElementById('newValue').textContent = JSON.stringify(JSON.parse(btn.dataset.new || '{}'), null, 2);
+                modal.style.display = 'block';
+            }
+        </script>
+    </body>
+</html>

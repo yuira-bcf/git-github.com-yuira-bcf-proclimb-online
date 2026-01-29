@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>発展19 ファイル添付機能</title>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="../style.css" />
+        <style>
+            .download-btn { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-left: auto; }
+            .code-header { display: flex; align-items: center; justify-content: space-between; }
+            .level-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; background: #fce7f3; color: #be185d; margin-right: 8px; }
+        </style>
+    </head>
+    <body>
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="../1spring-framework-tutorial.html" class="nav-logo"><span class="nav-logo-icon">🌱</span><span>Spring入門</span></a>
+                <button class="nav-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 発展レベル</div>
+                    <ul class="nav-list">
+                        <li class="nav-item"><a href="19_file_upload.html" class="nav-link active"><span class="nav-chapter-num">19</span><span>ファイル添付機能</span></a></li>
+                        <li class="nav-item"><a href="20_i18n.html" class="nav-link"><span class="nav-chapter-num">20</span><span>国際化（多言語対応）</span></a></li>
+                        <li class="nav-item"><a href="21_unit_test.html" class="nav-link"><span class="nav-chapter-num">21</span><span>単体テスト</span></a></li>
+                        <li class="nav-item"><a href="22_async.html" class="nav-link"><span class="nav-chapter-num">22</span><span>非同期処理</span></a></li>
+                        <li class="nav-item"><a href="23_mail.html" class="nav-link"><span class="nav-chapter-num">23</span><span>メール送信通知</span></a></li>
+                        <li class="nav-item"><a href="24_audit_log.html" class="nav-link"><span class="nav-chapter-num">24</span><span>監査ログ機能</span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <header class="chapter-header">
+                <div class="chapter-badge"><span class="level-badge">発展</span>📗 Expert</div>
+                <div class="chapter-number">19</div>
+                <h1 class="chapter-title">ファイル添付機能</h1>
+            </header>
+
+            <nav class="toc">
+                <h2 class="toc-title">📑 この章の内容</h2>
+                <ul class="toc-list">
+                    <li class="toc-item"><span class="toc-number">19-1</span><span>MultipartFileの基本</span></li>
+                    <li class="toc-item"><span class="toc-number">19-2</span><span>ファイルアップロード</span></li>
+                    <li class="toc-item"><span class="toc-number">19-3</span><span>ファイルダウンロード</span></li>
+                </ul>
+            </nav>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 19-1</span>
+                    <h2 class="section-title">MultipartFileの基本</h2>
+                </div>
+                <div class="intro-text">
+                    <p><strong>MultipartFile</strong>を使って、ToDoにファイルを添付できるようにします。</p>
+                </div>
+
+                <div class="module-list">
+                    <div class="module-item"><div class="module-icon">📎</div><div class="module-content"><h4>MultipartFile</h4><p>Springでファイルアップロードを扱うインターフェース</p></div></div>
+                    <div class="module-item"><div class="module-icon">💾</div><div class="module-content"><h4>ファイル保存</h4><p>サーバーのファイルシステムまたはDBに保存</p></div></div>
+                </div>
+
+                <div class="code-block" id="config">
+                    <div class="code-header">
+                        <span class="code-title">application.properties（ファイルアップロード設定）</span>
+                        <button class="download-btn" onclick="downloadCode('config', 'application_upload.properties')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code># ファイルアップロード設定
+spring.servlet.multipart.enabled=true
+spring.servlet.multipart.max-file-size=10MB
+spring.servlet.multipart.max-request-size=10MB
+
+# ファイル保存先
+app.upload.dir=./uploads</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="entity">
+                    <div class="code-header">
+                        <span class="code-title">TodoAttachment.java（添付ファイルエンティティ）</span>
+                        <button class="download-btn" onclick="downloadCode('entity', 'TodoAttachment.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>public class TodoAttachment {
+    private Integer id;
+    private Integer todoId;
+    private String originalFilename;  // 元のファイル名
+    private String storedFilename;    // 保存時のファイル名（UUID）
+    private String contentType;       // MIME型
+    private Long fileSize;            // ファイルサイズ
+    private LocalDateTime uploadedAt;
+
+    // getter/setter省略
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 19-2</span>
+                    <h2 class="section-title">ファイルアップロード</h2>
+                </div>
+
+                <div class="code-block" id="controller-upload">
+                    <div class="code-header">
+                        <span class="code-title">TodoController.java（アップロード処理）</span>
+                        <button class="download-btn" onclick="downloadCode('controller-upload', 'TodoController_upload.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.springframework.web.multipart.MultipartFile;
+
+@Controller
+@RequestMapping("/todos")
+public class TodoController {
+
+    private final TodoService todoService;
+    private final FileStorageService fileStorageService;
+
+    /**
+     * ファイル添付フォームの表示
+     */
+    @GetMapping("/{id}/attach")
+    public String showAttachForm(@PathVariable Integer id, Model model) {
+        model.addAttribute("todo", todoService.findById(id));
+        return "todo/attach";
+    }
+
+    /**
+     * ファイルアップロード処理
+     */
+    @PostMapping("/{id}/attach")
+    public String uploadFile(
+            @PathVariable Integer id,
+            @RequestParam("file") MultipartFile file,
+            RedirectAttributes redirectAttributes) {
+
+        // ファイルが空でないかチェック
+        if (file.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "ファイルを選択してください");
+            return "redirect:/todos/" + id + "/attach";
+        }
+
+        try {
+            // ファイルを保存
+            fileStorageService.store(id, file);
+            redirectAttributes.addFlashAttribute("message", "ファイルをアップロードしました");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "アップロードに失敗しました");
+        }
+
+        return "redirect:/todos/" + id;
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="service">
+                    <div class="code-header">
+                        <span class="code-title">FileStorageService.java（ファイル保存サービス）</span>
+                        <button class="download-btn" onclick="downloadCode('service', 'FileStorageService.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import java.nio.file.*;
+import java.util.UUID;
+
+@Service
+public class FileStorageService {
+
+    private final Path uploadPath;
+    private final AttachmentMapper attachmentMapper;
+
+    public FileStorageService(
+            @Value("${app.upload.dir}") String uploadDir,
+            AttachmentMapper attachmentMapper) {
+        this.uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
+        this.attachmentMapper = attachmentMapper;
+
+        // アップロードディレクトリを作成
+        try {
+            Files.createDirectories(this.uploadPath);
+        } catch (IOException e) {
+            throw new RuntimeException("アップロードディレクトリの作成に失敗", e);
+        }
+    }
+
+    /**
+     * ファイルを保存
+     */
+    public TodoAttachment store(Integer todoId, MultipartFile file) throws IOException {
+        // ファイル名の安全性チェック
+        String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
+        if (originalFilename.contains("..")) {
+            throw new IllegalArgumentException("不正なファイル名です");
+        }
+
+        // UUIDで一意なファイル名を生成
+        String storedFilename = UUID.randomUUID().toString() + getExtension(originalFilename);
+
+        // ファイルを保存
+        Path targetPath = this.uploadPath.resolve(storedFilename);
+        Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+
+        // DB にメタ情報を保存
+        TodoAttachment attachment = new TodoAttachment();
+        attachment.setTodoId(todoId);
+        attachment.setOriginalFilename(originalFilename);
+        attachment.setStoredFilename(storedFilename);
+        attachment.setContentType(file.getContentType());
+        attachment.setFileSize(file.getSize());
+        attachment.setUploadedAt(LocalDateTime.now());
+
+        attachmentMapper.insert(attachment);
+
+        return attachment;
+    }
+
+    private String getExtension(String filename) {
+        int dotIndex = filename.lastIndexOf(".");
+        return dotIndex > 0 ? filename.substring(dotIndex) : "";
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="form">
+                    <div class="code-header">
+                        <span class="code-title">attach.html（アップロードフォーム）</span>
+                        <button class="download-btn" onclick="downloadCode('form', 'attach.html')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>&lt;form th:action="@{/todos/{id}/attach(id=${todo.id})}"
+      method="post"
+      enctype="multipart/form-data"&gt;
+
+    &lt;div class="form-group"&gt;
+        &lt;label for="file"&gt;ファイルを選択&lt;/label&gt;
+        &lt;input type="file" id="file" name="file" required /&gt;
+    &lt;/div&gt;
+
+    &lt;button type="submit"&gt;アップロード&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-box-header"><span class="warning-box-icon">⚠️</span><span class="warning-box-title">セキュリティ上の注意</span></div>
+                    <ul>
+                        <li>ファイル名は必ずサニタイズする（パストラバーサル対策）</li>
+                        <li>許可するファイル種類を制限する（実行ファイルの禁止）</li>
+                        <li>ファイルサイズの上限を設定する</li>
+                        <li>アップロードディレクトリはWebからアクセスできない場所に配置</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 19-3</span>
+                    <h2 class="section-title">ファイルダウンロード</h2>
+                </div>
+
+                <div class="code-block" id="download">
+                    <div class="code-header">
+                        <span class="code-title">TodoController.java（ダウンロード処理）</span>
+                        <button class="download-btn" onclick="downloadCode('download', 'TodoController_download.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+
+@Controller
+@RequestMapping("/todos")
+public class TodoController {
+
+    /**
+     * ファイルダウンロード
+     */
+    @GetMapping("/attachments/{attachmentId}/download")
+    public ResponseEntity&lt;Resource&gt; downloadFile(@PathVariable Integer attachmentId) {
+        TodoAttachment attachment = attachmentService.findById(attachmentId);
+
+        try {
+            Path filePath = uploadPath.resolve(attachment.getStoredFilename());
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (!resource.exists()) {
+                throw new RuntimeException("ファイルが見つかりません");
+            }
+
+            // Content-Dispositionヘッダーでファイル名を指定
+            String encodedFilename = URLEncoder.encode(
+                attachment.getOriginalFilename(), StandardCharsets.UTF_8.toString()
+            ).replaceAll("\\+", "%20");
+
+            return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(attachment.getContentType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                    "attachment; filename*=UTF-8''" + encodedFilename)
+                .body(resource);
+
+        } catch (IOException e) {
+            throw new RuntimeException("ファイルの読み込みに失敗", e);
+        }
+    }
+
+    /**
+     * 添付ファイル削除
+     */
+    @PostMapping("/attachments/{attachmentId}/delete")
+    public String deleteFile(
+            @PathVariable Integer attachmentId,
+            RedirectAttributes redirectAttributes) {
+
+        TodoAttachment attachment = attachmentService.findById(attachmentId);
+        Integer todoId = attachment.getTodoId();
+
+        fileStorageService.delete(attachmentId);
+        redirectAttributes.addFlashAttribute("message", "ファイルを削除しました");
+
+        return "redirect:/todos/" + todoId;
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="mapper">
+                    <div class="code-header">
+                        <span class="code-title">AttachmentMapper.xml</span>
+                        <button class="download-btn" onclick="downloadCode('mapper', 'AttachmentMapper.xml')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;
+&lt;mapper namespace="com.example.mapper.AttachmentMapper"&gt;
+
+    &lt;insert id="insert" useGeneratedKeys="true" keyProperty="id"&gt;
+        INSERT INTO todo_attachments
+            (todo_id, original_filename, stored_filename, content_type, file_size, uploaded_at)
+        VALUES
+            (#{todoId}, #{originalFilename}, #{storedFilename}, #{contentType}, #{fileSize}, #{uploadedAt})
+    &lt;/insert&gt;
+
+    &lt;select id="findByTodoId" resultType="TodoAttachment"&gt;
+        SELECT * FROM todo_attachments WHERE todo_id = #{todoId}
+    &lt;/select&gt;
+
+    &lt;select id="findById" resultType="TodoAttachment"&gt;
+        SELECT * FROM todo_attachments WHERE id = #{id}
+    &lt;/select&gt;
+
+    &lt;delete id="delete"&gt;
+        DELETE FROM todo_attachments WHERE id = #{id}
+    &lt;/delete&gt;
+
+&lt;/mapper&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-header"><span class="info-box-icon">💡</span><span class="info-box-title">ファイル保存先の選択肢</span></div>
+                    <ul>
+                        <li><strong>ファイルシステム</strong>：シンプル、大容量向き、バックアップが必要</li>
+                        <li><strong>データベース（BLOB）</strong>：トランザクション一貫性、小〜中サイズ向き</li>
+                        <li><strong>クラウドストレージ（S3等）</strong>：スケーラブル、本番環境向き</li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+
+        <footer class="footer"><p>Spring Framework 入門チュートリアル - 発展レベル</p></footer>
+
+        <div class="page-nav">
+            <a href="18_transaction.html" class="page-nav-btn prev"><span>←</span><div><div class="page-nav-label">前の機能</div><div class="page-nav-title">トランザクション管理</div></div></a>
+            <a href="20_i18n.html" class="page-nav-btn next"><div><div class="page-nav-label">次の機能</div><div class="page-nav-title">国際化（多言語対応）</div></div><span>→</span></a>
+        </div>
+
+        <script>
+            function toggleMenu() { document.querySelector(".nav-toggle").classList.toggle("active"); document.querySelector(".nav-menu").classList.toggle("active"); }
+            function downloadCode(id, filename) { const el = document.getElementById(id); const code = el.querySelector('code') || el.querySelector('pre'); const blob = new Blob([code.textContent], {type:'text/plain;charset=utf-8'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url); }
+        </script>
+    </body>
+</html>
