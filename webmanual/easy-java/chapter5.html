@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>メソッドとは（概要・定義・呼び出し・mainから呼び出し）</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body{
+      font-family: system-ui, -apple-system, "Segoe UI",
+                   "Hiragino Kaku Gothic ProN","Yu Gothic", sans-serif;
+      line-height: 1.8;
+      margin: 24px;
+    }
+    h1{ font-size: 1.6rem; margin-bottom: 16px; }
+    h2{
+      font-size: 1.2rem;
+      margin-top: 32px;
+      border-left: 6px solid #ddd;
+      padding-left: 10px;
+    }
+    p{ margin: 10px 0; }
+    ul{ margin-left: 24px; }
+    pre{
+      background: #fafafa;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 12px;
+      overflow-x: auto;
+    }
+    code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco,
+                   Consolas, "Noto Sans Mono", monospace;
+    }
+    .box{
+      background: #fcfcfc;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 14px;
+      margin: 14px 0;
+    }
+    .key{
+      background: #eef5ff;
+      border-left: 6px solid #7fb3ff;
+      border-radius: 8px;
+      padding: 14px;
+      margin: 16px 0;
+    }
+    .note{
+      background: #fff7e6;
+      border-left: 6px solid #f0c36d;
+      border-radius: 8px;
+      padding: 14px;
+      margin: 16px 0;
+    }
+    .summary{
+      background: #effaf3;
+      border-left: 6px solid #7ad39a;
+      border-radius: 8px;
+      padding: 14px;
+      margin: 16px 0;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<h1>メソッドとは（概要・定義・呼び出し・mainメソッドから呼び出し）</h1>
+
+<section>
+  <h2>1. 概要（メソッドとは何か）</h2>
+  <p>
+    Java における<strong>メソッド</strong>とは、<strong>処理のまとまり</strong>のことです。
+    よく使う処理に名前を付けて、必要なときに呼び出せるようにします。
+  </p>
+
+  <div class="key">
+    <p><strong>メソッド = 「処理をまとめて名前を付けたもの」</strong></p>
+  </div>
+
+  <p>
+    メソッドを使うと、次のようなメリットがあります。
+  </p>
+  <ul>
+    <li>同じ処理を何度も書かずに済みます（再利用できます）</li>
+    <li>処理が短くまとまり、読みやすくなります</li>
+    <li>役割ごとに分けられるため、修正しやすくなります</li>
+  </ul>
+</section>
+
+<section>
+  <h2>2. 定義（メソッドの書き方）</h2>
+  <p>
+    メソッドは<strong>クラスの中</strong>に定義します。基本的な形は次の通りです。
+  </p>
+
+  <pre><code>戻り値の型 メソッド名(引数) {
+    処理
+}</code></pre>
+
+  <p>例として、「あいさつを表示するメソッド」を定義してみます。</p>
+
+  <pre><code>public class Main {
+
+    // メソッドの定義（引数なし、戻り値なし）
+    static void hello() {
+        System.out.println("こんにちは");
+    }
+
+}</code></pre>
+
+  <div class="note">
+    <p><strong>ポイント：</strong></p>
+    <ul>
+      <li><code>hello</code> がメソッド名です（好きな名前を付けられます）</li>
+      <li><code>void</code> は「戻り値がない」という意味です</li>
+      <li><code>()</code> の中が空なら「引数なし」です</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>3. 呼び出し（メソッドの使い方）</h2>
+  <p>
+    メソッドは、定義しただけでは動きません。<strong>呼び出したとき</strong>に実行されます。
+  </p>
+
+  <pre><code>メソッド名();</code></pre>
+
+  <p>先ほど定義した <code>hello</code> を呼び出すと、次のようになります。</p>
+
+  <pre><code>hello();</code></pre>
+
+  <div class="box">
+    <p>
+      <strong>イメージ：</strong><br>
+      メソッドは「ボタン」のようなものだと考えると分かりやすいです。<br>
+      定義は「ボタンを作る」、呼び出しは「ボタンを押す」です。
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>4. mainメソッドから呼び出す</h2>
+  <p>
+    Java のプログラムは、通常 <code>main</code> メソッドから処理が始まります。
+    そのため、初学者の方はまず
+    <strong>「main から自分のメソッドを呼び出す」</strong>ことを練習すると理解が進みます。
+  </p>
+
+  <p>次の例では、<code>main</code> メソッドの中で <code>hello</code> を呼び出しています。</p>
+
+  <pre><code>public class Main {
+
+    static void hello() {
+        System.out.println("こんにちは");
+    }
+
+    public static void main(String[] args) {
+        // main からメソッドを呼び出す
+        hello();
+    }
+}</code></pre>
+
+  <p>実行結果の例：</p>
+  <pre><code>こんにちは</code></pre>
+
+  <div class="note">
+    <p>
+      <strong>補足（初学者向け）：</strong><br>
+      この例で <code>hello</code> の前に <code>Main.</code> を付けていないのは、<br>
+      <code>main</code> と <code>hello</code> が同じクラスの中にあり、どちらも <code>static</code> だからです。<br>
+      （この段階では「そういうルール」くらいで大丈夫です）
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>まとめ</h2>
+  <div class="summary">
+    メソッドは「処理をまとめて名前を付けたもの」です。定義したメソッドは、呼び出したときに実行されます。初学者はまず、mainメソッドから自分のメソッドを呼び出す形を練習するのが効果的です。
+  </div>
+</section>
+
+<h1>引数の利用</h1>
+
+<section>
+  <h2>1. 引数とは</h2>
+  <p>
+    <strong>引数（ひきすう）</strong>とは、メソッドに値を渡すための仕組みです。
+  </p>
+  <p>
+    メソッドは「処理のまとまり」ですが、引数を使うことで
+    <strong>外から値を受け取り、内容を変えて実行</strong>できます。
+  </p>
+  <div class="key">
+    <p><strong>引数とは「メソッドに渡すデータ」</strong></p>
+  </div>
+</section>
+
+<section>
+  <h2>2. 1つの引数を渡す</h2>
+
+  <h3>2-1. 定義</h3>
+  <p>
+    1つの引数を受け取るメソッドは、次のように定義します。
+  </p>
+  <pre><code>static void greet(String name) {
+    System.out.println(name + "さん、こんにちは");
+}</code></pre>
+
+  <div class="note">
+    <p>
+      <strong>ポイント：</strong><br>
+      <code>String name</code> が引数です。<br>
+      この <code>name</code> は、メソッドの中だけで使える変数です。
+    </p>
+  </div>
+
+  <h3>2-2. 呼び出し</h3>
+  <p>
+    引数を持つメソッドは、呼び出すときに値を渡します。
+  </p>
+  <pre><code>greet("田中");</code></pre>
+
+  <p>実行結果：</p>
+  <pre><code>田中さん、こんにちは</code></pre>
+</section>
+
+<section>
+  <h2>3. 複数の引数を渡す</h2>
+
+  <h3>3-1. 定義</h3>
+  <p>
+    複数の引数を使う場合は、カンマ（,）で区切って定義します。
+  </p>
+  <pre><code>static void add(int a, int b) {
+    System.out.println(a + b);
+}</code></pre>
+
+  <h3>3-2. 呼び出し</h3>
+  <p>
+    呼び出すときも、同じ順番で値を渡します。
+  </p>
+  <pre><code>add(10, 20);</code></pre>
+
+  <p>実行結果：</p>
+  <pre><code>30</code></pre>
+
+  <div class="note">
+    <p>
+      <strong>注意：</strong><br>
+      引数は「順番」が重要です。<br>
+      型と順番が一致していないと、コンパイルエラーになります。
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>4. 仮引数と実引数</h2>
+  <p>
+    引数には、呼び方の違いがあります。
+  </p>
+
+  <ul>
+    <li><strong>仮引数</strong>：メソッド定義側の引数</li>
+    <li><strong>実引数</strong>：メソッド呼び出し時に渡す値</li>
+  </ul>
+
+  <pre><code>// 仮引数
+static void greet(String name) {
+    System.out.println(name);
+}
+
+// 実引数
+greet("佐藤");</code></pre>
+
+  <div class="box">
+    <p>
+      <strong>整理すると：</strong><br>
+      ・<code>String name</code> → 仮引数<br>
+      ・<code>"佐藤"</code> → 実引数
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>5. 変数のスコープとローカル変数</h2>
+  <p>
+    <strong>スコープ</strong>とは、「変数が使える範囲」のことです。
+  </p>
+
+  <h3>5-1. ローカル変数</h3>
+  <p>
+    メソッドの中で定義された変数は、
+    <strong>そのメソッドの中だけ</strong>で使えます。
+  </p>
+
+  <pre><code>static void sample() {
+    int x = 10;   // ローカル変数
+    System.out.println(x);
+}</code></pre>
+
+  <p>
+    上記の <code>x</code> は、<code>sample</code> メソッドの外では使えません。
+  </p>
+
+  <div class="note">
+    <p>
+      <strong>重要：</strong><br>
+      引数もローカル変数の一種です。<br>
+      メソッドの外から直接使うことはできません。
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>まとめ</h2>
+  <div class="summary">
+    引数を使うことで、メソッドは外から値を受け取り、柔軟に処理できるようになります。
+    仮引数と実引数の違い、そして変数のスコープを理解することが、
+    正しいプログラムを書くための重要なポイントです。
+  </div>
+</section>
+
+<h1>戻り値の利用</h1>
+
+<section>
+  <h2>1. 戻り値とは</h2>
+  <p>
+    <strong>戻り値</strong>とは、メソッドが処理を行った結果として、
+    <strong>呼び出し元に返す値</strong>のことです。
+  </p>
+
+  <div class="key">
+    <p><strong>戻り値 = メソッドの実行結果</strong></p>
+  </div>
+
+  <p>
+    これまで学習した <code>void</code> のメソッドは、
+    処理は行いますが値を返しません。
+    戻り値を使うことで、計算結果などを後続の処理に利用できます。
+  </p>
+
+  <h3>定義</h3>
+  <p>
+    戻り値を持つメソッドは、
+    <code>void</code> の代わりに
+    <strong>返したい値の型</strong>を書いて定義します。
+  </p>
+
+  <pre><code>static int add(int a, int b) {
+    return a + b;
+}</code></pre>
+
+  <div class="note">
+    <p>
+      <strong>ポイント：</strong><br>
+      ・<code>int</code> が戻り値の型です。<br>
+      ・<code>return</code> は値を返して、メソッドを終了します。
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>2. 戻り値を受け取る</h2>
+
+  <p>
+    戻り値を持つメソッドは、
+    <strong>変数に代入して受け取る</strong>ことができます。
+  </p>
+
+  <h3>定義（受け取り方）</h3>
+  <pre><code>int result = add(10, 20);</code></pre>
+
+  <p>
+    この処理では、次の順序で動いています。
+  </p>
+  <ul>
+    <li><code>add(10, 20)</code> が実行される</li>
+    <li>計算結果 <code>30</code> が返される</li>
+    <li><code>result</code> に <code>30</code> が代入される</li>
+  </ul>
+
+  <p>受け取った値は、普通の変数として利用できます。</p>
+
+  <pre><code>System.out.println(result);</code></pre>
+</section>
+
+<section>
+  <h2>3. 戻り値をそのまま使う</h2>
+  <p>
+    戻り値は、必ずしも変数に入れる必要はありません。
+    <strong>そのまま別の処理に使う</strong>こともできます。
+  </p>
+
+  <pre><code>System.out.println(add(10, 20));</code></pre>
+
+  <p>
+    この場合、
+    <code>add(10, 20)</code> の戻り値が、
+    直接 <code>println</code> に渡されています。
+  </p>
+
+  <div class="box">
+    <p>
+      <strong>考え方：</strong><br>
+      「戻り値があるメソッドは、値として使える」
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>4. return 文の注意点</h2>
+
+  <h3>① return を実行するとメソッドは終了する</h3>
+  <pre><code>static int sample() {
+    return 10;
+    // この下の処理は実行されません
+}</code></pre>
+
+  <div class="note">
+    <p>
+      <strong>注意：</strong><br>
+      <code>return</code> が実行された時点で、
+      メソッドの処理はそこで終わります。
+    </p>
+  </div>
+
+  <h3>② 戻り値の型と一致している必要がある</h3>
+  <pre><code>// 正しい例
+static int sample() {
+    return 5;
+}
+
+// 間違いの例（型が違う）
+static int sample() {
+    return "5";
+}</code></pre>
+
+  <h3>③ 戻り値があるメソッドでは return が必須</h3>
+  <p>
+    戻り値の型を指定した場合、
+    <strong>必ず return 文で値を返す必要があります</strong>。
+  </p>
+
+  <pre><code>// コンパイルエラーになる例
+static int sample() {
+    int x = 10;
+}</code></pre>
+</section>
+
+<section>
+  <h2>まとめ</h2>
+  <div class="summary">
+    戻り値とは、メソッドが処理結果として返す値です。
+    戻り値は変数に代入して受け取ることも、そのまま使うこともできます。
+    return 文は値を返すと同時に、メソッドを終了させる重要な役割を持っています。
+  </div>
+</section>
+
+
+<h1>オーバーロードの利用</h1>
+
+<section>
+  <h2>1. オーバーロードとは</h2>
+  <p>
+    <strong>オーバーロード（Overload）</strong>とは、
+    <strong>同じ名前のメソッドを、引数の違いによって複数定義すること</strong>です。
+  </p>
+
+  <div class="key">
+    同じ処理の名前を使い、<br>
+    引数の数や型が違うメソッドを用意する仕組み
+  </div>
+
+  <p>
+    処理内容が似ている場合でも、
+    メソッド名を増やさず整理できるため、
+    プログラムが読みやすくなります。
+  </p>
+</section>
+
+<section>
+  <h2>2. 類似する複数メソッドを定義する</h2>
+
+  <p>
+    例えば「値を表示する処理」を考えます。
+    表示したい値が <code>int</code> の場合と
+    <code>String</code> の場合で処理内容はほぼ同じです。
+  </p>
+
+  <pre><code>// オーバーロードを使った例
+static void print(int x) {
+    System.out.println(x);
+}
+
+static void print(String s) {
+    System.out.println(s);
+}</code></pre>
+
+  <p>
+    呼び出し側では、引数を渡すだけで、
+    Java が自動的に適切なメソッドを選択します。
+  </p>
+
+  <pre><code>print(100);
+print("Java");</code></pre>
+
+  <div class="box">
+    <p>
+      <strong>ポイント：</strong><br>
+      メソッド名は同じでも、
+      引数の型が違うため区別できます。
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>3. メソッドのシグネチャ</h2>
+  <p>
+    Java が「どのメソッドを呼ぶか」を判断する基準を
+    <strong>メソッドのシグネチャ</strong>と呼びます。
+  </p>
+
+  <div class="key">
+    メソッドのシグネチャ ＝ メソッド名 ＋ 引数の型と順番
+  </div>
+
+  <p>
+    次の 2 つのメソッドは、
+    引数の型が異なるため、同時に定義できます。
+  </p>
+
+  <pre><code>static void calc(int a, int b) {
+}
+
+static void calc(double a, double b) {
+}</code></pre>
+
+  <p>
+    一方、次のような定義はできません。
+  </p>
+
+  <pre><code>// コンパイルエラーになる例
+static int sample(int x) {
+    return x;
+}
+
+static void sample(int x) {
+}</code></pre>
+
+  <div class="note">
+    <p>
+      <strong>注意：</strong><br>
+      戻り値の型はシグネチャに含まれません。<br>
+      引数が同じで戻り値だけが違うメソッドは定義できません。
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>4. サンプルプログラム（全体例）</h2>
+  <p>
+    次は、オーバーロードを使った
+    <strong>完全なサンプルプログラム</strong>です。
+  </p>
+
+  <pre><code>public class Main {
+
+    // int を受け取って表示するメソッド
+    static void show(int x) {
+        System.out.println("int型: " + x);
+    }
+
+    // String を受け取って表示するメソッド
+    static void show(String s) {
+        System.out.println("String型: " + s);
+    }
+
+    // int を2つ受け取って表示するメソッド
+    static void show(int a, int b) {
+        System.out.println("int型2つ: " + a + ", " + b);
+    }
+
+    public static void main(String[] args) {
+        show(10);
+        show("Hello");
+        show(3, 5);
+    }
+}</code></pre>
+
+  <p>実行結果の例：</p>
+
+  <pre><code>int型: 10
+String型: Hello
+int型2つ: 3, 5</code></pre>
+
+  <div class="note">
+    <p>
+      <strong>確認ポイント：</strong><br>
+      ・すべて同じ <code>show</code> という名前のメソッドです。<br>
+      ・引数の数や型に応じて、呼び出されるメソッドが変わります。
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>まとめ</h2>
+  <div class="summary">
+    オーバーロードとは、引数の違いによって
+    同じ名前のメソッドを複数定義する仕組みです。
+    Java はメソッドのシグネチャ（メソッド名と引数）を使って
+    呼び出すメソッドを判断します。
+    サンプルプログラムのように、処理が似ている場合に活用すると、
+    コードを分かりやすく整理できます。
+  </div>
+</section>
+
+<h1>引数や戻り値に配列を用いる</h1>
+
+<section>
+  <h2>このセクションで押さえる結論</h2>
+  <div class="key">
+    Java は常に「値渡し」です。<br>
+    ただし配列の場合、コピーされるのは「配列を指す情報（参照）」なので、<br>
+    同じ配列の中身を変更すると return がなくても呼び出し元に反映されます。
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2>1. 引数に配列を用いる</h2>
+
+  <h3>1-1. 概要</h3>
+  <p>
+    メソッドに配列を渡すと、メソッドの中で
+    <strong>複数の値をまとめて扱う</strong>ことができます。
+    たとえば、合計・平均・最大値の計算などを配列1つで渡せます。
+  </p>
+
+  <h3>1-2. 定義方法</h3>
+  <p>
+    配列を引数にする場合は、引数の型を配列型（<code>型[]</code>）にします。
+  </p>
+  <pre><code>// int 配列を受け取る
+static void printAll(int[] nums) {
+    // 処理
+}</code></pre>
+
+  <h3>1-3. サンプルプログラム</h3>
+  <p>
+    配列の中身をすべて表示する例です。
+  </p>
+  <pre><code>public class Main {
+
+    // 配列を受け取り、要素をすべて表示する
+    static void printAll(int[] nums) {
+        for (int i = 0; i &lt; nums.length; i++) {
+            System.out.println(nums[i]);
+        }
+    }
+
+    public static void main(String[] args) {
+        int[] data = {10, 20, 30};
+        printAll(data);
+    }
+}</code></pre>
+
+  <p>実行結果：</p>
+  <pre><code>10
+20
+30</code></pre>
+</section>
+
+<hr>
+
+<section>
+  <h2>2. 値渡しと参照渡し</h2>
+
+  <h3>2-1. 概要</h3>
+  <p>
+    まず重要な事実として、Java ではメソッド呼び出しの際に
+    <strong>実引数の値がコピーされ、仮引数に渡されます</strong>。
+  </p>
+  <div class="box">
+    <p><strong>仮引数と実引数の関係：</strong></p>
+    <ul>
+      <li><strong>実引数</strong>：呼び出し側が渡す値（例：<code>data</code>）</li>
+      <li><strong>仮引数</strong>：メソッド側が受け取る変数（例：<code>array</code>）</li>
+      <li>渡されるときに<strong>値のコピー</strong>が起きます</li>
+    </ul>
+  </div>
+
+  <p>
+    では、配列の場合は何がコピーされるのでしょうか。
+    配列を変数に入れると、変数には「配列の中身」ではなく
+    <strong>配列を指す情報（参照）</strong>が入ります。
+    その参照がコピーされるため、結果として「参照渡しのように見える」動作になります。
+  </p>
+
+  <h3>2-2. 定義方法</h3>
+  <p>
+    配列を引数に取るメソッドは、次のように定義します。
+  </p>
+  <pre><code>static void incArray(int[] array) {
+    // 配列の要素を変更する処理
+}</code></pre>
+
+  <h3>2-3. サンプルプログラム（return なしでも呼び出し元が変わる）</h3>
+  <p>
+    次の例では <code>return</code> を書いていませんが、
+    <code>data[0]</code> が 100 に変わります。
+  </p>
+
+  <pre><code>public class Main {
+
+    // 配列の先頭要素を 100 に変更する
+    static void incArray(int[] array) {
+        array[0] = 100;
+    }
+
+    public static void main(String[] args) {
+        int[] data = {1, 2, 3};
+
+        // 実引数 data の「参照」がコピーされ、仮引数 array に渡される
+        incArray(data);
+
+        // 同じ配列の中身を書き換えたため、呼び出し元でも変化が見える
+        System.out.println(data[0]);
+    }
+}</code></pre>
+
+  <p>実行結果：</p>
+  <pre><code>100</code></pre>
+
+  <div class="key">
+    配列で return が不要なのは、<br>
+    「同じ配列の要素（中身）を直接変更している」ためです。
+  </div>
+
+  <div class="note">
+    <p><strong>注意：</strong></p>
+    <p>
+      次のように「仮引数の参照を別の配列に付け替える」操作は、
+      呼び出し元の <code>data</code> を変えません。
+    </p>
+    <pre><code>static void changeRef(int[] array) {
+    array = new int[]{9, 9, 9}; // 参照の付け替え（呼び出し元には影響しない）
+}</code></pre>
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2>3. 戻り値に配列を用いる</h2>
+
+  <h3>3-1. 概要</h3>
+  <p>
+    配列を戻り値にすると、
+    <strong>複数の値をまとめて返す</strong>ことができます。
+    たとえば「1〜n の一覧」「計算結果の一覧」などを返せます。
+  </p>
+
+  <h3>3-2. 定義方法</h3>
+  <p>
+    戻り値の型を配列型（<code>型[]</code>）にします。
+  </p>
+  <pre><code>// int 配列を返す
+static int[] makeArray(int size) {
+    // 配列を作成して return する
+}</code></pre>
+
+  <p>
+    戻り値として返るのは、配列の中身そのものではなく、
+    <strong>配列を指す情報（参照）</strong>です。
+    呼び出し元は、その参照を受け取って配列を利用します。
+  </p>
+
+  <h3>3-3. サンプルプログラム</h3>
+  <p>
+    0 から <code>size - 1</code> までを入れた配列を作って返す例です。
+  </p>
+
+  <pre><code>public class Main {
+
+    // size 個の配列を作り、0,1,2... を入れて返す
+    static int[] makeArray(int size) {
+        int[] newArray = new int[size];
+        for (int i = 0; i &lt; newArray.length; i++) {
+            newArray[i] = i;
+        }
+        return newArray;
+    }
+
+    public static void main(String[] args) {
+        int[] data = makeArray(3);
+
+        for (int x : data) {
+            System.out.println(x);
+        }
+    }
+}</code></pre>
+
+  <p>実行結果：</p>
+  <pre><code>0
+1
+2</code></pre>
+</section>
+
+<hr>
+
+<section>
+  <h2>まとめ</h2>
+  <div class="summary">
+    ・配列を引数にすると、複数の値をまとめて渡せます。<br>
+    ・Java は常に値渡しであり、実引数の値がコピーされて仮引数に渡されます。<br>
+    ・配列の場合、コピーされるのは「配列を指す情報（参照）」です。<br>
+    ・そのため、メソッド内で配列の要素を変更すると return がなくても呼び出し元に反映されます。<br>
+    ・配列を戻り値にすると、複数の結果をまとめて返すことができます（返るのは参照情報です）。
+  </div>
+</section>
+
+
+<h1>コマンドライン引数とは</h1>
+
+<section>
+  <h2>1. コマンドライン引数の概要</h2>
+  <p>
+    <strong>コマンドライン引数</strong>とは、
+    プログラムを起動するときに、
+    <strong>外部から渡す値</strong>のことです。
+  </p>
+
+  <div class="key">
+    コマンドライン引数 = プログラム起動時に渡されるデータ
+  </div>
+
+  <p>
+    Java では、コマンドライン引数は
+    <code>main</code> メソッドの引数として受け取ります。
+  </p>
+</section>
+
+<hr>
+
+<section>
+  <h2>2. main メソッドとコマンドライン引数</h2>
+  <p>
+    Java プログラムの開始点である <code>main</code> メソッドは、
+    次の形で定義されています。
+  </p>
+
+  <pre><code>public static void main(String[] args) {
+}</code></pre>
+
+  <p>
+    この <code>String[] args</code> が、
+    <strong>コマンドライン引数を受け取るための配列</strong>です。
+  </p>
+
+  <div class="box">
+    <p>
+      <strong>ポイント：</strong><br>
+      ・引数はすべて <code>String</code> 型として渡される<br>
+      ・渡された順番どおりに配列に格納される
+    </p>
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2>3. コマンドライン引数の渡し方</h2>
+  <p>
+    コマンドラインから Java プログラムを実行するとき、
+    プログラム名の後に値を並べて指定します。
+  </p>
+
+  <pre><code>java Main 10 20 30</code></pre>
+
+  <p>
+    この場合、<code>args</code> 配列の中身は次のようになります。
+  </p>
+
+  <pre><code>args[0] → "10"
+args[1] → "20"
+args[2] → "30"</code></pre>
+
+  <div class="note">
+    <p>
+      数値を渡しても、<br>
+      受け取った時点ではすべて <code>String</code> 型です。
+    </p>
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2>4. サンプルプログラム</h2>
+  <p>
+    渡されたコマンドライン引数を順番に表示する例です。
+  </p>
+
+  <pre><code>public class Main {
+
+    public static void main(String[] args) {
+
+        for (int i = 0; i &lt; args.length; i++) {
+            System.out.println(args[i]);
+        }
+    }
+}</code></pre>
+
+  <p>
+    実行例：
+  </p>
+
+  <pre><code>java Main Apple Banana Orange</code></pre>
+
+  <p>
+    実行結果：
+  </p>
+
+  <pre><code>Apple
+Banana
+Orange</code></pre>
+</section>
+
+<hr>
+
+<section>
+  <h2>5. 数値として使う場合</h2>
+  <p>
+    コマンドライン引数は文字列として渡されるため、
+    数値として使いたい場合は変換が必要です。
+  </p>
+
+  <pre><code>public class Main {
+
+    public static void main(String[] args) {
+
+        int a = Integer.parseInt(args[0]);
+        int b = Integer.parseInt(args[1]);
+
+        System.out.println(a + b);
+    }
+}</code></pre>
+
+  <p>
+    実行例：
+  </p>
+
+  <pre><code>java Main 10 20</code></pre>
+
+  <p>
+    実行結果：
+  </p>
+
+  <pre><code>30</code></pre>
+
+  <div class="note">
+    <p>
+      <strong>注意：</strong><br>
+      数値に変換できない文字列が渡された場合、
+      実行時エラーが発生します。
+    </p>
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2>6. よくある注意点</h2>
+  <ul>
+    <li>引数が渡されない場合、<code>args.length</code> は 0 になる</li>
+    <li><code>args[0]</code> を使う前に、長さの確認が必要</li>
+    <li>配列なので、0 番目から始まる</li>
+  </ul>
+</section>
+
+<hr>
+
+<section>
+  <h2>まとめ</h2>
+  <div class="summary">
+    ・コマンドライン引数は、プログラム起動時に外部から渡されるデータである。<br>
+    ・Java では <code>main(String[] args)</code> の <code>args</code> 配列で受け取る。<br>
+    ・引数はすべて文字列として渡され、順番どおりに配列に格納される。<br>
+    ・数値として使う場合は、文字列から数値への変換が必要である。
+  </div>
+</section>
+
+
+</body>
+</html>

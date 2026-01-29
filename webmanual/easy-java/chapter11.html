@@ -1,0 +1,870 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Java 高度な継承（抽象クラス／インタフェース） 教科書</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #111827;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --accent: #166534;
+      --accent2: #0f766e;
+      --code-bg: #0b1020;
+      --code-fg: #e5e7eb;
+    }
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+      line-height: 1.75;
+      margin: 0;
+    }
+    header {
+      border-bottom: 1px solid var(--line);
+      padding: 24px 16px;
+      background: #f9fafb;
+    }
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 24px 16px 64px;
+    }
+    h1, h2, h3 {
+      line-height: 1.35;
+      margin: 28px 0 12px;
+    }
+    h1 { font-size: 1.9rem; margin-top: 0; }
+    h2 { font-size: 1.45rem; padding-top: 12px; border-top: 1px solid var(--line); }
+    h3 { font-size: 1.15rem; }
+    p { margin: 10px 0; }
+    .note {
+      border-left: 4px solid var(--accent2);
+      background: #f0fdfa;
+      padding: 10px 12px;
+      margin: 12px 0;
+      color: #0f172a;
+    }
+    .warn {
+      border-left: 4px solid #b45309;
+      background: #fffbeb;
+      padding: 10px 12px;
+      margin: 12px 0;
+      color: #0f172a;
+    }
+    .toc {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-top: 12px;
+    }
+    .toc a {
+      color: #0f172a;
+      text-decoration: none;
+    }
+    .toc a:hover { text-decoration: underline; }
+    ul { margin: 8px 0 8px 20px; }
+    li { margin: 4px 0; }
+    code.inline {
+      background: #f3f4f6;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 0 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.95em;
+    }
+    pre {
+      background: var(--code-bg);
+      color: var(--code-fg);
+      padding: 14px 14px;
+      border-radius: 10px;
+      overflow-x: auto;
+      border: 1px solid #111827;
+      margin: 12px 0;
+    }
+    pre code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.92rem;
+      white-space: pre;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 900px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px 14px;
+      background: #ffffff;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 0.82rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #f9fafb;
+      color: var(--muted);
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 10px 0;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 8px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #f9fafb;
+    }
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 20px 16px;
+      color: var(--muted);
+      background: #f9fafb;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="max-width:980px;margin:0 auto;">
+      <h1>Java 高度な継承（抽象クラス／インタフェース） 教科書</h1>
+      <p style="margin:6px 0;color:var(--muted);">
+        抽象クラス・抽象メソッド・多段階の抽象継承・インタフェース・extends / implements を、設計の観点から学習します。
+      </p>
+
+      <div class="toc">
+        <strong>目次</strong>
+        <ul>
+          <li><a href="#overview">1. 概要</a></li>
+          <li><a href="#defs">2. 定義（用語集）</a></li>
+          <li><a href="#standpoint">3. 立場の切り替え（未来に備える設計）</a></li>
+          <li><a href="#abstract">4. 抽象クラスと抽象メソッド</a></li>
+          <li><a href="#multilevel">5. 多段階の抽象継承（段階的に具体化する）</a></li>
+          <li><a href="#interface">6. インタフェース</a></li>
+          <li><a href="#keywords">7. extends と implements の使い分け</a></li>
+          <li><a href="#samples">8. サンプルソースコード（コンパイル・実行確認用）</a></li>
+          <li><a href="#exercises">9. 確認問題</a></li>
+          <li><a href="#summary">10. まとめ</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- 1. 概要 -->
+    <section id="overview">
+      <h2>1. 概要</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>概要</h3>
+          <p>
+            本教材では、Java の継承を「動くプログラムを作る」だけでなく、
+            <strong>将来の開発者が安全に再利用できる部品を設計する</strong>観点で学習します。
+          </p>
+          <p>
+            特に、以下の内容を段階的に理解します。
+          </p>
+          <ul>
+            <li>未確定な処理（例：攻撃処理）をどう表現するか</li>
+            <li>誤った使い方（例：材料クラスを new してしまう）をどう防ぐか</li>
+            <li>継承階層を上に辿るほど抽象度が高くなる、という構造の理解</li>
+            <li>役割（できること）を表現し、複数の役割を安全に持たせる方法</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>学習目標</h3>
+          <ul>
+            <li>抽象クラス／抽象メソッドの意味と、使う理由を説明できる</li>
+            <li>多段階の抽象継承で「段階的に具体化」する設計を理解できる</li>
+            <li>インタフェースで「役割（契約）」を表現できる</li>
+            <li>extends と implements の使い分けを整理できる</li>
+            <li>サンプルコードをコンパイルして実行し、動作を確認できる</li>
+          </ul>
+          <div class="note">
+            コンパイラは、実装漏れを早い段階で知らせてくれる「確認係」です。<br />
+            人間の注意だけに頼らず、仕組みで品質を守ることが重要です。
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 定義 -->
+    <section id="defs">
+      <h2>2. 定義（用語集）</h2>
+
+      <h3>定義</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>用語</th>
+            <th>説明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>継承（inheritance）</td>
+            <td>親クラスの性質（フィールド／メソッド）を引き継いで子クラスを作る仕組みです。Java では <code class="inline">extends</code> を使用します。</td>
+          </tr>
+          <tr>
+            <td>オーバーライド（override）</td>
+            <td>親クラスのメソッドを、子クラスで同じ形（戻り値・メソッド名・引数）で再定義し、振る舞いを上書きすることです。</td>
+          </tr>
+          <tr>
+            <td>抽象クラス（abstract class）</td>
+            <td><code class="inline">abstract</code> が付いたクラスです。<strong>new できません</strong>。継承の材料（ベース）として使います。</td>
+          </tr>
+          <tr>
+            <td>抽象メソッド（abstract method）</td>
+            <td><code class="inline">abstract</code> が付いたメソッドです。本体（処理ブロック）を持たず宣言だけを行います。子クラスは必ず実装（オーバーライド）します。</td>
+          </tr>
+          <tr>
+            <td>インタフェース（interface）</td>
+            <td>「この役割（能力）を持つなら、このメソッド群を提供してください」という<strong>契約</strong>を表現します。クラスは <code class="inline">implements</code> で実装します。</td>
+          </tr>
+          <tr>
+            <td>多重継承（multiple inheritance）</td>
+            <td>複数の親から性質を引き継ぐことです。Java はクラスの多重継承を許可しませんが、インタフェースの複数実装は可能です。</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 3. 立場 -->
+    <section id="standpoint">
+      <h2>3. 立場の切り替え（未来に備える設計）</h2>
+
+      <h3>概要</h3>
+      <p>
+        継承は「いま必要なクラスを作る」だけでなく、将来ほかの開発者が使うことを想定して、
+        <strong>安全に使える材料クラス</strong>を提供するためにも使われます。
+      </p>
+
+      <h3>定義</h3>
+      <ul>
+        <li><strong>立場A（いま作る開発者）</strong>：目の前のアプリや機能を完成させるためにクラスを作成します。</li>
+        <li><strong>立場B（未来に備える開発者）</strong>：ほかの開発者が安全に再利用できる材料（ベースクラス、契約）を作成します。</li>
+      </ul>
+
+      <h3>実際の使い所</h3>
+      <ul>
+        <li>社内共通ライブラリ（共通ログ、共通例外、共通ドメイン）</li>
+        <li>複数チームが利用する基盤モジュール</li>
+        <li>プラグイン構造（追加機能を別チームが実装する前提）</li>
+      </ul>
+
+      <div class="note">
+        本教材の抽象クラス・インタフェースは、とくに「立場B」を理解することで整理しやすくなります。
+      </div>
+    </section>
+
+    <!-- 4. 抽象 -->
+    <section id="abstract">
+      <h2>4. 抽象クラスと抽象メソッド</h2>
+
+      <h3>概要</h3>
+      <p>
+        材料クラス（例：Character）の作成時点では、将来の子クラスの具体的な処理内容が決められない場合があります。
+        そのような「将来確定する処理」を、<strong>抽象メソッド</strong>として宣言します。
+      </p>
+
+      <h3>定義</h3>
+      <ul>
+        <li><strong>抽象クラス</strong>：<code class="inline">abstract class</code>。new できません。</li>
+        <li><strong>抽象メソッド</strong>：<code class="inline">abstract</code> が付いた宣言のみのメソッド。子クラスが必ず実装します。</li>
+      </ul>
+
+      <h3>ポイント</h3>
+      <ul>
+        <li>抽象メソッドが残っているクラスは、抽象クラスである必要があります。</li>
+        <li>子クラスは抽象メソッドをすべて実装してはじめて、new できる通常クラスになります。</li>
+        <li>「材料クラスを new してしまう」誤用を、言語機能で防止できます。</li>
+      </ul>
+
+      <h3>実際の使い所</h3>
+      <ul>
+        <li>共通フィールド（例：name, hp）と共通処理（例：run）を親にまとめたい場合</li>
+        <li>子クラスに「必ず実装するべきメソッド」を強制したい場合</li>
+        <li>ベースクラスを new 禁止にし、誤用を防止したい場合</li>
+      </ul>
+
+      <div class="warn">
+        抽象にする目的は「難しくすること」ではなく、<strong>将来の実装漏れや誤用を防ぐこと</strong>です。
+      </div>
+    </section>
+
+    <!-- 5. 多段階 -->
+    <section id="multilevel">
+      <h2>5. 多段階の抽象継承（段階的に具体化する）</h2>
+
+      <h3>概要</h3>
+      <p>
+        抽象クラスは、継承の途中で「一部だけ具体化」し、残りはさらに下位クラスで確定させることができます。
+        これを本教材では <strong>多段階の抽象継承</strong>として扱います。
+      </p>
+
+      <h3>定義</h3>
+      <ul>
+        <li><strong>上位クラス</strong>：抽象度が高く、未確定の要素（抽象メソッドなど）を多く含みます。</li>
+        <li><strong>下位クラス</strong>：具体的な実装が揃い、最終的に new できるクラスになります。</li>
+      </ul>
+
+      <h3>実際の使い所</h3>
+      <ul>
+        <li>系列に共通する処理（例：逃げ方だけ共通）を中間クラスで固めたい場合</li>
+        <li>フレームワーク設計（骨組みは上位、具体は下位）</li>
+        <li>差分が多い処理を末端で実装させたい場合</li>
+      </ul>
+    </section>
+
+    <!-- 6. インタフェース -->
+    <section id="interface">
+      <h2>6. インタフェース</h2>
+
+      <h3>概要</h3>
+      <p>
+        インタフェースは「この役割（能力）を持つなら、このメソッド群を提供してください」という契約です。
+        抽象クラスよりもさらに「役割」に特化した表現として利用します。
+      </p>
+
+      <h3>定義</h3>
+      <ul>
+        <li><strong>インタフェース</strong>：<code class="inline">interface</code> で宣言します。クラスは <code class="inline">implements</code> で実装します。</li>
+        <li><strong>定数</strong>：インタフェース内のフィールドは基本的に <code class="inline">public static final</code> として扱われます。</li>
+      </ul>
+
+      <h3>ポイント</h3>
+      <ul>
+        <li>インタフェースは「状態（フィールド）」ではなく、「できること（メソッド）」を中心に表現します。</li>
+        <li>クラスの多重継承はできませんが、インタフェースは複数実装できます。</li>
+        <li>複数の役割を同時に持たせる設計が可能になります。</li>
+      </ul>
+
+      <h3>実際の使い所</h3>
+      <ul>
+        <li>継承関係ではないが「同じ役割」を持つものを統一したい場合（例：操作可能、通知可能など）</li>
+        <li>依存性注入（DI）で実装を差し替えやすくしたい場合</li>
+        <li>複数の役割を安全に持たせたい場合（複数インタフェースの実装）</li>
+      </ul>
+    </section>
+
+    <!-- 7. キーワード -->
+    <section id="keywords">
+      <h2>7. extends と implements の使い分け</h2>
+
+      <h3>概要</h3>
+      <p>
+        Java では「クラス」と「インタフェース」で継承・実装のキーワードが異なります。
+        混乱を避けるために、規則として整理しておくことが重要です。
+      </p>
+
+      <h3>定義</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>継承元</th>
+            <th>継承先</th>
+            <th>キーワード</th>
+            <th>数</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>クラス</td>
+            <td>クラス</td>
+            <td><code class="inline">extends</code></td>
+            <td>1つ</td>
+          </tr>
+          <tr>
+            <td>インタフェース</td>
+            <td>クラス</td>
+            <td><code class="inline">implements</code></td>
+            <td>複数可</td>
+          </tr>
+          <tr>
+            <td>インタフェース</td>
+            <td>インタフェース</td>
+            <td><code class="inline">extends</code></td>
+            <td>複数可</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        覚え方の一例：<br />
+        「クラス同士・インタフェース同士の“同種”は extends、クラスがインタフェースを受け取る“異種”は implements」
+      </div>
+    </section>
+
+    <!-- 8. サンプル -->
+    <section id="samples">
+      <h2>8. サンプルソースコード（コンパイル・実行確認用）</h2>
+
+      <h3>概要</h3>
+      <p>
+        ここに掲載するサンプルは、<strong>コンパイルして実行し、動作確認できる状態</strong>です。
+        すべて同一フォルダに配置して、<code class="inline">javac *.java</code> → <code class="inline">java Main</code> で動作を確認できます。
+      </p>
+
+      <div class="note">
+        ZIP 形式の一式も用意しています：<br />
+        <a href="java_textbook_samples.zip">java_textbook_samples.zip をダウンロード</a>
+      </div>
+
+      <h3>ビルド・実行手順</h3>
+      <pre><code>javac *.java
+java Main</code></pre>
+
+      <h3>実行結果（例）</h3>
+      <pre><code>== Demo 1: Abstract class + abstract method ==
+Enemy: MatangoA (hp=20)
+Minato attacks! damage=10
+Suga casts a spell! damage=5
+Yui attacks with rhythm! damage=3
+Enemy hp after attacks: 2
+Minato runs away.
+
+== Demo 2: Multi-level abstract inheritance ==
+Goblin (hp=12, mp=3)
+Goblin runs away on foot.
+Goblin attacks with a knife.
+DeathBat (hp=8, mp=10)
+DeathBat flies away.
+DeathBat attacks by pecking.
+
+== Demo 3: Interface + implements (and extends) ==
+Fool runs away.
+Fool talks.
+Fool watches.
+Fool hears.
+Fool attacks softly. damage=1
+Enemy hp after Fool attack: 6
+
+== Demo 4: Multiple interfaces (diamond-safe) ==
+PrincessHero runs with two roles.
+PrincessHero runs with two roles.
+
+== Demo 5: Interface constants ==
+PI=3.141592
+area(r=2.0)=12.566368</code></pre>
+
+      <h3>ファイル構成</h3>
+      <ul>
+        <li>Main.java</li>
+        <li>Character.java / Hero.java / Wizard.java / Dancer.java / Matango.java</li>
+        <li>Monster.java / WalkingMonster.java / FlyingMonster.java / Goblin.java / DeathBat.java</li>
+        <li>Creature.java / Human.java / Fool.java</li>
+        <li>HeroRole.java / PrincessRole.java / PrincessHero.java</li>
+        <li>Circle.java</li>
+      </ul>
+
+      <h3>ソースコード</h3>
+
+      <h4>Main.java</h4>
+      <pre><code>public class Main {
+    public static void main(String[] args) {
+        System.out.println("== Demo 1: Abstract class + abstract method ==");
+        demoAbstractClass();
+
+        System.out.println();
+        System.out.println("== Demo 2: Multi-level abstract inheritance ==");
+        demoMultiLevelAbstractInheritance();
+
+        System.out.println();
+        System.out.println("== Demo 3: Interface + implements (and extends) ==");
+        demoInterfaces();
+
+        System.out.println();
+        System.out.println("== Demo 4: Multiple interfaces (diamond-safe) ==");
+        demoMultipleInterfaces();
+
+        System.out.println();
+        System.out.println("== Demo 5: Interface constants ==");
+        demoInterfaceConstants();
+    }
+
+    private static void demoAbstractClass() {
+        Matango m = new Matango("A", 20);
+
+        Character hero = new Hero("Minato", 30, 10);
+        Character wizard = new Wizard("Suga", 25, 5);
+        Character dancer = new Dancer("Yui", 18);
+
+        System.out.println("Enemy: " + m.getName() + " (hp=" + m.hp + ")");
+
+        hero.attack(m);
+        wizard.attack(m);
+        dancer.attack(m);
+
+        System.out.println("Enemy hp after attacks: " + m.hp);
+
+        hero.run();
+
+        // 抽象クラスは new できません（コンパイルエラーになります）
+        // Character c = new Character("X", 1);
+    }
+
+    private static void demoMultiLevelAbstractInheritance() {
+        Monster goblin = new Goblin("Goblin", 12, 3);
+        Monster deathBat = new DeathBat("DeathBat", 8, 10);
+
+        System.out.println(goblin.status());
+        goblin.run();
+        goblin.attack();
+
+        System.out.println(deathBat.status());
+        deathBat.run();
+        deathBat.attack();
+    }
+
+    private static void demoInterfaces() {
+        Fool f = new Fool("Fool", 15);
+
+        // Character から継承した run()
+        f.run();
+
+        // Human（interface）で要求されるメソッド
+        f.talk();
+        f.watch();
+        f.hear();
+
+        // Character の抽象メソッドを Fool が実装
+        Matango m = new Matango("B", 7);
+        f.attack(m);
+        System.out.println("Enemy hp after Fool attack: " + m.hp);
+    }
+
+    private static void demoMultipleInterfaces() {
+        PrincessHero ph = new PrincessHero();
+
+        HeroRole asHero = ph;
+        PrincessRole asPrincess = ph;
+
+        asHero.run();
+        asPrincess.run();
+    }
+
+    private static void demoInterfaceConstants() {
+        double radius = 2.0;
+        double area = Circle.PI * radius * radius;
+        System.out.println("PI=" + Circle.PI);
+        System.out.println("area(r=2.0)=" + area);
+    }
+}</code></pre>
+
+      <h4>Character.java（抽象クラス）</h4>
+      <pre><code>public abstract class Character {
+    protected final String name;
+    protected int hp;
+
+    public Character(String name, int hp) {
+        this.name = name;
+        this.hp = hp;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    // 共通処理（具体メソッド）
+    public void run() {
+        System.out.println(this.name + " runs away.");
+    }
+
+    // 未確定の処理（抽象メソッド）
+    public abstract void attack(Matango m);
+}</code></pre>
+
+      <h4>Matango.java</h4>
+      <pre><code>public class Matango {
+    private final String suffix;
+    public int hp;
+
+    public Matango(String suffix, int hp) {
+        this.suffix = suffix;
+        this.hp = hp;
+    }
+
+    public String getName() {
+        return "Matango" + suffix;
+    }
+}</code></pre>
+
+      <h4>Hero.java</h4>
+      <pre><code>public class Hero extends Character {
+    private final int strength;
+
+    public Hero(String name, int hp, int strength) {
+        super(name, hp);
+        this.strength = strength;
+    }
+
+    @Override
+    public void attack(Matango m) {
+        int damage = strength;
+        System.out.println(this.name + " attacks! damage=" + damage);
+        m.hp -= damage;
+        if (m.hp &lt; 0) {
+            m.hp = 0;
+        }
+    }
+}</code></pre>
+
+      <h4>Wizard.java</h4>
+      <pre><code>public class Wizard extends Character {
+    private final int magicPower;
+
+    public Wizard(String name, int hp, int magicPower) {
+        super(name, hp);
+        this.magicPower = magicPower;
+    }
+
+    @Override
+    public void attack(Matango m) {
+        int damage = magicPower;
+        System.out.println(this.name + " casts a spell! damage=" + damage);
+        m.hp -= damage;
+        if (m.hp &lt; 0) {
+            m.hp = 0;
+        }
+    }
+}</code></pre>
+
+      <h4>Dancer.java</h4>
+      <div class="note">
+        この例では「抽象メソッドを子クラスで実装する」点に注目できるよう、必要な内容に整理しています。
+      </div>
+      <pre><code>public class Dancer extends Character {
+    public Dancer(String name, int hp) {
+        super(name, hp);
+    }
+
+    public void dance() {
+        System.out.println(this.name + " dances.");
+    }
+
+    @Override
+    public void attack(Matango m) {
+        int damage = 3;
+        System.out.println(this.name + " attacks with rhythm! damage=" + damage);
+        m.hp -= damage;
+        if (m.hp &lt; 0) {
+            m.hp = 0;
+        }
+    }
+}</code></pre>
+
+      <h4>Monster.java（多段階の抽象継承：最上位）</h4>
+      <pre><code>public abstract class Monster {
+    protected final String name;
+    protected int hp;
+    protected int mp;
+
+    public Monster(String name, int hp, int mp) {
+        this.name = name;
+        this.hp = hp;
+        this.mp = mp;
+    }
+
+    public String status() {
+        return this.name + " (hp=" + this.hp + ", mp=" + this.mp + ")";
+    }
+
+    public abstract void attack();
+    public abstract void run();
+}</code></pre>
+
+      <h4>WalkingMonster.java（中間層：run だけ確定）</h4>
+      <pre><code>public abstract class WalkingMonster extends Monster {
+    public WalkingMonster(String name, int hp, int mp) {
+        super(name, hp, mp);
+    }
+
+    @Override
+    public void run() {
+        System.out.println(this.name + " runs away on foot.");
+    }
+}</code></pre>
+
+      <h4>FlyingMonster.java（中間層：run だけ確定）</h4>
+      <pre><code>public abstract class FlyingMonster extends Monster {
+    public FlyingMonster(String name, int hp, int mp) {
+        super(name, hp, mp);
+    }
+
+    @Override
+    public void run() {
+        System.out.println(this.name + " flies away.");
+    }
+}</code></pre>
+
+      <h4>Goblin.java（末端：attack も確定 → new 可能）</h4>
+      <pre><code>public class Goblin extends WalkingMonster {
+    public Goblin(String name, int hp, int mp) {
+        super(name, hp, mp);
+    }
+
+    @Override
+    public void attack() {
+        System.out.println(this.name + " attacks with a knife.");
+    }
+}</code></pre>
+
+      <h4>DeathBat.java（末端：attack も確定 → new 可能）</h4>
+      <pre><code>public class DeathBat extends FlyingMonster {
+    public DeathBat(String name, int hp, int mp) {
+        super(name, hp, mp);
+    }
+
+    @Override
+    public void attack() {
+        System.out.println(this.name + " attacks by pecking.");
+    }
+}</code></pre>
+
+      <h4>Creature.java（インタフェース）</h4>
+      <pre><code>public interface Creature {
+    void run();
+}</code></pre>
+
+      <h4>Human.java（インタフェースの継承）</h4>
+      <pre><code>public interface Human extends Creature {
+    void talk();
+    void watch();
+    void hear();
+}</code></pre>
+
+      <h4>Fool.java（extends と implements を同時に使用）</h4>
+      <pre><code>public class Fool extends Character implements Human {
+    public Fool(String name, int hp) {
+        super(name, hp);
+    }
+
+    @Override
+    public void attack(Matango m) {
+        int damage = 1;
+        System.out.println(this.name + " attacks softly. damage=" + damage);
+        m.hp -= damage;
+        if (m.hp &lt; 0) {
+            m.hp = 0;
+        }
+    }
+
+    @Override
+    public void talk() {
+        System.out.println(this.name + " talks.");
+    }
+
+    @Override
+    public void watch() {
+        System.out.println(this.name + " watches.");
+    }
+
+    @Override
+    public void hear() {
+        System.out.println(this.name + " hears.");
+    }
+}</code></pre>
+
+      <h4>HeroRole.java / PrincessRole.java（同名メソッドを持つ複数インタフェース）</h4>
+      <pre><code>public interface HeroRole {
+    void run();
+}</code></pre>
+      <pre><code>public interface PrincessRole {
+    void run();
+}</code></pre>
+
+      <h4>PrincessHero.java（複数インタフェースの実装）</h4>
+      <pre><code>public class PrincessHero implements HeroRole, PrincessRole {
+    @Override
+    public void run() {
+        System.out.println("PrincessHero runs with two roles.");
+    }
+}</code></pre>
+
+      <h4>Circle.java（インタフェースの定数）</h4>
+      <pre><code>public interface Circle {
+    double PI = 3.141592;
+}</code></pre>
+    </section>
+
+    <!-- 9. 確認問題 -->
+    <section id="exercises">
+      <h2>9. 確認問題</h2>
+
+      <h3>問題1（抽象クラス）</h3>
+      <p>抽象クラスが new できない理由を、1〜2文で説明してください。</p>
+
+      <h3>問題2（抽象メソッド）</h3>
+      <p>
+        「処理が未確定なメソッド」を空のメソッドとして用意する方法と、
+        抽象メソッドとして宣言する方法の違いを説明してください。
+      </p>
+
+      <h3>問題3（多段階の抽象継承）</h3>
+      <p>
+        <code class="inline">Monster</code> → <code class="inline">WalkingMonster</code> → <code class="inline">Goblin</code>
+        の流れで、どのタイミングで new が可能になるか、理由とあわせて説明してください。
+      </p>
+
+      <h3>問題4（インタフェース）</h3>
+      <p>
+        Java でクラスの多重継承ができない一方、インタフェースの複数実装ができる理由を説明してください。
+      </p>
+    </section>
+
+    <!-- 10. まとめ -->
+    <section id="summary">
+      <h2>10. まとめ</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>要点</h3>
+          <ul>
+            <li>抽象クラスは「材料クラスを new させない」ために利用します。</li>
+            <li>抽象メソッドは「子クラスに実装を強制する」ために利用します。</li>
+            <li>多段階の抽象継承では、抽象から具体へ段階的に処理を確定できます。</li>
+            <li>インタフェースは「役割（契約）」を表現し、複数実装が可能です。</li>
+            <li>同種（クラス→クラス、インタフェース→インタフェース）は extends、クラス→インタフェースは implements を使用します。</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>実際の使い所（再掲）</h3>
+          <ul>
+            <li>共通ライブラリ：再利用と誤用防止の両立</li>
+            <li>チーム開発：実装漏れをコンパイル時に検出</li>
+            <li>DI：インタフェースで差し替えやすい設計</li>
+            <li>フレームワーク：抽象クラスで骨組み、下位で具体化</li>
+          </ul>
+          <div class="note">
+            仕組みで守れる部分は仕組みに任せると、開発が安定しやすくなります。
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div style="max-width:980px;margin:0 auto;">
+      <div>© 学習用資料（HTML出力）</div>
+      <div>サンプル一式：<a href="java_textbook_samples.zip">java_textbook_samples.zip</a></div>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>上級13 ユーザー別ToDo管理</title>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="../style.css" />
+        <style>
+            .download-btn { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-left: auto; }
+            .code-header { display: flex; align-items: center; justify-content: space-between; }
+            .level-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; background: #fee2e2; color: #991b1b; margin-right: 8px; }
+        </style>
+    </head>
+    <body>
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="../1spring-framework-tutorial.html" class="nav-logo"><span class="nav-logo-icon">🌱</span><span>Spring入門</span></a>
+                <button class="nav-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 上級レベル</div>
+                    <ul class="nav-list">
+                        <li class="nav-item"><a href="12_login.html" class="nav-link"><span class="nav-chapter-num">12</span><span>ログイン認証</span></a></li>
+                        <li class="nav-item"><a href="13_user_todo.html" class="nav-link active"><span class="nav-chapter-num">13</span><span>ユーザー別ToDo管理</span></a></li>
+                        <li class="nav-item"><a href="14_role.html" class="nav-link"><span class="nav-chapter-num">14</span><span>ロール別権限制御</span></a></li>
+                        <li class="nav-item"><a href="15_rest_api.html" class="nav-link"><span class="nav-chapter-num">15</span><span>REST API化</span></a></li>
+                        <li class="nav-item"><a href="16_exception.html" class="nav-link"><span class="nav-chapter-num">16</span><span>例外ハンドリング</span></a></li>
+                        <li class="nav-item"><a href="17_aop.html" class="nav-link"><span class="nav-chapter-num">17</span><span>AOPでログ出力</span></a></li>
+                        <li class="nav-item"><a href="18_transaction.html" class="nav-link"><span class="nav-chapter-num">18</span><span>トランザクション管理</span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <header class="chapter-header">
+                <div class="chapter-badge"><span class="level-badge">上級</span>📕 Advanced</div>
+                <div class="chapter-number">13</div>
+                <h1 class="chapter-title">ユーザー別ToDo管理</h1>
+            </header>
+
+            <nav class="toc">
+                <h2 class="toc-title">📑 この章の内容</h2>
+                <ul class="toc-list">
+                    <li class="toc-item"><span class="toc-number">13-1</span><span>ログインユーザーの取得</span></li>
+                    <li class="toc-item"><span class="toc-number">13-2</span><span>ユーザーIDでToDoを絞り込み</span></li>
+                    <li class="toc-item"><span class="toc-number">13-3</span><span>Thymeleafでユーザー情報表示</span></li>
+                </ul>
+            </nav>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 13-1</span>
+                    <h2 class="section-title">ログインユーザーの取得</h2>
+                </div>
+                <div class="intro-text">
+                    <p><strong>@AuthenticationPrincipal</strong>を使って、ログイン中のユーザー情報を取得します。</p>
+                </div>
+
+                <div class="module-list">
+                    <div class="module-item"><div class="module-icon">👤</div><div class="module-content"><h4>@AuthenticationPrincipal</h4><p>認証済みユーザー情報をコントローラーで受け取る</p></div></div>
+                    <div class="module-item"><div class="module-icon">🔑</div><div class="module-content"><h4>SecurityContextHolder</h4><p>現在の認証情報を保持するコンテキスト</p></div></div>
+                </div>
+
+                <div class="code-block" id="controller-user">
+                    <div class="code-header">
+                        <span class="code-title">TodoController.java</span>
+                        <button class="download-btn" onclick="downloadCode('controller-user', 'TodoController_user.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+
+@Controller
+@RequestMapping("/todo")
+public class TodoController {
+
+    /**
+     * 一覧表示（自分のToDoのみ）
+     */
+    @GetMapping
+    public String index(@AuthenticationPrincipal UserDetails userDetails,
+                        Model model) {
+
+        // ログインユーザー名を取得
+        String username = userDetails.getUsername();
+
+        // ユーザーのToDoのみ取得
+        List&lt;Todo&gt; todoList = todoService.findByUsername(username);
+
+        model.addAttribute("todoList", todoList);
+        model.addAttribute("username", username);
+
+        return "todo/index";
+    }
+
+    /**
+     * 新規登録（ユーザー情報付き）
+     */
+    @PostMapping("/create")
+    public String create(@AuthenticationPrincipal UserDetails userDetails,
+                         @Valid @ModelAttribute Todo todo,
+                         BindingResult result) {
+
+        if (result.hasErrors()) {
+            return "todo/new";
+        }
+
+        // 作成者を設定
+        todo.setAuthor(userDetails.getUsername());
+        todoService.save(todo);
+
+        return "redirect:/todo";
+    }
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 13-2</span>
+                    <h2 class="section-title">ユーザーIDでToDoを絞り込み</h2>
+                </div>
+
+                <div class="code-block" id="todo-entity-user">
+                    <div class="code-header">
+                        <span class="code-title">Todo.java（ユーザーID追加）</span>
+                        <button class="download-btn" onclick="downloadCode('todo-entity-user', 'Todo_user.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>public class Todo {
+    private Integer id;
+    private String title;
+    private String detail;
+    private String author;
+    private Integer userId;  // 追加: ユーザーID
+    private LocalDateTime createdAt;
+
+    // getter/setter
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="mapper-user">
+                    <div class="code-header">
+                        <span class="code-title">TodoMapper.xml</span>
+                        <button class="download-btn" onclick="downloadCode('mapper-user', 'TodoMapper_user.xml')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>&lt;select id="findByUserId" resultType="Todo"&gt;
+    SELECT * FROM todo
+    WHERE user_id = #{userId}
+    ORDER BY created_at DESC
+&lt;/select&gt;
+
+&lt;select id="findByUsername" resultType="Todo"&gt;
+    SELECT t.* FROM todo t
+    INNER JOIN users u ON t.user_id = u.id
+    WHERE u.username = #{username}
+    ORDER BY t.created_at DESC
+&lt;/select&gt;
+
+&lt;insert id="insert" useGeneratedKeys="true" keyProperty="id"&gt;
+    INSERT INTO todo (title, detail, author, user_id, created_at)
+    VALUES (#{title}, #{detail}, #{author}, #{userId}, NOW())
+&lt;/insert&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="schema-user-todo">
+                    <div class="code-header">
+                        <span class="code-title">schema.sql（外部キー追加）</span>
+                        <button class="download-btn" onclick="downloadCode('schema-user-todo', 'schema_user_todo.sql')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>ALTER TABLE todo ADD user_id INT;
+ALTER TABLE todo ADD FOREIGN KEY (user_id) REFERENCES users(id);</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 13-3</span>
+                    <h2 class="section-title">Thymeleafでユーザー情報表示</h2>
+                </div>
+
+                <div class="code-block" id="thymeleaf-security">
+                    <div class="code-header">
+                        <span class="code-title">index.html（ユーザー情報表示）</span>
+                        <button class="download-btn" onclick="downloadCode('thymeleaf-security', 'index_security.html')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"&gt;
+&lt;head&gt;
+    &lt;title&gt;ToDo一覧&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;header&gt;
+        &lt;!-- ログイン中のユーザー名を表示 --&gt;
+        &lt;span sec:authentication="name"&gt;&lt;/span&gt;さん、こんにちは！
+
+        &lt;!-- 認証済みの場合のみ表示 --&gt;
+        &lt;div sec:authorize="isAuthenticated()"&gt;
+            &lt;form th:action="@{/logout}" method="post"&gt;
+                &lt;button type="submit"&gt;ログアウト&lt;/button&gt;
+            &lt;/form&gt;
+        &lt;/div&gt;
+    &lt;/header&gt;
+
+    &lt;h1&gt;あなたのToDoリスト&lt;/h1&gt;
+    &lt;p&gt;&lt;span th:text="${#lists.size(todoList)}"&gt;&lt;/span&gt;件のToDoがあります&lt;/p&gt;
+
+    &lt;!-- ToDo一覧 --&gt;
+    &lt;table&gt;
+        &lt;tr th:each="todo : ${todoList}"&gt;
+            &lt;td th:text="${todo.title}"&gt;&lt;/td&gt;
+            &lt;td th:text="${todo.author}"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                    </div>
+                </div>
+
+                <h3>Thymeleaf Security拡張</h3>
+                <table class="data-table">
+                    <thead><tr><th>記述</th><th>説明</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>sec:authentication="name"</code></td><td>ログインユーザー名を表示</td></tr>
+                        <tr><td><code>sec:authorize="isAuthenticated()"</code></td><td>認証済みの場合のみ表示</td></tr>
+                        <tr><td><code>sec:authorize="hasRole('ADMIN')"</code></td><td>ADMIN権限の場合のみ表示</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="info-box">
+                    <div class="info-box-header"><span class="info-box-icon">💡</span><span class="info-box-title">セキュリティのベストプラクティス</span></div>
+                    <p>他のユーザーのToDoにアクセスできないよう、必ずサーバー側でもユーザーIDのチェックを行いましょう。<br>URLの直接入力による不正アクセスを防ぐことができます。</p>
+                </div>
+            </section>
+        </div>
+
+        <footer class="footer"><p>Spring Framework 入門チュートリアル - 上級レベル</p></footer>
+
+        <div class="page-nav">
+            <a href="12_login.html" class="page-nav-btn prev"><span>←</span><div><div class="page-nav-label">前の機能</div><div class="page-nav-title">ログイン認証</div></div></a>
+            <a href="14_role.html" class="page-nav-btn next"><div><div class="page-nav-label">次の機能</div><div class="page-nav-title">ロール別権限制御</div></div><span>→</span></a>
+        </div>
+
+        <script>
+            function toggleMenu() { document.querySelector(".nav-toggle").classList.toggle("active"); document.querySelector(".nav-menu").classList.toggle("active"); }
+            function downloadCode(id, filename) { const el = document.getElementById(id); const code = el.querySelector('code') || el.querySelector('pre'); const blob = new Blob([code.textContent], {type:'text/plain;charset=utf-8'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url); }
+        </script>
+    </body>
+</html>

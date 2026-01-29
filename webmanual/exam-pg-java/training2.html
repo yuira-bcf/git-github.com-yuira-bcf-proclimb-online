@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>教材：じゃんけん（継承版）※abstract/interface/ポリモーフィズムなし</title>
+  <style>
+    :root{
+      --bg:#ffffff; --panel:#f8fafc; --text:#1f2937; --muted:#6b7280;
+      --accent:#2563eb; --border:#e5e7eb; --codebg:#f3f4f6; --good:#059669; --warn:#d97706;
+    }
+    body{ margin:0; font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic",sans-serif;
+      background:linear-gradient(180deg,var(--bg),#f3f4f6); color:var(--text); line-height:1.7; }
+    header{ padding:26px 18px; border-bottom:1px solid var(--border);
+      background:rgba(255,255,255,0.9); backdrop-filter:blur(6px); position:sticky; top:0; z-index:10; }
+    header h1{ font-size:18px; margin:0 0 6px 0; letter-spacing:.02em; }
+    header p{ margin:0; color:var(--muted); font-size:13px; }
+    main{ max-width:980px; margin:0 auto; padding:20px 18px 60px; }
+    nav{ margin:16px 0 22px; display:flex; flex-wrap:wrap; gap:10px; }
+    nav a{ color:var(--text); text-decoration:none; border:1px solid var(--border);
+      padding:8px 10px; border-radius:10px; background:#ffffff; font-size:13px; }
+    nav a:hover{ border-color:rgba(96,165,250,0.7); box-shadow:0 0 0 3px rgba(96,165,250,0.15); }
+    section{ background:#ffffff; border:1px solid var(--border); border-radius:14px;
+      padding:18px 16px; margin:14px 0; }
+    section h2{ margin:0 0 10px 0; font-size:16px; }
+    h3{ margin:14px 0 8px; font-size:14px; }
+    .badge{ display:inline-block; font-size:12px; padding:3px 8px; border-radius:999px; border:1px solid var(--border);
+      color:var(--muted); margin-left:8px; vertical-align:middle; }
+    ul,ol{ margin:10px 0 0 18px; }
+    li{ margin:6px 0; }
+    .callout{ border-left:4px solid var(--accent); padding:10px 12px; background:#eff6ff;
+      border-radius:10px; margin:12px 0; }
+    .callout small{ color:var(--muted); }
+    pre{ margin:12px 0 0; padding:12px 12px; border-radius:12px; overflow:auto;
+      background:var(--codebg); border:1px solid var(--border); }
+    code{ font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+      font-size:12.5px; color:#111827; }
+    .meta{ color:var(--muted); font-size:13px; }
+    .ok{ color:var(--good); font-weight:700; }
+    .warn{ color:var(--warn); font-weight:700; }
+    footer{ max-width:980px; margin:0 auto; padding:18px; color:var(--muted); font-size:12px; }
+  </style>
+</head>
+
+<body>
+<header>
+  <h1>教材：じゃんけん（継承版）<span class="badge">abstractなし</span><span class="badge">interfaceなし</span><span class="badge">ポリモーフィズムなし</span></h1>
+  <p>「extends（継承）」だけを使って共通部分をまとめる練習。振る舞い差し替え（オーバーライド）はしない。</p>
+</header>
+
+<main>
+  <nav>
+    <a href="#overview">アプリ概要</a>
+    <a href="#howto">コーディングの進め方</a>
+    <a href="#impl">実装用ソース</a>
+    <a href="#answer">回答プログラム</a>
+    <a href="#explain">プログラム解説</a>
+  </nav>
+
+  <section id="overview">
+    <h2>アプリ概要 <span class="badge">コンソール</span></h2>
+    <p>
+      標準入力で <strong>G/C/P/Q</strong> を受け取り、CPUとじゃんけんを行います。<br />
+      今回は「継承（extends）」を導入し、<strong>共通の情報（名前・手の表示）</strong>を親クラスにまとめます。
+    </p>
+
+    <ul>
+      <li><strong>入力</strong>：G=グー / C=チョキ / P=パー / Q=終了</li>
+      <li><strong>手の表現</strong>：int（0=グー / 1=チョキ / 2=パー）</li>
+      <li><strong>CPU</strong>：Randomで0〜2を生成</li>
+      <li><strong>勝敗</strong>：勝ち / 負け / 引き分け を表示</li>
+    </ul>
+
+    <div class="callout">
+      <div><span class="ok">今回の縛り（授業ルール）</span></div>
+      <ul>
+        <li>abstractクラスを使わない</li>
+        <li>interfaceを使わない</li>
+        <li>ポリモーフィズム（オーバーライドで振る舞いを差し替える設計）を使わない</li>
+      </ul>
+      <small>※Javaの言語仕様としての「動的ディスパッチ」という意味で語り出すと授業が終わるので、ここでは「オーバーライドを使わない」＝ポリモーフィズムなし、として扱います。</small>
+    </div>
+
+    <p class="meta">
+      クラス構成（最小）：<br />
+      親：Player（名前・表示用メソッド）<br />
+      子：HumanPlayer（入力で手を決める） / CpuPlayer（乱数で手を決める）
+    </p>
+  </section>
+
+  <section id="howto">
+    <h2>コーディングの進め方</h2>
+
+    <ol>
+      <li><strong>Main.java</strong> を作成し、下の「実装用ソース（穴埋め版）」を貼り付ける。</li>
+      <li><strong>Player → HumanPlayer → CpuPlayer → Main</strong> の順にTODOを埋める（依存関係が楽）。</li>
+      <li>2〜3個TODOを埋めたら <span class="warn">毎回コンパイル</span>（エラーが次の作業を教えてくれる）。</li>
+      <li>動いたら入力チェック：空入力 / 小文字入力（g/c/p）/ 不正入力（x）/ Q終了</li>
+    </ol>
+
+    <div class="callout">
+      <div><strong>この回の「学びどころ」</strong></div>
+      <ul>
+        <li>親クラスに「共通」を置く（name / getName / handLabel）</li>
+        <li>子クラスに「違い」を置く（入力で決める / 乱数で決める）</li>
+        <li>オーバーライドしない（＝差し替えない）。extendsは “共有” のために使う</li>
+      </ul>
+      <small>「extends は最強のコピペ」ではありません。最強の地雷にもなるので、まずは共有だけで使います。</small>
+    </div>
+
+    <p class="meta">
+      実行（例）：<br />
+      <code>javac Main.java</code><br />
+      <code>java Main</code>
+    </p>
+  </section>
+
+  <section id="impl">
+    <h2>実装用ソース（生徒用：穴埋め版）</h2>
+    <p class="meta">
+      ここは「答え（完成コード）」を載せない版です。コメントの指示に従って実装してください。<br />
+      ※未完成なので、このままでは正しく動きません（ダミーreturnがあります）。
+    </p>
+
+<pre><code>// Main.java（継承版：穴埋め）
+import java.util.Random;
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        // =========================================================
+        // 1) 準備
+        // =========================================================
+        // TODO: Scanner を作成（標準入力）
+        // TODO: Random を作成（CPUの手）
+        //
+        // TODO: HumanPlayer you を作成
+        //   ・名前は "あなた"
+        //   ・scanner を渡す
+        //
+        // TODO: CpuPlayer cpu を作成
+        //   ・名前は "CPU"
+        //   ・random を渡す
+
+
+        // =========================================================
+        // 2) 案内表示
+        // =========================================================
+        // TODO: タイトル表示（例：=== じゃんけん（継承版）===）
+        // TODO: 入力説明（G/C/P/Q）
+        // TODO: 空行
+
+
+        // =========================================================
+        // 3) メインループ
+        // =========================================================
+        // TODO: while(true) 開始
+        //
+        //   TODO: you.readCommand() で入力を1文字（String）として受け取る
+        //         例：G / C / P / Q （小文字でもOKにする）
+        //
+        //   TODO: cmdStr が "Q" の場合、終了メッセージを出して break
+        //
+        //   TODO: you.commandToHand(cmdStr) で int youHand を得る（0/1/2）
+        //         もし -1 が返ったら「不正入力」を表示して continue
+        //
+        //   TODO: cpu.nextHand() で int cpuHand を得る（0/1/2）
+        //
+        //   TODO: you.getName() と you.handLabel(youHand) を使って表示
+        //   TODO: cpu.getName() と cpu.handLabel(cpuHand) を使って表示
+        //
+        //   TODO: 勝敗判定
+        //     ・youHand == cpuHand → 引き分け
+        //     ・勝ちの3条件：
+        //         (youHand==0 &amp;&amp; cpuHand==1) OR
+        //         (youHand==1 &amp;&amp; cpuHand==2) OR
+        //         (youHand==2 &amp;&amp; cpuHand==0)
+        //     ・それ以外 → 負け
+        //
+        //   TODO: 空行
+        //
+        // TODO: while(true) 終了
+
+
+        // =========================================================
+        // 4) 後片付け
+        // =========================================================
+        // TODO: scanner.close()
+
+    }
+}
+
+// =========================================================
+// 親クラス：Player（abstract禁止なので「普通のクラス」で作る）
+// =========================================================
+class Player {
+
+    // TODO: String name フィールド（private final 推奨）
+
+    // TODO: コンストラクタ Player(String name)
+    //   ・this.name = name;
+
+    // TODO: getName() を作る（Stringを返す）
+
+    // TODO: handLabel(int hand) を作る（Stringを返す）
+    //   ・0→"グー" / 1→"チョキ" / 2→"パー"
+    //   ・それ以外は "?" を返す
+
+    // --- ダミー（コンパイル用）※必ず置き換える ---
+    public String getName() { return ""; }
+    public String handLabel(int hand) { return ""; }
+}
+
+// =========================================================
+// 子クラス：HumanPlayer（入力で手を決める）
+// =========================================================
+class HumanPlayer extends Player {
+
+    // TODO: Scanner scanner フィールド（private final）
+
+    // TODO: コンストラクタ HumanPlayer(String name, Scanner scanner)
+    //   ・super(name)
+    //   ・this.scanner = scanner
+
+    // TODO: readCommand() を作る（Stringを返す）
+    //   ・プロンプト表示：あなたの手を入力してください：
+    //   ・scanner.nextLine() で行を読む
+    //   ・空なら「入力がありません。」を表示してやり直し（whileでループ）
+    //   ・先頭1文字だけ取り出し（substring(0,1)）
+    //   ・大文字化（toUpperCase）
+    //   ・返す
+
+    // TODO: commandToHand(String cmdStr) を作る（intを返す）
+    //   ・"G"→0 / "C"→1 / "P"→2 / それ以外→-1
+
+    // --- ダミー（コンパイル用）※必ず置き換える ---
+    public HumanPlayer(String name, Scanner scanner) { super(name); }
+    public String readCommand() { return ""; }
+    public int commandToHand(String cmdStr) { return -1; }
+}
+
+// =========================================================
+// 子クラス：CpuPlayer（乱数で手を決める）
+// =========================================================
+class CpuPlayer extends Player {
+
+    // TODO: Random random フィールド（private final）
+
+    // TODO: コンストラクタ CpuPlayer(String name, Random random)
+    //   ・super(name)
+    //   ・this.random = random
+
+    // TODO: nextHand() を作る（intを返す）
+    //   ・random.nextInt(3) を返す（0〜2）
+
+    // --- ダミー（コンパイル用）※必ず置き換える ---
+    public CpuPlayer(String name, Random random) { super(name); }
+    public int nextHand() { return 0; }
+}</code></pre>
+  </section>
+
+  <section id="answer">
+    <h2>回答プログラム（完成版）</h2>
+    <p class="meta">下記が完成版です。答え合わせに使用してください。</p>
+
+<pre><code>// Main.java（継承版：完成）
+import java.util.Random;
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
+
+        HumanPlayer you = new HumanPlayer("あなた", scanner);
+        CpuPlayer cpu = new CpuPlayer("CPU", random);
+
+        System.out.println("=== じゃんけん（継承版）===");
+        System.out.println("入力：G=グー / C=チョキ / P=パー / Q=終了");
+        System.out.println();
+
+        while (true) {
+
+            String cmdStr = you.readCommand();
+
+            if (cmdStr.equals("Q")) {
+                System.out.println("ゲームを終了します。");
+                break;
+            }
+
+            int youHand = you.commandToHand(cmdStr);
+            if (youHand == -1) {
+                System.out.println("不正な入力です。G/C/P/Q のいずれかを入力してください。");
+                continue;
+            }
+
+            int cpuHand = cpu.nextHand();
+
+            System.out.println(you.getName() + "： " + you.handLabel(youHand));
+            System.out.println(cpu.getName() + "： " + cpu.handLabel(cpuHand));
+
+            if (youHand == cpuHand) {
+                System.out.println("結果：引き分け");
+            } else if (
+                    (youHand == 0 &amp;&amp; cpuHand == 1) ||
+                    (youHand == 1 &amp;&amp; cpuHand == 2) ||
+                    (youHand == 2 &amp;&amp; cpuHand == 0)
+            ) {
+                System.out.println("結果：勝ち");
+            } else {
+                System.out.println("結果：負け");
+            }
+
+            System.out.println();
+        }
+
+        scanner.close();
+    }
+}
+
+class Player {
+    private final String name;
+
+    public Player(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String handLabel(int hand) {
+        if (hand == 0) return "グー";
+        if (hand == 1) return "チョキ";
+        if (hand == 2) return "パー";
+        return "?";
+    }
+}
+
+class HumanPlayer extends Player {
+    private final Scanner scanner;
+
+    public HumanPlayer(String name, Scanner scanner) {
+        super(name);
+        this.scanner = scanner;
+    }
+
+    public String readCommand() {
+        while (true) {
+            System.out.print("あなたの手を入力してください：");
+            String input = scanner.nextLine();
+
+            if (input == null || input.length() == 0) {
+                System.out.println("入力がありません。");
+                continue;
+            }
+
+            String cmdStr = input.substring(0, 1);
+            cmdStr = cmdStr.toUpperCase();
+            return cmdStr;
+        }
+    }
+
+    public int commandToHand(String cmdStr) {
+        if (cmdStr.equals("G")) return 0;
+        if (cmdStr.equals("C")) return 1;
+        if (cmdStr.equals("P")) return 2;
+        return -1;
+    }
+}
+
+class CpuPlayer extends Player {
+    private final Random random;
+
+    public CpuPlayer(String name, Random random) {
+        super(name);
+        this.random = random;
+    }
+
+    public int nextHand() {
+        return random.nextInt(3);
+    }
+}</code></pre>
+  </section>
+
+  <section id="explain">
+    <h2>プログラム解説</h2>
+
+    <h3>1) 継承（extends）で「共通」を親クラスへ</h3>
+    <p>
+      <strong>Player</strong> は親クラスです。全プレイヤーに共通するもの（名前・表示用メソッド）だけを持ちます。
+    </p>
+    <ul>
+      <li><code>name</code>（プレイヤー名）</li>
+      <li><code>getName()</code>（名前の取得）</li>
+      <li><code>handLabel(int)</code>（0/1/2 → グー/チョキ/パー）</li>
+    </ul>
+
+    <h3>2) 子クラスは「違い」だけを持つ</h3>
+    <p>
+      <strong>HumanPlayer</strong> と <strong>CpuPlayer</strong> は Player を継承します。
+      それぞれ「手をどう決めるか」が違うので、そこだけを子クラス側に置きます。
+    </p>
+    <ul>
+      <li>HumanPlayer：入力（Scanner）で決める → <code>readCommand()</code>, <code>commandToHand()</code></li>
+      <li>CpuPlayer：乱数（Random）で決める → <code>nextHand()</code></li>
+    </ul>
+
+    <h3>3) なぜ「ポリモーフィズムなし」になるのか</h3>
+    <div class="callout">
+      <div><span class="ok">この教材では、次をやらない方針です：</span></div>
+      <ul>
+        <li>オーバーライド（親メソッドを子で上書き）しない</li>
+        <li>親型（Player）で受けて、同じメソッド呼び出しで挙動を変える設計にしない</li>
+      </ul>
+      <small>つまり「extends は“共通の共有”のためだけに使う」段階です。</small>
+    </div>
+
+    <h3>4) 次のステップ案（授業の流れとして自然）</h3>
+    <ul>
+      <li>この継承版を理解したあとに、<strong>abstract</strong> を導入して「共通の型」を強制する</li>
+      <li><strong>interface</strong> を導入して「入力方法の差し替え」を可能にする</li>
+      <li>そこで初めて <strong>ポリモーフィズム</strong>（同じ呼び出しで振る舞いが変わる）を扱う</li>
+    </ul>
+
+    <p class="meta">
+      ここまでできれば「継承は便利だが、使い方を間違えると地獄」までセットで教えられます。
+      便利さだけ教えると、あとで必ず爆発します（経験則です。爆発物処理班は呼ばないでください）。
+    </p>
+  </section>
+</main>
+
+<footer>
+  <div>© 教材用テンプレート（じゃんけん：継承版）</div>
+  <div>※このページは授業用に「理解しやすさ優先」で作っています。</div>
+</footer>
+</body>
+</html>

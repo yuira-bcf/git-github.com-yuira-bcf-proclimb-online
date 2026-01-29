@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HTML / CSS レイアウト解説（教科書用）＋練習問題10題（解答例つき）</title>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --text:#111;
+      --muted:#555;
+      --line:#e6e6e6;
+      --card:#fafafa;
+      --code:#0b1020;
+      --codeText:#e8e8e8;
+      --accent:#1a73e8;
+      --accent2:#0f9d58;
+      --warn:#b00020;
+      --radius:14px;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.75;
+    }
+    header{
+      position: sticky;
+      top: 0;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(8px);
+      border-bottom:1px solid var(--line);
+      z-index: 10;
+    }
+    .container{
+      max-width: 1024px;
+      margin: 0 auto;
+      padding: 18px 18px;
+    }
+    .title{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      padding: 8px 0 4px;
+    }
+    .title h1{
+      margin:0;
+      font-size: 22px;
+      letter-spacing: .02em;
+    }
+    .title p{
+      margin:0;
+      color:var(--muted);
+      font-size: 14px;
+    }
+    nav.toc{
+      margin-top: 10px;
+      border-top:1px dashed var(--line);
+      padding-top: 12px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px 14px;
+      font-size: 14px;
+    }
+    nav.toc a{
+      color: var(--accent);
+      text-decoration: none;
+      padding: 6px 10px;
+      border:1px solid var(--line);
+      border-radius: 999px;
+      background:#fff;
+    }
+    nav.toc a:hover{ border-color: var(--accent); }
+
+    main{ padding: 22px 0 60px; }
+    section{
+      margin: 18px 0 26px;
+      padding: 18px;
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+    section h2{
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+    section h3{
+      margin: 18px 0 8px;
+      font-size: 16px;
+    }
+    .lead{
+      color: var(--muted);
+      margin: 0 0 10px;
+    }
+    ul, ol{ margin: 8px 0 8px 1.1em; }
+    li{ margin: 4px 0; }
+    .note{
+      background: var(--card);
+      border:1px solid var(--line);
+      border-left: 4px solid var(--accent);
+      padding: 12px 12px;
+      border-radius: 12px;
+      margin: 12px 0;
+      color: var(--muted);
+    }
+    .warn{
+      background: #fff5f5;
+      border:1px solid #ffd7d7;
+      border-left: 4px solid var(--warn);
+      padding: 12px 12px;
+      border-radius: 12px;
+      margin: 12px 0;
+      color: #7a0012;
+    }
+    code, pre{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Noto Sans Mono", "Courier New", monospace;
+    }
+    pre{
+      background: var(--code);
+      color: var(--codeText);
+      padding: 14px 14px;
+      border-radius: 12px;
+      overflow:auto;
+      margin: 10px 0;
+      border: 1px solid #222a44;
+    }
+    .pillrow{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin: 8px 0 0;
+    }
+    .pill{
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border:1px solid var(--line);
+      background:#fff;
+      color: var(--muted);
+    }
+    .pill.good{ border-color: #cfead8; background:#f3fbf6; color:#0b5d2a; }
+    .pill.main{ border-color: #d6e6ff; background:#f4f8ff; color:#0b3b8a; }
+    .grid2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 780px){
+      .grid2{ grid-template-columns: 1fr; }
+    }
+    .q{
+      background: #fff;
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin: 14px 0;
+    }
+    .q h3{
+      margin: 0 0 6px;
+      font-size: 16px;
+    }
+    .q .meta{
+      color: var(--muted);
+      font-size: 13px;
+      margin: 0 0 10px;
+    }
+    .q h4{
+      margin: 12px 0 6px;
+      font-size: 14px;
+    }
+    .q ul{ margin-left: 1.1em; }
+    details{
+      margin-top: 10px;
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+      background: #fff;
+      padding: 10px;
+    }
+    summary{
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--accent2);
+      outline: none;
+    }
+    .answer-note{
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    footer{
+      border-top:1px solid var(--line);
+      color: var(--muted);
+      padding: 18px 0;
+      font-size: 13px;
+    }
+    a.anchor{
+      color:inherit;
+      text-decoration:none;
+      border-bottom: 1px dotted var(--line);
+    }
+
+    /* ここから下は「解答例の動作確認用」の最低限デザイン（課題の本質ではありません） */
+    .demo-box{ border:1px solid var(--line); border-radius:12px; padding:12px; background:#fff; margin-top:10px; }
+    .demo-title{ font-size:13px; color:var(--muted); margin:0 0 8px; }
+
+    /* 問1 デモ */
+    .demo-menu{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:16px;
+      height:56px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:#fff;
+    }
+    .demo-menu a{ text-decoration:none; color:#000; padding:6px 8px; border-radius:8px; }
+    .demo-menu a:hover{ outline: 1px solid var(--line); }
+
+    /* 問2 デモ */
+    .demo-card-list{
+      display:flex;
+      flex-wrap:wrap;
+      gap:16px;
+      max-width:960px;
+      margin:0 auto;
+    }
+    .demo-card{
+      width:240px;
+      padding:16px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:#fff;
+      min-height:80px;
+    }
+
+    /* 問3 + 問9 デモ（同じ骨格を使える） */
+    .demo-layout{
+      display:grid;
+      grid-template-columns:240px 1fr;
+      grid-template-rows:auto 1fr auto;
+      grid-template-areas:
+        "header header"
+        "sidebar main"
+        "footer footer";
+      gap:16px;
+      min-height:240px; /* 本来は 100vh が要件ですが、教材ページ内デモのため縮めています */
+    }
+    .demo-header{ grid-area:header; }
+    .demo-sidebar{ grid-area:sidebar; }
+    .demo-main{ grid-area:main; }
+    .demo-footer{ grid-area:footer; }
+    .demo-area{
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:12px;
+      background:#fff;
+    }
+
+    /* 問4 デモ */
+    .demo-gallery{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap:12px;
+    }
+    .demo-item{
+      height:120px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    /* 問5 デモ */
+    .demo-center-flex{
+      width:400px;
+      height:300px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background:#fff;
+    }
+    .demo-center-grid{
+      width:400px;
+      height:300px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      display:grid;
+      place-items:center;
+      background:#fff;
+    }
+    .demo-target{
+      width:120px;
+      height:80px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--muted);
+      font-size:13px;
+      background:#fff;
+    }
+
+    /* 問6 デモ */
+    .demo-badge-card{
+      width:280px;
+      padding:16px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      position:relative;
+      background:#fff;
+    }
+    .demo-badge{
+      position:absolute;
+      top:8px;
+      right:8px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:4px 10px;
+      font-size:12px;
+      background:#fff;
+    }
+
+    /* 問7 デモ（sticky はページ全体スクロールが必要なので、デモはコードのみ提示） */
+
+    /* 問8 デモ */
+    .demo-article{
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:12px;
+      background:#fff;
+    }
+    .demo-figure{
+      float:left;
+      width:160px;
+      height:120px;
+      margin:0 16px 16px 0;
+      border:1px solid var(--line);
+      border-radius:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--muted);
+      font-size:13px;
+      background:#fff;
+    }
+    .demo-next-title{
+      clear:both;
+      margin-top:10px;
+      padding-top:10px;
+      border-top:1px dashed var(--line);
+      font-size:14px;
+    }
+
+    /* 問10 デモ（container query は対応ブラウザの差があるため、コードのみ提示） */
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="title">
+      <h1>HTML / CSS レイアウト解説（教科書用）＋練習問題10題（解答例つき）</h1>
+      <p>各問題に「解答例（HTML / CSS）」を <code>&lt;details&gt;</code> で追加しています。</p>
+    </div>
+
+    <nav class="toc" aria-label="目次">
+      <a href="#problems">練習問題10題</a>
+      <a href="#answers-note">解答例の使い方</a>
+      <a href="#q1">問1</a>
+      <a href="#q2">問2</a>
+      <a href="#q3">問3</a>
+      <a href="#q4">問4</a>
+      <a href="#q5">問5</a>
+      <a href="#q6">問6</a>
+      <a href="#q7">問7</a>
+      <a href="#q8">問8</a>
+      <a href="#q9">問9</a>
+      <a href="#q10">問10</a>
+      <a href="htmllayout.html">レイアウト概論</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+
+  <section id="problems">
+    <h2>練習問題：レイアウトに関連する 10 題（解答例つき）</h2>
+    <p class="lead" id="answers-note">
+      解答例は「必ずこの書き方でなければならない」という意味ではありません。<br />
+      ただし、各問題の「制約」を満たすように、意図が伝わりやすい書き方で統一しています。
+    </p>
+
+    <div class="note">
+      <strong>共通ルール（全問題）</strong>
+      <ul>
+        <li>長さの単位はピクセル（px）を使用してください。</li>
+        <li>CSS は可能であればクラス名で指定してください（学習と管理のため）。</li>
+        <li>Flexbox / Grid の問題では、すき間の指定は <code>gap</code> を優先してください。</li>
+      </ul>
+    </div>
+
+    <!-- Q1 -->
+    <div class="q" id="q1">
+      <h3><a class="anchor" href="#q1">問1：Flexboxで横並びメニューを作成</a></h3>
+      <p class="meta">目的：Flexbox による横並び、左右中央揃え、上下中央揃え、gap の使用</p>
+
+      <h4>問題</h4>
+      <p>ページ上部に、リンクが横一列に並ぶメニューを作成してください。</p>
+
+      <h4>要件</h4>
+      <ul>
+        <li>HTML 構造：<code>nav.menu</code> の中に <code>a</code> 要素を 4 個入れてください。</li>
+        <li><code>.menu</code> の高さは 56 ピクセルにしてください。</li>
+        <li>リンクは横一列、間隔は 16 ピクセルにしてください。</li>
+        <li>メニュー全体を左右中央、リンク文字を上下中央に見えるようにしてください。</li>
+        <li>リンクの下線を消し、文字色を黒にしてください。</li>
+      </ul>
+
+      <h4>制約</h4>
+      <ul>
+        <li><code>.menu</code> に <code>display: flex;</code> を使用してください。</li>
+        <li>間隔は <code>gap</code> を使用してください。</li>
+        <li><code>float</code>、<code>inline-block</code>、<code>text-align</code> による中央寄せは禁止します。</li>
+      </ul>
+
+      <details>
+        <summary>解答例（HTML / CSS）を表示</summary>
+        <pre><code>&lt;!-- HTML --&gt;
+&lt;nav class="menu"&gt;
+  &lt;a href="#"&gt;Home&lt;/a&gt;
+  &lt;a href="#"&gt;News&lt;/a&gt;
+  &lt;a href="#"&gt;About&lt;/a&gt;
+  &lt;a href="#"&gt;Contact&lt;/a&gt;
+&lt;/nav&gt;</code></pre>
+
+        <pre><code>/* CSS */
+.menu{
+  display: flex;
+  justify-content: center; /* 左右方向の中央揃え */
+  align-items: center;     /* 上下方向の中央揃え */
+  gap: 16px;
+  height: 56px;
+}
+
+.menu a{
+  text-decoration: none;
+  color: #000;
+  padding: 6px 8px; /* クリックしやすいように余白を追加 */
+}</code></pre>
+
+        <div class="answer-note">ポイント：左右中央は <code>justify-content</code>、上下中央は <code>align-items</code> で指定します。</div>
+
+        <div class="demo-box">
+          <p class="demo-title">動作イメージ（このページ内デモ）</p>
+          <nav class="demo-menu">
+            <a href="#">Home</a><a href="#">News</a><a href="#">About</a><a href="#">Contact</a>
+          </nav>
+        </div>
+      </details>
+    </div>
+
+    <!-- Q2 -->
+    <div class="q" id="q2">
+      <h3><a class="anchor" href="#q2">問2：Flexboxでカード一覧を作成し、折り返しを行う</a></h3>
+      <p class="meta">目的：flex-wrap と gap、固定幅カードの一覧</p>
+
+      <h4>問題</h4>
+      <p>カードを複数並べ、画面幅が狭いときは次の行へ折り返してください。</p>
+
+      <h4>要件</h4>
+      <ul>
+        <li>親：<code>div.card-list</code>、子：<code>div.card</code> を 10 個</li>
+        <li><code>.card</code> 幅 240px、内側余白 16px、すき間 16px</li>
+        <li><code>.card-list</code> 最大幅 960px、左右中央</li>
+      </ul>
+
+      <h4>制約</h4>
+      <ul>
+        <li><code>display: flex;</code> と <code>flex-wrap: wrap;</code></li>
+        <li>すき間は <code>gap</code></li>
+        <li>Grid は使用禁止</li>
+      </ul>
+
+      <details>
+        <summary>解答例（HTML / CSS）を表示</summary>
+        <pre><code>&lt;!-- HTML --&gt;
+&lt;div class="card-list"&gt;
+  &lt;div class="card"&gt;Card 1&lt;/div&gt;
+  &lt;div class="card"&gt;Card 2&lt;/div&gt;
+  &lt;div class="card"&gt;Card 3&lt;/div&gt;
+  &lt;div class="card"&gt;Card 4&lt;/div&gt;
+  &lt;div class="card"&gt;Card 5&lt;/div&gt;
+  &lt;div class="card"&gt;Card 6&lt;/div&gt;
+  &lt;div class="card"&gt;Card 7&lt;/div&gt;
+  &lt;div class="card"&gt;Card 8&lt;/div&gt;
+  &lt;div class="card"&gt;Card 9&lt;/div&gt;
+  &lt;div class="card"&gt;Card 10&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+        <pre><code>/* CSS */
+.card-list{
+  display: flex;
+  flex-wrap: wrap;  /* 入りきらない場合は次の行へ */
+  gap: 16px;
+  max-width: 960px;
+  margin: 0 auto;   /* 左右中央 */
+}
+
+.card{
+  width: 240px;
+  padding: 16px;
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+}</code></pre>
+
+        <div class="answer-note">ポイント：折り返しは <code>flex-wrap: wrap;</code>、要素間のすき間は <code>gap</code> です。</div>
+
+        <div class="demo-box">
+          <p class="demo-title">動作イメージ（このページ内デモ）</p>
+          <div class="demo-card-list">
+            <div class="demo-card">Card 1</div><div class="demo-card">Card 2</div><div class="demo-card">Card 3</div>
+            <div class="demo-card">Card 4</div><div class="demo-card">Card 5</div><div class="demo-card">Card 6</div>
+            <div class="demo-card">Card 7</div><div class="demo-card">Card 8</div><div class="demo-card">Card 9</div>
+            <div class="demo-card">Card 10</div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Q3 -->
+    <div class="q" id="q3">
+      <h3><a class="anchor" href="#q3">問3：Gridで「ヘッダー・本文・サイドバー・フッター」を配置</a></h3>
+      <p class="meta">目的：grid-template-areas によるページ骨組み</p>
+
+      <h4>問題</h4>
+      <p>ページの基本構成を Grid で作成してください。</p>
+
+      <h4>要件</h4>
+      <ul>
+        <li>親：<code>div.layout</code></li>
+        <li>子：<code>header.header</code>、<code>main.main</code>、<code>aside.sidebar</code>、<code>footer.footer</code></li>
+        <li>769px 以上：ヘッダー全幅 → 左 240px サイド / 右 本文 → フッター全幅</li>
+        <li>すき間 16px、最小高さ 100vh</li>
+      </ul>
+
+      <h4>制約</h4>
+      <ul>
+        <li><code>display: grid;</code></li>
+        <li><code>grid-template-areas</code> を使用</li>
+        <li>position で配置しない</li>
+      </ul>
+
+      <details>
+        <summary>解答例（HTML / CSS）を表示</summary>
+        <pre><code>&lt;!-- HTML --&gt;
+&lt;div class="layout"&gt;
+  &lt;header class="header"&gt;Header&lt;/header&gt;
+  &lt;aside class="sidebar"&gt;Sidebar&lt;/aside&gt;
+  &lt;main class="main"&gt;Main&lt;/main&gt;
+  &lt;footer class="footer"&gt;Footer&lt;/footer&gt;
+&lt;/div&gt;</code></pre>
+
+        <pre><code>/* CSS */
+.layout{
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "header header"
+    "sidebar main"
+    "footer footer";
+  gap: 16px;
+  min-height: 100vh;
+}
+
+.header{ grid-area: header; }
+.sidebar{ grid-area: sidebar; }
+.main{ grid-area: main; }
+.footer{ grid-area: footer; }
+
+/* 見た目確認用（任意） */
+.header, .sidebar, .main, .footer{
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+  padding: 12px;
+}</code></pre>
+
+        <div class="answer-note">ポイント：配置は「名前（areas）」で決めると読みやすく、修正もしやすいです。</div>
+
+        <div class="demo-box">
+          <p class="demo-title">動作イメージ（このページ内デモ）</p>
+          <div class="demo-layout">
+            <div class="demo-area demo-header">Header</div>
+            <div class="demo-area demo-sidebar">Sidebar</div>
+            <div class="demo-area demo-main">Main</div>
+            <div class="demo-area demo-footer">Footer</div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Q4 -->
+    <div class="q" id="q4">
+      <h3><a class="anchor" href="#q4">問4：Gridで自動調整されるギャラリーを作成</a></h3>
+      <p class="meta">目的：repeat(auto-fit, minmax()) による自動列数</p>
+
+      <h4>問題</h4>
+      <p>画面幅に応じて列数が自動で変わる一覧を作成してください。</p>
+
+      <h4>要件</h4>
+      <ul>
+        <li>親：<code>div.gallery</code>、子：<code>div.item</code> を 12 個</li>
+        <li>item 高さ 120px、すき間 12px</li>
+        <li>列：最低 160px、余りは均等に広がる</li>
+      </ul>
+
+      <h4>制約</h4>
+      <ul>
+        <li><code>grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));</code> を使用</li>
+        <li>@media 禁止</li>
+      </ul>
+
+      <details>
+        <summary>解答例（HTML / CSS）を表示</summary>
+        <pre><code>&lt;!-- HTML --&gt;
+&lt;div class="gallery"&gt;
+  &lt;div class="item"&gt;1&lt;/div&gt;
+  &lt;div class="item"&gt;2&lt;/div&gt;
+  &lt;div class="item"&gt;3&lt;/div&gt;
+  &lt;div class="item"&gt;4&lt;/div&gt;
+  &lt;div class="item"&gt;5&lt;/div&gt;
+  &lt;div class="item"&gt;6&lt;/div&gt;
+  &lt;div class="item"&gt;7&lt;/div&gt;
+  &lt;div class="item"&gt;8&lt;/div&gt;
+  &lt;div class="item"&gt;9&lt;/div&gt;
+  &lt;div class="item"&gt;10&lt;/div&gt;
+  &lt;div class="item"&gt;11&lt;/div&gt;
+  &lt;div class="item"&gt;12&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+        <pre><code>/* CSS */
+.gallery{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.item{
+  height: 120px;
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}</code></pre>
+
+        <div class="answer-note">ポイント：列数は固定せず、最小幅 160px を守りながら自動で増減させます。</div>
+
+        <div class="demo-box">
+          <p class="demo-title">動作イメージ（このページ内デモ）</p>
+          <div class="demo-gallery">
+            <div class="demo-item">1</div><div class="demo-item">2</div><div class="demo-item">3</div><div class="demo-item">4</div>
+            <div class="demo-item">5</div><div class="demo-item">6</div><div class="demo-item">7</div><div class="demo-item">8</div>
+            <div class="demo-item">9</div><div class="demo-item">10</div><div class="demo-item">11</div><div class="demo-item">12</div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Q5 -->
+    <div class="q" id="q5">
+      <h3><a class="anchor" href="#q5">問5：上下左右の中央配置を2通りで作成（Flexbox と Grid）</a></h3>
+      <p class="meta">目的：中央配置を 2 つの方法で実装する</p>
+
+      <h4>問題</h4>
+      <p>親要素の中央に子要素を上下左右とも中央配置してください。実装方法は 2 通り示してください。</p>
+
+      <h4>要件</h4>
+      <ul>
+        <li>.container：幅 400px、高さ 300px</li>
+        <li>.target：幅 120px、高さ 80px</li>
+        <li>中央配置（上下左右）</li>
+      </ul>
+
+      <h4>制約</h4>
+      <ul>
+        <li>方法1：Flexbox（display: flex）</li>
+        <li>方法2：Grid（display: grid）</li>
+        <li>absolute + transform 禁止</li>
+      </ul>
+
+      <details>
+        <summary>解答例（HTML / CSS）を表示</summary>
+        <pre><code>&lt;!-- HTML（方法1：Flexbox） --&gt;
+&lt;div class="container flex-center"&gt;
+  &lt;div class="target"&gt;Target&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- HTML（方法2：Grid） --&gt;
+&lt;div class="container grid-center"&gt;
+  &lt;div class="target"&gt;Target&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+        <pre><code>/* CSS（共通） */
+.container{
+  width: 400px;
+  height: 300px;
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+}
+
+.target{
+  width: 120px;
+  height: 80px;
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 方法1：Flexbox */
+.flex-center{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 方法2：Grid */
+.grid-center{
+  display: grid;
+  place-items: center; /* 上下左右の中央 */
+}</code></pre>
+
+        <div class="answer-note">ポイント：Grid の <code>place-items: center;</code> は「上下左右の中央」を一行で表現できます。</div>
+
+        <div class="demo-box">
+          <p class="demo-title">動作イメージ（このページ内デモ）</p>
+          <div class="grid2">
+            <div>
+              <p class="demo-title">Flexbox</p>
+              <div class="demo-center-flex"><div class="demo-target">Target</div></div>
+            </div>
+            <div>
+              <p class="demo-title">Grid</p>
+              <div class="demo-center-grid"><div class="demo-target">Target</div></div>
+            </div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Q6 -->
+    <div class="q" id="q6">
+      <h3><a class="anchor" href="#q6">問6：絶対位置指定で右上バッジを重ねる</a></h3>
+      <p class="meta">目的：relative を基準に absolute で配置する</p>
+
+      <h4>問題</h4>
+      <p>カードの右上に「NEW」と書かれたバッジを重ねて表示してください。</p>
+
+      <h4>要件</h4>
+      <ul>
+        <li>.card：幅 280px、内側余白 16px</li>
+        <li>.badge：上 8px、右 8px</li>
+        <li>はみ出し禁止</li>
+      </ul>
+
+      <h4>制約</h4>
+      <ul>
+        <li>.card に position: relative</li>
+        <li>.badge に position: absolute + top/right</li>
+        <li>float 禁止</li>
+      </ul>
+
+      <details>
+        <summary>解答例（HTML / CSS）を表示</summary>
+        <pre><code>&lt;!-- HTML --&gt;
+&lt;div class="card"&gt;
+  &lt;span class="badge"&gt;NEW&lt;/span&gt;
+  &lt;h4&gt;カードのタイトル&lt;/h4&gt;
+  &lt;p&gt;カードの本文です。&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+
+        <pre><code>/* CSS */
+.card{
+  width: 280px;
+  padding: 16px;
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+  position: relative; /* ここが基準になります */
+}
+
+.badge{
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 12px;
+  padding: 4px 10px;
+  border: 1px solid #e6e6e6;
+  border-radius: 999px;
+}</code></pre>
+
+        <div class="answer-note">ポイント：absolute は「最も近い relative の親」を基準に配置されます。</div>
+
+        <div class="demo-box">
+          <p class="demo-title">動作イメージ（このページ内デモ）</p>
+          <div class="demo-badge-card">
+            <span class="demo-badge">NEW</span>
+            <strong>カードのタイトル</strong>
+            <div style="color:#555;font-size:13px;">カードの本文です。</div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Q7 -->
+    <div class="q" id="q7">
+      <h3><a class="anchor" href="#q7">問7：position: sticky で見出しを吸着させる</a></h3>
+      <p class="meta">目的：sticky の基本（top / 背景 / z-index）と、効かない条件の理解</p>
+
+      <h4>問題</h4>
+      <p>スクロール中に見出しが画面上端へ吸着する見た目を作成してください。</p>
+
+      <h4>要件</h4>
+      <ul>
+        <li>section を 3 つ以上</li>
+        <li>各 section の先頭に h2.section-title</li>
+        <li>top: 0 で吸着</li>
+        <li>背景色と z-index を指定</li>
+      </ul>
+
+      <h4>制約</h4>
+      <ul>
+        <li>position: sticky を使用</li>
+        <li>position: fixed 禁止</li>
+        <li>追加課題：sticky が動作しない原因を 2 つ説明</li>
+      </ul>
+
+      <details>
+        <summary>解答例（HTML / CSS）を表示</summary>
+        <pre><code>&lt;!-- HTML --&gt;
+&lt;section class="sec"&gt;
+  &lt;h2 class="section-title"&gt;第1章&lt;/h2&gt;
+  &lt;p&gt;...長い本文...&lt;/p&gt;
+&lt;/section&gt;
+
+&lt;section class="sec"&gt;
+  &lt;h2 class="section-title"&gt;第2章&lt;/h2&gt;
+  &lt;p&gt;...長い本文...&lt;/p&gt;
+&lt;/section&gt;
+
+&lt;section class="sec"&gt;
+  &lt;h2 class="section-title"&gt;第3章&lt;/h2&gt;
+  &lt;p&gt;...長い本文...&lt;/p&gt;
+&lt;/section&gt;</code></pre>
+
+        <pre><code>/* CSS */
+.section-title{
+  position: sticky;
+  top: 0;               /* 吸着位置を指定 */
+  background: #fff;     /* 本文の上に重なっても読めるように */
+  z-index: 1;           /* 本文より前面に */
+  margin: 0;
+  padding: 10px 8px;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+/* 追加課題（文章例）
+原因1：top を指定していない（sticky の吸着位置が決まらない）
+原因2：親要素に overflow: hidden / auto などがあり、sticky の基準やスクロール範囲に影響する場合がある
+*/</code></pre>
+
+        <div class="answer-note">
+          ポイント：sticky は「固定（fixed）」ではなく「ある位置に来たら吸着」する挙動です。必ず <code>top</code> を指定します。
+        </div>
+      </details>
+    </div>
+
+    <!-- Q8 -->
+    <div class="q" id="q8">
+      <h3><a class="anchor" href="#q8">問8：float で文章の回り込みを作成し、解除する</a></h3>
+      <p class="meta">目的：float の回り込みと clear による解除</p>
+
+      <h4>問題</h4>
+      <p>画像の代わりの箱の周囲に文章が回り込む見た目を作り、次の見出しでは回り込みを解除してください。</p>
+
+      <h4>要件</h4>
+      <ul>
+        <li>.figure：幅 160px、高さ 120px、右と下の外側余白 16px</li>
+        <li>figure を左に寄せ、文章を回り込ませる</li>
+        <li>next-title は回り込まず下から表示</li>
+      </ul>
+
+      <h4>制約</h4>
+      <ul>
+        <li>float: left を使用</li>
+        <li>解除に clear: both を使用</li>
+        <li>Flexbox / Grid で回り込み再現は禁止</li>
+      </ul>
+
+      <details>
+        <summary>解答例（HTML / CSS）を表示</summary>
+        <pre><code>&lt;!-- HTML --&gt;
+&lt;div class="article"&gt;
+  &lt;div class="figure"&gt;図&lt;/div&gt;
+  &lt;p&gt;
+    ここに長い文章を入れます。図の右側に文章が回り込みます。
+    回り込みが分かるように、ある程度の長さにしてください。
+  &lt;/p&gt;
+&lt;/div&gt;
+
+&lt;h2 class="next-title"&gt;次の見出し（回り込み解除）&lt;/h2&gt;</code></pre>
+
+        <pre><code>/* CSS */
+.figure{
+  float: left;
+  width: 160px;
+  height: 120px;
+  margin: 0 16px 16px 0; /* 右と下に余白 */
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+}
+
+.next-title{
+  clear: both; /* 回り込み解除 */
+}</code></pre>
+
+        <div class="answer-note">ポイント：回り込みは float、解除は clear です。目的がはっきりしているのが float の良い点です。</div>
+
+        <div class="demo-box">
+          <p class="demo-title">動作イメージ（このページ内デモ）</p>
+          <div class="demo-article">
+            <div class="demo-figure">図</div>
+            <p style="margin:0;color:#555;font-size:13px;">
+              ここに長い文章を入れます。図の右側に文章が回り込みます。回り込みが分かるように、
+              文章を少し長くしています。文章が図の右側へ回り込み、図の下に来ると通常の幅で続きます。
+            </p>
+            <h2 class="demo-next-title">次の見出し（回り込み解除）</h2>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Q9 -->
+    <div class="q" id="q9">
+      <h3><a class="anchor" href="#q9">問9：メディアクエリで2列→1列に切り替える（Gridで実装）</a></h3>
+      <p class="meta">目的：Grid と @media によるレスポンシブ切り替え</p>
+
+      <h4>問題</h4>
+      <p>画面幅によって 2 列レイアウトと 1 列レイアウトを切り替えてください。</p>
+
+      <h4>要件</h4>
+      <ul>
+        <li>769px 以上：2列（左 240px サイド、右 本文）</li>
+        <li>768px 以下：1列（header → main → aside → footer）</li>
+        <li>すき間 16px</li>
+      </ul>
+
+      <h4>制約</h4>
+      <ul>
+        <li>@media(max-width: 768px) を使用</li>
+        <li>HTML の並び順は変更しない</li>
+        <li>ページ骨格を Flexbox だけで作らない（Grid の練習）</li>
+      </ul>
+
+      <details>
+        <summary>解答例（HTML / CSS）を表示</summary>
+        <pre><code>&lt;!-- HTML --&gt;
+&lt;div class="layout"&gt;
+  &lt;header class="header"&gt;Header&lt;/header&gt;
+  &lt;main class="main"&gt;Main&lt;/main&gt;
+  &lt;aside class="sidebar"&gt;Sidebar&lt;/aside&gt;
+  &lt;footer class="footer"&gt;Footer&lt;/footer&gt;
+&lt;/div&gt;</code></pre>
+
+        <pre><code>/* CSS（769px以上の基本形：2列） */
+.layout{
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "header header"
+    "sidebar main"
+    "footer footer";
+  gap: 16px;
+  min-height: 100vh;
+}
+
+.header{ grid-area: header; }
+.main{ grid-area: main; }
+.sidebar{ grid-area: sidebar; }
+.footer{ grid-area: footer; }
+
+/* CSS（768px以下：1列に切り替え） */
+@media (max-width: 768px){
+  .layout{
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+    grid-template-areas:
+      "header"
+      "main"
+      "sidebar"
+      "footer";
+  }
+}</code></pre>
+
+        <div class="answer-note">
+          ポイント：HTML の順序は変えず、CSS の <code>grid-template-areas</code> を切り替えて見た目の並びを変えます。
+        </div>
+      </details>
+    </div>
+
+    <!-- Q10 -->
+    <div class="q" id="q10">
+      <h3><a class="anchor" href="#q10">問10：コンテナクエリで部品の幅に応じてレイアウトを変える</a></h3>
+      <p class="meta">目的：画面幅ではなく「親要素の幅」でレイアウトを切り替える</p>
+
+      <h4>問題</h4>
+      <p>同じカード部品を、置かれた場所（親要素）の幅に応じて横並び・縦並びに切り替えてください。</p>
+
+      <h4>要件</h4>
+      <ul>
+        <li>親：wrap-wide（幅 600px）と wrap-narrow（幅 320px）を用意</li>
+        <li>各親の中に同じ profile-card（photo + text）を置く</li>
+        <li>親の幅が 500px 以上：横並び（photo 幅 160px）</li>
+        <li>親の幅が 499px 以下：縦並び（photo 幅 100%）</li>
+      </ul>
+
+      <h4>制約</h4>
+      <ul>
+        <li>container-type と @container を使用</li>
+        <li>@media 禁止</li>
+        <li>JavaScript 禁止</li>
+      </ul>
+
+      <details>
+        <summary>解答例（HTML / CSS）を表示</summary>
+        <pre><code>&lt;!-- HTML --&gt;
+&lt;div class="wrap-wide"&gt;
+  &lt;div class="profile-card"&gt;
+    &lt;div class="photo"&gt;Photo&lt;/div&gt;
+    &lt;div class="text"&gt;
+      &lt;strong&gt;氏名&lt;/strong&gt;
+      &lt;p&gt;紹介文が入ります。&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="wrap-narrow"&gt;
+  &lt;div class="profile-card"&gt;
+    &lt;div class="photo"&gt;Photo&lt;/div&gt;
+    &lt;div class="text"&gt;
+      &lt;strong&gt;氏名&lt;/strong&gt;
+      &lt;p&gt;紹介文が入ります。&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+        <pre><code>/* CSS */
+.wrap-wide{ width: 600px; border: 1px solid #e6e6e6; border-radius: 12px; padding: 12px; }
+.wrap-narrow{ width: 320px; border: 1px solid #e6e6e6; border-radius: 12px; padding: 12px; margin-top: 12px; }
+
+/* 親要素（切り替え基準）をコンテナとして宣言します */
+.wrap-wide, .wrap-narrow{
+  container-type: inline-size;
+}
+
+/* profile-card の基本（まずは縦並びにしておくと切り替えが理解しやすいです） */
+.profile-card{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.photo{
+  width: 100%;
+  height: 120px;
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 親要素の幅が 500px 以上のときだけ横並びに変更します */
+@container (min-width: 500px){
+  .profile-card{
+    flex-direction: row;
+    align-items: center;
+  }
+  .photo{
+    width: 160px;
+    flex: 0 0 160px; /* 160px を固定 */
+  }
+}</code></pre>
+
+        <div class="answer-note">
+          ポイント：切り替えの条件は「画面幅」ではなく「親要素の幅」です。そのため、@media ではなく @container を使います。
+        </div>
+      </details>
+    </div>
+
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <div>教材メモ：授業では、まず問1〜問4（Flexbox / Grid の基礎）→ 問5（中央寄せ）→ 問6（absolute）→ 問7（sticky）→ 問8（float）→ 問9（レスポンシブ）→ 問10（コンテナクエリ）という順が理解しやすいです。</div>
+  </div>
+</footer>
+
+</body>
+</html>

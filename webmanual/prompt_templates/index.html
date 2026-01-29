@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>プロンプトテンプレート一覧</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <div class="title">Prompt Templates</div>
+        <div class="subtitle">Web掲載用HTML（一覧・ナビ付き）</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <a class="btn" href="index.html">🏠 一覧</a>
+      <a class="btn" href="prompt_templates_web.zip" download>📦 テンプレZIP</a>
+      <a class="btn" href="prompt_templates_web_pack.zip" download>🧾 Markdown版ZIP</a>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" aria-label="テンプレート ナビゲーション">
+    <div class="side-head">テンプレート一覧</div>
+    <ul>
+      <li><a class="active" href="index.html">🏠 一覧（Index）</a></li>
+<li><a class="" href="PROMPT_00_BASELINE.html">00 基本ルール固定（Baseline）</a></li>
+<li><a class="" href="PROMPT_01_SCOPE.html">01 目的・範囲の確定（Scope）</a></li>
+<li><a class="" href="PROMPT_02_REQUIREMENTS.html">02 要件定義（Requirements）</a></li>
+<li><a class="" href="PROMPT_03_ASSUMPTIONS.html">03 仮定と未決定事項の固定（Assumptions）</a></li>
+<li><a class="" href="PROMPT_04_DESIGN.html">04 設計（Design）</a></li>
+<li><a class="" href="PROMPT_05_IMPLEMENTATION.html">05 実装生成（Implementation）</a></li>
+<li><a class="" href="PROMPT_06_VERIFICATION.html">06 検証（Verification）</a></li>
+<li><a class="" href="PROMPT_07_REVIEW.html">07 レビューと改善（Review）</a></li>
+<li><a class="" href="PROMPT_08_CHANGE_CONTROL.html">08 変更管理（Change Control）</a></li>
+<li><a class="" href="PROMPT_09_ASSETIZATION.html">09 資産化（Assetization）</a></li>
+    </ul>
+  </nav>
+
+  <div class="content-wrap">
+    <main class="content">
+      <h1>プロンプトテンプレート一覧</h1>
+
+<blockquote>
+  <p>🌐 <strong>Web掲載用</strong>：TOP<br />
+  下の表から順番に進めて、プロンプトプログラミングを学びましょう。</p>
+</blockquote>
+
+<hr />
+
+<h2>ダウンロード</h2>
+
+<ul>
+<li>📦 テンプレ一式（ZIP）：<a href="prompt_templates_web.zip"><code>prompt_templates_web.zip</code></a></li>
+</ul>
+
+<hr />
+
+<h2>使い方（最短）</h2>
+
+<ol>
+<li><strong><code>PROMPT_00_BASELINE</code></strong> で「禁止事項・制約・出力形式」を固定  </li>
+<li><strong><code>PROMPT_01_SCOPE</code></strong> で「作る/作らない」を確定  </li>
+<li><strong><code>PROMPT_02_REQUIREMENTS</code></strong> で受入条件まで落とす  </li>
+<li><strong><code>PROMPT_03_ASSUMPTIONS</code></strong> で“未確定”と“仮定”を分離（勝手補完を殺す）  </li>
+<li><strong><code>PROMPT_04_DESIGN</code></strong> → <strong><code>05_IMPLEMENTATION</code></strong> で設計→実装  </li>
+<li><strong><code>PROMPT_06_VERIFICATION</code></strong> → <strong><code>07_REVIEW</code></strong> で検証→改善  </li>
+<li>修正は <strong><code>PROMPT_08_CHANGE_CONTROL</code></strong>（差分・理由・影響範囲）  </li>
+<li>最後に <strong><code>PROMPT_09_ASSETIZATION</code></strong> で資産化</li>
+</ol>
+
+<hr />
+
+<h2>テンプレ一覧（Phase順）</h2>
+
+<table>
+<thead>
+<tr>
+  <th style="text-align:right;">Phase</th>
+  <th>テンプレ</th>
+  <th>名前</th>
+  <th>目的</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:right;">1</td>
+  <td><a href="PROMPT_00_BASELINE.html"><code>PROMPT_00_BASELINE</code></a></td>
+  <td>基本ルール固定（Baseline）</td>
+  <td>以後の全工程に適用する“ルール・制約・出力形式”を固定する</td>
+</tr>
+<tr>
+  <td style="text-align:right;">2</td>
+  <td><a href="PROMPT_01_SCOPE.html"><code>PROMPT_01_SCOPE</code></a></td>
+  <td>目的・範囲の確定（Scope）</td>
+  <td>何を作る/作らない（in/out）を確定する</td>
+</tr>
+<tr>
+  <td style="text-align:right;">3</td>
+  <td><a href="PROMPT_02_REQUIREMENTS.html"><code>PROMPT_02_REQUIREMENTS</code></a></td>
+  <td>要件定義（Requirements）</td>
+  <td>機能/非機能/入出力/受入条件をテスト可能な粒度で固める</td>
+</tr>
+<tr>
+  <td style="text-align:right;">4</td>
+  <td><a href="PROMPT_03_ASSUMPTIONS.html"><code>PROMPT_03_ASSUMPTIONS</code></a></td>
+  <td>仮定と未決定事項の固定（Assumptions）</td>
+  <td>仕様の空白を“仮定/未決定”として分離し、勝手補完を防ぐ</td>
+</tr>
+<tr>
+  <td style="text-align:right;">5</td>
+  <td><a href="PROMPT_04_DESIGN.html"><code>PROMPT_04_DESIGN</code></a></td>
+  <td>設計（Design）</td>
+  <td>責務分割・データ構造・処理フローを固めてから実装に入る</td>
+</tr>
+<tr>
+  <td style="text-align:right;">6</td>
+  <td><a href="PROMPT_05_IMPLEMENTATION.html"><code>PROMPT_05_IMPLEMENTATION</code></a></td>
+  <td>実装生成（Implementation）</td>
+  <td>設計に沿ったコード一式をファイル単位で生成する</td>
+</tr>
+<tr>
+  <td style="text-align:right;">7</td>
+  <td><a href="PROMPT_06_VERIFICATION.html"><code>PROMPT_06_VERIFICATION</code></a></td>
+  <td>検証（Verification）</td>
+  <td>受入条件を満たすか確認できるテスト観点・手順・ケースを作る</td>
+</tr>
+<tr>
+  <td style="text-align:right;">8</td>
+  <td><a href="PROMPT_07_REVIEW.html"><code>PROMPT_07_REVIEW</code></a></td>
+  <td>レビューと改善（Review）</td>
+  <td>仕様ズレ/入力/例外/保守性の穴を洗い出し、Change Requestに落とす</td>
+</tr>
+<tr>
+  <td style="text-align:right;">9</td>
+  <td><a href="PROMPT_08_CHANGE_CONTROL.html"><code>PROMPT_08_CHANGE_CONTROL</code></a></td>
+  <td>変更管理（Change Control）</td>
+  <td>差分・理由・影響範囲・再テストを揃えて安全に改修する</td>
+</tr>
+<tr>
+  <td style="text-align:right;">10</td>
+  <td><a href="PROMPT_09_ASSETIZATION.html"><code>PROMPT_09_ASSETIZATION</code></a></td>
+  <td>資産化（Assetization）</td>
+  <td>再現可能な“開発資産”としてプロンプト・成果物を保存する</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h2>コツ（地味に効くやつ）</h2>
+
+<ul>
+<li><strong>「不明点は推測しない」</strong> を守る（AIの推測はだいたい“それっぽい事故”になる）  </li>
+<li><strong>受入条件を先に決める</strong>（後から決めると、だいたい地獄）  </li>
+<li>修正依頼は「直して」ではなく <strong>Before/After</strong>（人間もAIもこれで平和になる）</li>
+</ul>
+
+    </main>
+  </div>
+</div>
+
+<footer>
+  <div>Generated: 2026-01-13 / Local static HTML.（※中身はあなたのテンプレートをHTML化しただけ。AIが勝手に仕様を追加してません）</div>
+</footer>
+</body>
+</html>

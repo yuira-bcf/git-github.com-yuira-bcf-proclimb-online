@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>中級9 期限日と期限切れ警告</title>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="../style.css" />
+        <style>
+            .download-btn { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-left: auto; }
+            .code-header { display: flex; align-items: center; justify-content: space-between; }
+            .level-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; background: #fef9c3; color: #854d0e; margin-right: 8px; }
+            .deadline-expired { color: #dc2626; font-weight: bold; }
+            .deadline-soon { color: #f59e0b; font-weight: bold; }
+            .deadline-ok { color: #22c55e; }
+        </style>
+    </head>
+    <body>
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="../1spring-framework-tutorial.html" class="nav-logo"><span class="nav-logo-icon">🌱</span><span>Spring入門</span></a>
+                <button class="nav-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 中級レベル</div>
+                    <ul class="nav-list">
+                        <li class="nav-item"><a href="06_pagination.html" class="nav-link"><span class="nav-chapter-num">6</span><span>ページネーション</span></a></li>
+                        <li class="nav-item"><a href="07_priority.html" class="nav-link"><span class="nav-chapter-num">7</span><span>優先度設定</span></a></li>
+                        <li class="nav-item"><a href="08_category.html" class="nav-link"><span class="nav-chapter-num">8</span><span>カテゴリ/タグ機能</span></a></li>
+                        <li class="nav-item"><a href="09_deadline.html" class="nav-link active"><span class="nav-chapter-num">9</span><span>期限日と期限切れ警告</span></a></li>
+                        <li class="nav-item"><a href="10_bulk_delete.html" class="nav-link"><span class="nav-chapter-num">10</span><span>一括削除機能</span></a></li>
+                        <li class="nav-item"><a href="11_csv_export.html" class="nav-link"><span class="nav-chapter-num">11</span><span>CSVエクスポート</span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <header class="chapter-header">
+                <div class="chapter-badge"><span class="level-badge">中級</span>📘 Intermediate</div>
+                <div class="chapter-number">9</div>
+                <h1 class="chapter-title">期限日と期限切れ警告</h1>
+            </header>
+
+            <nav class="toc">
+                <h2 class="toc-title">📑 この章の内容</h2>
+                <ul class="toc-list">
+                    <li class="toc-item"><span class="toc-number">9-1</span><span>期限日カラムの追加</span></li>
+                    <li class="toc-item"><span class="toc-number">9-2</span><span>日付入力フォーム</span></li>
+                    <li class="toc-item"><span class="toc-number">9-3</span><span>期限切れ警告の表示</span></li>
+                </ul>
+            </nav>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 9-1</span>
+                    <h2 class="section-title">期限日カラムの追加</h2>
+                </div>
+                <div class="intro-text">
+                    <p>ToDoに<strong>期限日</strong>を設定し、期限切れや期限間近を警告表示します。</p>
+                </div>
+                <h3>完成イメージ</h3>
+                <div style="margin: 1rem 0;">
+                    <p><span class="deadline-expired">⚠️ 期限切れ: 2024/01/10</span></p>
+                    <p><span class="deadline-soon">⏰ あと2日: 2024/01/20</span></p>
+                    <p><span class="deadline-ok">📅 2024/02/15</span></p>
+                </div>
+
+                <div class="code-block" id="schema-deadline">
+                    <div class="code-header">
+                        <span class="code-title">schema.sql</span>
+                        <button class="download-btn" onclick="downloadCode('schema-deadline', 'schema_deadline.sql')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>ALTER TABLE todo ADD deadline DATE;</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="entity-deadline">
+                    <div class="code-header">
+                        <span class="code-title">Todo.java（期限日追加）</span>
+                        <button class="download-btn" onclick="downloadCode('entity-deadline', 'Todo_deadline.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+
+private LocalDate deadline;
+
+public LocalDate getDeadline() {
+    return deadline;
+}
+
+public void setDeadline(LocalDate deadline) {
+    this.deadline = deadline;
+}
+
+// 期限切れ判定
+public boolean isExpired() {
+    return deadline != null && deadline.isBefore(LocalDate.now());
+}
+
+// 期限間近判定（3日以内）
+public boolean isDeadlineSoon() {
+    if (deadline == null) return false;
+    long days = ChronoUnit.DAYS.between(LocalDate.now(), deadline);
+    return days >= 0 && days <= 3;
+}
+
+// 残り日数取得
+public long getDaysUntilDeadline() {
+    if (deadline == null) return Long.MAX_VALUE;
+    return ChronoUnit.DAYS.between(LocalDate.now(), deadline);
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 9-2</span>
+                    <h2 class="section-title">日付入力フォーム</h2>
+                </div>
+                <div class="code-block" id="form-deadline">
+                    <div class="code-header">
+                        <span class="code-title">edit.html（日付入力）</span>
+                        <button class="download-btn" onclick="downloadCode('form-deadline', 'edit_deadline.html')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>&lt;tr&gt;
+    &lt;th&gt;&lt;label for="deadline"&gt;期限日&lt;/label&gt;&lt;/th&gt;
+    &lt;td&gt;
+        &lt;input type="date" id="deadline" th:field="*{deadline}"
+               th:min="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}"&gt;
+    &lt;/td&gt;
+&lt;/tr&gt;</code></pre>
+                    </div>
+                </div>
+                <div class="info-box">
+                    <div class="info-box-header"><span class="info-box-icon">💡</span><span class="info-box-title">min属性</span></div>
+                    <p><code>min</code>属性で今日以降の日付のみ選択可能にできます。</p>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 9-3</span>
+                    <h2 class="section-title">期限切れ警告の表示</h2>
+                </div>
+                <div class="code-block" id="display-deadline">
+                    <div class="code-header">
+                        <span class="code-title">index.html（期限表示）</span>
+                        <button class="download-btn" onclick="downloadCode('display-deadline', 'index_deadline.html')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>&lt;td th:if="${todo.deadline != null}"&gt;
+    &lt;!-- 期限切れ --&gt;
+    &lt;span th:if="${todo.expired}" class="deadline-expired"&gt;
+        ⚠️ 期限切れ: &lt;span th:text="${#temporals.format(todo.deadline, 'yyyy/MM/dd')}"&gt;&lt;/span&gt;
+    &lt;/span&gt;
+    &lt;!-- 期限間近 --&gt;
+    &lt;span th:if="${!todo.expired and todo.deadlineSoon}" class="deadline-soon"&gt;
+        ⏰ あと&lt;span th:text="${todo.daysUntilDeadline}"&gt;&lt;/span&gt;日:
+        &lt;span th:text="${#temporals.format(todo.deadline, 'yyyy/MM/dd')}"&gt;&lt;/span&gt;
+    &lt;/span&gt;
+    &lt;!-- 通常 --&gt;
+    &lt;span th:if="${!todo.expired and !todo.deadlineSoon}" class="deadline-ok"&gt;
+        📅 &lt;span th:text="${#temporals.format(todo.deadline, 'yyyy/MM/dd')}"&gt;&lt;/span&gt;
+    &lt;/span&gt;
+&lt;/td&gt;
+&lt;td th:unless="${todo.deadline != null}"&gt;-&lt;/td&gt;
+
+&lt;style&gt;
+.deadline-expired { color: #dc2626; font-weight: bold; }
+.deadline-soon { color: #f59e0b; font-weight: bold; }
+.deadline-ok { color: #22c55e; }
+&lt;/style&gt;</code></pre>
+                    </div>
+                </div>
+
+                <h3>Thymeleaf日付フォーマット</h3>
+                <table class="data-table">
+                    <thead><tr><th>記述</th><th>説明</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>#temporals.format(date, 'yyyy/MM/dd')</code></td><td>日付をフォーマット</td></tr>
+                        <tr><td><code>#temporals.createNow()</code></td><td>現在日時を取得</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+
+        <footer class="footer"><p>Spring Framework 入門チュートリアル - 中級レベル</p></footer>
+
+        <div class="page-nav">
+            <a href="08_category.html" class="page-nav-btn prev"><span>←</span><div><div class="page-nav-label">前の機能</div><div class="page-nav-title">カテゴリ/タグ機能</div></div></a>
+            <a href="10_bulk_delete.html" class="page-nav-btn next"><div><div class="page-nav-label">次の機能</div><div class="page-nav-title">一括削除機能</div></div><span>→</span></a>
+        </div>
+
+        <script>
+            function toggleMenu() { document.querySelector(".nav-toggle").classList.toggle("active"); document.querySelector(".nav-menu").classList.toggle("active"); }
+            function downloadCode(id, filename) { const el = document.getElementById(id); const code = el.querySelector('code') || el.querySelector('pre'); const blob = new Blob([code.textContent], {type:'text/plain;charset=utf-8'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url); }
+        </script>
+    </body>
+</html>

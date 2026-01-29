@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spring Boot 入門資料：DI（依存性注入）とコンポーネントスキャン</title>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --panel:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --accent:#2563eb;
+      --accent2:#7c3aed;
+      --good:#16a34a;
+      --warn:#d97706;
+      --bad:#dc2626;
+
+      --codebg:#0b1220;
+      --codeborder:#111827;
+
+      --shadow: 0 10px 25px rgba(0,0,0,.08);
+      --radius: 16px;
+    }
+
+    *{ box-sizing: border-box; }
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+      line-height: 1.85;
+    }
+
+    .wrap{
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 28px 16px 72px;
+    }
+
+    header{
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, #f8fafc, #ffffff);
+      box-shadow: var(--shadow);
+      padding: 18px 18px 22px;
+    }
+
+    .kicker{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:800;
+      color: var(--accent);
+      letter-spacing: .02em;
+    }
+    .kicker .sq{
+      width: 36px; height: 36px;
+      border-radius: 11px;
+      background:#dbeafe;
+      border:1px solid #bfdbfe;
+      display:grid; place-items:center;
+      font-weight:900;
+    }
+
+    h1{
+      margin: 10px 0 6px;
+      font-size: 26px;
+      line-height: 1.35;
+    }
+
+    .lead{
+      margin:0;
+      color: var(--muted);
+      font-size: 14.5px;
+    }
+
+    nav{
+      margin-top: 14px;
+      border-top: 1px dashed #cbd5e1;
+      padding-top: 14px;
+    }
+    .toc{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin:0;
+      padding:0;
+      list-style:none;
+    }
+    .toc a{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      text-decoration:none;
+      color: var(--text);
+      border:1px solid var(--border);
+      background:#fff;
+      padding: 6px 10px;
+      border-radius: 999px;
+      box-shadow: 0 6px 14px rgba(0,0,0,.06);
+      font-size: 13px;
+    }
+    .toc a:hover{ border-color:#cbd5e1; }
+    .dot{
+      width: 8px; height: 8px; border-radius:999px;
+      background:#93c5fd;
+      border:1px solid #bfdbfe;
+    }
+
+    main{
+      margin-top: 18px;
+      display:grid;
+      gap: 16px;
+    }
+
+    section{
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    h2{
+      margin: 0 0 10px;
+      font-size: 18px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .pill{
+      font-size: 12px;
+      padding: 2px 10px;
+      border-radius: 999px;
+      border:1px solid var(--border);
+      color: var(--muted);
+      background:#f9fafb;
+      font-weight:700;
+    }
+
+    .grid2{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    @media (min-width: 980px){
+      .grid2{ grid-template-columns: 1.05fr .95fr; }
+    }
+
+    .muted{ color: var(--muted); }
+    .term{
+      display:inline-block;
+      padding: 0 6px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background:#f9fafb;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.95em;
+    }
+
+    .note{
+      margin-top: 12px;
+      padding: 12px;
+      border-left: 4px solid #bfdbfe;
+      background: #eff6ff;
+      border-radius: 10px;
+      color:#1f2937;
+      font-size: 14px;
+    }
+    .warn{
+      border-left-color:#fed7aa;
+      background:#fff7ed;
+    }
+    .danger{
+      border-left-color:#fecaca;
+      background:#fef2f2;
+    }
+
+    ul{ margin: 10px 0 0; padding-left: 20px; }
+    li{ margin: 6px 0; }
+
+    /* Code */
+    pre{
+      margin: 12px 0 0;
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid var(--codeborder);
+      background: var(--codebg);
+      color:#e5e7eb;
+      overflow:auto;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    pre code{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+
+    /* Diagrams */
+    .diagram{
+      margin-top: 10px;
+      padding: 14px;
+      border: 1px dashed #cbd5e1;
+      border-radius: 14px;
+      background:#f8fafc;
+    }
+    .diagram-title{
+      font-weight: 900;
+      margin-bottom: 10px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .diagram-title .chip{
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border:1px solid #e2e8f0;
+      background:#fff;
+      color: var(--muted);
+      font-weight:800;
+    }
+
+    .flow{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .node{
+      border:1px solid var(--border);
+      background:#fff;
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 0 8px 18px rgba(0,0,0,.06);
+    }
+    .node .t{
+      font-weight: 900;
+      margin-bottom: 4px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap:10px;
+      font-size: 14px;
+    }
+    .node .d{ margin:0; color: var(--muted); font-size: 13px; }
+
+    .tag{
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border:1px solid var(--border);
+      background:#f9fafb;
+      color: var(--muted);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .node.blue{ border-color:#bfdbfe; }
+    .node.blue .t{ color: var(--accent); }
+    .node.purple{ border-color:#ddd6fe; }
+    .node.purple .t{ color: var(--accent2); }
+    .node.green{ border-color:#bbf7d0; }
+    .node.green .t{ color: var(--good); }
+
+    .arrow{
+      height: 18px;
+      position: relative;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .02em;
+    }
+    .arrow::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:0;
+      width:2px;
+      height:18px;
+      background:#cbd5e1;
+      transform: translateX(-50%);
+    }
+    .arrow::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      bottom:-2px;
+      width:10px;
+      height:10px;
+      border-right:2px solid #cbd5e1;
+      border-bottom:2px solid #cbd5e1;
+      transform: translateX(-50%) rotate(45deg);
+    }
+
+    /* Side-by-side (Before/After) */
+    .split{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 760px){
+      .split{ grid-template-columns: 1fr 1fr; }
+    }
+    .card{
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background:#fff;
+      box-shadow: 0 8px 18px rgba(0,0,0,.06);
+      padding: 12px;
+    }
+    .card h3{
+      margin: 0 0 10px;
+      font-size: 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .status{
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border:1px solid var(--border);
+      background:#f9fafb;
+      color: var(--muted);
+      font-weight:900;
+    }
+
+    /* File map */
+    .filemap{
+      display:grid;
+      gap:10px;
+    }
+    @media (min-width: 760px){
+      .filemap{ grid-template-columns: 1fr 40px 1fr; align-items:center; }
+    }
+    .h-arrow{
+      display:none;
+      position:relative;
+      height: 40px;
+    }
+    @media (min-width: 760px){
+      .h-arrow{ display:block; }
+    }
+    .h-arrow::before{
+      content:"";
+      position:absolute;
+      left:4px; right:4px;
+      top:50%;
+      height:2px;
+      background:#cbd5e1;
+      transform: translateY(-50%);
+    }
+    .h-arrow::after{
+      content:"";
+      position:absolute;
+      right:2px;
+      top:50%;
+      width:10px; height:10px;
+      border-right:2px solid #cbd5e1;
+      border-bottom:2px solid #cbd5e1;
+      transform: translateY(-50%) rotate(-45deg);
+    }
+    .h-arrow span{
+      position:absolute;
+      left:50%;
+      top:0;
+      transform: translateX(-50%);
+      font-size: 11px;
+      color: var(--muted);
+      background:#f8fafc;
+      border:1px solid #e2e8f0;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 8px;
+      border:1px solid var(--border);
+      background:#f9fafb;
+      color:#111827;
+    }
+
+    footer{
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 12.5px;
+      text-align:center;
+    }
+
+    @media print{
+      header, section{ box-shadow:none; }
+      .toc a{ box-shadow:none; }
+      body{ background:#fff; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="kicker">
+        <span class="sq">07</span>
+        <span>初学者向けまとめ資料</span>
+      </div>
+      <h1>Spring Boot 概論（DI編）：コンポーネントスキャンと @Autowired</h1>
+      <p class="lead">
+        目的：Spring が「クラスを自動で見つけて」「自動で注入して」「実行時に差し替え可能にする」流れを、最小構成で理解する。
+      </p>
+
+      <nav aria-label="目次">
+        <ul class="toc">
+          <li><a href="#goals"><span class="dot"></span>到達目標</a></li>
+          <li><a href="#files"><span class="dot"></span>登場ファイル</a></li>
+          <li><a href="#terms"><span class="dot"></span>用語</a></li>
+          <li><a href="#how"><span class="dot"></span>Springの動き</a></li>
+          <li><a href="#switch"><span class="dot"></span>切り替え</a></li>
+          <li><a href="#pitfalls"><span class="dot"></span>つまずき</a></li>
+          <li><a href="#ex"><span class="dot"></span>演習</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="grid2">
+      <!-- Left column -->
+      <section id="goals">
+        <h2>到達目標 <span class="pill">このページのゴール</span></h2>
+        <ul>
+          <li><span class="term">@Component</span> が「部品登録の合図」だと説明できる</li>
+          <li><span class="term">@Autowired</span> が「部品を自動で入れてください」の合図だと説明できる</li>
+          <li>「使う側」と「使われる側」を区別できる</li>
+          <li><span class="term">@Component</span> の付け替えで実装を差し替えられる理由を説明できる</li>
+        </ul>
+
+        <div class="note">
+          この資料は <strong>初学者向け</strong>として、いったん「フィールド注入（<span class="term">@Autowired</span> をフィールドに付ける）」で説明します。<br>
+          実務ではコンストラクタ注入が推奨されがちですが、まず仕組みを理解するのが先です。
+        </div>
+      </section>
+
+      <!-- Right column -->
+      <section id="files">
+        <h2>登場ファイル <span class="pill">DIサンプル一式</span></h2>
+        <p class="muted">この教材は次の構成を前提にしています（名前は例）。</p>
+        <ul>
+          <li><strong>Greet.java</strong>：あいさつの「約束」（インターフェース）</li>
+          <li><strong>MorningGreet.java</strong>：朝のあいさつ（実装クラス）</li>
+          <li><strong>EveningGreet.java</strong>：夜のあいさつ（実装クラス）</li>
+          <li><strong>DiSampleApplication.java</strong>：起動クラス（使う側）</li>
+          <li><strong>application.properties</strong>：設定（アプリ名など）</li>
+          <li><strong>DemoApplicationTests.java</strong>：起動確認用テスト（補足）</li>
+        </ul>
+
+        <div class="diagram">
+          <div class="diagram-title">
+            図：ファイル同士の関係
+            <span class="chip">構造</span>
+          </div>
+
+          <div class="filemap">
+            <div class="node blue">
+              <div class="t">DiSampleApplication（使う側） <span class="tag">@Autowired</span></div>
+              <p class="d">Greet 型を必要としている（具体クラスは書かない）</p>
+            </div>
+
+            <div class="h-arrow"><span>注入される</span></div>
+
+            <div class="node green">
+              <div class="t">Morning/Evening（使われる側） <span class="tag">@Component</span></div>
+              <p class="d">Greet を実装し、Spring に登録される「部品」</p>
+            </div>
+          </div>
+
+          <div class="note warn" style="margin-top:10px;">
+            <strong>重要：</strong>「使う側は <span class="term">Greet</span> 型しか知らない」ため、実装を差し替えやすい設計になります。
+          </div>
+        </div>
+      </section>
+
+      <section id="terms">
+        <h2>用語整理 <span class="pill">最低限だけ</span></h2>
+        <ul>
+          <li><strong>コンポーネントスキャン</strong>：起動時に <span class="term">@Component</span> 付きのクラスを探す処理</li>
+          <li><strong>Bean（ビーン）</strong>：Spring が管理しているインスタンス（部品）</li>
+          <li><strong>DI（依存性注入）</strong>：必要な部品を、Spring が自動で入れる仕組み</li>
+          <li><strong>使う側</strong>：部品を必要とするクラス（<span class="term">@Autowired</span> が登場しやすい）</li>
+          <li><strong>使われる側</strong>：部品として注入されるクラス（<span class="term">@Component</span> が登場しやすい）</li>
+        </ul>
+
+        <div class="note">
+          一言でまとめると、Spring は <strong>「部品を探して、作って、必要な場所に差し込む」</strong> 仕組みです。<br>
+          あなたが <span class="kbd">new</span> を書く機会が減るのは、Spring が仕事を奪っているからではなく、分担しているからです。
+        </div>
+      </section>
+
+      <section id="how">
+        <h2>Spring の動き <span class="pill">起動〜実行まで</span></h2>
+
+        <h3 style="margin:0 0 6px; font-size:15px;">1) 起動時：コンポーネントスキャン</h3>
+        <p class="muted" style="margin:0;">
+          Spring Framework は起動すると、<span class="term">@Component</span> の付いたクラスを探し、見つけたらインスタンスを生成します。
+        </p>
+
+        <div class="diagram">
+          <div class="diagram-title">
+            図1：起動時の処理
+            <span class="chip">SCAN → BEAN</span>
+          </div>
+          <div class="flow">
+            <div class="node blue">
+              <div class="t">Spring 起動 <span class="tag">START</span></div>
+              <p class="d">アプリが起動し、Spring が準備を開始する</p>
+            </div>
+            <div class="arrow">起動時に自動で探す</div>
+            <div class="node purple">
+              <div class="t">@Component を探索 <span class="tag">SCAN</span></div>
+              <p class="d">部品として使うクラスを見つける</p>
+            </div>
+            <div class="arrow">見つかったら</div>
+            <div class="node green">
+              <div class="t">インスタンス生成・登録 <span class="tag">BEAN</span></div>
+              <p class="d">Spring が new して管理する（Bean として登録）</p>
+            </div>
+          </div>
+        </div>
+
+        <h3 style="margin:14px 0 6px; font-size:15px;">2) 注入：@Autowired に従って差し込む</h3>
+        <p class="muted" style="margin:0;">
+          使う側クラスに <span class="term">@Autowired</span> があると、Spring は「必要な部品をここに入れる」と判断します。
+        </p>
+
+        <div class="diagram">
+          <div class="diagram-title">
+            図2：@Autowired による注入
+            <span class="chip">DI</span>
+          </div>
+          <div class="filemap">
+            <div class="node blue">
+              <div class="t">使う側クラス <span class="tag">@Autowired</span></div>
+              <p class="d">例：<span class="term">private Greet greet;</span> を持つ</p>
+            </div>
+            <div class="h-arrow"><span>自動で代入</span></div>
+            <div class="node green">
+              <div class="t">使われる側クラス <span class="tag">@Component</span></div>
+              <p class="d">例：<span class="term">MorningGreet implements Greet</span></p>
+            </div>
+          </div>
+        </div>
+
+        <h3 style="margin:14px 0 6px; font-size:15px;">3) 実行：注入されたクラスのメソッドが動く</h3>
+        <p class="muted" style="margin:0;">
+          実行時、呼ばれる <span class="term">greeting()</span> は「注入された実装クラス」のものになります。
+        </p>
+
+        <pre><code>// 使う側（イメージ）
+@Autowired
+private Greet greet;
+
+public void run() {
+    greet.greeting(); // ← Morning が注入されていれば MorningGreet の greeting が動く
+}</code></pre>
+
+        <div class="note">
+          ここまでの流れが、画像の「07 ソースコードの説明」に書かれている内容の要点です。<br>
+          <strong>起動時に作られて → 注入されて → 実行される</strong>、これだけ押さえればOKです。
+        </div>
+      </section>
+
+      <section id="switch">
+        <h2>仕様変更に強い理由 <span class="pill">Morning → Evening</span></h2>
+        <p class="muted" style="margin:0;">
+          実装を切り替えたいとき、使う側のコードは基本的に触りません。<br>
+          変えるのは「どのクラスを部品として登録するか」＝ <span class="term">@Component</span> の付け替えです。
+        </p>
+
+        <div class="diagram">
+          <div class="diagram-title">
+            図3：切り替え（Before / After）
+            <span class="chip">SWITCH</span>
+          </div>
+
+          <div class="split">
+            <div class="card">
+              <h3>変更前：Morning が動く <span class="status">Before</span></h3>
+              <div class="flow">
+                <div class="node green">
+                  <div class="t">MorningGreet に @Component</div>
+                  <p class="d">Spring が MorningGreet を部品として登録</p>
+                </div>
+                <div class="arrow">注入される</div>
+                <div class="node blue">
+                  <div class="t">Greet フィールドに入る</div>
+                  <p class="d">結果：MorningGreet.greeting() が実行される</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>変更後：Evening が動く <span class="status">After</span></h3>
+              <div class="flow">
+                <div class="node green">
+                  <div class="t">EveningGreet に @Component</div>
+                  <p class="d">Spring が EveningGreet を部品として登録</p>
+                </div>
+                <div class="arrow">注入される</div>
+                <div class="node blue">
+                  <div class="t">Greet フィールドに入る</div>
+                  <p class="d">結果：EveningGreet.greeting() が実行される</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="note warn" style="margin-top:10px;">
+            <strong>教材としての核心：</strong><br>
+            使う側は「<span class="term">Greet</span> 型」だけを見ているため、実装の差し替えに強くなります。
+          </div>
+        </div>
+
+        <div class="note">
+          画像の説明にあった通り、<strong>MorningGreet の <span class="term">@Component</span> を外す（削除/コメントアウト）</strong> → <strong>EveningGreet に <span class="term">@Component</span> を付ける</strong>、で切り替えが成立します。
+        </div>
+      </section>
+
+      <section id="pitfalls">
+        <h2>初学者がつまずくポイント <span class="pill">よくある事故</span></h2>
+
+        <h3 style="margin:0 0 6px; font-size:15px;">1) 候補が2つある（どれを注入する？）</h3>
+        <p class="muted" style="margin:0;">
+          Morning と Evening の両方に <span class="term">@Component</span> を付けると、Spring は注入先を決められません。
+        </p>
+        <div class="note danger">
+          <strong>対策（入門編）：</strong> どちらか一方だけに <span class="term">@Component</span> を付ける。<br>
+          <strong>発展：</strong> <span class="term">@Qualifier</span> で指定する（次の章で扱うのが自然）。
+        </div>
+
+        <h3 style="margin:14px 0 6px; font-size:15px;">2) @Component を付け忘れた（部品が見つからない）</h3>
+        <div class="note warn">
+          <strong>症状：</strong> 注入する部品が見つからず起動時にエラーになる。<br>
+          <strong>対策：</strong> 実装クラスに <span class="term">@Component</span> が付いているか確認する。
+        </div>
+
+        <h3 style="margin:14px 0 6px; font-size:15px;">3) パッケージ配置がズレてスキャンされない</h3>
+        <p class="muted" style="margin:0;">
+          Spring は起動クラス（<span class="term">@SpringBootApplication</span>）のパッケージ配下を中心に探索します。<br>
+          その外側にクラスを置くと、見つからず注入できないことがあります。
+        </p>
+        <div class="note warn">
+          <strong>対策：</strong> 起動クラスと、使う側/使われる側のクラスを同じルート配下に置く。
+        </div>
+
+        <h3 style="margin:14px 0 6px; font-size:15px;">4) application.properties の誤解</h3>
+        <p class="muted" style="margin:0;">
+          <span class="term">spring.application.name</span> はアプリ名で、DI の挙動そのものを変える設定ではありません。
+        </p>
+        <div class="note">
+          「設定が効いていない？」となったら、まずは <span class="term">@Component</span> / <span class="term">@Autowired</span> / パッケージ構成を疑うのが早いです。
+        </div>
+      </section>
+
+      <section id="ex">
+        <h2>演習（理解チェック） <span class="pill">手を動かす</span></h2>
+
+        <h3 style="margin:0 0 6px; font-size:15px;">演習1：Morning / Evening を切り替える</h3>
+        <ol style="margin:10px 0 0; padding-left: 22px;">
+          <li>MorningGreet の <span class="term">@Component</span> を外す（コメントアウトでも可）</li>
+          <li>EveningGreet に <span class="term">@Component</span> を付ける</li>
+          <li>起動して、出力が変わることを確認する</li>
+        </ol>
+
+        <h3 style="margin:14px 0 6px; font-size:15px;">演習2：新しいあいさつを追加する</h3>
+        <ul>
+          <li><span class="term">NoonGreet</span> を追加して <span class="term">implements Greet</span> する</li>
+          <li><span class="term">@Component</span> を付け替えて動作を切り替える</li>
+        </ul>
+
+        <h3 style="margin:14px 0 6px; font-size:15px;">演習3（発展）：候補が複数ある問題を解決する</h3>
+        <ul>
+          <li>Morning と Evening の両方を <span class="term">@Component</span> にする</li>
+          <li>エラーを確認する</li>
+          <li><span class="term">@Qualifier</span> を使って注入先を明示する（次章のテーマ）</li>
+        </ul>
+
+        <div class="note">
+          DI を理解すると、「仕様変更で差し替える」が現実的になります。<br>
+          逆に DI が分からないと、new が増えて改修が地獄になります（経験者談ではなく、構造上そうなる）。
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      Spring Boot 概論（DI編）／初学者向けまとめ資料
+    </footer>
+  </div>
+</body>
+</html>

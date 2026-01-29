@@ -1,0 +1,2180 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>第9章 O/Rマッパー（MyBatis）を知ろう</title>
+
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&family=M+PLUS+Rounded+1c:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <!-- グローバルナビゲーション -->
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="1spring-framework-tutorial.html" class="nav-logo">
+                    <span class="nav-logo-icon">🌱</span>
+                    <span>Spring入門</span>
+                </a>
+                <button class="nav-toggle" onclick="toggleMenu()" aria-label="メニュー">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 章を選択</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="0promptprograming.html" class="nav-link">
+                                <span class="nav-chapter-num">0</span>
+                                <span>プロンプトプログラミング</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="1spring-framework-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">1</span>
+                                <span>Spring Frameworkについて知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="2java_basics.html" class="nav-link">
+                                <span class="nav-chapter-num">2</span>
+                                <span>基礎知識を身に付けよう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="3di-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">3</span>
+                                <span>DIを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="4aop-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">4</span>
+                                <span>AOPを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="5mvc-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">5</span>
+                                <span>MVCを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="6thymeleaf-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">6</span>
+                                <span>Thymeleafを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="7ServerDataSubmission.html" class="nav-link">
+                                <span class="nav-chapter-num">7</span>
+                                <span>サーバーへのデータ送信</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="8Validation_Textbook_Rewrite.html" class="nav-link">
+                                <span class="nav-chapter-num">8</span>
+                                <span>バリデーション</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="9_MyBatis_Tutorial__2_.html" class="nav-link active">
+                                <span class="nav-chapter-num">9</span>
+                                <span>MyBatisチュートリアル</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="10app-preparation-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">10</span>
+                                <span>アプリケーション作成準備</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="11-database-operations.html" class="nav-link">
+                                <span class="nav-chapter-num">11</span>
+                                <span>データベース操作</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="12service-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">12</span>
+                                <span>サービス層</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="13_application_layer.html" class="nav-link">
+                                <span class="nav-chapter-num">13</span>
+                                <span>アプリケーション層</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="14_validation.html" class="nav-link">
+                                <span class="nav-chapter-num">14</span>
+                                <span>バリデーション（応用）</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="15-spring-security-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">15</span>
+                                <span>Spring Security</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <!-- ヘッダー -->
+            <header class="chapter-header">
+                <div class="chapter-badge">📘 Chapter</div>
+                <div class="chapter-number">9</div>
+                <h1 class="chapter-title">O/Rマッパー（MyBatis）を知ろう</h1>
+            </header>
+            <nav class="toc">
+                <h2 class="toc-title">📑 📚 この章で学ぶこと</h2>
+                <ul class="toc-list">
+                    <li class="toc-item">
+                        <a href="#section-9-1"><span class="toc-number">9-1</span>MyBatisについて知ろう</a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#section-9-2"><span class="toc-number">9-2</span>MyBatisを使ってみよう</a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#section-9-3"><span class="toc-number">9-3</span>resultMapについて知ろう</a>
+                    </li>
+                </ul>
+            </nav>
+            <!-- Section 9-1 -->
+            <section class="section" id="section-9-1">
+                <div class="section-header">
+                    <span class="section-number">Section 9-1</span>
+                    <h2 class="section-title">MyBatisについて知ろう</h2>
+                </div>
+                <div class="section-content">
+                    <p>
+                        現在のJavaプログラム開発では、データベースとのアクセス処理に「O/Rマッパー」というフレームワークを使用する開発が多いです。ここではO/Rマッパーについて簡単に説明し、Springと相性が良いO/Rマッパー「MyBatis」を使用してプログラムを作成していきます。
+                    </p>
+
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">9-1-1</span>
+                            <h3 class="subsection-title">O/Rマッパーとは？</h3>
+                        </div>
+                        <p>
+                            「O/Rマッパー」を簡単に説明すると、アプリケーションで扱う「O：オブジェクト」と「R：リレーショナルデータベース」とのデータをマッピングするものです。
+                        </p>
+                        <p>
+                            もう少し詳細に説明すると「O/Rマッパー」は、あらかじめ設定された「O：オブジェクト」と「R：リレーショナルデータベース」との対応関係の情報に基づき、インスタンスのデータを対応するテーブルへ書き出したり、データベースから値を読み込んでインスタンスに代入したりといった操作を自動的に行なってくれます。
+                        </p>
+                        <div class="figure">
+                            <svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <filter id="shadow1" x="-20%" y="-20%" width="140%" height="140%">
+                                        <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.15" />
+                                    </filter>
+                                    <marker
+                                        id="arrowhead"
+                                        markerWidth="10"
+                                        markerHeight="7"
+                                        refX="9"
+                                        refY="3.5"
+                                        orient="auto"
+                                    >
+                                        <polygon points="0 0, 10 3.5, 0 7" fill="#00A3E0" />
+                                    </marker>
+                                </defs>
+                                <rect width="700" height="200" fill="#f8fafc" rx="12" />
+                                <g filter="url(#shadow1)">
+                                    <rect x="30" y="50" width="150" height="100" rx="10" fill="#3b82f6" />
+                                    <text
+                                        x="105"
+                                        y="90"
+                                        text-anchor="middle"
+                                        fill="white"
+                                        font-family="Noto Sans JP"
+                                        font-size="14"
+                                        font-weight="bold"
+                                    >
+                                        オブジェクト
+                                    </text>
+                                    <text
+                                        x="105"
+                                        y="115"
+                                        text-anchor="middle"
+                                        fill="#bfdbfe"
+                                        font-family="Noto Sans JP"
+                                        font-size="12"
+                                    >
+                                        (Java)
+                                    </text>
+                                    <text
+                                        x="105"
+                                        y="135"
+                                        text-anchor="middle"
+                                        fill="#bfdbfe"
+                                        font-family="JetBrains Mono"
+                                        font-size="11"
+                                    >
+                                        Book book
+                                    </text>
+                                </g>
+                                <path
+                                    d="M 190 85 L 250 85"
+                                    stroke="#00A3E0"
+                                    stroke-width="2"
+                                    fill="none"
+                                    marker-end="url(#arrowhead)"
+                                />
+                                <path
+                                    d="M 250 115 L 190 115"
+                                    stroke="#00A3E0"
+                                    stroke-width="2"
+                                    fill="none"
+                                    marker-end="url(#arrowhead)"
+                                />
+                                <g filter="url(#shadow1)">
+                                    <rect x="260" y="50" width="180" height="100" rx="10" fill="#00A3E0" />
+                                    <text
+                                        x="350"
+                                        y="80"
+                                        text-anchor="middle"
+                                        fill="white"
+                                        font-family="Noto Sans JP"
+                                        font-size="14"
+                                        font-weight="bold"
+                                    >
+                                        O/Rマッパー
+                                    </text>
+                                    <rect x="280" y="95" width="140" height="40" rx="6" fill="rgba(255,255,255,0.2)" />
+                                    <text
+                                        x="350"
+                                        y="112"
+                                        text-anchor="middle"
+                                        fill="white"
+                                        font-family="Noto Sans JP"
+                                        font-size="11"
+                                    >
+                                        データを
+                                    </text>
+                                    <text
+                                        x="350"
+                                        y="127"
+                                        text-anchor="middle"
+                                        fill="white"
+                                        font-family="Noto Sans JP"
+                                        font-size="11"
+                                    >
+                                        マッピングする
+                                    </text>
+                                </g>
+                                <path
+                                    d="M 450 85 L 510 85"
+                                    stroke="#00A3E0"
+                                    stroke-width="2"
+                                    fill="none"
+                                    marker-end="url(#arrowhead)"
+                                />
+                                <path
+                                    d="M 510 115 L 450 115"
+                                    stroke="#00A3E0"
+                                    stroke-width="2"
+                                    fill="none"
+                                    marker-end="url(#arrowhead)"
+                                />
+                                <g filter="url(#shadow1)">
+                                    <rect x="520" y="50" width="150" height="100" rx="10" fill="#10b981" />
+                                    <text
+                                        x="595"
+                                        y="90"
+                                        text-anchor="middle"
+                                        fill="white"
+                                        font-family="Noto Sans JP"
+                                        font-size="14"
+                                        font-weight="bold"
+                                    >
+                                        リレーショナル
+                                    </text>
+                                    <text
+                                        x="595"
+                                        y="110"
+                                        text-anchor="middle"
+                                        fill="white"
+                                        font-family="Noto Sans JP"
+                                        font-size="14"
+                                        font-weight="bold"
+                                    >
+                                        データベース
+                                    </text>
+                                    <text
+                                        x="595"
+                                        y="135"
+                                        text-anchor="middle"
+                                        fill="#a7f3d0"
+                                        font-family="JetBrains Mono"
+                                        font-size="11"
+                                    >
+                                        books テーブル
+                                    </text>
+                                </g>
+                                <text
+                                    x="220"
+                                    y="75"
+                                    text-anchor="middle"
+                                    fill="#64748b"
+                                    font-family="Noto Sans JP"
+                                    font-size="10"
+                                >
+                                    自動
+                                </text>
+                                <text
+                                    x="480"
+                                    y="75"
+                                    text-anchor="middle"
+                                    fill="#64748b"
+                                    font-family="Noto Sans JP"
+                                    font-size="10"
+                                >
+                                    自動
+                                </text>
+                            </svg>
+                            <p class="figure-caption">図9.1 O/Rマッパーのイメージ</p>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">9-1-2</span>
+                            <h3 class="subsection-title">MyBatisとは？</h3>
+                        </div>
+                        <p>
+                            「MyBatis」は、「O/Rマッパー」の一つです。オブジェクトとRDB（リレーショナルデータベース）の「マッピング」を行います。MyBatisは無料で使用できるオープンソースソフトウェアで、Apache
+                            Licenseというライセンスの下で配布されています。
+                        </p>
+                        <div class="info-box note">
+                            <div class="info-box-icon">💡</div>
+                            <div class="info-box-content">
+                                <div class="info-box-title">Apache Licenseとは</div>
+                                <p>商用・非商用を問わず自由に使用、変更、再配布することができます。</p>
+                            </div>
+                        </div>
+                        <p>
+                            MyBatisの特徴は、<strong>SQLを直接書くことができる</strong>点です。SQLを「XMLファイル」やJavaの「アノテーション」を利用して書くことができます。また、MyBatisはSpringと連携することで、より効率的にアプリケーション開発をすることができます。
+                        </p>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">9-1-3</span>
+                            <h3 class="subsection-title">MyBatisの使用方法</h3>
+                        </div>
+                        <p>
+                            MyBatisの使用方法には、「アノテーションを使用する方法」と「マッパーファイル（XMLファイル）」を使用する2つの方法があります。
+                        </p>
+                        <h4 style="margin: 24px 0 16px; color: var(--secondary); font-size: 16px">
+                            ■ アノテーションを使用する方法
+                        </h4>
+                        <p>Javaのインターフェースにアノテーションを使用して、SQLを直接記述します。</p>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">リスト9.1 アノテーションを使用した例</span
+                                ><span class="code-lang">Java</span>
+                            </div>
+                            <div class="code-content">
+                                <pre><span class="code-keyword">public interface</span> <span class="code-class">BookMapper</span> {
+    <span class="code-annotation">@Select</span>(<span class="code-string">"SELECT * FROM books WHERE id = #{id}"</span>)
+    <span class="code-class">Book</span> <span class="code-method">getBookById</span>(<span class="code-keyword">int</span> id);
+}</pre>
+                            </div>
+                        </div>
+                        <h4 style="margin: 24px 0 16px; color: var(--secondary); font-size: 16px">
+                            ■ マッパーファイルを使用する方法
+                        </h4>
+                        <p>XMLファイルを使用してSQLを記述します。このXMLファイルを「マッパーファイル」と呼びます。</p>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">リスト9.2 マッパーファイルを使用した例</span
+                                ><span class="code-lang">XML</span>
+                            </div>
+                            <div class="code-content">
+                                <pre><span class="tag">&lt;mapper</span> <span class="attr">namespace</span>=<span class="value">"com.example.BookMapper"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;select</span> <span class="attr">id</span>=<span class="value">"getBookById"</span> <span class="attr">parameterType</span>=<span class="value">"int"</span> <span class="attr">resultType</span>=<span class="value">"com.example.Book"</span><span class="tag">&gt;</span>
+        SELECT * FROM books WHERE id = #{id}
+    <span class="tag">&lt;/select&gt;</span>
+<span class="tag">&lt;/mapper&gt;</span></pre>
+                            </div>
+                        </div>
+                        <div class="info-box tip">
+                            <div class="info-box-icon">📝</div>
+                            <div class="info-box-content">
+                                <div class="info-box-title">どちらを使うべき？</div>
+                                <p>
+                                    「アノテーション」を使用する方法は、簡単なSQLの場合には便利ですが、複雑なSQLや再利用が必要な場合は、「マッパーファイル」を使用する方法が推奨されます。本書では、「マッパーファイル」を使用する方法を説明します。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Section 9-2 -->
+            <section class="section" id="section-9-2">
+                <div class="section-header">
+                    <span class="section-number">Section 9-2</span>
+                    <h2 class="section-title">MyBatisを使ってみよう</h2>
+                </div>
+                <div class="section-content">
+                    <p>
+                        「Spring」と「MyBatis」を連携してプロジェクトを作成しながら、MyBatisの使用方法を学習しましょう。MyBatis以外にもライブラリを使用しますので、「Step
+                        by Step」で説明させて頂きます。
+                    </p>
+
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">9-2-1</span>
+                            <h3 class="subsection-title">プロジェクトの作成</h3>
+                        </div>
+                        <p>
+                            Spring Initializr（<a href="https://start.spring.io/" target="_blank">https://start.spring.io/</a>）を使用してプロジェクトを作成します。
+                        </p>
+
+                        <h4 style="margin: 24px 0 16px; color: var(--secondary); font-size: 16px">
+                            ■ Spring Initializrでの設定
+                        </h4>
+                        <div class="table-container">
+                            <table class="settings-table">
+                                <tr>
+                                    <th>Project</th>
+                                    <td>Maven</td>
+                                </tr>
+                                <tr>
+                                    <th>Language</th>
+                                    <td>Java</td>
+                                </tr>
+                                <tr>
+                                    <th>Spring Boot</th>
+                                    <td>3.4.1（最新の安定版）</td>
+                                </tr>
+                                <tr>
+                                    <th>Group</th>
+                                    <td>com.example</td>
+                                </tr>
+                                <tr>
+                                    <th>Artifact</th>
+                                    <td>MyBatisSample</td>
+                                </tr>
+                                <tr>
+                                    <th>Name</th>
+                                    <td>MyBatisSample</td>
+                                </tr>
+                                <tr>
+                                    <th>Package name</th>
+                                    <td>com.example.demo</td>
+                                </tr>
+                                <tr>
+                                    <th>Packaging</th>
+                                    <td>Jar</td>
+                                </tr>
+                                <tr>
+                                    <th>Java</th>
+                                    <td>21</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="info-box note">
+                            <div class="info-box-icon">📦</div>
+                            <div class="info-box-content">
+                                <div class="info-box-title">依存関係（Dependencies）</div>
+                                <p>「ADD DEPENDENCIES」ボタンをクリックして以下を追加します：</p>
+                                <ul style="margin: 8px 0 0 20px">
+                                    <li>Spring Boot DevTools</li>
+                                    <li>Lombok</li>
+                                    <li>MyBatis Framework</li>
+                                    <li>H2 Database</li>
+                                    <li>Thymeleaf</li>
+                                    <li>Spring Web</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <h4 style="margin: 24px 0 16px; color: var(--secondary); font-size: 16px">
+                            ■ プロジェクトのダウンロードとVSCodeでの開き方
+                        </h4>
+                        <ol class="steps">
+                            <li class="step">
+                                <div class="step-title">「GENERATE」ボタンをクリック</div>
+                                <p>設定完了後、「GENERATE」ボタンをクリックしてZIPファイルをダウンロードします。</p>
+                            </li>
+                            <li class="step">
+                                <div class="step-title">ZIPファイルを解凍</div>
+                                <p>ダウンロードしたZIPファイルを任意の作業フォルダに解凍します。</p>
+                            </li>
+                            <li class="step">
+                                <div class="step-title">VSCodeでフォルダを開く</div>
+                                <p>VSCodeを起動し、「ファイル」→「フォルダーを開く」から解凍したフォルダを選択します。</p>
+                            </li>
+                        </ol>
+
+                        <div class="info-box tip">
+                            <div class="info-box-icon">💡</div>
+                            <div class="info-box-content">
+                                <div class="info-box-title">VSCodeの拡張機能</div>
+                                <p>Spring Boot開発には以下の拡張機能をインストールしておくと便利です：</p>
+                                <ul style="margin: 8px 0 0 20px">
+                                    <li><strong>Extension Pack for Java</strong>：Java開発の基本機能</li>
+                                    <li><strong>Spring Boot Extension Pack</strong>：Spring Boot開発支援</li>
+                                    <li><strong>Lombok Annotations Support for VS Code</strong>：Lombokサポート</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <h4 style="margin: 24px 0 16px; color: var(--secondary); font-size: 16px">
+                            ■ MyBatis Framework（SQL）
+                        </h4>
+                        <p>
+                            Spring
+                            BootとMyBatisを組み合わせることができるツールです。MyBatisは、データベースへのアクセスを簡単にし、開発の生産性を向上させることができます。
+                        </p>
+                        <h4 style="margin: 24px 0 16px; color: var(--secondary); font-size: 16px">
+                            ■ H2 Database（SQL）
+                        </h4>
+                        <p>
+                            H2
+                            Databaseは軽量で高速なJavaベースのデータベースであり、開発やテストのための一時的な使用が推奨されているデータベースです。
+                        </p>
+
+                        <h4 style="margin: 24px 0 16px; color: var(--secondary); font-size: 16px">
+                            ■ プロジェクトのフォルダ構成
+                        </h4>
+                        <p>
+                            完成したプロジェクトのフォルダ構成は以下のようになります。
+                        </p>
+                        <div class="figure">
+                            <svg viewBox="0 0 700 520" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <filter id="shadowFolder" x="-20%" y="-20%" width="140%" height="140%">
+                                        <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.15" />
+                                    </filter>
+                                </defs>
+                                <rect width="700" height="520" fill="#f8fafc" rx="12" />
+
+                                <!-- プロジェクトルート -->
+                                <g filter="url(#shadowFolder)">
+                                    <rect x="30" y="20" width="640" height="480" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1" />
+                                </g>
+
+                                <!-- フォルダ構成テキスト -->
+                                <text x="50" y="50" fill="#1e293b" font-family="JetBrains Mono" font-size="13" font-weight="bold">MyBatisSample/</text>
+
+                                <text x="70" y="75" fill="#64748b" font-family="JetBrains Mono" font-size="12">├── src/</text>
+                                <text x="70" y="97" fill="#64748b" font-family="JetBrains Mono" font-size="12">│   ├── main/</text>
+                                <text x="70" y="119" fill="#64748b" font-family="JetBrains Mono" font-size="12">│   │   ├── java/</text>
+                                <text x="70" y="141" fill="#64748b" font-family="JetBrains Mono" font-size="12">│   │   │   └── com/example/demo/</text>
+
+                                <text x="70" y="163" fill="#3b82f6" font-family="JetBrains Mono" font-size="12">│   │   │       ├── controller/</text>
+                                <text x="350" y="163" fill="#94a3b8" font-family="Noto Sans JP" font-size="11">← コントローラクラス</text>
+                                <text x="70" y="185" fill="#64748b" font-family="JetBrains Mono" font-size="12">│   │   │       │   └── BookController.java</text>
+
+                                <text x="70" y="207" fill="#10b981" font-family="JetBrains Mono" font-size="12">│   │   │       ├── entity/</text>
+                                <text x="350" y="207" fill="#94a3b8" font-family="Noto Sans JP" font-size="11">← エンティティクラス</text>
+                                <text x="70" y="229" fill="#64748b" font-family="JetBrains Mono" font-size="12">│   │   │       │   ├── Book.java</text>
+                                <text x="70" y="251" fill="#64748b" font-family="JetBrains Mono" font-size="12">│   │   │       │   ├── Publisher.java</text>
+                                <text x="70" y="273" fill="#64748b" font-family="JetBrains Mono" font-size="12">│   │   │       │   └── Review.java</text>
+
+                                <text x="70" y="295" fill="#f59e0b" font-family="JetBrains Mono" font-size="12">│   │   │       ├── mapper/</text>
+                                <text x="350" y="295" fill="#94a3b8" font-family="Noto Sans JP" font-size="11">← マッパーインターフェース</text>
+                                <text x="70" y="317" fill="#64748b" font-family="JetBrains Mono" font-size="12">│   │   │       │   └── BookMapper.java</text>
+
+                                <text x="70" y="339" fill="#64748b" font-family="JetBrains Mono" font-size="12">│   │   │       └── MyBatisSampleApplication.java</text>
+
+                                <text x="70" y="361" fill="#64748b" font-family="JetBrains Mono" font-size="12">│   │   └── resources/</text>
+
+                                <text x="70" y="383" fill="#8b5cf6" font-family="JetBrains Mono" font-size="12">│   │       ├── com/example/demo/mapper/</text>
+                                <text x="400" y="383" fill="#94a3b8" font-family="Noto Sans JP" font-size="11">← マッパーXML</text>
+                                <text x="70" y="405" fill="#64748b" font-family="JetBrains Mono" font-size="12">│   │       │   └── BookMapper.xml</text>
+
+                                <text x="70" y="427" fill="#ec4899" font-family="JetBrains Mono" font-size="12">│   │       ├── templates/book/</text>
+                                <text x="350" y="427" fill="#94a3b8" font-family="Noto Sans JP" font-size="11">← Thymeleafテンプレート</text>
+                                <text x="70" y="449" fill="#64748b" font-family="JetBrains Mono" font-size="12">│   │       │   ├── index.html</text>
+                                <text x="70" y="471" fill="#64748b" font-family="JetBrains Mono" font-size="12">│   │       │   └── success.html</text>
+
+                                <text x="70" y="493" fill="#64748b" font-family="JetBrains Mono" font-size="12">│   │       ├── application.properties</text>
+                                <text x="70" y="515" fill="#64748b" font-family="JetBrains Mono" font-size="12">│   │       ├── schema.sql</text>
+                                <text x="70" y="537" fill="#64748b" font-family="JetBrains Mono" font-size="12">│   │       └── data.sql</text>
+
+                            </svg>
+                            <p class="figure-caption">図9.2 プロジェクトのフォルダ構成</p>
+                        </div>
+                        <div class="info-box tip">
+                            <div class="info-box-icon">📂</div>
+                            <div class="info-box-content">
+                                <div class="info-box-title">フォルダ構成のポイント</div>
+                                <ul style="margin: 8px 0 0 20px">
+                                    <li><strong>controller/</strong>：HTTPリクエストを受け付けるコントローラクラスを配置</li>
+                                    <li><strong>entity/</strong>：データベースのテーブルに対応するエンティティクラスを配置</li>
+                                    <li><strong>mapper/</strong>：MyBatisのマッパーインターフェースを配置</li>
+                                    <li><strong>resources/com/example/demo/mapper/</strong>：マッパーXMLファイルを配置（Javaのパッケージ構成と同じ階層）</li>
+                                    <li><strong>templates/</strong>：Thymeleafのテンプレートファイルを配置</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">9-2-2</span>
+                            <h3 class="subsection-title">application.propertiesの設定</h3>
+                        </div>
+                        <p>
+                            Spring
+                            Bootプロジェクトにおける「application.properties」ファイルは、アプリケーションの設定やプロパティを定義するファイルです。
+                        </p>
+                        <div class="info-box tip">
+                            <div class="info-box-icon">📋</div>
+                            <div class="info-box-content">
+                                <div class="info-box-title">application.propertiesの主な特徴と利点</div>
+                                <ul style="margin: 8px 0 0 20px">
+                                    <li><strong>Key-Value形式</strong>：読み書きが容易です。</li>
+                                    <li>
+                                        <strong>環境固有の設定</strong
+                                        >：環境（開発、テスト、本番など）毎に異なるファイルを持つことができます。
+                                    </li>
+                                    <li>
+                                        <strong>外部化された設定</strong
+                                        >：アプリケーションのコードから設定を分離することで、設定の変更が容易になります。
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">リスト9.3 application.properties</span
+                                ><span class="code-lang">Properties</span>
+                            </div>
+                            <div class="code-content">
+                                <pre><span class="code-comment"># データベースへの接続URL。</span>
+<span class="code-comment"># ここではH2データベースのメモリモードを使用しています</span>
+spring.datasource.url=jdbc:h2:mem:testdb
+
+<span class="code-comment"># 使用するデータベースのドライバークラス</span>
+spring.datasource.driver-class-name=org.h2.Driver
+
+<span class="code-comment"># データベースへの接続時のユーザー名。</span>
+spring.datasource.username=sa
+
+<span class="code-comment"># データベースへの接続時のパスワード。</span>
+spring.datasource.password=
+
+<span class="code-comment"># H2データベースのコンソールを有効にするための設定</span>
+spring.h2.console.enabled=true</pre>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>説明</th>
+                                </tr>
+                                <tr>
+                                    <td><code>jdbc</code></td>
+                                    <td>Javaアプリケーションがデータベースに接続するためのプロトコルを示します</td>
+                                </tr>
+                                <tr>
+                                    <td><code>h2</code></td>
+                                    <td>使用するデータベースの種類です。H2データベースを使用することを示します</td>
+                                </tr>
+                                <tr>
+                                    <td><code>mem</code></td>
+                                    <td>
+                                        H2データベースのメモリモードです。アプリケーションが終了するとデータが消えるモードになります
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>testdb</code></td>
+                                    <td>メモリ内のデータベースの名前です。自分で任意で決めれます</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="info-box warning">
+                            <div class="info-box-icon">⚠️</div>
+                            <div class="info-box-content">
+                                <div class="info-box-title">H2データベースのメモリモードとは？</div>
+                                <p>
+                                    H2データベースは、ディスク上に永続的にデータを保存する「ディスクモード」と、アプリケーションの実行中のみデータをメモリ内に保持する「メモリモード」の2つのモードがあります。メモリモードは、テストや開発中に一時的なデータベースとして使用するのに便利です。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">9-2-3</span>
+                            <h3 class="subsection-title">schema.sqlとdata.sqlの作成</h3>
+                        </div>
+                        <p>
+                            Spring
+                            Bootでは、特定の名前を持つSQLファイルを「src/main/resources」フォルダ配下に配置することで、アプリケーション起動時に自動的にデータベースの初期化やデータの投入を行うことができます。
+                        </p>
+                        <h4 style="margin: 24px 0 16px; color: var(--secondary); font-size: 16px">■ schema.sql</h4>
+                        <p>
+                            このファイルは、テーブルの作成やインデックスの定義、外部キーの設定など、データベースの構造に関連するSQL文を記述します。
+                        </p>
+                        <h4 style="margin: 24px 0 16px; color: var(--secondary); font-size: 16px">■ data.sql</h4>
+                        <p>
+                            このファイルは、テーブルへのデータ登録（INSERT文）など、初期データのセットアップに関連するSQL文を記述します。
+                        </p>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">リスト9.4 schema.sql</span><span class="code-lang">SQL</span>
+                            </div>
+                            <div class="code-content">
+                                <pre><span class="code-comment">-- booksテーブルの作成</span>
+<span class="code-keyword">CREATE TABLE</span> books (
+    <span class="code-comment">-- 主キーとしてのID。自動インクリメントされる</span>
+    id <span class="code-class">INT</span> <span class="code-keyword">PRIMARY KEY AUTO_INCREMENT</span>,
+    <span class="code-comment">-- 書籍のタイトル。NULLを許容しない。</span>
+    title <span class="code-class">VARCHAR</span>(255) <span class="code-keyword">NOT NULL</span>,
+    <span class="code-comment">-- 書籍の著者名。NULLを許容しない。</span>
+    author <span class="code-class">VARCHAR</span>(255) <span class="code-keyword">NOT NULL</span>
+);</pre>
+                            </div>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">リスト9.5 data.sql</span><span class="code-lang">SQL</span>
+                            </div>
+                            <div class="code-content">
+                                <pre><span class="code-comment">-- booksテーブルへのデータ登録</span>
+<span class="code-keyword">INSERT INTO</span> books (title, author) <span class="code-keyword">VALUES</span> (<span class="code-string">'新人研修あるある'</span>, <span class="code-string">'山田太郎'</span>);
+<span class="code-keyword">INSERT INTO</span> books (title, author) <span class="code-keyword">VALUES</span> (<span class="code-string">'こんなDBエンジニアは嫌だ'</span>, <span class="code-string">'佐藤花子'</span>);
+<span class="code-keyword">INSERT INTO</span> books (title, author) <span class="code-keyword">VALUES</span> (<span class="code-string">'本当にあったIT業界トラブル'</span>, <span class="code-string">'鈴木一郎'</span>);</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">9-2-4</span>
+                            <h3 class="subsection-title">H2コンソールの起動</h3>
+                        </div>
+                        <p>
+                            プロジェクト「MyBatisSample」を起動します。VSCodeでターミナルを開き（Ctrl+`）、以下のコマンドを実行するか、「Spring Boot Dashboard」から起動します。
+                        </p>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">アプリケーションの起動</span><span class="code-lang">Terminal</span>
+                            </div>
+                            <div class="code-content">
+                                <pre>./mvnw spring-boot:run</pre>
+                            </div>
+                        </div>
+                        <p>
+                            起動後、ブラウザのURLに「http://localhost:8080/h2-console」と入力すると、「H2コンソール」画面が表示されます。
+                        </p>
+                        <p>
+                            H2コンソールは、H2データベースのWebベースの管理ツールです。このコンソールを使用すると、ブラウザから直接H2データベースにアクセスして、SQLを実行したり、データベースの内容を確認したりすることができます。
+                        </p>
+                        <div class="table-container">
+                            <table>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>説明</th>
+                                </tr>
+                                <tr>
+                                    <td>Saved Settings</td>
+                                    <td>
+                                        ドロップダウンメニューから、以前に保存された接続設定を選択することができます
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Setting Name</td>
+                                    <td>現在の接続設定の名前です</td>
+                                </tr>
+                                <tr>
+                                    <td>Driver Class</td>
+                                    <td>
+                                        使用するJDBCドライバのクラス名を指定します。H2データベースの場合、org.h2.Driverがデフォルトです
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>JDBC URL</td>
+                                    <td>データベースへの接続URLを指定します</td>
+                                </tr>
+                                <tr>
+                                    <td>User Name</td>
+                                    <td>データベースに接続する際のユーザー名を入力します。デフォルトは「sa」です</td>
+                                </tr>
+                                <tr>
+                                    <td>Password</td>
+                                    <td>データベースに接続する際のパスワードを入力します。デフォルトは空です</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">9-2-5</span>
+                            <h3 class="subsection-title">エンティティの作成</h3>
+                        </div>
+                        <h4 style="margin: 24px 0 16px; color: var(--secondary); font-size: 16px">■ 規約（ルール）</h4>
+                        <p>MyBatisを使用する場合、エンティティの作成には規約（ルール）があります。</p>
+                        <div class="table-container">
+                            <table>
+                                <tr>
+                                    <th>番号</th>
+                                    <th>ルール</th>
+                                    <th>内容</th>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>クラス名は任意</td>
+                                    <td>
+                                        エンティティの名前は自由に決めることができますが、一般的にはデータベースのテーブル名やその内容を反映した名前を設定します
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>引数なし／コンストラクタ</td>
+                                    <td>
+                                        MyBatisは、エンティティのインスタンスを作成する際にデフォルトのコンストラクタを使用します。引数なしコンストラクタは必須です
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>フィールド名</td>
+                                    <td>
+                                        エンティティのフィールド名は、対象テーブルの列名と一致している必要があります
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>getter/setter</td>
+                                    <td>
+                                        Javaのカプセル化の原則に従い、フィールドにはgetterとsetterメソッドを持つことが推奨されます
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <h4 style="margin: 24px 0 16px; color: var(--secondary); font-size: 16px">■ 作成</h4>
+                        <div class="table-container">
+                            <table class="settings-table">
+                                <tr>
+                                    <th>パッケージ</th>
+                                    <td>com.example.demo.entity</td>
+                                </tr>
+                                <tr>
+                                    <th>名前</th>
+                                    <td>Book</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">リスト9.6 エンティティ（Book.java）</span
+                                ><span class="code-lang">Java</span>
+                            </div>
+                            <div class="code-content">
+                                <pre><span class="code-keyword">package</span> com.example.demo.entity;
+
+<span class="code-keyword">import</span> lombok.Data;
+
+<span class="code-annotation">@Data</span>
+<span class="code-keyword">public class</span> <span class="code-class">Book</span> {
+    <span class="code-comment">/** 書籍ID */</span>
+    <span class="code-keyword">private int</span> id;
+    <span class="code-comment">/** タイトル */</span>
+    <span class="code-keyword">private</span> <span class="code-class">String</span> title;
+    <span class="code-comment">/** 著者 */</span>
+    <span class="code-keyword">private</span> <span class="code-class">String</span> author;
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">9-2-6</span>
+                            <h3 class="subsection-title">マッパーファイルの使用方法</h3>
+                        </div>
+                        <h4 style="margin: 24px 0 16px; color: var(--secondary); font-size: 16px">■ 規約（ルール）</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr>
+                                    <th>番号</th>
+                                    <th>ルール</th>
+                                    <th>内容</th>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>マッパーインターフェースの作成</td>
+                                    <td>エンティティに対応するマッパーインターフェースを作成します</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>マッパーファイルの作成</td>
+                                    <td>マッパーインターフェースに対応するXMLファイルを作成します</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <h4 style="margin: 24px 0 16px; color: var(--secondary); font-size: 16px">
+                            ■ マッパーインターフェースの作成
+                        </h4>
+                        <div class="table-container">
+                            <table class="settings-table">
+                                <tr>
+                                    <th>パッケージ</th>
+                                    <td>com.example.demo.mapper</td>
+                                </tr>
+                                <tr>
+                                    <th>名前</th>
+                                    <td>BookMapper</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">リスト9.7 マッパーインターフェース（BookMapper.java）</span
+                                ><span class="code-lang">Java</span>
+                            </div>
+                            <div class="code-content">
+                                <pre><span class="code-keyword">package</span> com.example.demo.mapper;
+
+<span class="code-keyword">import</span> java.util.List;
+<span class="code-keyword">import</span> org.apache.ibatis.annotations.Mapper;
+<span class="code-keyword">import</span> com.example.demo.entity.Book;
+
+<span class="code-annotation">@Mapper</span>
+<span class="code-keyword">public interface</span> <span class="code-class">BookMapper</span> {
+    <span class="code-comment">/** 全件取得 */</span>
+    <span class="code-class">List</span>&lt;<span class="code-class">Book</span>&gt; <span class="code-method">getAllBooks</span>();
+    <span class="code-comment">/** idで1件取得 */</span>
+    <span class="code-class">Book</span> <span class="code-method">getBookById</span>(<span class="code-keyword">int</span> id);
+    <span class="code-comment">/** 登録 */</span>
+    <span class="code-keyword">void</span> <span class="code-method">insertBook</span>(<span class="code-class">Book</span> book);
+    <span class="code-comment">/** 更新 */</span>
+    <span class="code-keyword">void</span> <span class="code-method">updateBook</span>(<span class="code-class">Book</span> book);
+    <span class="code-comment">/** 削除 */</span>
+    <span class="code-keyword">void</span> <span class="code-method">deleteBookById</span>(<span class="code-keyword">int</span> id);
+}</pre>
+                            </div>
+                        </div>
+                        <p>
+                            「@Mapper」はMyBatisのアノテーションで、JavaインターフェースがMyBatisのマッパーであることを示します。このアノテーションを使用すると、MyBatisはこのインターフェースの実装を自動的に生成します。
+                        </p>
+                        <div class="table-container">
+                            <table>
+                                <tr>
+                                    <th>特徴</th>
+                                    <th>説明</th>
+                                </tr>
+                                <tr>
+                                    <td>自動実装</td>
+                                    <td>
+                                        @Mapperアノテーションを持つインターフェースには、実装が必要ありません。MyBatisが自動的に実装をしてくれます
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Springとの統合</td>
+                                    <td>
+                                        Spring
+                                        Bootプロジェクトで@Mapperを使用すると、マッパーはSpringのコンポーネントとして自動的に登録されます
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>SQLマッピング</td>
+                                    <td>
+                                        対応するマッパーファイルにSQLを定義することで、@MapperインターフェースのメソッドはマッパーファイルのSQLにマッピングされます
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">9-2-7</span>
+                            <h3 class="subsection-title">マッパーファイルの作成</h3>
+                        </div>
+                        <p>
+                            マッパーファイルの作成ルールとして、「src/main/resources」フォルダ配下にMapperインターフェースと同じ階層のフォルダを作成し、「Mapperインターフェース名.xml」というファイル名で定義します。
+                        </p>
+                        <div class="table-container">
+                            <table class="settings-table">
+                                <tr>
+                                    <th>親フォルダ</th>
+                                    <td>MyBatisSample/src/main/resources/com/example/demo/mapper</td>
+                                </tr>
+                                <tr>
+                                    <th>ファイル名</th>
+                                    <td>BookMapper</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">リスト9.8 マッパーファイル（BookMapper.xml）</span
+                                ><span class="code-lang">XML</span>
+                            </div>
+                            <div class="code-content">
+                                <pre><span class="tag">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="tag">&lt;!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;</span>
+<span class="tag">&lt;mapper</span> <span class="attr">namespace</span>=<span class="value">"com.example.demo.mapper.BookMapper"</span><span class="tag">&gt;</span>
+    <span class="code-comment">&lt;!-- 【SELECT】全ての書籍を取得するためのSQLを定義 --&gt;</span>
+    <span class="tag">&lt;select</span> <span class="attr">id</span>=<span class="value">"getAllBooks"</span> <span class="attr">resultType</span>=<span class="value">"com.example.demo.entity.Book"</span><span class="tag">&gt;</span>
+        SELECT id, title, author FROM books ORDER BY id
+    <span class="tag">&lt;/select&gt;</span>
+
+    <span class="code-comment">&lt;!-- 【SELECT】特定のIDを持つ書籍を取得するためのSQLを定義 --&gt;</span>
+    <span class="tag">&lt;select</span> <span class="attr">id</span>=<span class="value">"getBookById"</span> <span class="attr">resultType</span>=<span class="value">"com.example.demo.entity.Book"</span><span class="tag">&gt;</span>
+        SELECT id, title, author FROM books WHERE id = #{id}
+    <span class="tag">&lt;/select&gt;</span>
+
+    <span class="code-comment">&lt;!-- 【INSERT】新しい書籍をデータベースに追加するSQLを定義 --&gt;</span>
+    <span class="tag">&lt;insert</span> <span class="attr">id</span>=<span class="value">"insertBook"</span> <span class="attr">parameterType</span>=<span class="value">"com.example.demo.entity.Book"</span><span class="tag">&gt;</span>
+        INSERT INTO books (title, author) VALUES (#{title}, #{author})
+    <span class="tag">&lt;/insert&gt;</span>
+
+    <span class="code-comment">&lt;!-- 【UPDATE】特定のIDを持つ書籍の情報を更新するSQLを定義 --&gt;</span>
+    <span class="tag">&lt;update</span> <span class="attr">id</span>=<span class="value">"updateBook"</span> <span class="attr">parameterType</span>=<span class="value">"com.example.demo.entity.Book"</span><span class="tag">&gt;</span>
+        UPDATE books SET title = #{title}, author = #{author} WHERE id = #{id}
+    <span class="tag">&lt;/update&gt;</span>
+
+    <span class="code-comment">&lt;!-- 【DELETE】特定のIDを持つ書籍の情報を削除するSQLを定義 --&gt;</span>
+    <span class="tag">&lt;delete</span> <span class="attr">id</span>=<span class="value">"deleteBookById"</span> <span class="attr">parameterType</span>=<span class="value">"int"</span><span class="tag">&gt;</span>
+        DELETE FROM books WHERE id = #{id}
+    <span class="tag">&lt;/delete&gt;</span>
+<span class="tag">&lt;/mapper&gt;</span></pre>
+                            </div>
+                        </div>
+                        <p>
+                            「namespace」には、マッパーファイルが関連付けられている「インターフェース」の完全修飾名（FQCN）を指定します。「id」は、インターフェースのメソッド名を設定します。
+                        </p>
+                        <div class="figure">
+                            <svg viewBox="0 0 700 180" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <filter id="shadow2" x="-20%" y="-20%" width="140%" height="140%">
+                                        <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.15" />
+                                    </filter>
+                                    <marker
+                                        id="arrow2"
+                                        markerWidth="10"
+                                        markerHeight="7"
+                                        refX="9"
+                                        refY="3.5"
+                                        orient="auto"
+                                    >
+                                        <polygon points="0 0, 10 3.5, 0 7" fill="#00A3E0" />
+                                    </marker>
+                                </defs>
+                                <rect width="700" height="180" fill="#f8fafc" rx="12" />
+                                <g filter="url(#shadow2)">
+                                    <rect
+                                        x="30"
+                                        y="30"
+                                        width="280"
+                                        height="120"
+                                        rx="10"
+                                        fill="white"
+                                        stroke="#3b82f6"
+                                        stroke-width="2"
+                                    />
+                                    <rect x="30" y="30" width="280" height="35" rx="10" fill="#3b82f6" />
+                                    <text
+                                        x="170"
+                                        y="55"
+                                        text-anchor="middle"
+                                        fill="white"
+                                        font-family="Noto Sans JP"
+                                        font-size="14"
+                                        font-weight="bold"
+                                    >
+                                        マッパーインターフェース
+                                    </text>
+                                    <text x="50" y="90" fill="#1e293b" font-family="JetBrains Mono" font-size="12">
+                                        /** 全件取得 */
+                                    </text>
+                                    <text x="50" y="115" fill="#1e293b" font-family="JetBrains Mono" font-size="12">
+                                        List&lt;Book&gt;
+                                        <tspan fill="#3b82f6" font-weight="bold">getAllBooks</tspan>
+                                        ();
+                                    </text>
+                                </g>
+                                <path
+                                    d="M 320 90 L 380 90"
+                                    stroke="#00A3E0"
+                                    stroke-width="3"
+                                    marker-end="url(#arrow2)"
+                                />
+                                <text
+                                    x="350"
+                                    y="80"
+                                    text-anchor="middle"
+                                    fill="#64748b"
+                                    font-family="Noto Sans JP"
+                                    font-size="11"
+                                >
+                                    マッピング
+                                </text>
+                                <g filter="url(#shadow2)">
+                                    <rect
+                                        x="390"
+                                        y="30"
+                                        width="280"
+                                        height="120"
+                                        rx="10"
+                                        fill="white"
+                                        stroke="#10b981"
+                                        stroke-width="2"
+                                    />
+                                    <rect x="390" y="30" width="280" height="35" rx="10" fill="#10b981" />
+                                    <text
+                                        x="530"
+                                        y="55"
+                                        text-anchor="middle"
+                                        fill="white"
+                                        font-family="Noto Sans JP"
+                                        font-size="14"
+                                        font-weight="bold"
+                                    >
+                                        マッパーXML
+                                    </text>
+                                    <text x="410" y="90" fill="#1e293b" font-family="JetBrains Mono" font-size="12">
+                                        &lt;select id = "
+                                        <tspan fill="#10b981" font-weight="bold">getAllBooks</tspan>
+                                        " ...
+                                    </text>
+                                    <text x="410" y="115" fill="#1e293b" font-family="JetBrains Mono" font-size="12">
+                                        SELECT * FROM books
+                                    </text>
+                                </g>
+                                <text
+                                    x="350"
+                                    y="170"
+                                    text-anchor="middle"
+                                    fill="#64748b"
+                                    font-family="Noto Sans JP"
+                                    font-size="12"
+                                >
+                                    メソッド名とidが一致することでマッピングされる
+                                </text>
+                            </svg>
+                            <p class="figure-caption">図9.18 メソッドとid</p>
+                        </div>
+                        <h4 style="margin: 24px 0 16px; color: var(--secondary); font-size: 16px">■ 「CRUD」とは？</h4>
+                        <p>
+                            「CRUD」は、システムの基本的な操作を表す4つの頭文字から成る言葉です。Create（作成）、Read（読み取り）、Update（更新）、Delete（削除）を意味します。
+                        </p>
+                        <div class="table-container">
+                            <table>
+                                <tr>
+                                    <th>CRUD</th>
+                                    <th>SQL</th>
+                                    <th>タグ</th>
+                                    <th>系</th>
+                                    <th>使用属性タイプ</th>
+                                </tr>
+                                <tr>
+                                    <td>C</td>
+                                    <td>INSERT</td>
+                                    <td>&lt;insert&gt;</td>
+                                    <td>更新系</td>
+                                    <td>parameterType</td>
+                                </tr>
+                                <tr>
+                                    <td>R</td>
+                                    <td>SELECT</td>
+                                    <td>&lt;select&gt;</td>
+                                    <td>参照系</td>
+                                    <td>resultType</td>
+                                </tr>
+                                <tr>
+                                    <td>U</td>
+                                    <td>UPDATE</td>
+                                    <td>&lt;update&gt;</td>
+                                    <td>更新系</td>
+                                    <td>parameterType</td>
+                                </tr>
+                                <tr>
+                                    <td>D</td>
+                                    <td>DELETE</td>
+                                    <td>&lt;delete&gt;</td>
+                                    <td>更新系</td>
+                                    <td>parameterType</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <h4 style="margin: 24px 0 16px; color: var(--secondary); font-size: 16px">■ プレースホルダ</h4>
+                        <p>
+                            「#{id}」は、「プレースホルダ」と呼ばれるものです。プレースホルダは、後から具体的な値に置き換えられる予約された場所を示します。MyBatisでは、このプレースホルダを使用して、SQL文に動的に値を挿入することができます。
+                        </p>
+                        <div class="info-box warning">
+                            <div class="info-box-icon">🔒</div>
+                            <div class="info-box-content">
+                                <div class="info-box-title">SQLインジェクション攻撃とは</div>
+                                <p>
+                                    不正なSQL文をアプリケーションの入力フィールドに挿入することで、データベースを不正に操作する攻撃手法です。プレースホルダを使用することで、MyBatisが安全に値をエスケープしてSQLを実行し、この攻撃を防ぐことができます。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">9-2-8</span>
+                            <h3 class="subsection-title">コントローラの作成</h3>
+                        </div>
+                        <div class="table-container">
+                            <table class="settings-table">
+                                <tr>
+                                    <th>パッケージ</th>
+                                    <td>com.example.demo.controller</td>
+                                </tr>
+                                <tr>
+                                    <th>名前</th>
+                                    <td>BookController</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">リスト9.9 コントローラ（BookController.java）</span
+                                ><span class="code-lang">Java</span>
+                            </div>
+                            <div class="code-content">
+                                <pre><span class="code-keyword">package</span> com.example.demo.controller;
+
+<span class="code-keyword">import</span> org.springframework.stereotype.Controller;
+<span class="code-keyword">import</span> org.springframework.ui.Model;
+<span class="code-keyword">import</span> org.springframework.web.bind.annotation.GetMapping;
+<span class="code-keyword">import</span> org.springframework.web.bind.annotation.PathVariable;
+<span class="code-keyword">import</span> com.example.demo.entity.Book;
+<span class="code-keyword">import</span> com.example.demo.mapper.BookMapper;
+<span class="code-keyword">import</span> lombok.RequiredArgsConstructor;
+
+<span class="code-annotation">@Controller</span>
+<span class="code-annotation">@RequiredArgsConstructor</span>
+<span class="code-keyword">public class</span> <span class="code-class">BookController</span> {
+    <span class="code-comment">// DI</span>
+    <span class="code-keyword">private final</span> <span class="code-class">BookMapper</span> bookMapper;
+
+    <span class="code-comment">// メニュー画面を表示する</span>
+    <span class="code-annotation">@GetMapping</span>(<span class="code-string">"/"</span>)
+    <span class="code-keyword">public</span> <span class="code-class">String</span> <span class="code-method">showIndex</span>() {
+        <span class="code-keyword">return</span> <span class="code-string">"book/index"</span>;
+    }
+
+    <span class="code-comment">// 全ての書籍を取得する</span>
+    <span class="code-annotation">@GetMapping</span>(<span class="code-string">"/list"</span>)
+    <span class="code-keyword">public</span> <span class="code-class">String</span> <span class="code-method">showAllBooks</span>(<span class="code-class">Model</span> model) {
+        model.addAttribute(<span class="code-string">"message"</span>, <span class="code-string">"一覧表示"</span>);
+        model.addAttribute(<span class="code-string">"books"</span>, bookMapper.getAllBooks());
+        <span class="code-keyword">return</span> <span class="code-string">"book/success"</span>;
+    }
+
+    <span class="code-comment">// 特定のIDを持つ書籍を取得する</span>
+    <span class="code-annotation">@GetMapping</span>(<span class="code-string">"/detail/{id}"</span>)
+    <span class="code-keyword">public</span> <span class="code-class">String</span> <span class="code-method">showBook</span>(<span class="code-annotation">@PathVariable</span> <span class="code-keyword">int</span> id, <span class="code-class">Model</span> model) {
+        model.addAttribute(<span class="code-string">"message"</span>, <span class="code-string">"詳細表示"</span>);
+        model.addAttribute(<span class="code-string">"book"</span>, bookMapper.getBookById(id));
+        <span class="code-keyword">return</span> <span class="code-string">"book/success"</span>;
+    }
+
+    <span class="code-comment">// 新しい書籍を作成する</span>
+    <span class="code-annotation">@GetMapping</span>(<span class="code-string">"/create"</span>)
+    <span class="code-keyword">public</span> <span class="code-class">String</span> <span class="code-method">createBook</span>(<span class="code-class">Model</span> model) {
+        <span class="code-class">Book</span> book = <span class="code-keyword">new</span> <span class="code-class">Book</span>();
+        book.setTitle(<span class="code-string">"クラウド技術を学ぶ"</span>);
+        book.setAuthor(<span class="code-string">"山田太郎"</span>);
+        bookMapper.insertBook(book);
+        model.addAttribute(<span class="code-string">"message"</span>, <span class="code-string">"登録成功"</span>);
+        <span class="code-keyword">return</span> <span class="code-string">"book/success"</span>;
+    }
+
+    <span class="code-comment">// 特定のIDを持つ書籍を更新する</span>
+    <span class="code-annotation">@GetMapping</span>(<span class="code-string">"/update/{id}"</span>)
+    <span class="code-keyword">public</span> <span class="code-class">String</span> <span class="code-method">updateBook</span>(<span class="code-annotation">@PathVariable</span> <span class="code-keyword">int</span> id, <span class="code-class">Model</span> model) {
+        <span class="code-class">Book</span> book = <span class="code-keyword">new</span> <span class="code-class">Book</span>();
+        book.setId(id);
+        book.setTitle(<span class="code-string">"更新されたタイトル"</span>);
+        book.setAuthor(<span class="code-string">"更新太郎"</span>);
+        bookMapper.updateBook(book);
+        model.addAttribute(<span class="code-string">"message"</span>, <span class="code-string">"更新成功"</span>);
+        <span class="code-keyword">return</span> <span class="code-string">"book/success"</span>;
+    }
+
+    <span class="code-comment">// 特定のIDを持つ書籍を削除する</span>
+    <span class="code-annotation">@GetMapping</span>(<span class="code-string">"/delete/{id}"</span>)
+    <span class="code-keyword">public</span> <span class="code-class">String</span> <span class="code-method">deleteBook</span>(<span class="code-annotation">@PathVariable</span> <span class="code-keyword">int</span> id, <span class="code-class">Model</span> model) {
+        bookMapper.deleteBookById(id);
+        model.addAttribute(<span class="code-string">"message"</span>, <span class="code-string">"削除成功"</span>);
+        <span class="code-keyword">return</span> <span class="code-string">"book/success"</span>;
+    }
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">9-2-9</span>
+                            <h3 class="subsection-title">ビューの作成</h3>
+                        </div>
+                        <p>「index.html」と「success.html」の2ファイルを作成します。</p>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">リスト9.10 index.html</span><span class="code-lang">HTML</span>
+                            </div>
+                            <div class="code-content">
+                                <pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attr">xmlns:th</span>=<span class="value">"http://www.thymeleaf.org"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attr">charset</span>=<span class="value">"UTF-8"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;title&gt;</span>メニュー画面<span class="tag">&lt;/title&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+    <span class="tag">&lt;h1&gt;</span>書籍管理メニュー<span class="tag">&lt;/h1&gt;</span>
+    <span class="tag">&lt;ul&gt;</span>
+        <span class="tag">&lt;li&gt;&lt;a</span> <span class="attr">th:href</span>=<span class="value">"@{/list}"</span><span class="tag">&gt;</span>書籍一覧表示<span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="tag">&lt;li&gt;&lt;a</span> <span class="attr">th:href</span>=<span class="value">"@{/detail/2}"</span><span class="tag">&gt;</span>書籍詳細<span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="tag">&lt;li&gt;&lt;a</span> <span class="attr">th:href</span>=<span class="value">"@{/create}"</span><span class="tag">&gt;</span>新しい書籍を作成<span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="tag">&lt;li&gt;&lt;a</span> <span class="attr">th:href</span>=<span class="value">"@{/update/2}"</span><span class="tag">&gt;</span>書籍を更新<span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="tag">&lt;li&gt;&lt;a</span> <span class="attr">th:href</span>=<span class="value">"@{/delete/2}"</span><span class="tag">&gt;</span>書籍を削除<span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+    <span class="tag">&lt;/ul&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">9-2-10</span>
+                            <h3 class="subsection-title">まとめ</h3>
+                        </div>
+                        <p>MyBatisの使用方法をステップで振り返りましょう。</p>
+                        <div class="figure">
+                            <svg viewBox="0 0 700 370" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <filter id="shadow4" x="-20%" y="-20%" width="140%" height="140%">
+                                        <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.15" />
+                                    </filter>
+                                    <marker
+                                        id="arrow3"
+                                        markerWidth="10"
+                                        markerHeight="7"
+                                        refX="9"
+                                        refY="3.5"
+                                        orient="auto"
+                                    >
+                                        <polygon points="0 0, 10 3.5, 0 7" fill="#00A3E0" />
+                                    </marker>
+                                </defs>
+                                <rect width="700" height="370" fill="#f8fafc" rx="12" />
+                                <g filter="url(#shadow4)">
+                                    <rect
+                                        x="30"
+                                        y="30"
+                                        width="150"
+                                        height="80"
+                                        rx="10"
+                                        fill="white"
+                                        stroke="#3b82f6"
+                                        stroke-width="2"
+                                    />
+                                    <circle cx="55" cy="55" r="15" fill="#3b82f6" />
+                                    <text
+                                        x="55"
+                                        y="60"
+                                        text-anchor="middle"
+                                        fill="white"
+                                        font-family="Noto Sans JP"
+                                        font-size="12"
+                                        font-weight="bold"
+                                    >
+                                        1
+                                    </text>
+                                    <text
+                                        x="105"
+                                        y="55"
+                                        text-anchor="middle"
+                                        fill="#1e293b"
+                                        font-family="Noto Sans JP"
+                                        font-size="11"
+                                        font-weight="bold"
+                                    >
+                                        Mapper
+                                    </text>
+                                    <text
+                                        x="105"
+                                        y="75"
+                                        text-anchor="middle"
+                                        fill="#1e293b"
+                                        font-family="Noto Sans JP"
+                                        font-size="11"
+                                        font-weight="bold"
+                                    >
+                                        インターフェース
+                                    </text>
+                                    <text
+                                        x="105"
+                                        y="95"
+                                        text-anchor="middle"
+                                        fill="#64748b"
+                                        font-family="Noto Sans JP"
+                                        font-size="10"
+                                    >
+                                        を作成
+                                    </text>
+                                </g>
+                                <path
+                                    d="M 190 70 L 220 70"
+                                    stroke="#00A3E0"
+                                    stroke-width="2"
+                                    fill="none"
+                                    marker-end="url(#arrow3)"
+                                />
+                                <g filter="url(#shadow4)">
+                                    <rect
+                                        x="230"
+                                        y="30"
+                                        width="150"
+                                        height="80"
+                                        rx="10"
+                                        fill="white"
+                                        stroke="#10b981"
+                                        stroke-width="2"
+                                    />
+                                    <circle cx="255" cy="55" r="15" fill="#10b981" />
+                                    <text
+                                        x="255"
+                                        y="60"
+                                        text-anchor="middle"
+                                        fill="white"
+                                        font-family="Noto Sans JP"
+                                        font-size="12"
+                                        font-weight="bold"
+                                    >
+                                        2
+                                    </text>
+                                    <text
+                                        x="305"
+                                        y="55"
+                                        text-anchor="middle"
+                                        fill="#1e293b"
+                                        font-family="Noto Sans JP"
+                                        font-size="11"
+                                        font-weight="bold"
+                                    >
+                                        Mapper
+                                    </text>
+                                    <text
+                                        x="305"
+                                        y="75"
+                                        text-anchor="middle"
+                                        fill="#1e293b"
+                                        font-family="Noto Sans JP"
+                                        font-size="11"
+                                        font-weight="bold"
+                                    >
+                                        XMLファイル
+                                    </text>
+                                    <text
+                                        x="305"
+                                        y="95"
+                                        text-anchor="middle"
+                                        fill="#64748b"
+                                        font-family="Noto Sans JP"
+                                        font-size="10"
+                                    >
+                                        を作成
+                                    </text>
+                                </g>
+                                <g filter="url(#shadow4)">
+                                    <rect x="230" y="190" width="240" height="60" rx="10" fill="#1e293b" />
+                                    <text
+                                        x="350"
+                                        y="225"
+                                        text-anchor="middle"
+                                        fill="white"
+                                        font-family="JetBrains Mono"
+                                        font-size="20"
+                                        font-weight="bold"
+                                    >
+                                        MyBatis
+                                    </text>
+                                </g>
+                                <path
+                                    d="M 105 115 L 105 220 L 220 220"
+                                    stroke="#00A3E0"
+                                    stroke-width="2"
+                                    fill="none"
+                                    marker-end="url(#arrow3)"
+                                />
+                                <path d="M 305 115 L 305 175 L 305 180" stroke="#00A3E0" stroke-width="2" fill="none" marker-end="url(#arrow3)" />
+                                <g filter="url(#shadow4)">
+                                    <rect x="520" y="190" width="150" height="60" rx="10" fill="#f59e0b" />
+                                    <circle cx="545" cy="220" r="15" fill="rgba(255,255,255,0.3)" />
+                                    <text
+                                        x="545"
+                                        y="225"
+                                        text-anchor="middle"
+                                        fill="white"
+                                        font-family="Noto Sans JP"
+                                        font-size="12"
+                                        font-weight="bold"
+                                    >
+                                        3
+                                    </text>
+                                    <text
+                                        x="595"
+                                        y="215"
+                                        text-anchor="middle"
+                                        fill="white"
+                                        font-family="Noto Sans JP"
+                                        font-size="11"
+                                        font-weight="bold"
+                                    >
+                                        実装クラス
+                                    </text>
+                                    <text
+                                        x="595"
+                                        y="235"
+                                        text-anchor="middle"
+                                        fill="rgba(255,255,255,0.8)"
+                                        font-family="Noto Sans JP"
+                                        font-size="10"
+                                    >
+                                        自動生成
+                                    </text>
+                                </g>
+                                <path
+                                    d="M 475 220 L 510 220"
+                                    stroke="#00A3E0"
+                                    stroke-width="2"
+                                    fill="none"
+                                    marker-end="url(#arrow3)"
+                                />
+                                <g filter="url(#shadow4)">
+                                    <rect
+                                        x="30"
+                                        y="280"
+                                        width="150"
+                                        height="60"
+                                        rx="10"
+                                        fill="white"
+                                        stroke="#8b5cf6"
+                                        stroke-width="2"
+                                    />
+                                    <circle cx="55" cy="310" r="15" fill="#8b5cf6" />
+                                    <text
+                                        x="55"
+                                        y="315"
+                                        text-anchor="middle"
+                                        fill="white"
+                                        font-family="Noto Sans JP"
+                                        font-size="12"
+                                        font-weight="bold"
+                                    >
+                                        4
+                                    </text>
+                                    <text
+                                        x="105"
+                                        y="305"
+                                        text-anchor="middle"
+                                        fill="#1e293b"
+                                        font-family="Noto Sans JP"
+                                        font-size="11"
+                                        font-weight="bold"
+                                    >
+                                        使うクラス
+                                    </text>
+                                    <text
+                                        x="105"
+                                        y="325"
+                                        text-anchor="middle"
+                                        fill="#64748b"
+                                        font-family="Noto Sans JP"
+                                        font-size="10"
+                                    >
+                                        (Controller等)
+                                    </text>
+                                </g>
+                                <path
+                                    d="M 595 255 L 595 310 L 190 310"
+                                    stroke="#00A3E0"
+                                    stroke-width="2"
+                                    fill="none"
+                                    marker-end="url(#arrow3)"
+                                />
+                                <rect x="250" y="295" width="40" height="25" rx="4" fill="#8b5cf6" />
+                                <text
+                                    x="270"
+                                    y="312"
+                                    text-anchor="middle"
+                                    fill="white"
+                                    font-family="Noto Sans JP"
+                                    font-size="10"
+                                    font-weight="bold"
+                                >
+                                    DI
+                                </text>
+                            </svg>
+                            <p class="figure-caption">図9.33 振り返り</p>
+                        </div>
+                        <ol class="steps">
+                            <li class="step">
+                                <div class="step-title">「Mapperインターフェース」を作成します</div>
+                                <p>インターフェースには「@Mapper」を付与します。</p>
+                            </li>
+                            <li class="step">
+                                <div class="step-title">「MapperXMLファイル」を作成します</div>
+                                <p>
+                                    「namespace属性」にFQCNで「Mapperインターフェース」を設定し、「id属性」にメソッド名を設定します。
+                                </p>
+                            </li>
+                            <li class="step">
+                                <div class="step-title">MyBatisが実装クラスを自動生成します</div>
+                                <p>私達は実装クラスを作成する必要がありません。</p>
+                            </li>
+                            <li class="step">
+                                <div class="step-title">「DI」を行うことで実装クラスを使用できます</div>
+                                <p>③で作成された実装クラスを使用したい「使うクラス」にて「DI」を行います。</p>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+            <!-- Section 9-3 -->
+            <section class="section" id="section-9-3">
+                <div class="section-header">
+                    <span class="section-number">Section 9-3</span>
+                    <h2 class="section-title">resultMapについて知ろう</h2>
+                </div>
+                <div class="section-content">
+                    <p>
+                        ここではMyBatisを使用した複数テーブルの参照方法を学びましょう。テーブル同士の複雑な関連性（1対1、1対多など）や結合を扱いたい場合は「resultMap」を使用することで容易に実現できます。
+                    </p>
+
+                   ｃ
+
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">9-3-2</span>
+                            <h3 class="subsection-title">テーブル構成</h3>
+                        </div>
+                        <p>
+                            先ほど作成したプロジェクト「MyBatisSample」を使用します。複数テーブルを扱うため、「schema.sql」を以下のように書き換えます。
+                        </p>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">リスト9.12 schema.sql</span><span class="code-lang">SQL</span>
+                            </div>
+                            <div class="code-content">
+                                <pre><span class="code-comment">-- 出版社の情報を格納するテーブル</span>
+<span class="code-keyword">CREATE TABLE</span> publishers (
+    id <span class="code-class">INT</span> <span class="code-keyword">PRIMARY KEY AUTO_INCREMENT</span>,
+    name <span class="code-class">VARCHAR</span>(255) <span class="code-keyword">NOT NULL</span>
+);
+
+<span class="code-comment">-- 書籍の情報を格納するテーブル</span>
+<span class="code-keyword">CREATE TABLE</span> books (
+    id <span class="code-class">INT</span> <span class="code-keyword">PRIMARY KEY AUTO_INCREMENT</span>,
+    title <span class="code-class">VARCHAR</span>(255) <span class="code-keyword">NOT NULL</span>,
+    author <span class="code-class">VARCHAR</span>(255) <span class="code-keyword">NOT NULL</span>,
+    publisher_id <span class="code-class">INT</span>,
+    <span class="code-keyword">FOREIGN KEY</span> (publisher_id) <span class="code-keyword">REFERENCES</span> publishers(id)
+);
+
+<span class="code-comment">-- 書籍に対するレビューを格納するテーブル</span>
+<span class="code-keyword">CREATE TABLE</span> reviews (
+    id <span class="code-class">INT</span> <span class="code-keyword">PRIMARY KEY AUTO_INCREMENT</span>,
+    book_id <span class="code-class">INT</span> <span class="code-keyword">NOT NULL</span>,
+    review_text <span class="code-class">TEXT</span>,
+    <span class="code-keyword">FOREIGN KEY</span> (book_id) <span class="code-keyword">REFERENCES</span> books(id)
+);</pre>
+                            </div>
+                        </div>
+                        <div class="figure">
+                            <svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <filter id="shadow6" x="-20%" y="-20%" width="140%" height="140%">
+                                        <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.15" />
+                                    </filter>
+                                </defs>
+                                <rect width="700" height="220" fill="#f8fafc" rx="12" />
+                                <g filter="url(#shadow6)">
+                                    <rect
+                                        x="30"
+                                        y="30"
+                                        width="180"
+                                        height="160"
+                                        rx="8"
+                                        fill="white"
+                                        stroke="#3b82f6"
+                                        stroke-width="2"
+                                    />
+                                    <rect x="30" y="30" width="180" height="35" rx="8" fill="#3b82f6" />
+                                    <text
+                                        x="120"
+                                        y="55"
+                                        text-anchor="middle"
+                                        fill="white"
+                                        font-family="Noto Sans JP"
+                                        font-size="14"
+                                        font-weight="bold"
+                                    >
+                                        books
+                                    </text>
+                                    <text x="50" y="85" fill="#1e293b" font-family="JetBrains Mono" font-size="11">
+                                        id 🔑 INT
+                                    </text>
+                                    <line x1="40" y1="95" x2="200" y2="95" stroke="#e2e8f0" />
+                                    <text x="50" y="115" fill="#1e293b" font-family="JetBrains Mono" font-size="11">
+                                        title VARCHAR
+                                    </text>
+                                    <line x1="40" y1="125" x2="200" y2="125" stroke="#e2e8f0" />
+                                    <text x="50" y="145" fill="#1e293b" font-family="JetBrains Mono" font-size="11">
+                                        author VARCHAR
+                                    </text>
+                                    <line x1="40" y1="155" x2="200" y2="155" stroke="#e2e8f0" />
+                                    <text x="50" y="175" fill="#1e293b" font-family="JetBrains Mono" font-size="11">
+                                        publisher_id INT
+                                    </text>
+                                </g>
+                                <g filter="url(#shadow6)">
+                                    <rect
+                                        x="260"
+                                        y="30"
+                                        width="180"
+                                        height="130"
+                                        rx="8"
+                                        fill="white"
+                                        stroke="#10b981"
+                                        stroke-width="2"
+                                    />
+                                    <rect x="260" y="30" width="180" height="35" rx="8" fill="#10b981" />
+                                    <text
+                                        x="350"
+                                        y="55"
+                                        text-anchor="middle"
+                                        fill="white"
+                                        font-family="Noto Sans JP"
+                                        font-size="14"
+                                        font-weight="bold"
+                                    >
+                                        reviews
+                                    </text>
+                                    <text x="280" y="85" fill="#1e293b" font-family="JetBrains Mono" font-size="11">
+                                        id 🔑 INT
+                                    </text>
+                                    <line x1="270" y1="95" x2="430" y2="95" stroke="#e2e8f0" />
+                                    <text x="280" y="115" fill="#1e293b" font-family="JetBrains Mono" font-size="11">
+                                        book_id INT
+                                    </text>
+                                    <line x1="270" y1="125" x2="430" y2="125" stroke="#e2e8f0" />
+                                    <text x="280" y="145" fill="#1e293b" font-family="JetBrains Mono" font-size="11">
+                                        review_text TEXT
+                                    </text>
+                                </g>
+                                <g filter="url(#shadow6)">
+                                    <rect
+                                        x="490"
+                                        y="30"
+                                        width="180"
+                                        height="100"
+                                        rx="8"
+                                        fill="white"
+                                        stroke="#f59e0b"
+                                        stroke-width="2"
+                                    />
+                                    <rect x="490" y="30" width="180" height="35" rx="8" fill="#f59e0b" />
+                                    <text
+                                        x="580"
+                                        y="55"
+                                        text-anchor="middle"
+                                        fill="white"
+                                        font-family="Noto Sans JP"
+                                        font-size="14"
+                                        font-weight="bold"
+                                    >
+                                        publishers
+                                    </text>
+                                    <text x="510" y="85" fill="#1e293b" font-family="JetBrains Mono" font-size="11">
+                                        id 🔑 INT
+                                    </text>
+                                    <line x1="500" y1="95" x2="660" y2="95" stroke="#e2e8f0" />
+                                    <text x="510" y="115" fill="#1e293b" font-family="JetBrains Mono" font-size="11">
+                                        name VARCHAR
+                                    </text>
+                                </g>
+                                <path
+                                    d="M 210 175 L 235 175 L 235 95 L 260 95"
+                                    stroke="#64748b"
+                                    stroke-width="1.5"
+                                    stroke-dasharray="5,3"
+                                    fill="none"
+                                />
+                                <text x="230" y="70" fill="#64748b" font-family="Noto Sans JP" font-size="9">
+                                    1対多
+                                </text>
+                                <path
+                                    d="M 210 175 L 450 175 L 450 80 L 490 80"
+                                    stroke="#64748b"
+                                    stroke-width="1.5"
+                                    stroke-dasharray="5,3"
+                                    fill="none"
+                                />
+                                <text x="460" y="70" fill="#64748b" font-family="Noto Sans JP" font-size="9">
+                                    1対1
+                                </text>
+                            </svg>
+                            <p class="figure-caption">図9.35 テーブル構成</p>
+                        </div>
+                        <p>上記のテーブルには以下のような関係があります：</p>
+                        <ul style="margin: 16px 0 16px 24px">
+                            <li>
+                                <strong>books（書籍）とpublishers（出版社）</strong
+                                >：各書籍は1つの出版社に関連付けられます（1対1の関係）。
+                            </li>
+                            <li>
+                                <strong>books（書籍）とreviews（レビュー）</strong
+                                >：1つの書籍には複数のレビューを書くことができます（1対多の関係）。
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">9-3-3</span>
+                            <h3 class="subsection-title">エンティティの追加と修正</h3>
+                        </div>
+                        <h4 style="margin: 24px 0 16px; color: var(--secondary); font-size: 16px">
+                            01 出版社用エンティティの追加
+                        </h4>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">リスト9.14 Publisher.java</span
+                                ><span class="code-lang">Java</span>
+                            </div>
+                            <div class="code-content">
+                                <pre><span class="code-keyword">package</span> com.example.demo.entity;
+<span class="code-keyword">import</span> lombok.Data;
+
+<span class="code-annotation">@Data</span>
+<span class="code-keyword">public class</span> <span class="code-class">Publisher</span> {
+    <span class="code-comment">/** 出版社ID */</span>
+    <span class="code-keyword">private int</span> id;
+    <span class="code-comment">/** 出版社名 */</span>
+    <span class="code-keyword">private</span> <span class="code-class">String</span> name;
+}</pre>
+                            </div>
+                        </div>
+                        <h4 style="margin: 24px 0 16px; color: var(--secondary); font-size: 16px">
+                            02 レビュー用エンティティの追加
+                        </h4>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">リスト9.15 Review.java</span
+                                ><span class="code-lang">Java</span>
+                            </div>
+                            <div class="code-content">
+                                <pre><span class="code-keyword">package</span> com.example.demo.entity;
+<span class="code-keyword">import</span> lombok.Data;
+
+<span class="code-annotation">@Data</span>
+<span class="code-keyword">public class</span> <span class="code-class">Review</span> {
+    <span class="code-comment">/** レビューID */</span>
+    <span class="code-keyword">private int</span> id;
+    <span class="code-comment">/** 書籍ID */</span>
+    <span class="code-keyword">private int</span> bookId;
+    <span class="code-comment">/** レビュー内容 */</span>
+    <span class="code-keyword">private</span> <span class="code-class">String</span> reviewText;
+}</pre>
+                            </div>
+                        </div>
+                        <h4 style="margin: 24px 0 16px; color: var(--secondary); font-size: 16px">
+                            03 書籍用エンティティの修正
+                        </h4>
+                        <p>
+                            「Book」クラスに対して、「書籍と出版社の1対1の関係」と「書籍とレビューの1対多の関係」をフィールドに追加する修正を行います。
+                        </p>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">リスト9.16 Book.java（修正後）</span
+                                ><span class="code-lang">Java</span>
+                            </div>
+                            <div class="code-content">
+                                <pre><span class="code-keyword">package</span> com.example.demo.entity;
+<span class="code-keyword">import</span> java.util.List;
+<span class="code-keyword">import</span> lombok.Data;
+
+<span class="code-annotation">@Data</span>
+<span class="code-keyword">public class</span> <span class="code-class">Book</span> {
+    <span class="code-comment">/** 書籍ID */</span>
+    <span class="code-keyword">private int</span> id;
+    <span class="code-comment">/** タイトル */</span>
+    <span class="code-keyword">private</span> <span class="code-class">String</span> title;
+    <span class="code-comment">/** 著者 */</span>
+    <span class="code-keyword">private</span> <span class="code-class">String</span> author;
+    <span class="code-comment">/** 書籍と出版社の1対1の関係 */</span>
+    <span class="code-keyword">private</span> <span class="code-class">Publisher</span> publisher;
+    <span class="code-comment">/** 書籍とレビューの1対多の関係 */</span>
+    <span class="code-keyword">private</span> <span class="code-class">List</span>&lt;<span class="code-class">Review</span>&gt; reviews;
+}</pre>
+                            </div>
+                        </div>
+                        <p>
+                            「private Publisher
+                            publisher;」は、書籍と出版社の関係が「1対1」なので、フィールドの型が「Publisher」になっています。「private
+                            List&lt;Review&gt;
+                            reviews;」は、書籍とレビューの関係が「1対多」なので、フィールドの型が「List&lt;Review&gt;」になっています。
+                        </p>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">9-3-4</span>
+                            <h3 class="subsection-title">マッパーファイルの修正</h3>
+                        </div>
+                        <h4 style="margin: 24px 0 16px; color: var(--secondary); font-size: 16px">
+                            ■ resultMap：書籍と出版社の1対1の関係
+                        </h4>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">リスト9.17 resultMap：書籍と出版社の1対1</span
+                                ><span class="code-lang">XML</span>
+                            </div>
+                            <div class="code-content">
+                                <pre><span class="code-comment">&lt;!-- 書籍と出版社の1対1の関係 --&gt;</span>
+<span class="tag">&lt;resultMap</span> <span class="attr">id</span>=<span class="value">"BookWithPublisherResult"</span>
+        <span class="attr">type</span>=<span class="value">"com.example.demo.entity.Book"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;id</span> <span class="attr">property</span>=<span class="value">"id"</span> <span class="attr">column</span>=<span class="value">"id"</span> <span class="tag">/&gt;</span>
+    <span class="tag">&lt;result</span> <span class="attr">property</span>=<span class="value">"title"</span> <span class="attr">column</span>=<span class="value">"title"</span> <span class="tag">/&gt;</span>
+    <span class="tag">&lt;result</span> <span class="attr">property</span>=<span class="value">"author"</span> <span class="attr">column</span>=<span class="value">"author"</span> <span class="tag">/&gt;</span>
+    <span class="tag">&lt;association</span> <span class="attr">property</span>=<span class="value">"publisher"</span>
+            <span class="attr">javaType</span>=<span class="value">"com.example.demo.entity.Publisher"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;id</span> <span class="attr">property</span>=<span class="value">"id"</span> <span class="attr">column</span>=<span class="value">"publisher_id"</span> <span class="tag">/&gt;</span>
+        <span class="tag">&lt;result</span> <span class="attr">property</span>=<span class="value">"name"</span> <span class="attr">column</span>=<span class="value">"publisher_name"</span> <span class="tag">/&gt;</span>
+    <span class="tag">&lt;/association&gt;</span>
+<span class="tag">&lt;/resultMap&gt;</span></pre>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <tr>
+                                    <th>タグ/属性</th>
+                                    <th>説明</th>
+                                </tr>
+                                <tr>
+                                    <td>&lt;resultMap&gt; id</td>
+                                    <td>resultMapの一意な識別子です</td>
+                                </tr>
+                                <tr>
+                                    <td>&lt;resultMap&gt; type</td>
+                                    <td>resultMapがマッピングするJavaのエンティティクラスの完全修飾名です</td>
+                                </tr>
+                                <tr>
+                                    <td>&lt;association&gt; property</td>
+                                    <td>エンティティクラス内で関連するオブジェクトを保持するフィールド名です</td>
+                                </tr>
+                                <tr>
+                                    <td>&lt;association&gt; javaType</td>
+                                    <td>関連するオブジェクトのJavaの型です</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <p>&lt;association&gt;タグを使うことで、「1対1」のような複雑な関係も表現できます。</p>
+
+                        <h4 style="margin: 24px 0 16px; color: var(--secondary); font-size: 16px">
+                            ■ resultMap：書籍とレビューの1対多の関係
+                        </h4>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">リスト9.18 resultMap：書籍とレビューの1対多</span
+                                ><span class="code-lang">XML</span>
+                            </div>
+                            <div class="code-content">
+                                <pre><span class="code-comment">&lt;!-- 書籍とレビューの1対多の関係 --&gt;</span>
+<span class="tag">&lt;resultMap</span> <span class="attr">id</span>=<span class="value">"BookWithReviewsResult"</span>
+        <span class="attr">type</span>=<span class="value">"com.example.demo.entity.Book"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;id</span> <span class="attr">property</span>=<span class="value">"id"</span> <span class="attr">column</span>=<span class="value">"id"</span> <span class="tag">/&gt;</span>
+    <span class="tag">&lt;result</span> <span class="attr">property</span>=<span class="value">"title"</span> <span class="attr">column</span>=<span class="value">"title"</span> <span class="tag">/&gt;</span>
+    <span class="tag">&lt;result</span> <span class="attr">property</span>=<span class="value">"author"</span> <span class="attr">column</span>=<span class="value">"author"</span> <span class="tag">/&gt;</span>
+    <span class="tag">&lt;collection</span> <span class="attr">property</span>=<span class="value">"reviews"</span> <span class="attr">ofType</span>=<span class="value">"com.example.demo.entity.Review"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;id</span> <span class="attr">property</span>=<span class="value">"id"</span> <span class="attr">column</span>=<span class="value">"review_id"</span> <span class="tag">/&gt;</span>
+        <span class="tag">&lt;result</span> <span class="attr">property</span>=<span class="value">"bookId"</span> <span class="attr">column</span>=<span class="value">"book_id"</span> <span class="tag">/&gt;</span>
+        <span class="tag">&lt;result</span> <span class="attr">property</span>=<span class="value">"reviewText"</span> <span class="attr">column</span>=<span class="value">"review_text"</span> <span class="tag">/&gt;</span>
+    <span class="tag">&lt;/collection&gt;</span>
+<span class="tag">&lt;/resultMap&gt;</span></pre>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>説明</th>
+                                </tr>
+                                <tr>
+                                    <td>&lt;collection&gt; property</td>
+                                    <td>エンティティクラス内でレビューのリストを保持するフィールド名を指定します</td>
+                                </tr>
+                                <tr>
+                                    <td>&lt;collection&gt; ofType</td>
+                                    <td>コレクション内の各要素のJavaの型を完全修飾名で指定します</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">9-3-5</span>
+                            <h3 class="subsection-title">SQLの修正</h3>
+                        </div>
+                        <h4 style="margin: 24px 0 16px; color: var(--secondary); font-size: 16px">
+                            ■ SQLの修正（書籍と出版社の1対1の関係）
+                        </h4>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">リスト9.20 書き換え後（getAllBooks）</span
+                                ><span class="code-lang">XML</span>
+                            </div>
+                            <div class="code-content">
+                                <pre><span class="code-comment">&lt;!-- 【SELECT】全ての書籍(出版社)を取得するためのSQLを定義 --&gt;</span>
+<span class="tag">&lt;select</span> <span class="attr">id</span>=<span class="value">"getAllBooks"</span> <span class="attr">resultMap</span>=<span class="value">"BookWithPublisherResult"</span><span class="tag">&gt;</span>
+    SELECT
+        b.id, b.title, b.author,
+        p.id as publisher_id, p.name as publisher_name
+    FROM books b
+    INNER JOIN publishers p ON b.publisher_id = p.id
+    ORDER BY b.id
+<span class="tag">&lt;/select&gt;</span></pre>
+                            </div>
+                        </div>
+                        <p>
+                            booksテーブル（エイリアスb）とpublishersテーブル（エイリアスp）をINNER
+                            JOINしています。この結合により、書籍と出版社を関連付けてデータを取得します。取得された結果データは、「resultMap="BookWithPublisherResult"」により、先ほど作成したresultMapと紐づけられます。
+                        </p>
+
+                        <h4 style="margin: 24px 0 16px; color: var(--secondary); font-size: 16px">
+                            ■ SQLの修正（書籍とレビューの1対多の関係）
+                        </h4>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">リスト9.22 書き換え後（getBookById）</span
+                                ><span class="code-lang">XML</span>
+                            </div>
+                            <div class="code-content">
+                                <pre><span class="code-comment">&lt;!-- 【SELECT】特定のIDを持つ書籍（レビュー）を取得するためのSQLを定義 --&gt;</span>
+<span class="tag">&lt;select</span> <span class="attr">id</span>=<span class="value">"getBookById"</span> <span class="attr">resultMap</span>=<span class="value">"BookWithReviewsResult"</span><span class="tag">&gt;</span>
+    SELECT
+        b.id, b.title, b.author, b.publisher_id,
+        r.id as review_id, r.book_id, r.review_text
+    FROM books b
+    INNER JOIN reviews r ON b.id = r.book_id
+    WHERE b.id = #{id}
+<span class="tag">&lt;/select&gt;</span></pre>
+                            </div>
+                        </div>
+                        <p>
+                            booksテーブルとreviewsテーブルをINNER JOINしています。「WHERE b.id =
+                            #{id}」で、取得する書籍のIDを指定します。取得された結果データは、「resultMap="BookWithReviewsResult"」を通じて、Javaの「Book」エンティティにマッピングされます。
+                        </p>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">9-3-6</span>
+                            <h3 class="subsection-title">動作確認</h3>
+                        </div>
+                        <p>
+                            プログラムが完成したので動作確認を実施します。VSCodeのターミナルで「./mvnw spring-boot:run」を実行するか、「Spring Boot Dashboard」からプロジェクトを起動します。
+                        </p>
+                        <p>
+                            「書籍一覧表示」リンクをクリックすると、出版社の列が追加され、テーブル結合の結果が正しく表示されていることを確認してください。「書籍詳細」リンクをクリックすると、書籍の詳細とともにレビュー一覧が表示されます。1対多の関係が正しくマッピングされ、複数のレビューが表示されることを確認してください。
+                        </p>
+                    </div>
+
+                    <!-- まとめ -->
+                    <div class="summary-box">
+                        <h3>📝 第9章のまとめ</h3>
+                        <ul class="summary-list">
+                            <li>
+                                O/Rマッパーは、オブジェクトとリレーショナルデータベース間のデータマッピングを自動化する
+                            </li>
+                            <li>
+                                MyBatisはSQLを直接記述できるO/Rマッパーで、XMLファイルやアノテーションでSQLを定義できる
+                            </li>
+                            <li>
+                                マッパーインターフェースに@Mapperアノテーションを付与し、対応するXMLファイルでSQLを定義する
+                            </li>
+                            <li>
+                                CRUD操作（Create、Read、Update、Delete）は、それぞれ&lt;insert&gt;、&lt;select&gt;、&lt;update&gt;、&lt;delete&gt;タグで定義する
+                            </li>
+                            <li>プレースホルダ（#{パラメータ名}）を使用してSQLインジェクション攻撃を防ぐ</li>
+                            <li>resultMapを使用すると、複数テーブル間の複雑な関係（1対1、1対多）を定義できる</li>
+                            <li>&lt;association&gt;タグは1対1の関係、&lt;collection&gt;タグは1対多の関係を表現する</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <footer class="chapter-footer">
+                <p>© Spring Boot 学習教材 - 第9章 O/Rマッパー（MyBatis）を知ろう</p>
+            </footer>
+        </div>
+
+        <footer class="footer">
+            <p>Spring Framework 入門チュートリアル</p>
+        </footer>
+
+        <div class="page-nav">
+            <a href="8Validation_Textbook_Rewrite.html" class="page-nav-btn prev">
+                <span>←</span>
+                <div>
+                    <div class="page-nav-label">前の章</div>
+                    <div class="page-nav-title">第8章</div>
+                </div>
+            </a>
+
+            <a href="10app-preparation-tutorial.html" class="page-nav-btn next">
+                <div>
+                    <div class="page-nav-label">次の章</div>
+                    <div class="page-nav-title">第10章</div>
+                </div>
+                <span>→</span>
+            </a>
+        </div>
+
+        <script>
+            function toggleMenu() {
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+                toggle.classList.toggle("active");
+                menu.classList.toggle("active");
+            }
+
+            document.addEventListener("click", function (e) {
+                const nav = document.querySelector(".global-nav");
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+
+                if (!nav.contains(e.target) && menu.classList.contains("active")) {
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+
+            window.addEventListener("resize", function () {
+                if (window.innerWidth >= 1024) {
+                    const toggle = document.querySelector(".nav-toggle");
+                    const menu = document.querySelector(".nav-menu");
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+        </script>
+    </body>
+</html>

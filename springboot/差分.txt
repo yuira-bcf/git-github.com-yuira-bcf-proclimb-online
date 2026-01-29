@@ -1,0 +1,87 @@
+3) 差分整理（重要なズレだけ、教材事故ポイント順）
+差分A：現行ソースの index.html が「初期版」で止まっている
+
+現行ソースの index.html は「ここに一覧を表示します」＋リンクだけ（=フェーズ2相当）。
+
+index
+
+でも Controller はすでに notes をModelへ渡している（=フェーズ4以降の作り）。
+
+CrudappController
+
+教科書後半の “一覧にDBデータを表示する index.html” は th:each="note : ${notes}" のテーブル表示（=フェーズ4以降）。
+
+SpringBootsCode-3
+
+影響（そのままだと起きること）
+
+DB保存しても、ブラウザ上の一覧に何も出ない（裏で notes は取ってるのに表示してない）。
+
+フェーズ5（削除ボタン）フェーズ6（編集ボタン）の UI検証が成立しない。
+
+>>ファイル構成は現行ソースを優先
+>>ソースコードはpdfを優先
+
+差分B：@RequestMapping({"/crudapp", ""}) の扱い（PDFと現行ソースで違う）
+
+教科書のController例は @RequestMapping({"/crudapp", ""})（ルートもcrudapp扱いにする書き方）が混在。
+
+SpringBootsCode-3
+
+現行ソースは @RequestMapping("/crudapp") のみで、ルート / は HelloController が取る。
+
+HelloController
+
+CrudappController
+
+影響
+
+教科書通りに "" を足すと、/ の競合が起き得る（HelloとCRUDが両方 / を主張する）。
+→ 教材としては「現行ソース方式（/ はHello、CRUDは /crudapp）」の方が事故りにくい。
+
+
+>>現行ソースを優先
+
+差分C：パッケージ名の表記ゆれ（教科書は demo が多い）
+
+教科書は com.example.demo 前提の記述が多い（例：DemoApplication/HelloController）。
+
+SpringBootsCode-3
+
+現行プロジェクトは springboot-app 由来で、パッケージは com.example.springboot_app。
+さらに HELP.md に「元の package 名が無効なので springboot_app を使う」と明記。
+
+HELP
+
+影響
+
+受講者がコピペすると com.example.demo で迷子になりやすい。
+→ 教材側で「この教材は com.example.springboot_app で統一」と最初に固定した方がいい。
+
+>>com.example.demoで統一
+
+
+差分D：フェーズ説明に “表示切替(toggle)” が書かれていない（教科書・ソースには存在）
+
+現行ソースは /crudapp/toggle を持つ。
+
+CrudappController
+
+教科書にも toggle が載っている。
+
+SpringBootsCode-3
+
+でもあなたのフェーズ1〜6説明には toggle がない。
+
+影響
+
+「ボタンがある/ない」「V2 migration の is_visible は何のため？」が教材でブレる。
+
+整理案（おすすめ）
+
+toggle を フェーズ5に含める（削除と同じ“一覧の操作”枠） か、
+
+**フェーズ7（オプション課題）**として分離（教材がスッキリする）。
+
+
+>>提案通りとする

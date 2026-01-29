@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ガベージコレクション（初学者向け）</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif; line-height: 1.8; margin: 24px; }
+    h1 { font-size: 1.6rem; margin: 0 0 12px; }
+    h2 { font-size: 1.2rem; margin: 28px 0 8px; border-left: 6px solid #ddd; padding-left: 10px; }
+    p  { margin: 10px 0; }
+    ul { margin: 10px 0 10px 22px; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Noto Sans Mono", "Liberation Mono", "Courier New", monospace; }
+    pre { padding: 12px; border: 1px solid #e5e5e5; border-radius: 8px; overflow-x: auto; background: #fafafa; }
+    .box { border: 1px solid #e5e5e5; border-radius: 10px; padding: 14px; background: #fcfcfc; }
+    .note { border-left: 6px solid #f0c36d; background: #fff7e6; padding: 12px 14px; border-radius: 8px; }
+    .key { border-left: 6px solid #7fb3ff; background: #eef5ff; padding: 12px 14px; border-radius: 8px; }
+    .summary { border-left: 6px solid #7ad39a; background: #effaf3; padding: 12px 14px; border-radius: 8px; }
+    .small { font-size: 0.95rem; color: #444; }
+  </style>
+</head>
+<body>
+
+  <h1>初学者のためのガベージコレクション（メモリを意識しない説明）</h1>
+
+  <section>
+    <h2>はじめに</h2>
+    <p>
+      Java を学び始めたばかりの段階では、「メモリ」や「new」という言葉を正確に理解していなくても、まったく問題ありません。
+      実際、多くの学習者は次のように考えています。
+    </p>
+    <div class="box">
+      <p><strong>「プログラムの中に、値やものがある」</strong></p>
+    </div>
+    <p>
+      この章では、難しい言葉をできるだけ使わずに、ガベージコレクションの考え方を説明します。
+    </p>
+  </section>
+
+  <section>
+    <h2>Java は「使っているもの」と「使っていないもの」を区別しています</h2>
+    <p>Java は、プログラムの中にある「もの」を、次の 2 種類に分けて考えています。</p>
+    <ul>
+      <li><strong>今、使っているもの</strong></li>
+      <li><strong>もう使っていないもの</strong></li>
+    </ul>
+    <div class="key">
+      <p>
+        ガベージコレクションとは、<strong>「もう使っていないものを、Java が自動で片付ける仕組み」</strong>です。
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>具体例で考えてみましょう</h2>
+    <p>次のような処理があったとします。</p>
+    <pre><code>String name = "田中";
+name = "佐藤";</code></pre>
+
+    <p>このとき、理解すべきことは次の一点だけです。</p>
+    <ul>
+      <li>今、使われているのは「佐藤」</li>
+      <li>「田中」はもう使われていない</li>
+    </ul>
+
+    <p class="small">
+      Java はこの状態を見て、「もう使われていないものがあるな」と判断します。
+    </p>
+  </section>
+
+  <section>
+    <h2>Java は「もう取り出せないもの」を片付けます</h2>
+    <p>
+      Java が「不要だ」と判断する基準は、とても単純です。
+    </p>
+    <div class="box">
+      <p><strong>「もう取り出せないもの」</strong></p>
+    </div>
+    <p>
+      プログラムの中で、どこにも名前が残っていない、つまりもう参照できない状態になったものは、自動的に回収の対象になります。
+    </p>
+  </section>
+
+  <section>
+    <h2>ガベージコレクションは自動で行われます</h2>
+    <p>ここで大切な点があります。</p>
+    <ul>
+      <li>ガベージコレクションは自動です</li>
+      <li>人が命令しなくてよい仕組みです</li>
+      <li>実行するタイミングは Java が決めます</li>
+    </ul>
+    <div class="note">
+      <p><strong>結論：</strong>「気づいたら片付いている」という仕組みです。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>初学者が気にしなくてよいこと</h2>
+    <p>この段階では、次のことは考えなくて大丈夫です。</p>
+    <ul>
+      <li>メモリの場所</li>
+      <li>new がどこに確保されるか</li>
+      <li>ヒープやスタックの違い</li>
+      <li>回収のアルゴリズム</li>
+    </ul>
+    <p class="small">
+      これらは、もう少し後で知れば十分です。
+    </p>
+  </section>
+
+  <section>
+    <h2>この章で覚えること（最重要）</h2>
+    <div class="summary">
+      <p><strong>「Java は、もう使われなくなったものを、自動で片付ける」</strong></p>
+    </div>
+    <p>
+      これが分かっていれば、今後どんな説明が出てきても必ずつながります。
+    </p>
+  </section>
+
+  <section>
+    <h2>次の学習につなげるために</h2>
+    <p>
+      この理解ができた段階で、初めて次の話が意味を持ちます。
+    </p>
+    <ul>
+      <li>「new とは何か」</li>
+      <li>「オブジェクトとは何か」</li>
+      <li>「参照とは何か」</li>
+    </ul>
+    <p>
+      順番を間違えなければ、必ず理解できます。
+    </p>
+  </section>
+
+  <hr />
+
+<h1>null によって「参照されなくなる」とは</h1>
+
+<section>
+  <h2>はじめに</h2>
+  <p>
+    Java を学習していると、<code>null</code> という特別な値が登場します。
+  </p>
+  <p>
+    初学者の方は、次のように感じることが多いでしょう。
+  </p>
+  <div class="box">
+    <p>「null って、何もないってこと？」</p>
+    <p>「入れると、何が起きるの？」</p>
+  </div>
+  <p>
+    この章では、<strong>null の役割を「参照をなくすもの」</strong>として、
+    やさしく説明します。
+  </p>
+</section>
+
+<section>
+  <h2>まず「参照」とは何か</h2>
+  <p>
+    Java の変数は、必ずしも「値そのもの」を持っているわけではありません。
+  </p>
+  <p>
+    多くの場合、変数は
+  </p>
+  <div class="box">
+    <p><strong>「それを使うためのつながり」</strong></p>
+  </div>
+  <p>
+    を持っています。この「つながり」を <strong>参照</strong> と呼びます。
+  </p>
+</section>
+
+<section>
+  <h2>null の意味</h2>
+  <p>
+    <code>null</code> は、次の意味を持つ特別な値です。
+  </p>
+  <div class="key">
+    <p><strong>「どこも指していません」</strong></p>
+    <p><strong>「何ともつながっていません」</strong></p>
+  </div>
+  <p>
+    つまり <code>null</code> は、
+    <strong>参照を切るための値</strong> です。
+  </p>
+</section>
+
+<section>
+  <h2>具体例で見てみましょう</h2>
+  <p>次のコードを見てください。</p>
+  <pre><code>String name = "田中";</code></pre>
+  <p>
+    この時点では、変数 <code>name</code> は
+    「田中」を使える状態です。
+  </p>
+
+  <p>次に、次の行を実行します。</p>
+  <pre><code>name = null;</code></pre>
+
+  <p>
+    この瞬間に起きていることは次の通りです。
+  </p>
+  <ul>
+    <li>変数 <code>name</code> は残っている</li>
+    <li>しかし、「田中」とのつながりは切れている</li>
+    <li><code>name</code> は何も指していない状態になる</li>
+  </ul>
+</section>
+
+<section>
+  <h2>「参照されていない」とはどういう状態か</h2>
+  <p>
+    Java で「参照されていない」とは、次の状態を意味します。
+  </p>
+  <div class="box">
+    <p><strong>「もう、その値を取り出す方法がない状態」</strong></p>
+  </div>
+  <p>
+    <code>null</code> を代入すると、
+    その値を使うためのつながりがなくなります。
+  </p>
+</section>
+
+<section>
+  <h2>なぜ参照されなくする必要があるのか</h2>
+  <p>
+    Java は、プログラムの中を見て、
+  </p>
+  <div class="box">
+    <p>「もう使われていないものはどれか」</p>
+  </div>
+  <p>
+    を判断しています。
+  </p>
+  <p>
+    どこからも参照されていないものは、
+    <strong>不要なもの</strong> と判断され、
+    自動的に片付けられる対象になります。
+  </p>
+</section>
+
+<section>
+  <h2>注意点</h2>
+  <p>
+    <code>null</code> は便利ですが、使い方を間違えるとエラーになります。
+  </p>
+  <pre><code>String name = null;
+System.out.println(name.length());</code></pre>
+  <div class="note">
+    <p>
+      何も指していないものに対して、
+      操作をしようとしているためエラーになります。
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>この章で覚えてほしいこと</h2>
+  <div class="summary">
+    null は、参照をなくすための値である
+  </div>
+  <p>
+    この理解ができれば、
+    ガベージコレクションやエラーの説明も
+    自然につながっていきます。
+  </p>
+</section>
+
+<hr />
+
+<h1>NullPointerException とは</h1>
+
+<section>
+  <h2>はじめに</h2>
+  <p>
+    Java を学習していると、次のようなエラー表示に必ず出会います。
+  </p>
+  <pre><code>NullPointerException</code></pre>
+  <p>
+    初学者の方は、これを見て不安になることが多いでしょう。
+  </p>
+  <div class="box">
+    <p>「急に英語が出てきた」</p>
+    <p>「何が悪いのかわからない」</p>
+    <p>「プログラムが壊れた？」</p>
+  </div>
+  <p>
+    しかし、NullPointerException は、
+    <strong>原因がとてもはっきりしているエラー</strong>です。
+  </p>
+</section>
+
+<section>
+  <h2>NullPointerException を一言で言うと</h2>
+  <div class="key">
+    <p>
+      <strong>
+        何も指していないものに対して、<br>
+        操作をしようとしたときに起きるエラー
+      </strong>
+    </p>
+  </div>
+  <p>
+    難しい理由がいくつもあるわけではありません。
+    原因は、ほぼ 1 つだけです。
+  </p>
+</section>
+
+<section>
+  <h2>まず、正しい状態を見てみましょう</h2>
+  <p>次のコードを見てください。</p>
+  <pre><code>String name = "田中";
+System.out.println(name.length());</code></pre>
+  <p>
+    この場合、
+  </p>
+  <ul>
+    <li><code>name</code> は「田中」を指している</li>
+    <li>文字列として使える状態である</li>
+  </ul>
+  <p>
+    そのため、問題なく実行されます。
+  </p>
+</section>
+
+<section>
+  <h2>次に、エラーが起きる例です</h2>
+  <pre><code>String name = null;
+System.out.println(name.length());</code></pre>
+  <p>
+    このコードを実行すると、
+    <strong>NullPointerException が発生します。</strong>
+  </p>
+</section>
+
+<section>
+  <h2>何が起きているのか</h2>
+  <p>
+    このときの <code>name</code> の状態は、次の通りです。
+  </p>
+  <ul>
+    <li>変数 <code>name</code> は存在している</li>
+    <li>しかし、何も指していない</li>
+    <li>使える対象がない</li>
+  </ul>
+  <p>
+    それにもかかわらず、
+  </p>
+  <pre><code>name.length();</code></pre>
+  <p>
+    と書いて、「長さを調べてください」と命令しています。
+  </p>
+  <p>
+    Java はこれを見て、
+  </p>
+  <div class="box">
+    <p>
+      「何もないものに対して、<br>
+      操作をすることはできません」
+    </p>
+  </div>
+  <p>
+    と判断し、NullPointerException を発生させます。
+  </p>
+</section>
+
+<section>
+  <h2>null とエラーの関係</h2>
+  <p>
+    ここで、重要な点を整理します。
+  </p>
+  <ul>
+    <li><code>null</code> 自体はエラーではありません</li>
+    <li><code>null</code> に対して操作をしたときにエラーになります</li>
+  </ul>
+  <div class="note">
+    <p>
+      「null が入っているだけ」ではエラーになりません。<br>
+      「null を使おうとした瞬間」にエラーになります。
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>なぜ Java はエラーを出すのか</h2>
+  <p>
+    Java は、安全をとても重視する言語です。
+  </p>
+  <ul>
+    <li>あいまいな動作をしない</li>
+    <li>危険な状態を放置しない</li>
+    <li>問題があれば、必ず止める</li>
+  </ul>
+  <p>
+    そのため、
+    「何も指していないものを使おうとした」
+    という状況では、必ずエラーを出します。
+  </p>
+</section>
+
+<section>
+  <h2>NullPointerException を防ぐ方法</h2>
+  <p>
+    このエラーを防ぐために大切なのは、
+    次の考え方です。
+  </p>
+  <div class="key">
+    <p><strong>使う前に、null かどうかを確認する</strong></p>
+  </div>
+  <pre><code>if (name != null) {
+    System.out.println(name.length());
+}</code></pre>
+  <p>
+    このように書けば、
+    null のときに無理な操作をせず、安全に処理できます。
+  </p>
+</section>
+
+<section>
+  <h2>この章で覚えてほしいこと</h2>
+  <div class="summary">
+    NullPointerException は、null に対して操作をしようとしたときに起きる
+  </div>
+  <p>
+    この一文を理解できていれば、
+    このエラーはもう怖くありません。
+  </p>
+</section>
+<hr>
+<h1>多次元配列とは</h1>
+
+<section>
+  <h2>はじめに</h2>
+  <p>
+    配列（配列変数）は、複数の値をまとめて扱うための仕組みです。
+    まず、1次元配列は「一直線に並んだデータ」として考えると分かりやすいです。
+  </p>
+  <pre><code>int[] a = {10, 20, 30};</code></pre>
+  <p>
+    これに対して、<strong>多次元配列</strong>は「並びを、さらに並べたもの」です。
+    特に学習でよく使うのは <strong>2次元配列</strong> です。
+  </p>
+</section>
+
+<section>
+  <h2>多次元配列を一言で言うと</h2>
+  <div class="key">
+    <p><strong>配列の中に、配列が入っているもの</strong></p>
+  </div>
+  <p>
+    1次元配列が「横に並んだ列」だとすると、2次元配列は「行と列でできた表（テーブル）」として考えると理解しやすくなります。
+  </p>
+</section>
+
+<section>
+  <h2>2次元配列（表としてのイメージ）</h2>
+  <p>
+    例えば、次の表をデータとして持ちたいとします。
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>行\列</th>
+        <th>0列</th>
+        <th>1列</th>
+        <th>2列</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>0行</th>
+        <td>10</td>
+        <td>20</td>
+        <td>30</td>
+      </tr>
+      <tr>
+        <th>1行</th>
+        <td>40</td>
+        <td>50</td>
+        <td>60</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    このような「行と列」を持つデータを表すのが、2次元配列です。
+  </p>
+</section>
+
+<section>
+  <h2>2次元配列の書き方</h2>
+  <p>上の表は、Java では次のように書けます。</p>
+  <pre><code>int[][] data = {
+    {10, 20, 30},
+    {40, 50, 60}
+};</code></pre>
+
+  <div class="note">
+    <p>
+      <strong>ポイント：</strong><br>
+      外側の <code>{ ... }</code> が「行のまとまり」です。<br>
+      内側の <code>{ ... }</code> が「各行の中身（列の並び）」です。
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>要素の取り出し方（行と列で指定します）</h2>
+  <p>
+    2次元配列は、<strong>行番号</strong>と<strong>列番号</strong>の2つで場所を指定します。
+  </p>
+  <pre><code>System.out.println(data[0][0]); // 10（0行0列）
+System.out.println(data[0][2]); // 30（0行2列）
+System.out.println(data[1][1]); // 50（1行1列）</code></pre>
+  <div class="box">
+    <p>
+      <strong>読み方：</strong><br>
+      <code>data[行][列]</code> の順番で指定します。
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>for 文で全部表示する（基本形）</h2>
+  <p>
+    2次元配列をすべて表示したい場合は、通常 <strong>for 文を2回</strong>使います。
+    外側の for 文で「行」を回し、内側の for 文で「列」を回します。
+  </p>
+  <pre><code>for (int i = 0; i &lt; data.length; i++) {              // 行
+    for (int j = 0; j &lt; data[i].length; j++) {       // 列
+        System.out.print(data[i][j] + " ");
+    }
+    System.out.println();
+}</code></pre>
+  <p>実行結果の例：</p>
+  <pre><code>10 20 30
+40 50 60</code></pre>
+
+  <div class="note">
+    <p>
+      <strong>重要：</strong><br>
+      列の数は <code>data[i].length</code> で取り出します。<br>
+      これは「行によって列の数が違う場合」でも安全に動く書き方です。
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>「多次元」とはどこまでか</h2>
+  <p>
+    2次元は「表」ですが、さらに次のように増やすこともできます。
+  </p>
+  <ul>
+    <li><strong>3次元配列</strong>：表を複数まとめたもの（例：ページが複数ある表）</li>
+    <li><strong>4次元以上</strong>：実務ではあまり使いません（別の構造の方が分かりやすいことが多いです）</li>
+  </ul>
+
+  <pre><code>// 3次元配列の例（イメージ）
+int[][][] cube = {
+    {
+        {1, 2},
+        {3, 4}
+    },
+    {
+        {5, 6},
+        {7, 8}
+    }
+};</code></pre>
+</section>
+
+<section>
+  <h2>初学者がつまずきやすい点</h2>
+  <div class="note">
+    <p><strong>つまずきポイント 1：</strong>添字（番号）は 0 から始まります。</p>
+    <p><strong>つまずきポイント 2：</strong><code>data.length</code> は「行数」です。</p>
+    <p><strong>つまずきポイント 3：</strong><code>data[i].length</code> は「i 行目の列数」です。</p>
+  </div>
+</section>
+
+<section>
+  <h2>まとめ</h2>
+  <div class="summary">
+    多次元配列とは「配列の中に配列が入っているもの」であり、2次元配列は「表（行と列）」として考えると理解しやすいです。
+  </div>
+  <p>
+    次のステップとしては、2次元配列を使った「成績表」「座席表」「マップ」などの問題に進むと、理解が定着しやすくなります。
+  </p>
+</section>
+
+</body>
+</html>

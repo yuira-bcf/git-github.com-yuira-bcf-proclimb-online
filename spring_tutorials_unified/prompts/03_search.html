@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>初級3 検索機能（タイトル検索）</title>
+
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&family=M+PLUS+Rounded+1c:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="../style.css" />
+        <style>
+            .download-btn {
+                background: linear-gradient(135deg, #22c55e, #16a34a);
+                color: white;
+                border: none;
+                padding: 6px 14px;
+                border-radius: 6px;
+                font-size: 12px;
+                font-weight: 600;
+                cursor: pointer;
+                margin-left: auto;
+                transition: all 0.2s ease;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+            }
+            .download-btn:hover {
+                background: linear-gradient(135deg, #16a34a, #15803d);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+            }
+            .code-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .level-badge {
+                display: inline-block;
+                padding: 4px 12px;
+                border-radius: 20px;
+                font-size: 0.85rem;
+                font-weight: 600;
+                background: #dcfce7;
+                color: #166534;
+                margin-right: 8px;
+            }
+            .search-box {
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                padding: 1rem;
+                margin: 1rem 0;
+                display: flex;
+                gap: 0.5rem;
+                align-items: center;
+            }
+            .search-box input {
+                flex: 1;
+                padding: 0.5rem;
+                border: 1px solid #cbd5e1;
+                border-radius: 4px;
+            }
+            .search-box button {
+                padding: 0.5rem 1rem;
+                background: #3b82f6;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- グローバルナビゲーション -->
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="../1spring-framework-tutorial.html" class="nav-logo">
+                    <span class="nav-logo-icon">🌱</span>
+                    <span>Spring入門</span>
+                </a>
+                <button class="nav-toggle" onclick="toggleMenu()" aria-label="メニュー">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 初級レベル</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="01_validation.html" class="nav-link">
+                                <span class="nav-chapter-num">1</span>
+                                <span>入力バリデーション</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="02_status.html" class="nav-link">
+                                <span class="nav-chapter-num">2</span>
+                                <span>完了/未完了ステータス</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="03_search.html" class="nav-link active">
+                                <span class="nav-chapter-num">3</span>
+                                <span>検索機能</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="04_sort.html" class="nav-link">
+                                <span class="nav-chapter-num">4</span>
+                                <span>ソート機能</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="05_delete_dialog.html" class="nav-link">
+                                <span class="nav-chapter-num">5</span>
+                                <span>削除確認ダイアログ</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <!-- ヘッダー -->
+            <header class="chapter-header">
+                <div class="chapter-badge">
+                    <span class="level-badge">初級</span>
+                    📘 Beginner
+                </div>
+                <div class="chapter-number">3</div>
+                <h1 class="chapter-title">検索機能（タイトル検索）</h1>
+            </header>
+
+            <!-- 目次 -->
+            <nav class="toc">
+                <h2 class="toc-title">📑 この章の内容</h2>
+                <ul class="toc-list">
+                    <li class="toc-item">
+                        <span class="toc-number">3-1</span>
+                        <span>検索機能の概要</span>
+                    </li>
+                    <li class="toc-item">
+                        <span class="toc-number">3-2</span>
+                        <span>検索フォームの作成</span>
+                    </li>
+                    <li class="toc-item">
+                        <span class="toc-number">3-3</span>
+                        <span>Controllerの実装</span>
+                    </li>
+                    <li class="toc-item">
+                        <span class="toc-number">3-4</span>
+                        <span>動的SQLの作成</span>
+                    </li>
+                    <li class="toc-item">
+                        <span class="toc-number">3-5</span>
+                        <span>検索結果の表示</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- セクション 3-1 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 3-1</span>
+                    <h2 class="section-title">検索機能の概要</h2>
+                </div>
+
+                <div class="intro-text">
+                    <p>
+                        ToDoのタイトルでキーワード検索ができる機能を追加します。
+                    </p>
+                </div>
+
+                <h3>学習できるSpring技術</h3>
+                <div class="module-list">
+                    <div class="module-item">
+                        <div class="module-icon">🔍</div>
+                        <div class="module-content">
+                            <h4>@RequestParam</h4>
+                            <p>URLのクエリパラメータを受け取るアノテーション</p>
+                        </div>
+                    </div>
+                    <div class="module-item">
+                        <div class="module-icon">📝</div>
+                        <div class="module-content">
+                            <h4>動的SQL</h4>
+                            <p>MyBatisの&lt;if&gt;タグで条件に応じたSQLを生成</p>
+                        </div>
+                    </div>
+                    <div class="module-item">
+                        <div class="module-icon">🔗</div>
+                        <div class="module-content">
+                            <h4>LIKE検索</h4>
+                            <p>部分一致検索のSQL記述方法</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>完成イメージ</h3>
+                <div class="search-box">
+                    <span>🔍</span>
+                    <input type="text" placeholder="タイトルで検索..." value="買い物" disabled>
+                    <button>検索</button>
+                </div>
+            </section>
+
+            <!-- セクション 3-2 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 3-2</span>
+                    <h2 class="section-title">検索フォームの作成</h2>
+                </div>
+
+                <div class="code-block" id="search-form-html">
+                    <div class="code-header">
+                        <span class="code-title">index.html（検索フォーム追加）</span>
+                        <button class="download-btn" onclick="downloadCode('search-form-html', 'index_search.html')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>&lt;!-- 検索フォーム --&gt;
+&lt;div class="search-box"&gt;
+    &lt;form th:action="@{/todo}" method="get"&gt;
+        &lt;input type="text" name="keyword" th:value="${keyword}"
+               placeholder="タイトルで検索..."&gt;
+        &lt;button type="submit"&gt;検索&lt;/button&gt;
+        &lt;a th:href="@{/todo}"&gt;クリア&lt;/a&gt;
+    &lt;/form&gt;
+&lt;/div&gt;
+
+&lt;!-- 検索結果件数の表示 --&gt;
+&lt;p th:if="${keyword != null and keyword != ''}"&gt;
+    「&lt;span th:text="${keyword}"&gt;&lt;/span&gt;」の検索結果：
+    &lt;span th:text="${todoList.size()}"&gt;&lt;/span&gt;件
+&lt;/p&gt;
+
+&lt;style&gt;
+    .search-box {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+    .search-box form {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+    }
+    .search-box input {
+        flex: 1;
+        padding: 0.5rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 4px;
+    }
+    .search-box button {
+        padding: 0.5rem 1rem;
+        background: #3b82f6;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .search-box a {
+        color: #64748b;
+        text-decoration: none;
+        font-size: 0.9rem;
+    }
+&lt;/style&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title">GETメソッドを使う理由</span>
+                    </div>
+                    <p>検索はGETメソッドを使用します。これにより：<br>
+                    ・URLにキーワードが含まれ、ブックマークや共有が可能<br>
+                    ・ブラウザの戻るボタンで検索結果に戻れる</p>
+                </div>
+            </section>
+
+            <!-- セクション 3-3 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 3-3</span>
+                    <h2 class="section-title">Controllerの実装</h2>
+                </div>
+
+                <div class="code-block" id="controller-search">
+                    <div class="code-header">
+                        <span class="code-title">TodoController.java</span>
+                        <button class="download-btn" onclick="downloadCode('controller-search', 'TodoController_search.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>/**
+ * 一覧画面（検索機能付き）
+ */
+@GetMapping
+public String index(@RequestParam(required = false) String keyword,
+                    Model model) {
+
+    List&lt;Todo&gt; todoList;
+
+    if (keyword != null &amp;&amp; !keyword.isEmpty()) {
+        // キーワードがある場合は検索
+        todoList = todoService.searchByTitle(keyword);
+    } else {
+        // キーワードがない場合は全件取得
+        todoList = todoService.findAll();
+    }
+
+    model.addAttribute("todoList", todoList);
+    model.addAttribute("keyword", keyword);  // 検索キーワードを保持
+
+    return "todo/index";
+}</code></pre>
+                    </div>
+                </div>
+
+                <h3>@RequestParamの属性</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>属性</th>
+                            <th>説明</th>
+                            <th>例</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>required</code></td>
+                            <td>必須かどうか（デフォルトtrue）</td>
+                            <td>required = false</td>
+                        </tr>
+                        <tr>
+                            <td><code>defaultValue</code></td>
+                            <td>パラメータがない時のデフォルト値</td>
+                            <td>defaultValue = ""</td>
+                        </tr>
+                        <tr>
+                            <td><code>name</code></td>
+                            <td>パラメータ名（変数名と異なる場合）</td>
+                            <td>name = "q"</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- セクション 3-4 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 3-4</span>
+                    <h2 class="section-title">動的SQLの作成</h2>
+                </div>
+
+                <div class="intro-text">
+                    <p>
+                        MyBatisの<code>&lt;if&gt;</code>タグを使って、条件に応じたSQLを生成します。
+                    </p>
+                </div>
+
+                <div class="code-block" id="mapper-search">
+                    <div class="code-header">
+                        <span class="code-title">TodoMapper.xml</span>
+                        <button class="download-btn" onclick="downloadCode('mapper-search', 'TodoMapper_search.xml')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>&lt;!-- タイトルで検索 --&gt;
+&lt;select id="searchByTitle" resultType="Todo"&gt;
+    SELECT id, author, title, detail, completed, created_at, updated_at
+    FROM todo
+    WHERE title LIKE CONCAT('%', #{keyword}, '%')
+    ORDER BY created_at DESC
+&lt;/select&gt;
+
+&lt;!-- 動的SQLで全件取得と検索を1つにまとめる場合 --&gt;
+&lt;select id="findByCondition" resultType="Todo"&gt;
+    SELECT id, author, title, detail, completed, created_at, updated_at
+    FROM todo
+    &lt;where&gt;
+        &lt;if test="keyword != null and keyword != ''"&gt;
+            title LIKE CONCAT('%', #{keyword}, '%')
+        &lt;/if&gt;
+    &lt;/where&gt;
+    ORDER BY created_at DESC
+&lt;/select&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="repository-search">
+                    <div class="code-header">
+                        <span class="code-title">TodoRepository.java</span>
+                        <button class="download-btn" onclick="downloadCode('repository-search', 'TodoRepository_search.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>@Mapper
+public interface TodoRepository {
+
+    List&lt;Todo&gt; findAll();
+
+    List&lt;Todo&gt; searchByTitle(@Param("keyword") String keyword);
+
+    // または動的SQLを使う場合
+    List&lt;Todo&gt; findByCondition(@Param("keyword") String keyword);
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-box-header">
+                        <span class="warning-box-icon">⚠️</span>
+                        <span class="warning-box-title">SQLインジェクション対策</span>
+                    </div>
+                    <p>MyBatisの<code>#{}</code>を使用するとプレースホルダーとして処理され、<br>
+                    SQLインジェクション対策が自動で行われます。<br>
+                    <code>${}</code>は直接文字列が埋め込まれるため、使用を避けてください。</p>
+                </div>
+            </section>
+
+            <!-- セクション 3-5 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 3-5</span>
+                    <h2 class="section-title">検索結果の表示</h2>
+                </div>
+
+                <div class="code-block" id="service-search">
+                    <div class="code-header">
+                        <span class="code-title">TodoService.java</span>
+                        <button class="download-btn" onclick="downloadCode('service-search', 'TodoService_search.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>@Service
+public class TodoService {
+
+    private final TodoRepository todoRepository;
+
+    public TodoService(TodoRepository todoRepository) {
+        this.todoRepository = todoRepository;
+    }
+
+    public List&lt;Todo&gt; findAll() {
+        return todoRepository.findAll();
+    }
+
+    public List&lt;Todo&gt; searchByTitle(String keyword) {
+        return todoRepository.searchByTitle(keyword);
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <h3>検索結果がない場合の表示</h3>
+                <div class="code-block" id="no-result-html">
+                    <div class="code-header">
+                        <span class="code-title">index.html（検索結果なし表示）</span>
+                        <button class="download-btn" onclick="downloadCode('no-result-html', 'index_noresult.html')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>&lt;!-- 検索結果がない場合 --&gt;
+&lt;div th:if="${#lists.isEmpty(todoList) and keyword != null}" class="no-result"&gt;
+    &lt;p&gt;「&lt;span th:text="${keyword}"&gt;&lt;/span&gt;」に一致するToDoはありません。&lt;/p&gt;
+    &lt;a th:href="@{/todo}"&gt;検索をクリア&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;style&gt;
+    .no-result {
+        text-align: center;
+        padding: 2rem;
+        background: #f8fafc;
+        border-radius: 8px;
+        color: #64748b;
+    }
+&lt;/style&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title">動作確認</span>
+                    </div>
+                    <p>以下を確認しましょう：<br>
+                    ・キーワードを入力して検索すると結果が絞り込まれる<br>
+                    ・検索キーワードが入力欄に残っている<br>
+                    ・「クリア」で全件表示に戻る<br>
+                    ・URLにkeywordパラメータが含まれている</p>
+                </div>
+            </section>
+        </div>
+
+        <footer class="footer">
+            <p>Spring Framework 入門チュートリアル - 初級レベル</p>
+        </footer>
+
+        <div class="page-nav">
+            <a href="02_status.html" class="page-nav-btn prev">
+                <span>←</span>
+                <div>
+                    <div class="page-nav-label">前の機能</div>
+                    <div class="page-nav-title">完了/未完了ステータス</div>
+                </div>
+            </a>
+            <a href="04_sort.html" class="page-nav-btn next">
+                <div>
+                    <div class="page-nav-label">次の機能</div>
+                    <div class="page-nav-title">ソート機能</div>
+                </div>
+                <span>→</span>
+            </a>
+        </div>
+
+        <script>
+            function toggleMenu() {
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+                toggle.classList.toggle("active");
+                menu.classList.toggle("active");
+            }
+
+            document.addEventListener("click", function (e) {
+                const nav = document.querySelector(".global-nav");
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+
+                if (!nav.contains(e.target) && menu.classList.contains("active")) {
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+
+            function downloadCode(elementId, filename) {
+                const element = document.getElementById(elementId);
+                const preElement = element.querySelector('pre');
+                const codeElement = preElement.querySelector('code') || preElement;
+                const text = codeElement.textContent;
+
+                const blob = new Blob([text], { type: 'text/plain; charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+        </script>
+    </body>
+</html>

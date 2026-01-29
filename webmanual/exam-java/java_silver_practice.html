@@ -1,0 +1,5118 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Java Silver 対応：練習問題集（第2章〜第13章）</title>
+  <style>:root{
+  --bg: #0b0f19;
+  --panel: #121a2a;
+  --panel2: #0f1626;
+  --text: #e7eefc;
+  --muted: #a6b3cf;
+  --line: rgba(255,255,255,.10);
+  --brand: #7aa7ff;
+  --brand2:#9b7bff;
+  --ok:#7ee787;
+  --warn:#ffb86b;
+  --shadow: 0 10px 30px rgba(0,0,0,.35);
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+}
+@media (prefers-color-scheme: light){
+  :root{
+    --bg:#f6f8ff;
+    --panel:#ffffff;
+    --panel2:#f0f4ff;
+    --text:#0f172a;
+    --muted:#475569;
+    --line: rgba(15, 23, 42, .12);
+    --brand:#2563eb;
+    --brand2:#7c3aed;
+    --shadow: 0 10px 30px rgba(2,6,23,.08);
+  }
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family: var(--sans);
+  background: radial-gradient(1200px 600px at 10% 0%, rgba(122,167,255,.18), transparent 60%),
+              radial-gradient(900px 500px at 90% 10%, rgba(155,123,255,.14), transparent 55%),
+              var(--bg);
+  color:var(--text);
+  line-height:1.6;
+}
+
+a{color:var(--brand); text-decoration:none}
+a:hover{text-decoration:underline}
+code, pre{font-family:var(--mono)}
+small{color:var(--muted)}
+
+.header{
+  position:sticky; top:0; z-index:10;
+  backdrop-filter: blur(10px);
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  border-bottom:1px solid var(--line);
+}
+.header__inner{
+  max-width:1200px; margin:0 auto; padding:14px 18px;
+  display:flex; align-items:center; gap:14px; justify-content:space-between;
+}
+.brand{
+  display:flex; flex-direction:column; gap:2px;
+}
+.brand__title{font-weight:800; letter-spacing:.2px}
+.brand__sub{font-size:12px; color:var(--muted)}
+
+.shell{
+  max-width:1200px; margin:0 auto;
+  display:grid;
+  grid-template-columns: 340px 1fr;
+  gap:18px;
+  padding:18px;
+}
+@media (max-width: 980px){
+  .shell{grid-template-columns:1fr}
+  .tocWrap{position:relative; top:auto}
+}
+
+.tocWrap{
+  position:sticky; top:76px; height: calc(100vh - 92px);
+  overflow:auto;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background: color-mix(in srgb, var(--panel) 92%, transparent);
+  box-shadow: var(--shadow);
+}
+
+.toc{padding:14px}
+.toc__search{padding:6px 0 12px}
+.toc__search input{
+  width:100%;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  outline:none;
+  background: var(--panel2);
+  color:var(--text);
+}
+.toc__list{
+  list-style:none; padding-left:0; margin:0;
+  display:flex; flex-direction:column; gap:12px;
+}
+.toc__chapter > a{
+  font-weight:700;
+}
+.toc__problems{
+  margin:8px 0 0;
+  padding-left:16px;
+  display:flex; flex-direction:column; gap:6px;
+}
+.toc__problems li{list-style:none}
+.toc__problems a{color: color-mix(in srgb, var(--text) 86%, var(--brand) 14%); font-size:13px}
+.toc__problems a:hover{color:var(--brand)}
+
+.main{
+  border:1px solid var(--line);
+  border-radius:14px;
+  background: color-mix(in srgb, var(--panel) 92%, transparent);
+  box-shadow: var(--shadow);
+  padding:18px 18px 34px;
+}
+
+.hero{
+  padding:12px 2px 16px;
+  border-bottom:1px solid var(--line);
+  margin-bottom:18px;
+}
+.hero h1{margin:0 0 6px; font-size:22px}
+.hero p{margin:0; color:var(--muted)}
+.metaRow{
+  margin-top:10px;
+  display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+}
+.pill{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:6px 10px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background: var(--panel2);
+  color:var(--muted);
+  font-size:12px;
+}
+
+.chapter{margin-top:22px}
+.chapter__head{
+  padding:14px 14px 10px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--brand) 12%, transparent),
+    color-mix(in srgb, var(--brand2) 10%, transparent));
+}
+.chapter__head h2{margin:0 0 4px; font-size:18px}
+.chapter__sub{margin:0; color:var(--muted); font-size:13px}
+
+.problem{
+  margin-top:14px;
+  padding:14px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background: var(--panel2);
+}
+.problem__head{
+  display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+}
+.problem__head h3{
+  margin:0; font-size:16px; line-height:1.35;
+}
+.problem__meta{
+  font-size:12px; color:var(--muted);
+  white-space:nowrap;
+}
+.problem__meta a{color:var(--muted)}
+.problem__meta a:hover{color:var(--brand)}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  padding:2px 8px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background: color-mix(in srgb, var(--brand) 10%, transparent);
+  font-size:12px;
+  margin-right:6px;
+}
+.lead{margin:10px 0 12px; color:var(--muted)}
+
+.grid{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap:10px;
+}
+.card{
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:10px 12px;
+  background: color-mix(in srgb, var(--panel) 90%, transparent);
+}
+.card h4{
+  margin:0 0 8px;
+  font-size:13px;
+  color: color-mix(in srgb, var(--text) 85%, var(--muted) 15%);
+}
+.card ul{margin:0; padding-left:18px}
+.card li{margin:4px 0}
+.output{
+  margin:0;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px dashed var(--line);
+  background: #00000020;
+  overflow:auto;
+}
+
+.answer{
+  margin-top:12px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background: color-mix(in srgb, var(--panel) 92%, transparent);
+}
+.answer > summary{
+  cursor:pointer;
+  padding:10px 12px;
+  font-weight:700;
+  list-style:none;
+}
+.answer > summary::-webkit-details-marker{display:none}
+.answer[open] > summary{
+  border-bottom:1px solid var(--line);
+}
+.codefile{padding:12px}
+.codefile + .codefile{border-top:1px solid var(--line)}
+.codefile__header{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  margin-bottom:8px;
+}
+.codefile__name{
+  font-family: var(--mono);
+  font-size:12px;
+  color:var(--muted);
+}
+pre.code{
+  margin:0;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  background: #00000024;
+  overflow:auto;
+  font-size:12px;
+}
+
+.btn{
+  border:1px solid var(--line);
+  background: color-mix(in srgb, var(--panel2) 80%, transparent);
+  color:var(--text);
+  border-radius:10px;
+  padding:8px 10px;
+  cursor:pointer;
+}
+.btn--sm{padding:6px 8px; font-size:12px}
+.btn--ghost{color:var(--muted)}
+.btn:hover{border-color: color-mix(in srgb, var(--brand) 55%, var(--line)); color:var(--text)}
+
+.toast{
+  position:fixed;
+  right:16px; bottom:16px;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  background: color-mix(in srgb, var(--panel) 92%, transparent);
+  box-shadow: var(--shadow);
+  color:var(--text);
+  opacity:0;
+  transform: translateY(8px);
+  transition: .18s ease;
+  pointer-events:none;
+}
+.toast.show{opacity:1; transform: translateY(0)}
+.footer{
+  margin-top:18px;
+  padding-top:14px;
+  border-top:1px solid var(--line);
+  color:var(--muted);
+  font-size:12px;
+}</style>
+</head>
+<body>
+  <a id="top"></a>
+  <header class="header">
+    <div class="header__inner">
+      <div class="brand">
+        <div class="brand__title">Java Silver 対応：練習問題集（第2章〜第13章）</div>
+        <div class="brand__sub">Web教材用（リンク付き） / 生成日: 2026-01-13</div>
+      </div>
+      <div class="metaRow">
+        <span class="pill">対象: Java Silver 基礎〜標準</span>
+        <span class="pill">形式: 問題 → 解答例プログラム</span>
+        <a class="pill" href="#ch2">最初（第2章）へ</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="shell">
+    <aside class="tocWrap">
+      <div class="toc">
+<div class="toc__search"><input id="tocSearch" type="search" placeholder="章・問題を検索（例：配列 / Q3 / try）" aria-label="検索"></div>
+<nav aria-label="目次"><ul class="toc__list">
+<li class="toc__chapter"><a href="#ch2">第2章：変数とデータ型</a>
+<ul class="toc__problems">
+<li><a href="#ch2-q1">Q1 int 型の変数を宣言して表示する</a></li>
+<li><a href="#ch2-q2">Q2 複数のプリミティブ型を宣言する</a></li>
+<li><a href="#ch2-q3">Q3 float と double の違いを確認する</a></li>
+<li><a href="#ch2-q4">Q4 char 型は数値であることを確認する</a></li>
+<li><a href="#ch2-q5">Q5 boolean 型を使用する</a></li>
+<li><a href="#ch2-q6">Q6 参照型 String を使用する</a></li>
+<li><a href="#ch2-q7">Q7 配列は参照型であることを確認する</a></li>
+<li><a href="#ch2-q8">Q8 ローカル変数は初期化が必要</a></li>
+<li><a href="#ch2-q9">Q9 final 変数を使用する</a></li>
+<li><a href="#ch2-q10">Q10 var を使用した型推論（SE11）</a></li>
+</ul></li>
+<li class="toc__chapter"><a href="#ch3">第3章：演算子</a>
+<ul class="toc__problems">
+<li><a href="#ch3-q1">Q1 算術演算子を使用する</a></li>
+<li><a href="#ch3-q2">Q2 整数除算と小数除算の違い</a></li>
+<li><a href="#ch3-q3">Q3 代入演算子を使用する</a></li>
+<li><a href="#ch3-q4">Q4 インクリメント演算子の違い（前置/後置）</a></li>
+<li><a href="#ch3-q5">Q5 比較演算子を使用する</a></li>
+<li><a href="#ch3-q6">Q6 String の == と equals の違いを確認する（重要）</a></li>
+<li><a href="#ch3-q7">Q7 論理演算子（AND）を使用する</a></li>
+<li><a href="#ch3-q8">Q8 論理演算子（OR と NOT）を使用する</a></li>
+<li><a href="#ch3-q9">Q9 三項演算子を使用する</a></li>
+<li><a href="#ch3-q10">Q10 演算子の優先順位を確認する</a></li>
+</ul></li>
+<li class="toc__chapter"><a href="#ch4">第4章：条件分岐（if / switch）</a>
+<ul class="toc__problems">
+<li><a href="#ch4-q1">Q1 if 文で大小を判定する</a></li>
+<li><a href="#ch4-q2">Q2 else if を使った数値判定</a></li>
+<li><a href="#ch4-q3">Q3 複数条件（AND）を判定する</a></li>
+<li><a href="#ch4-q4">Q4 複数条件（OR）を判定する</a></li>
+<li><a href="#ch4-q5">Q5 if 文のネスト（入れ子）</a></li>
+<li><a href="#ch4-q6">Q6 switch 文の基本（int）</a></li>
+<li><a href="#ch4-q7">Q7 break を書かない場合の動作（fall-through）</a></li>
+<li><a href="#ch4-q8">Q8 switch 文で String を使用する</a></li>
+<li><a href="#ch4-q9">Q9 switch 文で char を使用する</a></li>
+<li><a href="#ch4-q10">Q10 if と switch の使い分け（範囲判定）</a></li>
+</ul></li>
+<li class="toc__chapter"><a href="#ch5">第5章：繰り返し処理</a>
+<ul class="toc__problems">
+<li><a href="#ch5-q1">Q1 for 文で 1〜10 を表示する</a></li>
+<li><a href="#ch5-q2">Q2 for 文で合計を求める</a></li>
+<li><a href="#ch5-q3">Q3 while 文の基本</a></li>
+<li><a href="#ch5-q4">Q4 do-while 文の特徴を確認する</a></li>
+<li><a href="#ch5-q5">Q5 continue を使用する</a></li>
+<li><a href="#ch5-q6">Q6 break を使用する</a></li>
+<li><a href="#ch5-q7">Q7 繰り返し回数を数える</a></li>
+<li><a href="#ch5-q8">Q8 配列と for 文を組み合わせる</a></li>
+<li><a href="#ch5-q9">Q9 二重ループの基本</a></li>
+<li><a href="#ch5-q10">Q10 無限ループを防ぐ</a></li>
+</ul></li>
+<li class="toc__chapter"><a href="#ch6">第6章：配列（Array）</a>
+<ul class="toc__problems">
+<li><a href="#ch6-q1">Q1 配列を宣言して要素を表示する</a></li>
+<li><a href="#ch6-q2">Q2 配列の要素数を表示する</a></li>
+<li><a href="#ch6-q3">Q3 配列の合計を求める</a></li>
+<li><a href="#ch6-q4">Q4 配列の最大値を求める</a></li>
+<li><a href="#ch6-q5">Q5 配列の初期値を確認する</a></li>
+<li><a href="#ch6-q6">Q6 配列は参照型であることを確認する</a></li>
+<li><a href="#ch6-q7">Q7 配列の最後の要素を表示する</a></li>
+<li><a href="#ch6-q8">Q8 配列の範囲外アクセスを防ぐ</a></li>
+<li><a href="#ch6-q9">Q9 拡張 for 文（for-each）で配列を表示する</a></li>
+<li><a href="#ch6-q10">Q10 2 次元配列を扱う</a></li>
+</ul></li>
+<li class="toc__chapter"><a href="#ch7">第7章：クラス（Class）</a>
+<ul class="toc__problems">
+<li><a href="#ch7-q1">Q1 クラスを定義してインスタンスを生成する</a></li>
+<li><a href="#ch7-q2">Q2 同じクラスから複数のインスタンスを生成する</a></li>
+<li><a href="#ch7-q3">Q3 クラスは参照型であることを確認する</a></li>
+<li><a href="#ch7-q4">Q4 デフォルトコンストラクタの存在を確認する</a></li>
+<li><a href="#ch7-q5">Q5 クラスを使い分ける（別クラスを作る）</a></li>
+<li><a href="#ch7-q6">Q6 public クラスとファイル名の関係</a></li>
+</ul></li>
+<li class="toc__chapter"><a href="#ch8">第8章：メソッド（Method）</a>
+<ul class="toc__problems">
+<li><a href="#ch8-q1">Q1 引数を持たないメソッド</a></li>
+<li><a href="#ch8-q2">Q2 引数を1つ持つメソッド</a></li>
+<li><a href="#ch8-q3">Q3 引数を2つ持つメソッド</a></li>
+<li><a href="#ch8-q4">Q4 戻り値を持つメソッド</a></li>
+<li><a href="#ch8-q5">Q5 void と return の違い（表示だけする）</a></li>
+<li><a href="#ch8-q6">Q6 戻り値を使って再利用する</a></li>
+<li><a href="#ch8-q7">Q7 メソッドの呼び出し順を確認する</a></li>
+<li><a href="#ch8-q8">Q8 return による処理の終了</a></li>
+<li><a href="#ch8-q9">Q9 同じ名前のメソッドは使えない（基礎理解）</a></li>
+<li><a href="#ch8-q10">Q10 static メソッドの役割を確認する</a></li>
+</ul></li>
+<li class="toc__chapter"><a href="#ch9">第9章：アクセス修飾子（public / private / protected / package-private）</a>
+<ul class="toc__problems">
+<li><a href="#ch9-q1">Q1 public フィールドはどこからでもアクセスできる</a></li>
+<li><a href="#ch9-q2">Q2 private フィールドは直接アクセスできない</a></li>
+<li><a href="#ch9-q3">Q3 package-private（修飾子なし）の挙動</a></li>
+<li><a href="#ch9-q4">Q4 protected フィールド（同一パッケージ）</a></li>
+<li><a href="#ch9-q5">Q5 アクセスできないコードを作らない（private の正しい扱い）</a></li>
+<li><a href="#ch9-q6">Q6 public クラスのルール（ファイル名とクラス名）</a></li>
+</ul></li>
+<li class="toc__chapter"><a href="#ch10">第10章：static（クラスメンバとインスタンスメンバ）</a>
+<ul class="toc__problems">
+<li><a href="#ch10-q1">Q1 static フィールドは共有される</a></li>
+<li><a href="#ch10-q2">Q2 インスタンスフィールドは個別に持つ</a></li>
+<li><a href="#ch10-q3">Q3 static フィールドとインスタンスフィールドの違い</a></li>
+<li><a href="#ch10-q4">Q4 static メソッドはインスタンスなしで呼び出せる</a></li>
+<li><a href="#ch10-q5">Q5 static メソッドからインスタンスメンバは使えない</a></li>
+<li><a href="#ch10-q6">Q6 static メソッド同士は直接呼び出せる</a></li>
+<li><a href="#ch10-q7">Q7 インスタンスメソッドから static メンバを使う</a></li>
+<li><a href="#ch10-q8">Q8 static フィールドはクラス名でアクセスする</a></li>
+<li><a href="#ch10-q9">Q9 static の有無で挙動が変わることを確認する</a></li>
+<li><a href="#ch10-q10">Q10 static の役割を確認する（共有の証明）</a></li>
+</ul></li>
+<li class="toc__chapter"><a href="#ch11">第11章：継承（extends / super / オーバーライド）</a>
+<ul class="toc__problems">
+<li><a href="#ch11-q1">Q1 extends を使ってクラスを継承する</a></li>
+<li><a href="#ch11-q2">Q2 継承したフィールドを利用する</a></li>
+<li><a href="#ch11-q3">Q3 親クラス型で子クラスを扱う（アップキャスト）</a></li>
+<li><a href="#ch11-q4">Q4 アップキャスト時に使えるもの・使えないもの</a></li>
+<li><a href="#ch11-q5">Q5 メソッドをオーバーライドする</a></li>
+<li><a href="#ch11-q6">Q6 参照型が親でも、呼ばれるメソッドは子（動的バインディング）</a></li>
+<li><a href="#ch11-q7">Q7 super を使って親クラスを参照する</a></li>
+<li><a href="#ch11-q8">Q8 オーバーライドの条件を満たす</a></li>
+<li><a href="#ch11-q9">Q9 @Override アノテーションの役割</a></li>
+<li><a href="#ch11-q10">Q10 継承の全体像を確認する（Silver総合）</a></li>
+</ul></li>
+<li class="toc__chapter"><a href="#ch12">第12章：抽象クラス・インターフェース</a>
+<ul class="toc__problems">
+<li><a href="#ch12-q1">Q1 抽象クラスを定義する</a></li>
+<li><a href="#ch12-q2">Q2 抽象クラスを継承する</a></li>
+<li><a href="#ch12-q3">Q3 抽象メソッドを定義する</a></li>
+<li><a href="#ch12-q4">Q4 抽象メソッドを実装する</a></li>
+<li><a href="#ch12-q5">Q5 抽象クラス型で子クラスを扱う</a></li>
+<li><a href="#ch12-q6">Q6 インターフェースを定義する</a></li>
+<li><a href="#ch12-q7">Q7 インターフェースを実装する</a></li>
+<li><a href="#ch12-q8">Q8 インターフェース型で扱う</a></li>
+<li><a href="#ch12-q9">Q9 抽象クラスとインターフェースを同時に使う</a></li>
+<li><a href="#ch12-q10">Q10 抽象クラス型・インターフェース型の両方で Dog を扱う</a></li>
+</ul></li>
+<li class="toc__chapter"><a href="#ch13">第13章：例外処理（try / catch / finally / throws）</a>
+<ul class="toc__problems">
+<li><a href="#ch13-q1">Q1 例外が発生するコードを書く（0除算）</a></li>
+<li><a href="#ch13-q2">Q2 try-catch で例外を捕捉する</a></li>
+<li><a href="#ch13-q3">Q3 複数の例外を catch する</a></li>
+<li><a href="#ch13-q4">Q4 catch の順序に注意する</a></li>
+<li><a href="#ch13-q5">Q5 finally の動作を確認する</a></li>
+<li><a href="#ch13-q6">Q6 チェック例外を扱う（コンパイルエラー回避）</a></li>
+<li><a href="#ch13-q7">Q7 throws を使って例外を投げる</a></li>
+<li><a href="#ch13-q8">Q8 throw を使って例外を発生させる</a></li>
+<li><a href="#ch13-q9">Q9 RuntimeException は throws 不要</a></li>
+<li><a href="#ch13-q10">Q10 例外が発生しても必ず finish を表示する</a></li>
+</ul></li>
+</ul></nav>
+</div>
+    </aside>
+
+    <main class="main">
+      <section class="hero">
+        <h1>使い方</h1>
+        <p>
+          左の目次から各問題へジャンプできます。解答例は「解答例プログラム」を開いて確認してください。
+          コード右上の「コピー」で貼り付けもできます。
+        </p>
+        <div class="metaRow">
+          <span class="pill">章: 第2章〜第13章</span>
+          <span class="pill">問題数: 112 問</span>
+          <span class="pill">Tip: 目次検索で一撃</span>
+        </div>
+      </section>
+
+      <section class="chapter" id="ch2">
+      <header class="chapter__head">
+        <h2>第2章：変数とデータ型</h2>
+        <p class="chapter__sub">primitive / 参照型 / final / var（SE11）</p>
+      </header>
+      <div class="chapter__body">
+        <section class="problem" id="ch2-q1">
+<div class="problem__head"><h3><span class="badge">問題 1</span> int 型の変数を宣言して表示する</h3>
+<div class="problem__meta"><a href="#ch2">第2章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>Java では、変数を使用する前に 宣言と初期化 が必要です。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>int 型の変数を 1 つ 宣言してください。</li>
+<li>値として 10 を代入し、その値を表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>変数は main メソッド内で宣言すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">10</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch2-q1-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch2-q1-0">public class Main {
+    public static void main(String[] args) {
+        int x = 10;
+        System.out.println(x);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch2-q2">
+<div class="problem__head"><h3><span class="badge">問題 2</span> 複数のプリミティブ型を宣言する</h3>
+<div class="problem__meta"><a href="#ch2">第2章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>Java には複数のプリミティブ型があります。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>次の型の変数をそれぞれ 1 つずつ宣言・初期化し、表示してください。</li>
+<li>byte（10）</li>
+<li>short（100）</li>
+<li>int（1000）</li>
+<li>long（100000）</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>long 型の値には L を付けること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">10
+100
+1000
+100000</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch2-q2-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch2-q2-0">public class Main {
+    public static void main(String[] args) {
+        byte b = 10;
+        short s = 100;
+        int i = 1000;
+        long l = 100000L;
+
+        System.out.println(b);
+        System.out.println(s);
+        System.out.println(i);
+        System.out.println(l);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch2-q3">
+<div class="problem__head"><h3><span class="badge">問題 3</span> float と double の違いを確認する</h3>
+<div class="problem__meta"><a href="#ch2">第2章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>小数リテラルはデフォルトで double 型です。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>float 型と double 型の変数を 1 つずつ宣言し、値を代入して表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>float 型の値には F を付けること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">1.5
+2.5</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch2-q3-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch2-q3-0">public class Main {
+    public static void main(String[] args) {
+        float f = 1.5F;
+        double d = 2.5;
+
+        System.out.println(f);
+        System.out.println(d);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch2-q4">
+<div class="problem__head"><h3><span class="badge">問題 4</span> char 型は数値であることを確認する</h3>
+<div class="problem__meta"><a href="#ch2">第2章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>char 型は内部的には数値として扱われます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>char 型の変数に 'A' を代入してください。</li>
+<li>文字としての表示と、数値としての表示を行ってください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>数値表示にはキャストを使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">A
+65</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch2-q4-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch2-q4-0">public class Main {
+    public static void main(String[] args) {
+        char c = 'A';
+
+        System.out.println(c);
+        System.out.println((int) c);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch2-q5">
+<div class="problem__head"><h3><span class="badge">問題 5</span> boolean 型を使用する</h3>
+<div class="problem__meta"><a href="#ch2">第2章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>boolean 型は true または false のみを扱います。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>boolean 型の変数を宣言し、true を代入して表示してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">true</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch2-q5-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch2-q5-0">public class Main {
+    public static void main(String[] args) {
+        boolean flag = true;
+        System.out.println(flag);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch2-q6">
+<div class="problem__head"><h3><span class="badge">問題 6</span> 参照型 String を使用する</h3>
+<div class="problem__meta"><a href="#ch2">第2章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>String は参照型です。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>String 型の変数を宣言し、文字列 "Java" を代入して表示してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Java</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch2-q6-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch2-q6-0">public class Main {
+    public static void main(String[] args) {
+        String s = "Java";
+        System.out.println(s);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch2-q7">
+<div class="problem__head"><h3><span class="badge">問題 7</span> 配列は参照型であることを確認する</h3>
+<div class="problem__meta"><a href="#ch2">第2章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>配列は参照型です。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>int 型の配列を 1 つ 宣言し、{1, 2, 3} を代入してください。</li>
+<li>配列のすべての要素を表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>for 文を使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">1
+2
+3</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch2-q7-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch2-q7-0">public class Main {
+    public static void main(String[] args) {
+        int[] nums = {1, 2, 3};
+
+        for (int i = 0; i &lt; nums.length; i++) {
+            System.out.println(nums[i]);
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch2-q8">
+<div class="problem__head"><h3><span class="badge">問題 8</span> ローカル変数は初期化が必要</h3>
+<div class="problem__meta"><a href="#ch2">第2章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>ローカル変数は初期化しないと使用できません。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>int 型の変数を正しく初期化し、表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>コンパイルエラーにならないこと。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">0</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch2-q8-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch2-q8-0">public class Main {
+    public static void main(String[] args) {
+        int x = 0;
+        System.out.println(x);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch2-q9">
+<div class="problem__head"><h3><span class="badge">問題 9</span> final 変数を使用する</h3>
+<div class="problem__meta"><a href="#ch2">第2章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>final 変数は再代入できません。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>円周率を表す final 変数を定義し、表示してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">3.14</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch2-q9-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch2-q9-0">public class Main {
+    public static void main(String[] args) {
+        final double PI = 3.14;
+        System.out.println(PI);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch2-q10">
+<div class="problem__head"><h3><span class="badge">問題 10</span> var を使用した型推論（SE11）</h3>
+<div class="problem__meta"><a href="#ch2">第2章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>Java SE 11 では var を使用できます。</li>
+<li>var は 宣言と同時に初期化 する必要があります。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>var を使って int 型と String 型の変数を宣言し、表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>var のみで宣言し、型名（int/String）は書かないこと。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">100
+Silver</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch2-q10-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch2-q10-0">public class Main {
+    public static void main(String[] args) {
+        var a = 100;
+        var b = "Silver";
+
+        System.out.println(a);
+        System.out.println(b);
+    }
+}</code></pre>
+    </div>
+</details>
+</section>
+      </div>
+    </section>
+<section class="chapter" id="ch3">
+      <header class="chapter__head">
+        <h2>第3章：演算子</h2>
+        <p class="chapter__sub">算術 / 代入 / 比較 / 論理 / 三項 / 優先順位</p>
+      </header>
+      <div class="chapter__body">
+        <section class="problem" id="ch3-q1">
+<div class="problem__head"><h3><span class="badge">問題 1</span> 算術演算子を使用する</h3>
+<div class="problem__meta"><a href="#ch3">第3章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>Java では算術演算子 + - * / % を使用できます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>int 型の変数 a と b を宣言し、a = 20、b = 6 を代入してください。</li>
+<li>足し算・引き算・掛け算・割り算（整数）・余り の結果をこの順番で表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>割り算は整数同士の計算とすること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">26
+14
+120
+3
+2</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch3-q1-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch3-q1-0">public class Main {
+    public static void main(String[] args) {
+        int a = 20;
+        int b = 6;
+
+        System.out.println(a + b);
+        System.out.println(a - b);
+        System.out.println(a * b);
+        System.out.println(a / b);
+        System.out.println(a % b);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch3-q2">
+<div class="problem__head"><h3><span class="badge">問題 2</span> 整数除算と小数除算の違い</h3>
+<div class="problem__meta"><a href="#ch3">第3章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>整数同士の割り算は整数になります。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>次の2つの式の結果をこの順番で表示してください。</li>
+<li>a / b</li>
+<li>(double) a / b</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>キャストを使用すること。</li>
+<li>a = 20, b = 6 を使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">3
+3.3333333333333335</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch3-q2-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch3-q2-0">public class Main {
+    public static void main(String[] args) {
+        int a = 20;
+        int b = 6;
+
+        System.out.println(a / b);
+        System.out.println((double) a / b);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch3-q3">
+<div class="problem__head"><h3><span class="badge">問題 3</span> 代入演算子を使用する</h3>
+<div class="problem__meta"><a href="#ch3">第3章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>代入演算子は「計算＋代入」を同時に行います。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>int 型の変数 x を宣言し、初期値を 10 としてください。</li>
+<li>+= を使って 5 を加算し、表示してください。</li>
+<li>続けて *= を使って 2 倍し、表示してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">15
+30</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch3-q3-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch3-q3-0">public class Main {
+    public static void main(String[] args) {
+        int x = 10;
+
+        x += 5;
+        System.out.println(x);
+
+        x *= 2;
+        System.out.println(x);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch3-q4">
+<div class="problem__head"><h3><span class="badge">問題 4</span> インクリメント演算子の違い（前置/後置）</h3>
+<div class="problem__meta"><a href="#ch3">第3章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>++ には前置と後置があります。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>int 型の変数 n を 5 で初期化してください。</li>
+<li>n++ を表示した後の n を表示してください。</li>
+<li>次に ++n を表示してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">5
+6
+7</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch3-q4-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch3-q4-0">public class Main {
+    public static void main(String[] args) {
+        int n = 5;
+
+        System.out.println(n++);
+        System.out.println(n);
+        System.out.println(++n);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch3-q5">
+<div class="problem__head"><h3><span class="badge">問題 5</span> 比較演算子を使用する</h3>
+<div class="problem__meta"><a href="#ch3">第3章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>比較演算子の結果は boolean になります。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>int 型の変数 x = 8, y = 10 を用意してください。</li>
+<li>次の結果をこの順番で表示してください：x &gt; y, x &lt; y, x == y, x != y</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">false
+true
+false
+true</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch3-q5-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch3-q5-0">public class Main {
+    public static void main(String[] args) {
+        int x = 8;
+        int y = 10;
+
+        System.out.println(x &gt; y);
+        System.out.println(x &lt; y);
+        System.out.println(x == y);
+        System.out.println(x != y);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch3-q6">
+<div class="problem__head"><h3><span class="badge">問題 6</span> String の == と equals の違いを確認する（重要）</h3>
+<div class="problem__meta"><a href="#ch3">第3章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>String は参照型です。</li>
+<li>== は参照比較（同じオブジェクトか）です。</li>
+<li>equals は内容比較（文字列の中身）です。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>"Java" という同じ文字列を持つ String 変数を 2 つ用意してください。</li>
+<li>ただし、必ず別オブジェクトになるように new String(...) を使用してください。</li>
+<li>== と equals の結果を表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>表示順は == の結果 → equals の結果。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">false
+true</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch3-q6-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch3-q6-0">public class Main {
+    public static void main(String[] args) {
+        String a = new String("Java");
+        String b = new String("Java");
+
+        System.out.println(a == b);
+        System.out.println(a.equals(b));
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch3-q7">
+<div class="problem__head"><h3><span class="badge">問題 7</span> 論理演算子（AND）を使用する</h3>
+<div class="problem__meta"><a href="#ch3">第3章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>&amp;&amp; は「両方 true」のとき true になります。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>int 型の変数 age = 20 を用意してください。</li>
+<li>「18以上かつ25以下か」を判定し、結果を表示してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">true</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch3-q7-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch3-q7-0">public class Main {
+    public static void main(String[] args) {
+        int age = 20;
+        System.out.println(age &gt;= 18 &amp;&amp; age &lt;= 25);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch3-q8">
+<div class="problem__head"><h3><span class="badge">問題 8</span> 論理演算子（OR と NOT）を使用する</h3>
+<div class="problem__meta"><a href="#ch3">第3章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>|| はどちらかが true で true になります。</li>
+<li>! は boolean を反転します。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>boolean 型の変数 isStudent = false、isSenior = true を用意してください。</li>
+<li>割引対象かどうか（OR）を表示してください。</li>
+<li>続けて、その否定（NOT）も表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>表示順：割引対象 → 否定。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">true
+false</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch3-q8-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch3-q8-0">public class Main {
+    public static void main(String[] args) {
+        boolean isStudent = false;
+        boolean isSenior = true;
+
+        boolean discount = isStudent || isSenior;
+        System.out.println(discount);
+        System.out.println(!discount);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch3-q9">
+<div class="problem__head"><h3><span class="badge">問題 9</span> 三項演算子を使用する</h3>
+<div class="problem__meta"><a href="#ch3">第3章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>三項演算子は if 文の簡易表現です。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>int 型の変数 score = 75 を用意してください。</li>
+<li>60以上なら "合格"、それ以外は "不合格" を表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>if 文ではなく三項演算子を使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">合格</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch3-q9-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch3-q9-0">public class Main {
+    public static void main(String[] args) {
+        int score = 75;
+
+        String result = score &gt;= 60 ? "合格" : "不合格";
+        System.out.println(result);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch3-q10">
+<div class="problem__head"><h3><span class="badge">問題 10</span> 演算子の優先順位を確認する</h3>
+<div class="problem__meta"><a href="#ch3">第3章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>演算子には優先順位があります。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>次の計算結果を表示してください。</li>
+<li>int result = 10 + 2 * 3;</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">16</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch3-q10-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch3-q10-0">public class Main {
+    public static void main(String[] args) {
+        int result = 10 + 2 * 3;
+        System.out.println(result);
+    }
+}</code></pre>
+    </div>
+</details>
+</section>
+      </div>
+    </section>
+<section class="chapter" id="ch4">
+      <header class="chapter__head">
+        <h2>第4章：条件分岐（if / switch）</h2>
+        <p class="chapter__sub">if / else if / switch / break / fall-through</p>
+      </header>
+      <div class="chapter__body">
+        <section class="problem" id="ch4-q1">
+<div class="problem__head"><h3><span class="badge">問題 1</span> if 文で大小を判定する</h3>
+<div class="problem__meta"><a href="#ch4">第4章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>if 文は条件が true のときに処理を実行します。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>int 型の変数 a = 10、b = 20 を宣言してください。</li>
+<li>a の方が大きい場合は "a"、それ以外は "b" を表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>if / else を使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">b</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch4-q1-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch4-q1-0">public class Main {
+    public static void main(String[] args) {
+        int a = 10;
+        int b = 20;
+
+        if (a &gt; b) {
+            System.out.println("a");
+        } else {
+            System.out.println("b");
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch4-q2">
+<div class="problem__head"><h3><span class="badge">問題 2</span> else if を使った数値判定</h3>
+<div class="problem__meta"><a href="#ch4">第4章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>else if を使うことで複数条件を分岐できます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>int 型の変数 n = -5 を宣言してください。</li>
+<li>n が正の数なら "positive"、負の数なら "negative"、0 なら "zero" と表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>if / else if / else を使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">negative</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch4-q2-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch4-q2-0">public class Main {
+    public static void main(String[] args) {
+        int n = -5;
+
+        if (n &gt; 0) {
+            System.out.println("positive");
+        } else if (n &lt; 0) {
+            System.out.println("negative");
+        } else {
+            System.out.println("zero");
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch4-q3">
+<div class="problem__head"><h3><span class="badge">問題 3</span> 複数条件（AND）を判定する</h3>
+<div class="problem__meta"><a href="#ch4">第4章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>&amp;&amp; は両方 true の場合のみ true になります。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>int 型の変数 age = 22 を宣言してください。</li>
+<li>18以上かつ30未満の場合 "OK"、それ以外は "NG" を表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>if 文を使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">OK</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch4-q3-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch4-q3-0">public class Main {
+    public static void main(String[] args) {
+        int age = 22;
+
+        if (age &gt;= 18 &amp;&amp; age &lt; 30) {
+            System.out.println("OK");
+        } else {
+            System.out.println("NG");
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch4-q4">
+<div class="problem__head"><h3><span class="badge">問題 4</span> 複数条件（OR）を判定する</h3>
+<div class="problem__meta"><a href="#ch4">第4章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>|| はどちらかが true なら true になります。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>boolean 型の変数 isStudent = true、isSenior = false を宣言してください。</li>
+<li>割引対象なら "discount"、対象外なら "no discount" を表示してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">discount</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch4-q4-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch4-q4-0">public class Main {
+    public static void main(String[] args) {
+        boolean isStudent = true;
+        boolean isSenior = false;
+
+        if (isStudent || isSenior) {
+            System.out.println("discount");
+        } else {
+            System.out.println("no discount");
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch4-q5">
+<div class="problem__head"><h3><span class="badge">問題 5</span> if 文のネスト（入れ子）</h3>
+<div class="problem__meta"><a href="#ch4">第4章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>if 文は入れ子にできます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>int 型の変数 score = 85 を宣言してください。</li>
+<li>60以上なら "pass" を表示してください。</li>
+<li>さらに80以上の場合 "excellent" を追加で表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>if 文を入れ子で使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">pass
+excellent</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch4-q5-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch4-q5-0">public class Main {
+    public static void main(String[] args) {
+        int score = 85;
+
+        if (score &gt;= 60) {
+            System.out.println("pass");
+            if (score &gt;= 80) {
+                System.out.println("excellent");
+            }
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch4-q6">
+<div class="problem__head"><h3><span class="badge">問題 6</span> switch 文の基本（int）</h3>
+<div class="problem__meta"><a href="#ch4">第4章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>switch 文は int 型を扱えます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>int 型の変数 day = 3 を宣言してください。</li>
+<li>1：Mon / 2：Tue / 3：Wed / 4：Thu / 5：Fri / それ以外：Holiday を表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>switch 文を使用すること。</li>
+<li>break を正しく使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Wed</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch4-q6-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch4-q6-0">public class Main {
+    public static void main(String[] args) {
+        int day = 3;
+
+        switch (day) {
+            case 1:
+                System.out.println("Mon");
+                break;
+            case 2:
+                System.out.println("Tue");
+                break;
+            case 3:
+                System.out.println("Wed");
+                break;
+            case 4:
+                System.out.println("Thu");
+                break;
+            case 5:
+                System.out.println("Fri");
+                break;
+            default:
+                System.out.println("Holiday");
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch4-q7">
+<div class="problem__head"><h3><span class="badge">問題 7</span> break を書かない場合の動作（fall-through）</h3>
+<div class="problem__meta"><a href="#ch4">第4章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>break を省略すると処理は下に流れます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>int 型の変数 n = 2 を宣言してください。</li>
+<li>break を使わず switch 文を書き、出力結果を確認してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>break を記述しないこと。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">two
+three
+other</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch4-q7-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch4-q7-0">public class Main {
+    public static void main(String[] args) {
+        int n = 2;
+
+        switch (n) {
+            case 1:
+                System.out.println("one");
+            case 2:
+                System.out.println("two");
+            case 3:
+                System.out.println("three");
+            default:
+                System.out.println("other");
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch4-q8">
+<div class="problem__head"><h3><span class="badge">問題 8</span> switch 文で String を使用する</h3>
+<div class="problem__meta"><a href="#ch4">第4章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>switch 文では String 型も使用できます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>String 型の変数 color = "red" を宣言してください。</li>
+<li>red：Red / blue：Blue / yellow：Yellow / それ以外：Unknown を表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>break を正しく使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Red</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch4-q8-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch4-q8-0">public class Main {
+    public static void main(String[] args) {
+        String color = "red";
+
+        switch (color) {
+            case "red":
+                System.out.println("Red");
+                break;
+            case "blue":
+                System.out.println("Blue");
+                break;
+            case "yellow":
+                System.out.println("Yellow");
+                break;
+            default:
+                System.out.println("Unknown");
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch4-q9">
+<div class="problem__head"><h3><span class="badge">問題 9</span> switch 文で char を使用する</h3>
+<div class="problem__meta"><a href="#ch4">第4章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>char 型も switch 文で使用できます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>char 型の変数 rank = 'B' を宣言してください。</li>
+<li>A・B・C の場合 "pass"、それ以外は "fail" を表示してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">pass</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch4-q9-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch4-q9-0">public class Main {
+    public static void main(String[] args) {
+        char rank = 'B';
+
+        switch (rank) {
+            case 'A':
+            case 'B':
+            case 'C':
+                System.out.println("pass");
+                break;
+            default:
+                System.out.println("fail");
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch4-q10">
+<div class="problem__head"><h3><span class="badge">問題 10</span> if と switch の使い分け（範囲判定）</h3>
+<div class="problem__meta"><a href="#ch4">第4章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>条件が「範囲」の場合は if が適しています。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>int 型の変数 score = 72 を宣言してください。</li>
+<li>70以上なら "C or higher"、それ以外は "below C" を表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>if 文を使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">C or higher</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch4-q10-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch4-q10-0">public class Main {
+    public static void main(String[] args) {
+        int score = 72;
+
+        if (score &gt;= 70) {
+            System.out.println("C or higher");
+        } else {
+            System.out.println("below C");
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section>
+      </div>
+    </section>
+<section class="chapter" id="ch5">
+      <header class="chapter__head">
+        <h2>第5章：繰り返し処理</h2>
+        <p class="chapter__sub">for / while / do-while / break / continue / 二重ループ</p>
+      </header>
+      <div class="chapter__body">
+        <section class="problem" id="ch5-q1">
+<div class="problem__head"><h3><span class="badge">問題 1</span> for 文で 1〜10 を表示する</h3>
+<div class="problem__meta"><a href="#ch5">第5章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>for 文は、回数が決まっている処理に適しています。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>for 文を使用して、1 から 10 までの整数を順に表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>for 文を使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">1
+2
+3
+4
+5
+6
+7
+8
+9
+10</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch5-q1-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch5-q1-0">public class Main {
+    public static void main(String[] args) {
+        for (int i = 1; i &lt;= 10; i++) {
+            System.out.println(i);
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch5-q2">
+<div class="problem__head"><h3><span class="badge">問題 2</span> for 文で合計を求める</h3>
+<div class="problem__meta"><a href="#ch5">第5章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>繰り返し処理の中で変数を更新できます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>for 文を使用して、1 から 100 までの合計を求めて表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>合計を保持する変数を使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">5050</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch5-q2-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch5-q2-0">public class Main {
+    public static void main(String[] args) {
+        int sum = 0;
+
+        for (int i = 1; i &lt;= 100; i++) {
+            sum += i;
+        }
+
+        System.out.println(sum);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch5-q3">
+<div class="problem__head"><h3><span class="badge">問題 3</span> while 文の基本</h3>
+<div class="problem__meta"><a href="#ch5">第5章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>while 文は、条件が true の間繰り返します。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>while 文を使用して、1 から 5 までの整数を表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>while 文を使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">1
+2
+3
+4
+5</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch5-q3-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch5-q3-0">public class Main {
+    public static void main(String[] args) {
+        int i = 1;
+
+        while (i &lt;= 5) {
+            System.out.println(i);
+            i++;
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch5-q4">
+<div class="problem__head"><h3><span class="badge">問題 4</span> do-while 文の特徴を確認する</h3>
+<div class="problem__meta"><a href="#ch5">第5章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>do-while 文は、条件に関係なく 最低 1 回は実行されます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>int 型の変数 n = 10 を使用し、do-while 文が 1 回は実行されることを確認してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>do-while 文を使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">10</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch5-q4-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch5-q4-0">public class Main {
+    public static void main(String[] args) {
+        int n = 10;
+
+        do {
+            System.out.println(n);
+        } while (n &lt; 5);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch5-q5">
+<div class="problem__head"><h3><span class="badge">問題 5</span> continue を使用する</h3>
+<div class="problem__meta"><a href="#ch5">第5章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>continue は、以降の処理をスキップして次の繰り返しに進みます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>1 から 10 までの整数のうち、偶数だけを表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>for 文を使用すること。</li>
+<li>continue を使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">2
+4
+6
+8
+10</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch5-q5-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch5-q5-0">public class Main {
+    public static void main(String[] args) {
+        for (int i = 1; i &lt;= 10; i++) {
+            if (i % 2 != 0) {
+                continue;
+            }
+            System.out.println(i);
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch5-q6">
+<div class="problem__head"><h3><span class="badge">問題 6</span> break を使用する</h3>
+<div class="problem__meta"><a href="#ch5">第5章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>break は、繰り返し処理を途中で終了させます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>1 から順に数を表示し、5 になった時点で繰り返しを終了してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>break を使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">1
+2
+3
+4</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch5-q6-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch5-q6-0">public class Main {
+    public static void main(String[] args) {
+        for (int i = 1; i &lt;= 10; i++) {
+            if (i == 5) {
+                break;
+            }
+            System.out.println(i);
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch5-q7">
+<div class="problem__head"><h3><span class="badge">問題 7</span> 繰り返し回数を数える</h3>
+<div class="problem__meta"><a href="#ch5">第5章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>変数を使って回数を数えることができます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>while 文を使用して 1 から 10 を表示し、繰り返しが何回実行されたかを表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>while 文を使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+回数=10</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch5-q7-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch5-q7-0">public class Main {
+    public static void main(String[] args) {
+        int i = 1;
+        int count = 0;
+
+        while (i &lt;= 10) {
+            System.out.println(i);
+            i++;
+            count++;
+        }
+
+        System.out.println("回数=" + count);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch5-q8">
+<div class="problem__head"><h3><span class="badge">問題 8</span> 配列と for 文を組み合わせる</h3>
+<div class="problem__meta"><a href="#ch5">第5章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>配列は for 文と組み合わせて処理できます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>int 型の配列 {10, 20, 30} を用意してください。</li>
+<li>for 文を使用して、すべての要素を表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>配列の要素数は length を使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">10
+20
+30</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch5-q8-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch5-q8-0">public class Main {
+    public static void main(String[] args) {
+        int[] nums = {10, 20, 30};
+
+        for (int i = 0; i &lt; nums.length; i++) {
+            System.out.println(nums[i]);
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch5-q9">
+<div class="problem__head"><h3><span class="badge">問題 9</span> 二重ループの基本</h3>
+<div class="problem__meta"><a href="#ch5">第5章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>ループは入れ子にできます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>for 文を 2 重に使用し、次の形式で表示してください：</li>
+<li>1-1, 1-2, 1-3, 2-1, 2-2, 2-3（各 1 行）</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>for 文を 2 重に使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">1-1
+1-2
+1-3
+2-1
+2-2
+2-3</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch5-q9-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch5-q9-0">public class Main {
+    public static void main(String[] args) {
+        for (int i = 1; i &lt;= 2; i++) {
+            for (int j = 1; j &lt;= 3; j++) {
+                System.out.println(i + "-" + j);
+            }
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch5-q10">
+<div class="problem__head"><h3><span class="badge">問題 10</span> 無限ループを防ぐ</h3>
+<div class="problem__meta"><a href="#ch5">第5章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>条件や更新を誤ると無限ループになります。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>while 文を使用して 1 から 5 を表示し、正しく終了するプログラムを作成してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>無限ループにならないこと。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">1
+2
+3
+4
+5</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch5-q10-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch5-q10-0">public class Main {
+    public static void main(String[] args) {
+        int i = 1;
+
+        while (i &lt;= 5) {
+            System.out.println(i);
+            i++;
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section>
+      </div>
+    </section>
+<section class="chapter" id="ch6">
+      <header class="chapter__head">
+        <h2>第6章：配列（Array）</h2>
+        <p class="chapter__sub">宣言/初期化/length/参照/初期値/拡張for/2次元</p>
+      </header>
+      <div class="chapter__body">
+        <section class="problem" id="ch6-q1">
+<div class="problem__head"><h3><span class="badge">問題 1</span> 配列を宣言して要素を表示する</h3>
+<div class="problem__meta"><a href="#ch6">第6章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>配列は、同じ型のデータを複数まとめて扱うための仕組みです。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>int 型の配列を 1 つ 宣言してください。</li>
+<li>配列の中に、次の 3 つの整数をこの順番で格納してください：10, 20, 30</li>
+<li>配列の要素を先頭から順に表示してください（各 1 行）。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>for 文を使用すること。</li>
+<li>配列の要素数は length を使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">10
+20
+30</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch6-q1-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch6-q1-0">public class Main {
+    public static void main(String[] args) {
+        int[] nums = {10, 20, 30};
+
+        for (int i = 0; i &lt; nums.length; i++) {
+            System.out.println(nums[i]);
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch6-q2">
+<div class="problem__head"><h3><span class="badge">問題 2</span> 配列の要素数を表示する</h3>
+<div class="problem__meta"><a href="#ch6">第6章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>配列の要素数は length で取得できます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>int 型の配列 {5, 10, 15, 20} を用意してください。</li>
+<li>配列の要素数を表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>数値を直接書いてはいけません。</li>
+<li>length を使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">4</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch6-q2-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch6-q2-0">public class Main {
+    public static void main(String[] args) {
+        int[] nums = {5, 10, 15, 20};
+        System.out.println(nums.length);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch6-q3">
+<div class="problem__head"><h3><span class="badge">問題 3</span> 配列の合計を求める</h3>
+<div class="problem__meta"><a href="#ch6">第6章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>配列の要素は繰り返し処理で集計できます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>int 型の配列 {1, 2, 3, 4, 5} を用意してください。</li>
+<li>配列内のすべての要素の合計を求めて表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>for 文を使用すること。</li>
+<li>length を使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">15</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch6-q3-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch6-q3-0">public class Main {
+    public static void main(String[] args) {
+        int[] nums = {1, 2, 3, 4, 5};
+        int sum = 0;
+
+        for (int i = 0; i &lt; nums.length; i++) {
+            sum += nums[i];
+        }
+
+        System.out.println(sum);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch6-q4">
+<div class="problem__head"><h3><span class="badge">問題 4</span> 配列の最大値を求める</h3>
+<div class="problem__meta"><a href="#ch6">第6章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>比較処理を使って最大値を更新できます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>int 型の配列 {7, 3, 9, 5} を用意してください。</li>
+<li>配列の中で最も大きい値を表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>for 文を使用すること。</li>
+<li>最初の要素を基準値として使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">9</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch6-q4-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch6-q4-0">public class Main {
+    public static void main(String[] args) {
+        int[] nums = {7, 3, 9, 5};
+        int max = nums[0];
+
+        for (int i = 1; i &lt; nums.length; i++) {
+            if (nums[i] &gt; max) {
+                max = nums[i];
+            }
+        }
+
+        System.out.println(max);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch6-q5">
+<div class="problem__head"><h3><span class="badge">問題 5</span> 配列の初期値を確認する</h3>
+<div class="problem__meta"><a href="#ch6">第6章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>配列を new で生成すると、自動的に初期値が設定されます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>長さ 3 の int 型配列を生成してください。</li>
+<li>すべての要素を表示し、初期値を確認してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>for 文を使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">0
+0
+0</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch6-q5-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch6-q5-0">public class Main {
+    public static void main(String[] args) {
+        int[] nums = new int[3];
+
+        for (int i = 0; i &lt; nums.length; i++) {
+            System.out.println(nums[i]);
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch6-q6">
+<div class="problem__head"><h3><span class="badge">問題 6</span> 配列は参照型であることを確認する</h3>
+<div class="problem__meta"><a href="#ch6">第6章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>配列は参照型であり、代入すると同じ配列を参照します。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>int 型の配列 {1, 2, 3} を用意してください。</li>
+<li>別の変数に代入し、一方の要素を変更してください。</li>
+<li>元の配列の内容が変わることを確認してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">99</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch6-q6-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch6-q6-0">public class Main {
+    public static void main(String[] args) {
+        int[] a = {1, 2, 3};
+        int[] b = a;
+
+        b[0] = 99;
+
+        System.out.println(a[0]);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch6-q7">
+<div class="problem__head"><h3><span class="badge">問題 7</span> 配列の最後の要素を表示する</h3>
+<div class="problem__meta"><a href="#ch6">第6章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>配列のインデックスは 0 から始まります。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>int 型の配列 {10, 20, 30, 40} を用意してください。</li>
+<li>最後の要素を表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>length を使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">40</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch6-q7-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch6-q7-0">public class Main {
+    public static void main(String[] args) {
+        int[] nums = {10, 20, 30, 40};
+        System.out.println(nums[nums.length - 1]);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch6-q8">
+<div class="problem__head"><h3><span class="badge">問題 8</span> 配列の範囲外アクセスを防ぐ</h3>
+<div class="problem__meta"><a href="#ch6">第6章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>配列の範囲外にアクセスすると実行時例外が発生します。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>for 文を使用して配列を表示し、範囲外アクセスが起きないようにしてください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>ループ条件に length を使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">1
+2
+3</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch6-q8-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch6-q8-0">public class Main {
+    public static void main(String[] args) {
+        int[] nums = {1, 2, 3};
+
+        for (int i = 0; i &lt; nums.length; i++) {
+            System.out.println(nums[i]);
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch6-q9">
+<div class="problem__head"><h3><span class="badge">問題 9</span> 拡張 for 文（for-each）で配列を表示する</h3>
+<div class="problem__meta"><a href="#ch6">第6章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>拡張 for 文（for-each）は配列の要素を順に取り出します。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>int 型の配列 {3, 6, 9} を用意してください。</li>
+<li>拡張 for 文を使用して、すべての要素を表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>インデックスは使用しないこと。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">3
+6
+9</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch6-q9-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch6-q9-0">public class Main {
+    public static void main(String[] args) {
+        int[] nums = {3, 6, 9};
+
+        for (int n : nums) {
+            System.out.println(n);
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch6-q10">
+<div class="problem__head"><h3><span class="badge">問題 10</span> 2 次元配列を扱う</h3>
+<div class="problem__meta"><a href="#ch6">第6章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>配列の中に配列を持つことで、2 次元配列を作成できます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>次の 2 次元配列を作成してください：{ {1, 2, 3}, {4, 5, 6} }</li>
+<li>すべての要素を表示してください（各 1 行）。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>for 文を 2 重に使用すること。</li>
+<li>length を使用すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">1
+2
+3
+4
+5
+6</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch6-q10-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch6-q10-0">public class Main {
+    public static void main(String[] args) {
+        int[][] nums = {
+            {1, 2, 3},
+            {4, 5, 6}
+        };
+
+        for (int i = 0; i &lt; nums.length; i++) {
+            for (int j = 0; j &lt; nums[i].length; j++) {
+                System.out.println(nums[i][j]);
+            }
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section>
+      </div>
+    </section>
+<section class="chapter" id="ch7">
+      <header class="chapter__head">
+        <h2>第7章：クラス（Class）</h2>
+        <p class="chapter__sub">設計図と実体 / 参照型 / デフォルトコンストラクタ / publicクラスとファイル名</p>
+      </header>
+      <div class="chapter__body">
+        <section class="problem" id="ch7-q1">
+<div class="problem__head"><h3><span class="badge">問題 1</span> クラスを定義してインスタンスを生成する</h3>
+<div class="problem__meta"><a href="#ch7">第7章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>Java では、クラスを定義し、そのクラスからインスタンスを生成できます。</li>
+<li>クラスは別ファイルに定義して構いません。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Person クラスを作成してください。</li>
+<li>Person クラスには次のフィールドを定義してください：String name, int age</li>
+<li>Main クラスで Person のインスタンスを生成し、name に "Taro"、age に 20 を代入して表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>メソッドは定義しないこと（main 以外は禁止）。</li>
+<li>フィールドは public とします。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Taro
+20</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch7-q1-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch7-q1-0">public class Main {
+    public static void main(String[] args) {
+        Person p = new Person();
+        p.name = "Taro";
+        p.age = 20;
+
+        System.out.println(p.name);
+        System.out.println(p.age);
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Person.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch7-q1-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch7-q1-1">public class Person {
+    public String name;
+    public int age;
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch7-q2">
+<div class="problem__head"><h3><span class="badge">問題 2</span> 同じクラスから複数のインスタンスを生成する</h3>
+<div class="problem__meta"><a href="#ch7">第7章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>1つのクラスから、複数のインスタンスを生成できます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Person クラスのインスタンスを 2 つ生成してください。</li>
+<li>それぞれ異なる値を設定し、表示してください（"Taro 20" / "Hanako 22"）。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>メソッドは定義しないこと（main 以外は禁止）。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Taro 20
+Hanako 22</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch7-q2-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch7-q2-0">public class Main {
+    public static void main(String[] args) {
+        Person p1 = new Person();
+        p1.name = "Taro";
+        p1.age = 20;
+
+        Person p2 = new Person();
+        p2.name = "Hanako";
+        p2.age = 22;
+
+        System.out.println(p1.name + " " + p1.age);
+        System.out.println(p2.name + " " + p2.age);
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Person.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch7-q2-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch7-q2-1">public class Person {
+    public String name;
+    public int age;
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch7-q3">
+<div class="problem__head"><h3><span class="badge">問題 3</span> クラスは参照型であることを確認する</h3>
+<div class="problem__meta"><a href="#ch7">第7章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>クラスは参照型です。</li>
+<li>変数に代入すると、同じインスタンスを参照します。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Person のインスタンスを 1 つ生成してください。</li>
+<li>別の変数に代入し、一方のフィールドを変更してください。</li>
+<li>元の変数から参照した値も変わることを確認してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>メソッドは定義しないこと（main 以外は禁止）。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">30</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch7-q3-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch7-q3-0">public class Main {
+    public static void main(String[] args) {
+        Person p1 = new Person();
+        p1.age = 20;
+
+        Person p2 = p1;
+        p2.age = 30;
+
+        System.out.println(p1.age);
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Person.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch7-q3-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch7-q3-1">public class Person {
+    public int age;
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch7-q4">
+<div class="problem__head"><h3><span class="badge">問題 4</span> デフォルトコンストラクタの存在を確認する</h3>
+<div class="problem__meta"><a href="#ch7">第7章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>コンストラクタを定義しない場合、デフォルトコンストラクタが自動的に用意されます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>引数なしで Person のインスタンスを生成してください。</li>
+<li>フィールドの初期値を表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>フィールドは初期化しないこと。</li>
+<li>メソッドは定義しないこと（main 以外は禁止）。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">null
+0</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch7-q4-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch7-q4-0">public class Main {
+    public static void main(String[] args) {
+        Person p = new Person();
+        System.out.println(p.name);
+        System.out.println(p.age);
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Person.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch7-q4-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch7-q4-1">public class Person {
+    public String name;
+    public int age;
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch7-q5">
+<div class="problem__head"><h3><span class="badge">問題 5</span> クラスを使い分ける（別クラスを作る）</h3>
+<div class="problem__meta"><a href="#ch7">第7章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>プログラムには複数のクラスを定義できます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Student クラスを新しく作成してください。</li>
+<li>次のフィールドを定義してください：String name, int score</li>
+<li>Main クラスで Student のインスタンスを生成し、"Ken 80" の形式で表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>メソッドは定義しないこと（main 以外は禁止）。</li>
+<li>フィールドは public とします。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Ken 80</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch7-q5-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch7-q5-0">public class Main {
+    public static void main(String[] args) {
+        Student s = new Student();
+        s.name = "Ken";
+        s.score = 80;
+
+        System.out.println(s.name + " " + s.score);
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Student.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch7-q5-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch7-q5-1">public class Student {
+    public String name;
+    public int score;
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch7-q6">
+<div class="problem__head"><h3><span class="badge">問題 6</span> public クラスとファイル名の関係</h3>
+<div class="problem__meta"><a href="#ch7">第7章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>public クラスはファイル名と同じ名前でなければなりません。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Car クラスを public クラスとして作成してください（ファイル名は Car.java）。</li>
+<li>Car クラスのフィールド brand を表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>ファイル名は Car.java とすること。</li>
+<li>メソッドは定義しないこと（main 以外は禁止）。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Toyota</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch7-q6-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch7-q6-0">public class Main {
+    public static void main(String[] args) {
+        Car c = new Car();
+        c.brand = "Toyota";
+        System.out.println(c.brand);
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Car.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch7-q6-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch7-q6-1">public class Car {
+    public String brand;
+}</code></pre>
+    </div>
+</details>
+</section>
+      </div>
+    </section>
+<section class="chapter" id="ch8">
+      <header class="chapter__head">
+        <h2>第8章：メソッド（Method）</h2>
+        <p class="chapter__sub">引数 / 戻り値 / return / 呼び出し順 / staticメソッド</p>
+      </header>
+      <div class="chapter__body">
+        <section class="problem" id="ch8-q1">
+<div class="problem__head"><h3><span class="badge">問題 1</span> 引数を持たないメソッド</h3>
+<div class="problem__meta"><a href="#ch8">第8章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>メソッドは処理をひとまとめにしたものです。</li>
+<li>引数を持たないメソッドを定義できます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>hello というメソッドを定義してください。</li>
+<li>このメソッドは "Hello Java" と表示するものとします。</li>
+<li>main メソッドから hello を呼び出してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>hello メソッドは static とします。</li>
+<li>戻り値はありません。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Hello Java</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch8-q1-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch8-q1-0">public class Main {
+    public static void main(String[] args) {
+        hello();
+    }
+
+    static void hello() {
+        System.out.println("Hello Java");
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch8-q2">
+<div class="problem__head"><h3><span class="badge">問題 2</span> 引数を1つ持つメソッド</h3>
+<div class="problem__meta"><a href="#ch8">第8章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>メソッドは引数を受け取ることができます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>printNumber というメソッドを定義してください。</li>
+<li>int 型の引数を 1 つ受け取り、その値を表示してください。</li>
+<li>main メソッドから printNumber(10) を呼び出してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>戻り値は使用しません。</li>
+<li>printNumber は static とします。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">10</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch8-q2-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch8-q2-0">public class Main {
+    public static void main(String[] args) {
+        printNumber(10);
+    }
+
+    static void printNumber(int n) {
+        System.out.println(n);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch8-q3">
+<div class="problem__head"><h3><span class="badge">問題 3</span> 引数を2つ持つメソッド</h3>
+<div class="problem__meta"><a href="#ch8">第8章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>メソッドは複数の引数を持つことができます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>add というメソッドを定義してください。</li>
+<li>int 型の引数を 2 つ受け取り、その合計を表示してください。</li>
+<li>main メソッドから add(3, 4) を呼び出してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>add は static とします。</li>
+<li>戻り値は使用しません。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">7</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch8-q3-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch8-q3-0">public class Main {
+    public static void main(String[] args) {
+        add(3, 4);
+    }
+
+    static void add(int a, int b) {
+        System.out.println(a + b);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch8-q4">
+<div class="problem__head"><h3><span class="badge">問題 4</span> 戻り値を持つメソッド</h3>
+<div class="problem__meta"><a href="#ch8">第8章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>メソッドは処理結果を戻り値として返すことができます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>multiply メソッドを定義してください。</li>
+<li>int 型の引数を 2 つ受け取り、掛け算の結果を戻り値として返してください。</li>
+<li>main メソッドで戻り値を受け取り、表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>multiply は static とします。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">12</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch8-q4-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch8-q4-0">public class Main {
+    public static void main(String[] args) {
+        int result = multiply(3, 4);
+        System.out.println(result);
+    }
+
+    static int multiply(int a, int b) {
+        return a * b;
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch8-q5">
+<div class="problem__head"><h3><span class="badge">問題 5</span> void と return の違い（表示だけする）</h3>
+<div class="problem__meta"><a href="#ch8">第8章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>void メソッドは値を返しません。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>printSum メソッドを作成してください。</li>
+<li>int 型の引数を 2 つ受け取り、合計を表示だけしてください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>戻り値は使用しないこと。</li>
+<li>printSum は static とします。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">15</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch8-q5-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch8-q5-0">public class Main {
+    public static void main(String[] args) {
+        printSum(7, 8);
+    }
+
+    static void printSum(int a, int b) {
+        System.out.println(a + b);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch8-q6">
+<div class="problem__head"><h3><span class="badge">問題 6</span> 戻り値を使って再利用する</h3>
+<div class="problem__meta"><a href="#ch8">第8章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>戻り値を使うことで処理結果を再利用できます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>square メソッドを定義してください。</li>
+<li>int 型の引数を 1 つ受け取り、その 2 乗を返してください。</li>
+<li>main メソッドで結果を表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>square は static とします。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">25</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch8-q6-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch8-q6-0">public class Main {
+    public static void main(String[] args) {
+        int result = square(5);
+        System.out.println(result);
+    }
+
+    static int square(int n) {
+        return n * n;
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch8-q7">
+<div class="problem__head"><h3><span class="badge">問題 7</span> メソッドの呼び出し順を確認する</h3>
+<div class="problem__meta"><a href="#ch8">第8章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>メソッドは呼び出された順に実行されます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>first と second という 2 つのメソッドを定義してください。</li>
+<li>main から first を呼び出し、first の中から second を呼び出してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>両方 static とします。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">first
+second</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch8-q7-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch8-q7-0">public class Main {
+    public static void main(String[] args) {
+        first();
+    }
+
+    static void first() {
+        System.out.println("first");
+        second();
+    }
+
+    static void second() {
+        System.out.println("second");
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch8-q8">
+<div class="problem__head"><h3><span class="badge">問題 8</span> return による処理の終了</h3>
+<div class="problem__meta"><a href="#ch8">第8章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>return はメソッドの処理を終了させます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>check メソッドを作成してください。</li>
+<li>引数が 0 の場合は "zero" を表示して終了してください。</li>
+<li>それ以外の場合は "not zero" を表示してください。</li>
+<li>main メソッドから check(0) を呼び出してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>check は static とします。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">zero</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch8-q8-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch8-q8-0">public class Main {
+    public static void main(String[] args) {
+        check(0);
+    }
+
+    static void check(int n) {
+        if (n == 0) {
+            System.out.println("zero");
+            return;
+        }
+        System.out.println("not zero");
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch8-q9">
+<div class="problem__head"><h3><span class="badge">問題 9</span> 同じ名前のメソッドは使えない（基礎理解）</h3>
+<div class="problem__meta"><a href="#ch8">第8章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>同じ引数・同じ戻り値のメソッドは複数定義できません。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>print メソッドを 1 つ定義し、文字列を表示してください。</li>
+<li>main から print("Java") を呼び出してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>正しくコンパイル・実行できる状態にすること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Java</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch8-q9-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch8-q9-0">public class Main {
+    public static void main(String[] args) {
+        print("Java");
+    }
+
+    static void print(String s) {
+        System.out.println(s);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch8-q10">
+<div class="problem__head"><h3><span class="badge">問題 10</span> static メソッドの役割を確認する</h3>
+<div class="problem__meta"><a href="#ch8">第8章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>static メソッドはインスタンスを作らずに呼び出せます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>showMessage メソッドを作成してください。</li>
+<li>main メソッドから直接呼び出してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>showMessage は static とします。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Method Test</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch8-q10-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch8-q10-0">public class Main {
+    public static void main(String[] args) {
+        showMessage();
+    }
+
+    static void showMessage() {
+        System.out.println("Method Test");
+    }
+}</code></pre>
+    </div>
+</details>
+</section>
+      </div>
+    </section>
+<section class="chapter" id="ch9">
+      <header class="chapter__head">
+        <h2>第9章：アクセス修飾子（public / private / protected / package-private）</h2>
+        <p class="chapter__sub">アクセス可能範囲の違いをコードで確認</p>
+      </header>
+      <div class="chapter__body">
+        <section class="problem" id="ch9-q1">
+<div class="problem__head"><h3><span class="badge">問題 1</span> public フィールドはどこからでもアクセスできる</h3>
+<div class="problem__meta"><a href="#ch9">第9章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>public 修飾子が付いたメンバは、どこからでもアクセスできます。</li>
+<li>Main クラスと Person クラスは別ファイルとします。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Person クラスに public String name を定義してください。</li>
+<li>Main クラスからこのフィールドに値を代入し、表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>パッケージは指定しなくてよい（同一パッケージ）。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Taro</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch9-q1-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch9-q1-0">public class Main {
+    public static void main(String[] args) {
+        Person p = new Person();
+        p.name = "Taro";
+        System.out.println(p.name);
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Person.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch9-q1-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch9-q1-1">public class Person {
+    public String name;
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch9-q2">
+<div class="problem__head"><h3><span class="badge">問題 2</span> private フィールドは直接アクセスできない</h3>
+<div class="problem__meta"><a href="#ch9">第9章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>private フィールドは同じクラス内からのみアクセスできます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Person クラスに private int age を定義してください。</li>
+<li>Person クラス内に age を表示するメソッドを作成してください。</li>
+<li>Main クラスからそのメソッドを呼び出して表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>Main クラスから age に直接アクセスしてはいけません。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">20</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch9-q2-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch9-q2-0">public class Main {
+    public static void main(String[] args) {
+        Person p = new Person();
+        p.showAge();
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Person.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch9-q2-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch9-q2-1">public class Person {
+    private int age = 20;
+
+    void showAge() {
+        System.out.println(age);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch9-q3">
+<div class="problem__head"><h3><span class="badge">問題 3</span> package-private（修飾子なし）の挙動</h3>
+<div class="problem__meta"><a href="#ch9">第9章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>修飾子を省略したメンバは同一パッケージ内からのみアクセスできます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Person クラスに修飾子なしの String city を定義してください。</li>
+<li>Main クラスからこのフィールドを設定して表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>両クラスは同一パッケージとします。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Tokyo</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch9-q3-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch9-q3-0">public class Main {
+    public static void main(String[] args) {
+        Person p = new Person();
+        p.city = "Tokyo";
+        System.out.println(p.city);
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Person.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch9-q3-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch9-q3-1">public class Person {
+    String city; // package-private
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch9-q4">
+<div class="problem__head"><h3><span class="badge">問題 4</span> protected フィールド（同一パッケージ）</h3>
+<div class="problem__meta"><a href="#ch9">第9章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>protected メンバは同一パッケージ、またはサブクラスからアクセスできます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Person クラスに protected String job を定義してください。</li>
+<li>Main クラスからこのフィールドを設定して表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>継承は使用しません（同一パッケージで確認）。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Engineer</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch9-q4-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch9-q4-0">public class Main {
+    public static void main(String[] args) {
+        Person p = new Person();
+        p.job = "Engineer";
+        System.out.println(p.job);
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Person.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch9-q4-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch9-q4-1">public class Person {
+    protected String job;
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch9-q5">
+<div class="problem__head"><h3><span class="badge">問題 5</span> アクセスできないコードを作らない（private の正しい扱い）</h3>
+<div class="problem__meta"><a href="#ch9">第9章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>private メンバは他クラスからアクセスできません。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>次の設計を正しく動作する形で完成させてください。</li>
+<li>Person クラスに private String secret を持たせ、Person クラス内のメソッドでのみ secret を表示する。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>Main クラスから secret に直接アクセスしてはいけません。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">secret</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch9-q5-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch9-q5-0">public class Main {
+    public static void main(String[] args) {
+        Person p = new Person();
+        p.showSecret();
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Person.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch9-q5-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch9-q5-1">public class Person {
+    private String secret = "secret";
+
+    void showSecret() {
+        System.out.println(secret);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch9-q6">
+<div class="problem__head"><h3><span class="badge">問題 6</span> public クラスのルール（ファイル名とクラス名）</h3>
+<div class="problem__meta"><a href="#ch9">第9章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>public クラスはファイル名とクラス名が一致する必要があります。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Car クラスを public クラスとして作成し、フィールドを表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>ファイル名は Car.java とします。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Toyota</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch9-q6-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch9-q6-0">public class Main {
+    public static void main(String[] args) {
+        Car c = new Car();
+        c.brand = "Toyota";
+        System.out.println(c.brand);
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Car.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch9-q6-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch9-q6-1">public class Car {
+    public String brand;
+}</code></pre>
+    </div>
+</details>
+</section>
+      </div>
+    </section>
+<section class="chapter" id="ch10">
+      <header class="chapter__head">
+        <h2>第10章：static（クラスメンバとインスタンスメンバ）</h2>
+        <p class="chapter__sub">staticフィールド/メソッド / 共有と個別 / クラス名アクセス</p>
+      </header>
+      <div class="chapter__body">
+        <section class="problem" id="ch10-q1">
+<div class="problem__head"><h3><span class="badge">問題 1</span> static フィールドは共有される</h3>
+<div class="problem__meta"><a href="#ch10">第10章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>static フィールドはクラス全体で共有されます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Counter クラスを作成してください。</li>
+<li>static int count フィールドを定義してください。</li>
+<li>Main クラスで Counter のインスタンスを 2 つ生成し、それぞれから count を 1 増やしてください。</li>
+<li>最終的な count の値を表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>count は static とします。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">2</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch10-q1-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch10-q1-0">public class Main {
+    public static void main(String[] args) {
+        Counter c1 = new Counter();
+        Counter.count++;
+
+        Counter c2 = new Counter();
+        Counter.count++;
+
+        System.out.println(Counter.count);
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Counter.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch10-q1-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch10-q1-1">public class Counter {
+    static int count = 0;
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch10-q2">
+<div class="problem__head"><h3><span class="badge">問題 2</span> インスタンスフィールドは個別に持つ</h3>
+<div class="problem__meta"><a href="#ch10">第10章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>インスタンスフィールドはオブジェクトごとに別々に存在します。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Person クラスに int age フィールドを定義してください。</li>
+<li>2つのインスタンスを生成し、それぞれ異なる年齢を設定して表示してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">20
+30</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch10-q2-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch10-q2-0">public class Main {
+    public static void main(String[] args) {
+        Person p1 = new Person();
+        p1.age = 20;
+
+        Person p2 = new Person();
+        p2.age = 30;
+
+        System.out.println(p1.age);
+        System.out.println(p2.age);
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Person.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch10-q2-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch10-q2-1">public class Person {
+    int age;
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch10-q3">
+<div class="problem__head"><h3><span class="badge">問題 3</span> static フィールドとインスタンスフィールドの違い</h3>
+<div class="problem__meta"><a href="#ch10">第10章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>static フィールドは共有、インスタンスフィールドは個別です。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Sample クラスに次のフィールドを定義してください：static int x, int y</li>
+<li>2つのインスタンスを生成し、x と y をそれぞれ 1 ずつ増やしてください。</li>
+<li>最終的な x と、最初に作ったインスタンスの y を表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>表示順：x → 最初のインスタンスの y</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">2
+1</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch10-q3-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch10-q3-0">public class Main {
+    public static void main(String[] args) {
+        Sample a = new Sample();
+        a.x++;
+        a.y++;
+
+        Sample b = new Sample();
+        b.x++;
+        b.y++;
+
+        System.out.println(Sample.x);
+        System.out.println(a.y);
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Sample.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch10-q3-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch10-q3-1">public class Sample {
+    static int x = 0;
+    int y = 0;
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch10-q4">
+<div class="problem__head"><h3><span class="badge">問題 4</span> static メソッドはインスタンスなしで呼び出せる</h3>
+<div class="problem__meta"><a href="#ch10">第10章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>static メソッドはクラス名から直接呼び出せます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Util クラスに static void show() メソッドを定義してください。</li>
+<li>Main クラスからインスタンスを作らずに呼び出してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">static method</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch10-q4-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch10-q4-0">public class Main {
+    public static void main(String[] args) {
+        Util.show();
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Util.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch10-q4-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch10-q4-1">public class Util {
+    static void show() {
+        System.out.println("static method");
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch10-q5">
+<div class="problem__head"><h3><span class="badge">問題 5</span> static メソッドからインスタンスメンバは使えない</h3>
+<div class="problem__meta"><a href="#ch10">第10章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>static メソッドからインスタンスメンバは直接使えません。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>次の設計を、正しく動作するように完成させてください。</li>
+<li>Sample クラスに int value = 10 を持たせ、static メソッド内で表示する。</li>
+<li>（ヒント：インスタンスを生成してから value を使用する）</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">10</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch10-q5-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch10-q5-0">public class Main {
+    public static void main(String[] args) {
+        Sample.showValue();
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Sample.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch10-q5-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch10-q5-1">public class Sample {
+    int value = 10;
+
+    static void showValue() {
+        Sample s = new Sample();
+        System.out.println(s.value);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch10-q6">
+<div class="problem__head"><h3><span class="badge">問題 6</span> static メソッド同士は直接呼び出せる</h3>
+<div class="problem__meta"><a href="#ch10">第10章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>static メソッドは他の static メソッドを直接呼び出せます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>methodA から methodB を呼び出してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>両方 static とします。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">B</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch10-q6-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch10-q6-0">public class Main {
+    public static void main(String[] args) {
+        methodA();
+    }
+
+    static void methodA() {
+        methodB();
+    }
+
+    static void methodB() {
+        System.out.println("B");
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch10-q7">
+<div class="problem__head"><h3><span class="badge">問題 7</span> インスタンスメソッドから static メンバを使う</h3>
+<div class="problem__meta"><a href="#ch10">第10章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>インスタンスメソッドから static メンバは使用可能です。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Sample クラスに static int num = 5 を定義してください。</li>
+<li>インスタンスメソッド show() 内から num を表示してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">5</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch10-q7-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch10-q7-0">public class Main {
+    public static void main(String[] args) {
+        Sample s = new Sample();
+        s.show();
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Sample.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch10-q7-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch10-q7-1">public class Sample {
+    static int num = 5;
+
+    void show() {
+        System.out.println(num);
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch10-q8">
+<div class="problem__head"><h3><span class="badge">問題 8</span> static フィールドはクラス名でアクセスする</h3>
+<div class="problem__meta"><a href="#ch10">第10章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>static メンバは クラス名.メンバ名 で扱うのが基本です。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Counter クラスに static int count を用意してください。</li>
+<li>Counter.count の形で値を設定し、表示してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">3</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch10-q8-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch10-q8-0">public class Main {
+    public static void main(String[] args) {
+        Counter.count = 3;
+        System.out.println(Counter.count);
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Counter.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch10-q8-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch10-q8-1">public class Counter {
+    static int count;
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch10-q9">
+<div class="problem__head"><h3><span class="badge">問題 9</span> static の有無で挙動が変わることを確認する</h3>
+<div class="problem__meta"><a href="#ch10">第10章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>static が付くかどうかでメンバの意味が変わります。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Test クラスに static int x と int y を用意してください。</li>
+<li>inc() メソッドで x と y をそれぞれ 1 増やしてください。</li>
+<li>Test のインスタンスを 2 つ作り、それぞれ inc() を呼び出してください。</li>
+<li>最後に Test.x と、最初のインスタンスの y を表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>表示順：Test.x → 最初のインスタンスの y</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">2
+1</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch10-q9-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch10-q9-0">public class Main {
+    public static void main(String[] args) {
+        Test a = new Test();
+        a.inc();
+
+        Test b = new Test();
+        b.inc();
+
+        System.out.println(Test.x);
+        System.out.println(a.y);
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Test.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch10-q9-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch10-q9-1">public class Test {
+    static int x = 0;
+    int y = 0;
+
+    void inc() {
+        x++;
+        y++;
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch10-q10">
+<div class="problem__head"><h3><span class="badge">問題 10</span> static の役割を確認する（共有の証明）</h3>
+<div class="problem__meta"><a href="#ch10">第10章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>static は「クラスに属する」ことを意味します。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Sample クラスに static String flag を定義してください。</li>
+<li>Main クラスで Sample のインスタンスを 2 つ作ってください。</li>
+<li>片方で flag に "共有" を代入し、もう片方から flag を表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>static フィールドには Sample.flag の形でアクセスすること（推奨）。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">共有</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch10-q10-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch10-q10-0">public class Main {
+    public static void main(String[] args) {
+        Sample a = new Sample();
+        Sample b = new Sample();
+
+        Sample.flag = "共有";
+        System.out.println(b.flag);
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Sample.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch10-q10-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch10-q10-1">public class Sample {
+    static String flag;
+}</code></pre>
+    </div>
+</details>
+</section>
+      </div>
+    </section>
+<section class="chapter" id="ch11">
+      <header class="chapter__head">
+        <h2>第11章：継承（extends / super / オーバーライド）</h2>
+        <p class="chapter__sub">継承 / アップキャスト / オーバーライド / super / 動的バインディング</p>
+      </header>
+      <div class="chapter__body">
+        <section class="problem" id="ch11-q1">
+<div class="problem__head"><h3><span class="badge">問題 1</span> extends を使ってクラスを継承する</h3>
+<div class="problem__meta"><a href="#ch11">第11章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>Java では extends を使ってクラスを継承できます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Animal クラスを作成し、String name フィールドを定義してください。</li>
+<li>Dog クラスを作成し、Animal クラスを継承してください。</li>
+<li>Main クラスで Dog のインスタンスを生成し、name を設定して表示してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Pochi</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q1-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q1-0">public class Main {
+    public static void main(String[] args) {
+        Dog d = new Dog();
+        d.name = "Pochi";
+        System.out.println(d.name);
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Animal.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q1-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q1-1">public class Animal {
+    public String name;
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Dog.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q1-2" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q1-2">public class Dog extends Animal {
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch11-q2">
+<div class="problem__head"><h3><span class="badge">問題 2</span> 継承したフィールドを利用する</h3>
+<div class="problem__meta"><a href="#ch11">第11章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>子クラスは親クラスのフィールドを引き継ぎます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Animal クラスに int age フィールドを追加してください。</li>
+<li>Dog クラスのインスタンスから age を設定・表示してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">3</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q2-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q2-0">public class Main {
+    public static void main(String[] args) {
+        Dog d = new Dog();
+        d.age = 3;
+        System.out.println(d.age);
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Animal.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q2-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q2-1">public class Animal {
+    public int age;
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Dog.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q2-2" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q2-2">public class Dog extends Animal {
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch11-q3">
+<div class="problem__head"><h3><span class="badge">問題 3</span> 親クラス型で子クラスを扱う（アップキャスト）</h3>
+<div class="problem__meta"><a href="#ch11">第11章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>親クラス型の変数に子クラスのインスタンスを代入できます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Animal 型の変数に Dog のインスタンスを代入してください。</li>
+<li>name フィールドを設定して表示してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Shiro</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q3-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q3-0">public class Main {
+    public static void main(String[] args) {
+        Animal a = new Dog();
+        a.name = "Shiro";
+        System.out.println(a.name);
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Animal.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q3-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q3-1">public class Animal {
+    public String name;
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Dog.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q3-2" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q3-2">public class Dog extends Animal {
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch11-q4">
+<div class="problem__head"><h3><span class="badge">問題 4</span> アップキャスト時に使えるもの・使えないもの</h3>
+<div class="problem__meta"><a href="#ch11">第11章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>参照型で使えるメンバは『参照型側』で決まります。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Dog クラスに String breed フィールドを追加してください。</li>
+<li>Animal 型で Dog を参照し、name は使えるが breed は直接使えないことを確認してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>breed に直接アクセスするコードは書かないこと（書くとコンパイルエラー）。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Pochi</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q4-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q4-0">public class Main {
+    public static void main(String[] args) {
+        Animal a = new Dog();
+        a.name = "Pochi";
+        System.out.println(a.name);
+
+        // a.breed = "柴"; // ← これはコンパイルエラー（Animal 型には breed がない）
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Animal.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q4-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q4-1">public class Animal {
+    public String name;
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Dog.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q4-2" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q4-2">public class Dog extends Animal {
+    public String breed;
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch11-q5">
+<div class="problem__head"><h3><span class="badge">問題 5</span> メソッドをオーバーライドする</h3>
+<div class="problem__meta"><a href="#ch11">第11章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>子クラスは親クラスのメソッドを上書き（オーバーライド）できます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Animal クラスに speak メソッドを定義し、"..." を表示してください。</li>
+<li>Dog クラスで speak メソッドをオーバーライドし、"Wan" を表示してください。</li>
+<li>Main クラスで Dog の speak を呼び出してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>オーバーライドには @Override を付けること（推奨）。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Wan</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q5-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q5-0">public class Main {
+    public static void main(String[] args) {
+        Dog d = new Dog();
+        d.speak();
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Animal.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q5-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q5-1">public class Animal {
+    public void speak() {
+        System.out.println("...");
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Dog.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q5-2" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q5-2">public class Dog extends Animal {
+    @Override
+    public void speak() {
+        System.out.println("Wan");
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch11-q6">
+<div class="problem__head"><h3><span class="badge">問題 6</span> 参照型が親でも、呼ばれるメソッドは子（動的バインディング）</h3>
+<div class="problem__meta"><a href="#ch11">第11章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>メソッドは『実体のクラス』によって決まります（動的バインディング）。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Animal 型で Dog を参照し、speak を呼び出してください。</li>
+<li>Dog 側の speak（オーバーライド）が呼ばれることを確認してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Wan</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q6-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q6-0">public class Main {
+    public static void main(String[] args) {
+        Animal a = new Dog();
+        a.speak();
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Animal.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q6-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q6-1">public class Animal {
+    public void speak() {
+        System.out.println("...");
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Dog.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q6-2" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q6-2">public class Dog extends Animal {
+    @Override
+    public void speak() {
+        System.out.println("Wan");
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch11-q7">
+<div class="problem__head"><h3><span class="badge">問題 7</span> super を使って親クラスを参照する</h3>
+<div class="problem__meta"><a href="#ch11">第11章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>super は親クラスのメンバを指します。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Dog クラスの speak メソッド内で、親クラスの speak を呼び出してください。</li>
+<li>その後に "Wan" を表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>表示順：親の speak → Wan</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">...
+Wan</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q7-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q7-0">public class Main {
+    public static void main(String[] args) {
+        Dog d = new Dog();
+        d.speak();
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Animal.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q7-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q7-1">public class Animal {
+    public void speak() {
+        System.out.println("...");
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Dog.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q7-2" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q7-2">public class Dog extends Animal {
+    @Override
+    public void speak() {
+        super.speak();
+        System.out.println("Wan");
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch11-q8">
+<div class="problem__head"><h3><span class="badge">問題 8</span> オーバーライドの条件を満たす</h3>
+<div class="problem__meta"><a href="#ch11">第11章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>オーバーライドは、メソッド名・引数・戻り値が一致している必要があります。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Animal クラスに run メソッドを定義し、"Animal run" と表示してください。</li>
+<li>Dog クラスで同じシグネチャの run を定義し、"Dog run" と表示してください。</li>
+<li>Main から Dog の run を呼び出してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>@Override を付けること（推奨）。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Dog run</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q8-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q8-0">public class Main {
+    public static void main(String[] args) {
+        Dog d = new Dog();
+        d.run();
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Animal.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q8-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q8-1">public class Animal {
+    public void run() {
+        System.out.println("Animal run");
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Dog.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q8-2" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q8-2">public class Dog extends Animal {
+    @Override
+    public void run() {
+        System.out.println("Dog run");
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch11-q9">
+<div class="problem__head"><h3><span class="badge">問題 9</span> @Override アノテーションの役割</h3>
+<div class="problem__meta"><a href="#ch11">第11章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>@Override はオーバーライドのミスを防ぎます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Animal クラスに name() メソッドを定義し、"Animal" と表示してください。</li>
+<li>Dog クラスで name() を @Override 付きでオーバーライドし、"Dog" と表示してください。</li>
+<li>Main から Dog の name() を呼び出してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Dog</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q9-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q9-0">public class Main {
+    public static void main(String[] args) {
+        Dog d = new Dog();
+        d.name();
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Animal.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q9-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q9-1">public class Animal {
+    public void name() {
+        System.out.println("Animal");
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Dog.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q9-2" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q9-2">public class Dog extends Animal {
+    @Override
+    public void name() {
+        System.out.println("Dog");
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch11-q10">
+<div class="problem__head"><h3><span class="badge">問題 10</span> 継承の全体像を確認する（Silver総合）</h3>
+<div class="problem__meta"><a href="#ch11">第11章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>継承・アップキャスト・オーバーライドを組み合わせます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Animal → Dog の継承関係を作成してください。</li>
+<li>Animal 型で Dog を参照してください。</li>
+<li>オーバーライドされた who() が呼ばれることを確認してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Dog</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q10-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q10-0">public class Main {
+    public static void main(String[] args) {
+        Animal a = new Dog();
+        a.who();
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Animal.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q10-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q10-1">public class Animal {
+    public void who() {
+        System.out.println("Animal");
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Dog.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch11-q10-2" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch11-q10-2">public class Dog extends Animal {
+    @Override
+    public void who() {
+        System.out.println("Dog");
+    }
+}</code></pre>
+    </div>
+</details>
+</section>
+      </div>
+    </section>
+<section class="chapter" id="ch12">
+      <header class="chapter__head">
+        <h2>第12章：抽象クラス・インターフェース</h2>
+        <p class="chapter__sub">abstract / 抽象メソッド / interface / implements / 多態性</p>
+      </header>
+      <div class="chapter__body">
+        <section class="problem" id="ch12-q1">
+<div class="problem__head"><h3><span class="badge">問題 1</span> 抽象クラスを定義する</h3>
+<div class="problem__meta"><a href="#ch12">第12章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>抽象クラスは abstract 修飾子を付けて定義します。</li>
+<li>抽象クラスはインスタンス化できません。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Animal という抽象クラスを作成してください。</li>
+<li>Animal クラスには String name フィールドを定義してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>Animal クラスは abstract とすること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">（定義のみ：実行結果なし）</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Animal.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch12-q1-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch12-q1-0">public abstract class Animal {
+    public String name;
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch12-q2">
+<div class="problem__head"><h3><span class="badge">問題 2</span> 抽象クラスを継承する</h3>
+<div class="problem__meta"><a href="#ch12">第12章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>抽象クラスは extends して使用します。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Dog クラスを作成し、Animal を継承してください。</li>
+<li>Main クラスで Dog のインスタンスを生成し、name を設定して表示してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Pochi</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch12-q2-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch12-q2-0">public class Main {
+    public static void main(String[] args) {
+        Dog d = new Dog();
+        d.name = "Pochi";
+        System.out.println(d.name);
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Animal.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch12-q2-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch12-q2-1">public abstract class Animal {
+    public String name;
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Dog.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch12-q2-2" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch12-q2-2">public class Dog extends Animal {
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch12-q3">
+<div class="problem__head"><h3><span class="badge">問題 3</span> 抽象メソッドを定義する</h3>
+<div class="problem__meta"><a href="#ch12">第12章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>抽象クラスは処理を持たないメソッド（抽象メソッド）を定義できます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Animal クラスに speak という抽象メソッドを定義してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>抽象メソッドには処理を書かないこと。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">（定義のみ：実行結果なし）</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Animal.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch12-q3-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch12-q3-0">public abstract class Animal {
+    public abstract void speak();
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch12-q4">
+<div class="problem__head"><h3><span class="badge">問題 4</span> 抽象メソッドを実装する</h3>
+<div class="problem__meta"><a href="#ch12">第12章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>抽象メソッドは必ず子クラスで実装する必要があります。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Animal クラスに speak 抽象メソッドを定義してください。</li>
+<li>Dog クラスで speak を実装し、"Wan" と表示してください。</li>
+<li>Main クラスで Dog の speak を呼び出してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Wan</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch12-q4-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch12-q4-0">public class Main {
+    public static void main(String[] args) {
+        Dog d = new Dog();
+        d.speak();
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Animal.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch12-q4-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch12-q4-1">public abstract class Animal {
+    public abstract void speak();
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Dog.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch12-q4-2" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch12-q4-2">public class Dog extends Animal {
+    @Override
+    public void speak() {
+        System.out.println("Wan");
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch12-q5">
+<div class="problem__head"><h3><span class="badge">問題 5</span> 抽象クラス型で子クラスを扱う</h3>
+<div class="problem__meta"><a href="#ch12">第12章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>抽象クラス型の変数で、子クラスのインスタンスを扱えます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Animal 型の変数に Dog のインスタンスを代入し、speak を呼び出してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Wan</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch12-q5-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch12-q5-0">public class Main {
+    public static void main(String[] args) {
+        Animal a = new Dog();
+        a.speak();
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Animal.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch12-q5-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch12-q5-1">public abstract class Animal {
+    public abstract void speak();
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Dog.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch12-q5-2" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch12-q5-2">public class Dog extends Animal {
+    @Override
+    public void speak() {
+        System.out.println("Wan");
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch12-q6">
+<div class="problem__head"><h3><span class="badge">問題 6</span> インターフェースを定義する</h3>
+<div class="problem__meta"><a href="#ch12">第12章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>インターフェースは interface キーワードで定義します。</li>
+<li>（注意）標準の java.lang.Runnable と混同しないよう、ここでは MyRunnable という名前を使用します。</li>
+<li>インターフェースのメソッドは自動的に public abstract になります。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>MyRunnable というインターフェースを作成してください。</li>
+<li>run メソッドを定義してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">（定義のみ：実行結果なし）</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">MyRunnable.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch12-q6-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch12-q6-0">public interface MyRunnable {
+    void run();
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch12-q7">
+<div class="problem__head"><h3><span class="badge">問題 7</span> インターフェースを実装する</h3>
+<div class="problem__meta"><a href="#ch12">第12章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>インターフェースは implements を使って実装します。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Person クラスを作成し、MyRunnable を実装してください。</li>
+<li>run メソッドで "Run" と表示してください。</li>
+<li>Main クラスで Person の run を呼び出してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Run</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch12-q7-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch12-q7-0">public class Main {
+    public static void main(String[] args) {
+        Person p = new Person();
+        p.run();
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">MyRunnable.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch12-q7-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch12-q7-1">public interface MyRunnable {
+    void run();
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Person.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch12-q7-2" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch12-q7-2">public class Person implements MyRunnable {
+    @Override
+    public void run() {
+        System.out.println("Run");
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch12-q8">
+<div class="problem__head"><h3><span class="badge">問題 8</span> インターフェース型で扱う</h3>
+<div class="problem__meta"><a href="#ch12">第12章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>インターフェース型の変数で実装クラスを扱えます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>MyRunnable 型の変数に Person のインスタンスを代入し、run を呼び出してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Run</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch12-q8-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch12-q8-0">public class Main {
+    public static void main(String[] args) {
+        MyRunnable r = new Person();
+        r.run();
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">MyRunnable.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch12-q8-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch12-q8-1">public interface MyRunnable {
+    void run();
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Person.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch12-q8-2" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch12-q8-2">public class Person implements MyRunnable {
+    @Override
+    public void run() {
+        System.out.println("Run");
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch12-q9">
+<div class="problem__head"><h3><span class="badge">問題 9</span> 抽象クラスとインターフェースを同時に使う</h3>
+<div class="problem__meta"><a href="#ch12">第12章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>抽象クラスはフィールドを持てます。</li>
+<li>インターフェースは多重実装できます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Animal（抽象クラス）と MyRunnable（インターフェース）を同時に使用する Dog クラスを作成してください。</li>
+<li>Dog の speak は "Wan"、run は "Run" と表示するものとします。</li>
+<li>Main クラスで Dog の speak と run を呼び出してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Wan
+Run</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch12-q9-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch12-q9-0">public class Main {
+    public static void main(String[] args) {
+        Dog d = new Dog();
+        d.speak();
+        d.run();
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Animal.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch12-q9-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch12-q9-1">public abstract class Animal {
+    public abstract void speak();
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">MyRunnable.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch12-q9-2" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch12-q9-2">public interface MyRunnable {
+    void run();
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Dog.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch12-q9-3" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch12-q9-3">public class Dog extends Animal implements MyRunnable {
+    @Override
+    public void speak() {
+        System.out.println("Wan");
+    }
+
+    @Override
+    public void run() {
+        System.out.println("Run");
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch12-q10">
+<div class="problem__head"><h3><span class="badge">問題 10</span> 抽象クラス型・インターフェース型の両方で Dog を扱う</h3>
+<div class="problem__meta"><a href="#ch12">第12章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>抽象クラスとインターフェースは組み合わせて使用できます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Dog クラスは Animal を継承し MyRunnable を実装してください。</li>
+<li>Main クラスで、Animal 型・MyRunnable 型の両方で Dog を扱い、それぞれのメソッドを呼び出してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>表示順：Wan → Run</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">Wan
+Run</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch12-q10-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch12-q10-0">public class Main {
+    public static void main(String[] args) {
+        Animal a = new Dog();
+        a.speak();
+
+        MyRunnable r = new Dog();
+        r.run();
+    }
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Animal.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch12-q10-1" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch12-q10-1">public abstract class Animal {
+    public abstract void speak();
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">MyRunnable.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch12-q10-2" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch12-q10-2">public interface MyRunnable {
+    void run();
+}</code></pre>
+    </div>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Dog.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch12-q10-3" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch12-q10-3">public class Dog extends Animal implements MyRunnable {
+    @Override
+    public void speak() {
+        System.out.println("Wan");
+    }
+
+    @Override
+    public void run() {
+        System.out.println("Run");
+    }
+}</code></pre>
+    </div>
+</details>
+</section>
+      </div>
+    </section>
+<section class="chapter" id="ch13">
+      <header class="chapter__head">
+        <h2>第13章：例外処理（try / catch / finally / throws）</h2>
+        <p class="chapter__sub">RuntimeException / チェック例外 / catch順序 / finally / throw / throws</p>
+      </header>
+      <div class="chapter__body">
+        <section class="problem" id="ch13-q1">
+<div class="problem__head"><h3><span class="badge">問題 1</span> 例外が発生するコードを書く（0除算）</h3>
+<div class="problem__meta"><a href="#ch13">第13章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>実行時に発生する例外を実行時例外（RuntimeException）といいます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>0 で割る処理を書き、例外が発生することを確認してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">（例外が発生してプログラムは終了します）</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch13-q1-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch13-q1-0">public class Main {
+    public static void main(String[] args) {
+        int a = 10;
+        int b = 0;
+        System.out.println(a / b); // ArithmeticException
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch13-q2">
+<div class="problem__head"><h3><span class="badge">問題 2</span> try-catch で例外を捕捉する</h3>
+<div class="problem__meta"><a href="#ch13">第13章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>try-catch を使うと例外を処理できます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>問題1のコードを try-catch で囲み、例外が発生した場合に "error" と表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>ArithmeticException を catch すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">error</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch13-q2-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch13-q2-0">public class Main {
+    public static void main(String[] args) {
+        try {
+            int a = 10;
+            int b = 0;
+            System.out.println(a / b);
+        } catch (ArithmeticException e) {
+            System.out.println("error");
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch13-q3">
+<div class="problem__head"><h3><span class="badge">問題 3</span> 複数の例外を catch する</h3>
+<div class="problem__meta"><a href="#ch13">第13章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>異なる種類の例外を複数捕捉できます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>配列の範囲外アクセスと 0 除算の処理をコード内に用意してください。</li>
+<li>どちらが起きても、対応する catch が動くようにしてください。</li>
+<li>今回は配列アクセスの例外が起きるように実行してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>ArrayIndexOutOfBoundsException と ArithmeticException をそれぞれ catch すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">array error</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch13-q3-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch13-q3-0">public class Main {
+    public static void main(String[] args) {
+        boolean doArray = true; // true: 配列例外 / false: 0除算例外
+
+        try {
+            if (doArray) {
+                int[] nums = {1, 2, 3};
+                System.out.println(nums[5]);
+            } else {
+                int x = 10 / 0;
+                System.out.println(x);
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("array error");
+        } catch (ArithmeticException e) {
+            System.out.println("calc error");
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch13-q4">
+<div class="problem__head"><h3><span class="badge">問題 4</span> catch の順序に注意する</h3>
+<div class="problem__meta"><a href="#ch13">第13章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>例外は上位クラス（Exception など）を後ろに書く必要があります。</li>
+<li>順序が逆だとコンパイルエラーになります（到達不能 catch）。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>NullPointerException と Exception を catch する try-catch を書いてください。</li>
+<li>String s = null; s.length(); を実行し、"null error" と表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>Exception を最後に catch すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">null error</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch13-q4-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch13-q4-0">public class Main {
+    public static void main(String[] args) {
+        try {
+            String s = null;
+            System.out.println(s.length());
+        } catch (NullPointerException e) {
+            System.out.println("null error");
+        } catch (Exception e) {
+            System.out.println("exception");
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch13-q5">
+<div class="problem__head"><h3><span class="badge">問題 5</span> finally の動作を確認する</h3>
+<div class="problem__meta"><a href="#ch13">第13章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>finally は例外の有無に関係なく必ず実行されます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>try-catch-finally を使い、例外が起きたら "error" を表示してください。</li>
+<li>finally で "end" を表示してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">error
+end</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch13-q5-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch13-q5-0">public class Main {
+    public static void main(String[] args) {
+        try {
+            int a = 10 / 0;
+        } catch (ArithmeticException e) {
+            System.out.println("error");
+        } finally {
+            System.out.println("end");
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch13-q6">
+<div class="problem__head"><h3><span class="badge">問題 6</span> チェック例外を扱う（コンパイルエラー回避）</h3>
+<div class="problem__meta"><a href="#ch13">第13章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>チェック例外は必ず処理または宣言が必要です。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>Thread.sleep を使用し、コンパイルエラーにならないように修正してください。</li>
+<li>最後に "done" と表示してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>InterruptedException を処理すること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">done</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch13-q6-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch13-q6-0">public class Main {
+    public static void main(String[] args) {
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            // ここでは何もしない
+        }
+        System.out.println("done");
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch13-q7">
+<div class="problem__head"><h3><span class="badge">問題 7</span> throws を使って例外を投げる</h3>
+<div class="problem__meta"><a href="#ch13">第13章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>throws を使うと例外処理を呼び出し元に委ねられます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>errorMethod を作り、throw new Exception() を行ってください。</li>
+<li>main から errorMethod を呼び出してください。</li>
+</ul></div>
+<div class="card"><h4>制約条件</h4><ul>
+<li>main または errorMethod に throws Exception を付けること。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">（例外が発生してプログラムは終了します）</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch13-q7-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch13-q7-0">public class Main {
+    public static void main(String[] args) throws Exception {
+        errorMethod();
+    }
+
+    static void errorMethod() throws Exception {
+        throw new Exception();
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch13-q8">
+<div class="problem__head"><h3><span class="badge">問題 8</span> throw を使って例外を発生させる</h3>
+<div class="problem__meta"><a href="#ch13">第13章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>throw は例外オブジェクトを投げます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>int n = -1 を用意し、n が 0 未満なら IllegalArgumentException を throw してください。</li>
+<li>catch して "exception" と表示してください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">exception</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch13-q8-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch13-q8-0">public class Main {
+    public static void main(String[] args) {
+        int n = -1;
+
+        try {
+            if (n &lt; 0) {
+                throw new IllegalArgumentException();
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("exception");
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch13-q9">
+<div class="problem__head"><h3><span class="badge">問題 9</span> RuntimeException は throws 不要</h3>
+<div class="problem__meta"><a href="#ch13">第13章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>RuntimeException は宣言しなくても投げられます。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>throws を書かずに RuntimeException を発生させてください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">（例外が発生してプログラムは終了します）</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch13-q9-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch13-q9-0">public class Main {
+    public static void main(String[] args) {
+        throw new RuntimeException();
+    }
+}</code></pre>
+    </div>
+</details>
+</section><section class="problem" id="ch13-q10">
+<div class="problem__head"><h3><span class="badge">問題 10</span> 例外が発生しても必ず finish を表示する</h3>
+<div class="problem__meta"><a href="#ch13">第13章へ戻る</a> ・ <a href="#top">目次へ戻る</a></div></div>
+<p class="lead">次の条件を満たす Java プログラムを作成しなさい。</p>
+<div class="grid">
+<div class="card"><h4>前提条件</h4><ul>
+<li>try-catch-finally の流れを正しく理解します。</li>
+</ul></div>
+<div class="card"><h4>課題</h4><ul>
+<li>例外が発生しても必ず "finish" が表示されるようにしてください。</li>
+</ul></div>
+<div class="card"><h4>実行結果例</h4><pre class="output">error
+finish</pre></div>
+</div>
+<details class="answer"><summary>解答例プログラム</summary>
+<div class="codefile">
+      <div class="codefile__header">
+        <span class="codefile__name">Main.java</span>
+        <button class="btn btn--sm btn--ghost copy-btn" data-copy-target="code-ch13-q10-0" type="button">コピー</button>
+      </div>
+      <pre class="code"><code id="code-ch13-q10-0">public class Main {
+    public static void main(String[] args) {
+        try {
+            int x = 5 / 0;
+        } catch (ArithmeticException e) {
+            System.out.println("error");
+        } finally {
+            System.out.println("finish");
+        }
+    }
+}</code></pre>
+    </div>
+</details>
+</section>
+      </div>
+    </section>
+
+      <div class="footer">
+        <div>注意: このページ内のコードは学習用の最小例です。実務では例外処理・命名・設計など追加の配慮が必要です。</div>
+      </div>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" aria-live="polite"></div>
+  <script>(function(){
+  const toast = document.getElementById('toast');
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add('show');
+    window.clearTimeout(showToast._t);
+    showToast._t = window.setTimeout(()=>toast.classList.remove('show'), 1200);
+  }
+
+  // Copy buttons
+  document.addEventListener('click', async (e)=>{
+    const btn = e.target.closest('.copy-btn');
+    if(!btn) return;
+    const id = btn.getAttribute('data-copy-target');
+    const el = document.getElementById(id);
+    if(!el) return;
+    const text = el.textContent;
+    try{
+      await navigator.clipboard.writeText(text);
+      showToast('コピーしました');
+    }catch(err){
+      // fallback
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('コピーしました');
+    }
+  });
+
+  // TOC search filter
+  const input = document.getElementById('tocSearch');
+  if(input){
+    input.addEventListener('input', ()=>{
+      const q = input.value.trim().toLowerCase();
+      const chapters = document.querySelectorAll('.toc__chapter');
+      chapters.forEach(ch=>{
+        let any = false;
+        const links = ch.querySelectorAll('a');
+        links.forEach(a=>{
+          const txt = a.textContent.toLowerCase();
+          const match = !q || txt.includes(q);
+          if(a.closest('.toc__problems')){
+            a.parentElement.style.display = match ? '' : 'none';
+            if(match) any = true;
+          } else {
+            // chapter title always visible; decide later
+          }
+        });
+        // Chapter visible if any problem visible or query matches chapter title
+        const chapterTitle = links[0]?.textContent.toLowerCase() || '';
+        const chapterMatch = !q || chapterTitle.includes(q);
+        ch.style.display = (chapterMatch || any) ? '' : 'none';
+        // If query matches chapter title, show all its problems
+        if(q && chapterMatch){
+          ch.querySelectorAll('.toc__problems li').forEach(li=>li.style.display='');
+        }
+      });
+    });
+  }
+})();</script>
+</body>
+</html>

@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Java の @Override アノテーション（教科書用）</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans JP", sans-serif;
+      line-height: 1.8;
+      background: #ffffff;
+      color: #111827;
+      margin: 0;
+      padding: 24px;
+    }
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+    header {
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 18px 20px;
+      background: #f9fafb;
+    }
+    h1 {
+      font-size: 24px;
+      margin: 0 0 8px;
+    }
+    .subtitle {
+      margin: 0;
+      color: #374151;
+      font-size: 14px;
+    }
+    section {
+      margin-top: 18px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 18px 20px;
+      background: #fff;
+    }
+    h2 {
+      font-size: 18px;
+      margin: 0 0 10px;
+    }
+    h3 {
+      font-size: 16px;
+      margin: 16px 0 8px;
+    }
+    p, li {
+      font-size: 15px;
+    }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    pre {
+      background: #0b1020;
+      color: #e5e7eb;
+      padding: 14px 14px;
+      border-radius: 10px;
+      overflow-x: auto;
+      border: 1px solid #111827;
+    }
+    .note {
+      background: #f3f4f6;
+      border-left: 5px solid #9ca3af;
+      padding: 12px 14px;
+      border-radius: 10px;
+      margin: 10px 0 0;
+    }
+    .warning {
+      background: #fff7ed;
+      border-left: 5px solid #fb923c;
+      padding: 12px 14px;
+      border-radius: 10px;
+      margin: 10px 0 0;
+    }
+    .ok {
+      background: #ecfdf5;
+      border-left: 5px solid #34d399;
+      padding: 12px 14px;
+      border-radius: 10px;
+      margin: 10px 0 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid #e5e7eb;
+      padding: 10px;
+      vertical-align: top;
+    }
+    th {
+      background: #f9fafb;
+      text-align: left;
+      width: 24%;
+    }
+    .small {
+      font-size: 13px;
+      color: #374151;
+    }
+    .pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      color: #374151;
+      margin-left: 6px;
+    }
+    .toc a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+    .toc a:hover {
+      text-decoration: underline;
+    }
+    footer {
+      margin-top: 18px;
+      color: #6b7280;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1>Java の <code>@Override</code> アノテーション</h1>
+    <p class="subtitle">
+      教科書用まとめ：<code>@Override</code> の役割、IDEの警告との違い、エラー表示（コンパイルエラー）の意味を丁寧に整理します。
+    </p>
+  </header>
+
+  <section class="toc">
+    <h2>目次</h2>
+    <ol>
+      <li><a href="#what">1. <code>@Override</code> とは何か</a></li>
+      <li><a href="#role">2. <code>@Override</code> の主な役割</a></li>
+      <li><a href="#diff-ide">3. IDE の警告と <code>@Override</code> の違い</a></li>
+      <li><a href="#error">4. エラー表示（挙動）の違い</a></li>
+      <li><a href="#common-mistakes">5. よくある間違いと対策</a></li>
+      <li><a href="#object-methods">6. <code>toString</code> / <code>equals</code> / <code>hashCode</code> で特に重要な理由</a></li>
+      <li><a href="#best-practice">7. 実務での推奨ルール</a></li>
+      <li><a href="#quiz">8. 確認問題（理解チェック）</a></li>
+    </ol>
+  </section>
+
+  <section id="what">
+    <h2>1. <code>@Override</code> とは何か</h2>
+    <p>
+      <code>@Override</code> は、Java の「アノテーション」の一種であり、<strong>メソッドがオーバーライド（上書き）であることをコンパイラに宣言するため</strong>に使用します。
+    </p>
+    <p>
+      重要な点として、<code>@Override</code> 自体は<strong>処理内容や実行速度を変えません</strong>。
+      目的は、<strong>「本当にオーバーライドできているか」をコンパイル時に検査させ、ミスを確実に発見すること</strong>です。
+    </p>
+
+    <div class="note">
+      <strong>補足：</strong>
+      オーバーライドとは、親クラス（またはインターフェース）で定義されたメソッドと<strong>同じ名前・同じ引数（同じシグネチャ）</strong>のメソッドを子クラスで定義し、
+      子クラス側の実装に差し替えることを指します。
+    </div>
+  </section>
+
+  <section id="role">
+    <h2>2. <code>@Override</code> の主な役割</h2>
+
+    <h3>2-1. 「オーバーライド成立」をコンパイル時に保証します</h3>
+    <p>
+      <code>@Override</code> を付けると、コンパイラは次の確認を行います。
+    </p>
+    <ul>
+      <li>親クラス（または実装対象インターフェース）に、同じシグネチャのメソッドが存在するか</li>
+      <li>存在しない場合は、<strong>コンパイルエラー</strong>にする</li>
+    </ul>
+    <p>
+      つまり、<code>@Override</code> は「このメソッドはオーバーライドのはずです」という<strong>宣言</strong>であり、
+      その宣言が間違っていれば、プログラムを実行する前に止めてくれます。
+    </p>
+
+    <pre><code>class Parent {
+    void hello() {}
+}
+
+class Child extends Parent {
+    @Override
+    void hello() {}  // 正しくオーバーライドできています
+}</code></pre>
+
+    <h3>2-2. タイプミス・勘違いによる事故を防ぎます</h3>
+    <p>
+      オーバーライドで特に多いミスは、次のようなものです。
+    </p>
+    <ul>
+      <li>メソッド名の大文字・小文字の違い（例：<code>hello</code> と <code>Hello</code>）</li>
+      <li>引数の型の違い（例：<code>int</code> と <code>Integer</code>）</li>
+      <li>引数の数の違い（例：引数を付け忘れる、増やしてしまう）</li>
+      <li>アクセス修飾子や例外の扱いなど、オーバーライド条件を満たしていない</li>
+    </ul>
+
+    <div class="warning">
+      <strong>注意：</strong>
+      <code>@Override</code> が無いと、上記のミスでも「新しいメソッドが増えただけ」としてコンパイルが通ってしまう場合があります。
+      その結果、意図したポリモーフィズムが働かず、バグが発生します。
+    </div>
+
+    <h3>2-3. ポリモーフィズム（多態性）の前提を守ります</h3>
+    <p>
+      次のように、親型の変数に子インスタンスを代入し、親型でメソッドを呼ぶとき、実際には子クラス側の実装が呼ばれます。
+      これがポリモーフィズムの代表的な動作です。
+    </p>
+
+    <pre><code>Parent p = new Child();
+p.hello();  // Child の hello() が呼ばれる（正しくオーバーライドされていれば）</code></pre>
+
+    <p>
+      ところが、オーバーライドが成立していない（例：メソッド名が違う）と、<strong>親クラスのメソッドが呼ばれる</strong>ため、期待した動作になりません。
+      <code>@Override</code> は、このような「静かに壊れる」状況を防ぐことに役立ちます。
+    </p>
+  </section>
+
+  <section id="diff-ide">
+    <h2>3. IDE の警告と <code>@Override</code> の違い</h2>
+    <p>
+      VS Code などの IDE は、入力中に問題を検知して表示する機能があります。しかし、IDEの表示と <code>@Override</code> の役割は同じではありません。
+    </p>
+
+    <table>
+      <tr>
+        <th>比較項目</th>
+        <th>IDE の警告</th>
+        <th><code>@Override</code> による検査</th>
+      </tr>
+      <tr>
+        <td>判定する主体</td>
+        <td>エディタ（拡張機能、設定に依存します）</td>
+        <td>Java コンパイラ（<code>javac</code>）</td>
+      </tr>
+      <tr>
+        <td>止める力</td>
+        <td>警告のため、無視できる場合があります</td>
+        <td><strong>コンパイルエラー</strong>としてビルドを確実に止めます</td>
+      </tr>
+      <tr>
+        <td>環境差</td>
+        <td>人・端末・設定で差が出ることがあります</td>
+        <td>どの環境でも同じ結果になります</td>
+      </tr>
+      <tr>
+        <td>CI での検知</td>
+        <td>基本的に効きません</td>
+        <td><strong>必ず検知できます</strong></td>
+      </tr>
+    </table>
+
+    <div class="note">
+      <p class="small">
+        <strong>ポイント：</strong>
+        IDE は「書く人」を助けますが、<code>@Override</code> は「コードそのもの」を守ります。
+        チーム開発や自動ビルドでは、IDEが見てくれる前提は成立しないため、コンパイラに強制させる意味が大きいです。
+      </p>
+    </div>
+  </section>
+
+  <section id="error">
+    <h2>4. エラー表示（挙動）の違い</h2>
+    <p>
+      ここでは「<code>@Override</code> がある場合」と「ない場合」で、どのような違いが出るかを整理します。
+    </p>
+
+    <h3>4-1. <code>@Override</code> がある場合：コンパイルエラーになります</h3>
+    <pre><code>class Parent {
+    void hello() {}
+}
+
+class Child extends Parent {
+    @Override
+    void Hello() {}  // メソッド名が違う（hello と Hello）
+}</code></pre>
+
+    <div class="warning">
+      <strong>結果：</strong>
+      <p>
+        コンパイル時にエラーとなり、ビルドに失敗します。代表的なメッセージは次の通りです。
+      </p>
+      <pre><code>method does not override or implement a method from a supertype</code></pre>
+      <p class="small">
+        つまり「親に同名・同形のメソッドが見つからないため、オーバーライドできていません」という意味です。
+      </p>
+    </div>
+
+    <h3>4-2. <code>@Override</code> がない場合：コンパイルが通り、実行時に意図と違う動作になり得ます</h3>
+    <pre><code>class Parent {
+    void hello() {
+        System.out.println("Parent.hello");
+    }
+}
+
+class Child extends Parent {
+    void Hello() { // オーバーライドではなく、新しいメソッド
+        System.out.println("Child.Hello");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Parent p = new Child();
+        p.hello(); // どちらが呼ばれるでしょうか
+    }
+}</code></pre>
+
+    <div class="ok">
+      <strong>実行結果（重要）：</strong>
+      <p>
+        上のコードでは、<code>p.hello()</code> は <strong>Parent の hello()</strong> を呼び出します。
+        <code>Child</code> の <code>Hello()</code> は別メソッドなので、ポリモーフィズムの対象になりません。
+      </p>
+      <p class="small">
+        このように「コンパイルは成功するが、意図と違う動作になる」ことが、<code>@Override</code> を付けない最大のリスクです。
+      </p>
+    </div>
+
+    <h3>4-3. まとめ表：どこで問題が検知されるか</h3>
+    <table>
+      <tr>
+        <th>場面</th>
+        <th><code>@Override</code> あり</th>
+        <th><code>@Override</code> なし</th>
+      </tr>
+      <tr>
+        <td>IDE（VS Code 等）</td>
+        <td>多くの場合、赤エラー表示</td>
+        <td>警告表示または無反応（設定次第）</td>
+      </tr>
+      <tr>
+        <td>コンパイル（javac）</td>
+        <td><strong>必ずエラーで停止</strong></td>
+        <td>成功する場合があります</td>
+      </tr>
+      <tr>
+        <td>Maven / Gradle / CI</td>
+        <td><strong>必ず失敗し、問題が露見</strong></td>
+        <td>通過してしまう可能性があります</td>
+      </tr>
+      <tr>
+        <td>実行時の動作</td>
+        <td>そもそも実行できません（安全）</td>
+        <td><strong>間違った動作</strong>が起き得ます</td>
+      </tr>
+    </table>
+  </section>
+
+  <section id="common-mistakes">
+    <h2>5. よくある間違いと対策</h2>
+
+    <h3>5-1. オーバーライドとオーバーロードの混同</h3>
+    <p>
+      よく似た用語に「オーバーロード」があります。これは、<strong>同名で引数が異なるメソッドを複数定義する</strong>仕組みです。
+      オーバーロードはオーバーライドではありません。
+    </p>
+
+    <pre><code>class Parent {
+    void hello() {}
+}
+
+class Child extends Parent {
+    // これはオーバーロード（引数が増えている）
+    void hello(String msg) {}
+}</code></pre>
+
+    <div class="note">
+      <strong>対策：</strong>
+      オーバーライドのつもりなら <code>@Override</code> を付けてください。
+      付けた瞬間に「これはオーバーライドではありません」とコンパイルエラーで分かります。
+    </div>
+
+    <h3>5-2. アクセス修飾子の取り扱い</h3>
+    <p>
+      オーバーライドでは、一般に<strong>親よりも狭い可視性（アクセス範囲）にしてはいけません</strong>。
+      例えば、親が <code>public</code> のメソッドを持つとき、子側で <code>protected</code> や <code>private</code> にすることはできません。
+    </p>
+
+    <div class="note">
+      <p class="small">
+        これは「親型として扱ったときに、子の実装が呼べなくなる」ためです。
+        オブジェクト指向の置き換え可能性（リスコフの置換原則）に反します。
+      </p>
+    </div>
+  </section>
+
+  <section id="object-methods">
+    <h2>6. <code>toString</code> / <code>equals</code> / <code>hashCode</code> で特に重要な理由</h2>
+    <p>
+      <code>@Override</code> が特に重要な場面として、<code>Object</code> クラス由来のメソッドがあります。
+      これらは、コレクションや比較処理などで頻繁に利用され、オーバーライドを間違えると不具合が発生しやすいです。
+    </p>
+
+    <h3>6-1. <code>equals</code> を間違える例</h3>
+    <pre><code>class User {
+    String id;
+
+    // 間違い：equals(Object) ではなく equals(User) を作ってしまっています
+    // @Override を付けると、ここでコンパイルエラーになり事故を防げます
+    public boolean equals(User other) {
+        return this.id.equals(other.id);
+    }
+}</code></pre>
+
+    <div class="warning">
+      <strong>問題点：</strong>
+      <p>
+        Java の標準の比較は <code>equals(Object)</code> を呼ぶ場面が多いため、上のように書くと
+        「比較したつもりなのに一致判定にならない」などの不具合が起きます。
+      </p>
+      <p class="small">
+        <code>@Override</code> は、このような「動くが間違っている」コードを作りにくくします。
+      </p>
+    </div>
+
+    <h3>6-2. 正しい例（@Override 付き）</h3>
+    <pre><code>class User {
+    String id;
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof User)) return false;
+        User other = (User) obj;
+        return this.id.equals(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+}</code></pre>
+
+    <div class="note">
+      <strong>補足：</strong>
+      <code>equals</code> をオーバーライドした場合は、通常 <code>hashCode</code> もセットでオーバーライドします。
+      これは、<code>HashMap</code> や <code>HashSet</code> などが内部で <code>hashCode</code> を使うためです。
+    </div>
+  </section>
+
+  <section id="best-practice">
+    <h2>7. 実務での推奨ルール</h2>
+    <ul>
+      <li><strong>オーバーライドするなら、必ず <code>@Override</code> を付けます。</strong></li>
+      <li>インターフェース実装でも、原則として <code>@Override</code> を付けます。</li>
+      <li>特に <code>toString</code>, <code>equals</code>, <code>hashCode</code> は <code>@Override</code> を付ける前提で記述します。</li>
+    </ul>
+
+    <div class="ok">
+      <strong>まとめ：</strong>
+      <p>
+        IDE の警告は便利ですが、設定や環境に左右されます。
+        <code>@Override</code> はコンパイラの検査を利用し、どの環境でも同じようにバグを止めます。
+        したがって、教科書としても実務としても「付けるのが標準」と考えてください。
+      </p>
+    </div>
+  </section>
+
+  <section id="quiz">
+    <h2>8. 確認問題（理解チェック）</h2>
+
+    <h3>問題1</h3>
+    <p>
+      次のコードはコンパイルエラーになるでしょうか。理由も説明してください。
+    </p>
+    <pre><code>class Parent {
+    void run() {}
+}
+
+class Child extends Parent {
+    @Override
+    void Run() {}
+}</code></pre>
+
+    <h3>問題2</h3>
+    <p>
+      「<code>@Override</code> を付けないと、オーバーライドのつもりがオーバーロードになる」状況を、簡単なコードで説明してください。
+    </p>
+
+    <h3>問題3</h3>
+    <p>
+      IDE の警告が出る場合でも、<code>@Override</code> を付ける価値がある理由を 2 つ挙げてください。
+    </p>
+
+    <div class="note">
+      <strong>学習のヒント：</strong>
+      コンパイルエラーは「面倒なもの」ではなく、<strong>間違いが早く見つかる便利な仕組み</strong>です。
+      <code>@Override</code> はその仕組みを積極的に利用するための書き方です。
+    </div>
+  </section>
+
+  <footer>
+    <p>
+      本ページは Java の <code>@Override</code> を教科書用途で整理した資料です。
+      学習では「オーバーライド＝必ず <code>@Override</code>」という習慣を身につけることを推奨します。
+    </p>
+  </footer>
+
+</div>
+</body>
+</html>

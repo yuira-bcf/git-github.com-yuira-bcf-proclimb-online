@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Java：コンストラクター問題集（選択式5問＋プログラミング5問）</title>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --line:#e5e7eb;
+      --card:#f9fafb;
+      --accent:#2563eb;
+      --ok:#16a34a;
+      --warn:#b45309;
+      --codebg:#0b1020;
+      --codefg:#e5e7eb;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.7;
+    }
+    header{
+      border-bottom:1px solid var(--line);
+      background:linear-gradient(180deg, #ffffff, #fbfbff);
+    }
+    .wrap{
+      max-width:980px;
+      margin:0 auto;
+      padding:22px 18px;
+    }
+    h1{ margin:0; font-size:22px; }
+    .sub{ margin:6px 0 0; color:var(--muted); font-size:14px; }
+    nav{
+      margin-top:14px;
+      padding:12px 14px;
+      border:1px solid var(--line);
+      background:var(--card);
+      border-radius:12px;
+    }
+    nav a{ color:var(--accent); text-decoration:none; }
+    nav a:hover{ text-decoration:underline; }
+    nav ul{ margin:8px 0 0; padding-left:18px; }
+    main{ padding:18px 0 30px; }
+    section{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:16px;
+      margin:14px 0;
+      background:#fff;
+    }
+    h2{ margin:0 0 10px; font-size:18px; }
+    .q{
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:14px;
+      margin:12px 0;
+      background:var(--card);
+    }
+    .q h3{
+      margin:0 0 8px;
+      font-size:15px;
+    }
+    .meta{
+      font-size:12px;
+      color:var(--muted);
+      margin:0 0 10px;
+    }
+    .choices{
+      margin:0;
+      padding-left:18px;
+    }
+    .choices li{ margin:6px 0; }
+    pre{
+      margin:10px 0;
+      padding:12px 14px;
+      border-radius:12px;
+      background:var(--codebg);
+      color:var(--codefg);
+      overflow:auto;
+    }
+    code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:.95em;
+    }
+    details{
+      margin-top:10px;
+      border:1px dashed var(--line);
+      border-radius:12px;
+      padding:10px 12px;
+      background:#fff;
+    }
+    summary{
+      cursor:pointer;
+      font-weight:700;
+      color:var(--accent);
+      outline:none;
+    }
+    .ans{
+      margin-top:8px;
+      color:#111827;
+    }
+    .tag{
+      display:inline-block;
+      font-size:12px;
+      padding:2px 8px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--muted);
+      margin-left:8px;
+      vertical-align:middle;
+    }
+    .note{
+      border-left:4px solid var(--ok);
+      background:#f0fdf4;
+      padding:10px 12px;
+      border-radius:10px;
+      margin:10px 0 0;
+      color:#064e3b;
+    }
+    .warn{
+      border-left:4px solid var(--warn);
+      background:#fff7ed;
+      padding:10px 12px;
+      border-radius:10px;
+      margin:10px 0 0;
+      color:#7c2d12;
+    }
+    footer{
+      border-top:1px solid var(--line);
+      color:var(--muted);
+      font-size:12px;
+      padding:18px 0 30px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>Java：コンストラクター問題集</h1>
+      <p class="sub">選択式 5問 ＋ プログラミング 5問（教科書・演習用）</p>
+
+      <nav aria-label="目次">
+        <strong>目次</strong>
+        <ul>
+          <li><a href="#mcq">A. 選択式問題（5問）</a></li>
+          <li><a href="#coding">B. プログラミング問題（5問）</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- A. MCQ -->
+    <section id="mcq">
+      <h2>A. 選択式問題（5問）</h2>
+
+      <!-- Q1 -->
+      <div class="q">
+        <h3>問1：コンストラクターの基本 <span class="tag">基礎</span></h3>
+        <p class="meta">次のうち、Javaのコンストラクターについて正しい説明はどれですか。</p>
+        <ol class="choices" type="A">
+          <li>コンストラクターは戻り値の型として <code>void</code> を書く。</li>
+          <li>コンストラクター名はクラス名と一致する必要がある。</li>
+          <li>コンストラクターは呼び出しが遅延され、最初にメソッドが呼ばれた時に実行される。</li>
+          <li>コンストラクターは静的メソッドとして宣言しなければならない。</li>
+        </ol>
+        <details>
+          <summary>解答・解説</summary>
+          <div class="ans">
+            <p><strong>正解：B</strong></p>
+            <p>コンストラクターはクラス名と同じ名前を持ち、戻り値は書きません。<code>new</code> による生成時に自動で呼び出されます。</p>
+          </div>
+        </details>
+      </div>
+
+      <!-- Q2 -->
+      <div class="q">
+        <h3>問2：デフォルトコンストラクター <span class="tag">基礎</span></h3>
+        <p class="meta">次のうち、デフォルトコンストラクターが自動生成される条件として正しいものはどれですか。</p>
+        <ol class="choices" type="A">
+          <li>フィールドが1つでも存在する場合、自動生成される。</li>
+          <li>コンストラクターを1つも定義していない場合、自動生成される。</li>
+          <li><code>final</code> フィールドがある場合、自動生成される。</li>
+          <li>クラスが <code>public</code> の場合のみ、自動生成される。</li>
+        </ol>
+        <details>
+          <summary>解答・解説</summary>
+          <div class="ans">
+            <p><strong>正解：B</strong></p>
+            <p>コンストラクターを1つも書いていない場合に限り、引数なしコンストラクター（デフォルトコンストラクター）が自動生成されます。</p>
+          </div>
+        </details>
+      </div>
+
+      <!-- Q3 -->
+      <div class="q">
+        <h3>問3：オーバーロード <span class="tag">基礎</span></h3>
+        <p class="meta">次の説明のうち、コンストラクターのオーバーロードとして正しいものはどれですか。</p>
+        <ol class="choices" type="A">
+          <li>同じ引数リストで、戻り値だけが異なるコンストラクターを複数定義する。</li>
+          <li>引数の数や型が異なる複数のコンストラクターを同じクラス内に定義する。</li>
+          <li>親クラスのコンストラクターを子クラスで上書きする。</li>
+          <li><code>static</code> を付けたコンストラクターを追加する。</li>
+        </ol>
+        <details>
+          <summary>解答・解説</summary>
+          <div class="ans">
+            <p><strong>正解：B</strong></p>
+            <p>オーバーロードは、引数の数や型が異なる同名メソッド（コンストラクター）を複数用意することです。コンストラクターに戻り値はありません。</p>
+          </div>
+        </details>
+      </div>
+
+      <!-- Q4 -->
+      <div class="q">
+        <h3>問4：this の役割 <span class="tag">基礎</span></h3>
+        <p class="meta">次のコードで <code>this.name</code> の <code>this</code> が表すものとして最も適切なものはどれですか。</p>
+        <pre><code>class User {
+    String name;
+
+    User(String name) {
+        this.name = name;
+    }
+}</code></pre>
+        <ol class="choices" type="A">
+          <li>クラスそのもの（クラスオブジェクト）</li>
+          <li>現在生成中のインスタンス（このオブジェクト）</li>
+          <li>引数 <code>name</code> の別名</li>
+          <li>親クラスのインスタンス</li>
+        </ol>
+        <details>
+          <summary>解答・解説</summary>
+          <div class="ans">
+            <p><strong>正解：B</strong></p>
+            <p><code>this</code> は「現在のインスタンス」を表します。<code>this.name</code> はフィールドを指し、右側の <code>name</code> は引数です。</p>
+          </div>
+        </details>
+      </div>
+
+      <!-- Q5 -->
+      <div class="q">
+        <h3>問5：引数なしコンストラクターの設計判断 <span class="tag">応用</span></h3>
+        <p class="meta">引数なしコンストラクターについて、設計として最も適切な考え方はどれですか。</p>
+        <ol class="choices" type="A">
+          <li>常に定義するべきである。あるほど便利である。</li>
+          <li>原則として定義しない。必要な場合は理由と利用範囲を明確にして定義する。</li>
+          <li><code>final</code> フィールドがある場合でも必ず定義する。</li>
+          <li>テストのためにのみ定義し、本番コードでは禁止する。</li>
+        </ol>
+        <details>
+          <summary>解答・解説</summary>
+          <div class="ans">
+            <p><strong>正解：B</strong></p>
+            <p>引数なしコンストラクターは、必須項目が未設定のまま生成できる可能性があるため、原則として避けます。必要な場合は理由と利用範囲を設計で明確にします。</p>
+          </div>
+        </details>
+      </div>
+
+      <div class="note">
+        <strong>学習のポイント：</strong>
+        選択式では「文法の正しさ」だけでなく、「設計として適切か」を意識して判断できるようにしましょう。
+      </div>
+    </section>
+
+    <!-- B. Coding -->
+    <section id="coding">
+      <h2>B. プログラミング問題（5問）</h2>
+
+      <!-- P1 -->
+      <div class="q">
+        <h3>問題1：必須項目をコンストラクターで初期化 <span class="tag">基礎</span></h3>
+        <p class="meta">
+          次の条件を満たす <code>Book</code> クラスを作成してください。
+        </p>
+        <ul>
+          <li>フィールド：<code>private final String title</code></li>
+          <li>コンストラクターで <code>title</code> を受け取り初期化する</li>
+          <li><code>getTitle()</code> を用意してタイトルを返す</li>
+          <li><code>Main</code> クラスで <code>Book</code> を生成し、タイトルを表示する</li>
+        </ul>
+
+        <details>
+          <summary>解答例</summary>
+          <div class="ans">
+            <pre><code>class Book {
+    private final String title;
+
+    Book(String title) {
+        this.title = title;
+    }
+
+    String getTitle() {
+        return title;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Book b = new Book("Java入門");
+        System.out.println(b.getTitle());
+    }
+}</code></pre>
+          </div>
+        </details>
+      </div>
+
+      <!-- P2 -->
+      <div class="q">
+        <h3>問題2：コンストラクターのオーバーロード <span class="tag">基礎</span></h3>
+        <p class="meta">次の条件を満たす <code>User</code> クラスを作成してください。</p>
+        <ul>
+          <li>フィールド：<code>private final String name</code>、<code>private final int age</code></li>
+          <li>コンストラクターを2つ用意する</li>
+          <li><code>User(String name)</code> は age を <code>0</code> として扱う</li>
+          <li><code>User(String name, int age)</code> は両方を初期化する</li>
+          <li><code>Main</code> で両方のコンストラクターを使って生成し、内容を表示する</li>
+        </ul>
+
+        <details>
+          <summary>解答例</summary>
+          <div class="ans">
+            <pre><code>class User {
+    private final String name;
+    private final int age;
+
+    User(String name) {
+        this(name, 0);
+    }
+
+    User(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    String info() {
+        return name + " / " + age;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        User u1 = new User("Taro");
+        User u2 = new User("Hanako", 20);
+
+        System.out.println(u1.info());
+        System.out.println(u2.info());
+    }
+}</code></pre>
+          </div>
+        </details>
+      </div>
+
+      <!-- P3 -->
+      <div class="q">
+        <h3>問題3：入力値をチェックして初期化 <span class="tag">応用</span></h3>
+        <p class="meta">次の条件を満たす <code>Product</code> クラスを作成してください。</p>
+        <ul>
+          <li>フィールド：<code>private final String name</code>、<code>private final int price</code></li>
+          <li>コンストラクターで <code>price</code> が 0 未満の場合は <code>0</code> に補正する</li>
+          <li><code>info()</code> を用意して「商品名: 価格」を返す</li>
+          <li><code>Main</code> で <code>price</code> に -100 を渡して生成し、表示する</li>
+        </ul>
+
+        <details>
+          <summary>解答例</summary>
+          <div class="ans">
+            <pre><code>class Product {
+    private final String name;
+    private final int price;
+
+    Product(String name, int price) {
+        this.name = name;
+        this.price = (price &lt; 0) ? 0 : price;
+    }
+
+    String info() {
+        return name + ": " + price;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Product p = new Product("Pen", -100);
+        System.out.println(p.info()); // Pen: 0
+    }
+}</code></pre>
+          </div>
+        </details>
+      </div>
+
+      <!-- P4 -->
+      <div class="q">
+        <h3>問題4：引数なしコンストラクターを避ける設計 <span class="tag">応用</span></h3>
+        <p class="meta">次の条件を満たす <code>Member</code> クラスを作成してください。</p>
+        <ul>
+          <li>フィールド：<code>private final String id</code>（会員ID）</li>
+          <li><code>id</code> は必須とし、引数なしコンストラクターは用意しない</li>
+          <li><code>Main</code> で <code>new Member()</code> を書くとコンパイルエラーになることを確認できるようにする</li>
+          <li>正しい生成例（<code>new Member("A001")</code>）では <code>id</code> を表示する</li>
+        </ul>
+
+        <details>
+          <summary>解答例</summary>
+          <div class="ans">
+            <pre><code>class Member {
+    private final String id;
+
+    Member(String id) {
+        this.id = id;
+    }
+
+    String getId() {
+        return id;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Member m0 = new Member(); // ← 引数なしは用意していないのでコンパイルエラー
+
+        Member m = new Member("A001");
+        System.out.println(m.getId());
+    }
+}</code></pre>
+            <p class="warn">
+              <strong>確認：</strong>学習時は、コメントを外してコンパイルし、エラーになることを確認してから戻してください。
+            </p>
+          </div>
+        </details>
+      </div>
+
+      <!-- P5 -->
+      <div class="q">
+        <h3>問題5：参照型フィールドをコンストラクターで受け取る <span class="tag">応用</span></h3>
+        <p class="meta">次の条件を満たす <code>Hero</code> と <code>Sword</code> を作成してください。</p>
+        <ul>
+          <li><code>Sword</code> は <code>private final String name</code> を持ち、コンストラクターで初期化する</li>
+          <li><code>Hero</code> は <code>private final String name</code> と <code>private final Sword sword</code> を持つ</li>
+          <li><code>Hero</code> のコンストラクターで <code>name</code> と <code>sword</code> を受け取り初期化する</li>
+          <li><code>Main</code> で剣を作り、勇者を作り、勇者の装備情報を表示する</li>
+        </ul>
+
+        <details>
+          <summary>解答例</summary>
+          <div class="ans">
+            <pre><code>class Sword {
+    private final String name;
+
+    Sword(String name) {
+        this.name = name;
+    }
+
+    String getName() {
+        return name;
+    }
+}
+
+class Hero {
+    private final String name;
+    private final Sword sword;
+
+    Hero(String name, Sword sword) {
+        this.name = name;
+        this.sword = sword;
+    }
+
+    String info() {
+        return name + " equips " + sword.getName();
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Sword s = new Sword("Bronze Sword");
+        Hero h = new Hero("Taro", s);
+
+        System.out.println(h.info());
+    }
+}</code></pre>
+          </div>
+        </details>
+      </div>
+
+      <div class="note">
+        <strong>学習のポイント：</strong>
+        コンストラクターは「生成時に正しい状態にする」ための仕組みです。必須項目・初期値・入力チェックを意識して実装してみましょう。
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      この問題集は、Javaのコンストラクターの理解（文法・設計・初期化）を目的とした教材用サンプルです。
+    </div>
+  </footer>
+</body>
+</html>

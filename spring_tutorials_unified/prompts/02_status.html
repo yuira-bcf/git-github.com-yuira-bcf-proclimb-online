@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>初級2 完了/未完了ステータス</title>
+
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&family=M+PLUS+Rounded+1c:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="../style.css" />
+        <style>
+            .download-btn {
+                background: linear-gradient(135deg, #22c55e, #16a34a);
+                color: white;
+                border: none;
+                padding: 6px 14px;
+                border-radius: 6px;
+                font-size: 12px;
+                font-weight: 600;
+                cursor: pointer;
+                margin-left: auto;
+                transition: all 0.2s ease;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+            }
+            .download-btn:hover {
+                background: linear-gradient(135deg, #16a34a, #15803d);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+            }
+            .code-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .level-badge {
+                display: inline-block;
+                padding: 4px 12px;
+                border-radius: 20px;
+                font-size: 0.85rem;
+                font-weight: 600;
+                background: #dcfce7;
+                color: #166534;
+                margin-right: 8px;
+            }
+            .status-complete {
+                background: #dcfce7;
+                color: #166534;
+                padding: 2px 8px;
+                border-radius: 4px;
+                font-size: 0.85rem;
+            }
+            .status-incomplete {
+                background: #fef3c7;
+                color: #92400e;
+                padding: 2px 8px;
+                border-radius: 4px;
+                font-size: 0.85rem;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- グローバルナビゲーション -->
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="../1spring-framework-tutorial.html" class="nav-logo">
+                    <span class="nav-logo-icon">🌱</span>
+                    <span>Spring入門</span>
+                </a>
+                <button class="nav-toggle" onclick="toggleMenu()" aria-label="メニュー">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 初級レベル</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="01_validation.html" class="nav-link">
+                                <span class="nav-chapter-num">1</span>
+                                <span>入力バリデーション</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="02_status.html" class="nav-link active">
+                                <span class="nav-chapter-num">2</span>
+                                <span>完了/未完了ステータス</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="03_search.html" class="nav-link">
+                                <span class="nav-chapter-num">3</span>
+                                <span>検索機能</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="04_sort.html" class="nav-link">
+                                <span class="nav-chapter-num">4</span>
+                                <span>ソート機能</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="05_delete_dialog.html" class="nav-link">
+                                <span class="nav-chapter-num">5</span>
+                                <span>削除確認ダイアログ</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <!-- ヘッダー -->
+            <header class="chapter-header">
+                <div class="chapter-badge">
+                    <span class="level-badge">初級</span>
+                    📘 Beginner
+                </div>
+                <div class="chapter-number">2</div>
+                <h1 class="chapter-title">完了/未完了ステータス</h1>
+            </header>
+
+            <!-- 目次 -->
+            <nav class="toc">
+                <h2 class="toc-title">📑 この章の内容</h2>
+                <ul class="toc-list">
+                    <li class="toc-item">
+                        <span class="toc-number">2-1</span>
+                        <span>ステータス機能とは</span>
+                    </li>
+                    <li class="toc-item">
+                        <span class="toc-number">2-2</span>
+                        <span>データベースの変更</span>
+                    </li>
+                    <li class="toc-item">
+                        <span class="toc-number">2-3</span>
+                        <span>Entityの修正</span>
+                    </li>
+                    <li class="toc-item">
+                        <span class="toc-number">2-4</span>
+                        <span>ステータス切り替え機能</span>
+                    </li>
+                    <li class="toc-item">
+                        <span class="toc-number">2-5</span>
+                        <span>条件分岐表示</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- セクション 2-1 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 2-1</span>
+                    <h2 class="section-title">ステータス機能とは</h2>
+                </div>
+
+                <div class="intro-text">
+                    <p>
+                        ToDoに<strong>完了/未完了</strong>のステータスを追加し、タスクの進捗を管理できるようにします。
+                    </p>
+                </div>
+
+                <h3>学習できるSpring技術</h3>
+                <div class="module-list">
+                    <div class="module-item">
+                        <div class="module-icon">🔘</div>
+                        <div class="module-content">
+                            <h4>Boolean型の扱い</h4>
+                            <p>true/falseで状態を管理する方法</p>
+                        </div>
+                    </div>
+                    <div class="module-item">
+                        <div class="module-icon">🔀</div>
+                        <div class="module-content">
+                            <h4>th:if / th:unless</h4>
+                            <p>Thymeleafでの条件分岐表示</p>
+                        </div>
+                    </div>
+                    <div class="module-item">
+                        <div class="module-icon">🎨</div>
+                        <div class="module-content">
+                            <h4>条件付きスタイル</h4>
+                            <p>状態に応じてCSSクラスを切り替え</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>完成イメージ</h3>
+                <div class="screen-mockup" style="background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin: 1rem auto; max-width: 600px;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                        <thead>
+                            <tr style="background: #e2e8f0;">
+                                <th style="border: 1px solid #cbd5e1; padding: 0.5rem;">No</th>
+                                <th style="border: 1px solid #cbd5e1; padding: 0.5rem;">タイトル</th>
+                                <th style="border: 1px solid #cbd5e1; padding: 0.5rem;">ステータス</th>
+                                <th style="border: 1px solid #cbd5e1; padding: 0.5rem;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid #cbd5e1; padding: 0.5rem; text-align: center;">1</td>
+                                <td style="border: 1px solid #cbd5e1; padding: 0.5rem;">買い物リスト作成</td>
+                                <td style="border: 1px solid #cbd5e1; padding: 0.5rem; text-align: center;">
+                                    <span class="status-complete">完了</span>
+                                </td>
+                                <td style="border: 1px solid #cbd5e1; padding: 0.5rem; text-align: center;">
+                                    <span style="color: #64748b; font-size: 0.8rem;">未完了に戻す</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #cbd5e1; padding: 0.5rem; text-align: center;">2</td>
+                                <td style="border: 1px solid #cbd5e1; padding: 0.5rem;">会議資料準備</td>
+                                <td style="border: 1px solid #cbd5e1; padding: 0.5rem; text-align: center;">
+                                    <span class="status-incomplete">未完了</span>
+                                </td>
+                                <td style="border: 1px solid #cbd5e1; padding: 0.5rem; text-align: center;">
+                                    <span style="color: #3b82f6; font-size: 0.8rem;">完了にする</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- セクション 2-2 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 2-2</span>
+                    <h2 class="section-title">データベースの変更</h2>
+                </div>
+
+                <div class="intro-text">
+                    <p>
+                        todoテーブルに<code>completed</code>カラムを追加します。
+                    </p>
+                </div>
+
+                <div class="code-block" id="schema-sql">
+                    <div class="code-header">
+                        <span class="code-title">schema.sql</span>
+                        <button class="download-btn" onclick="downloadCode('schema-sql', 'schema.sql')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>CREATE TABLE todo (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    author VARCHAR(50) NOT NULL,
+    title VARCHAR(100) NOT NULL,
+    detail VARCHAR(500),
+    completed BOOLEAN DEFAULT FALSE,  -- 追加
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title">既存データがある場合</span>
+                    </div>
+                    <p>既存のテーブルにカラムを追加する場合は ALTER TABLE を使用します：<br>
+                    <code>ALTER TABLE todo ADD completed BOOLEAN DEFAULT FALSE;</code></p>
+                </div>
+            </section>
+
+            <!-- セクション 2-3 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 2-3</span>
+                    <h2 class="section-title">Entityの修正</h2>
+                </div>
+
+                <div class="code-block" id="todo-entity">
+                    <div class="code-header">
+                        <span class="code-title">Todo.java</span>
+                        <button class="download-btn" onclick="downloadCode('todo-entity', 'Todo.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>package com.example.todo.entity;
+
+import java.time.LocalDateTime;
+
+public class Todo {
+
+    private Integer id;
+    private String author;
+    private String title;
+    private String detail;
+    private Boolean completed;  // 追加
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+    // getter / setter
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
+
+    public Boolean getCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(Boolean completed) {
+        this.completed = completed;
+    }
+
+    // 便利メソッド
+    public boolean isCompleted() {
+        return completed != null && completed;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- セクション 2-4 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 2-4</span>
+                    <h2 class="section-title">ステータス切り替え機能</h2>
+                </div>
+
+                <div class="intro-text">
+                    <p>
+                        ボタンクリックでステータスを切り替えるControllerを作成します。
+                    </p>
+                </div>
+
+                <div class="code-block" id="controller-toggle">
+                    <div class="code-header">
+                        <span class="code-title">TodoController.java（追加メソッド）</span>
+                        <button class="download-btn" onclick="downloadCode('controller-toggle', 'TodoController_toggle.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>/**
+ * ステータスを切り替える
+ */
+@PostMapping("/{id}/toggle")
+public String toggleStatus(@PathVariable Integer id) {
+    todoService.toggleCompleted(id);
+    return "redirect:/todo";
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="service-toggle">
+                    <div class="code-header">
+                        <span class="code-title">TodoService.java（追加メソッド）</span>
+                        <button class="download-btn" onclick="downloadCode('service-toggle', 'TodoService_toggle.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>/**
+ * 完了ステータスを切り替える
+ */
+public void toggleCompleted(Integer id) {
+    Todo todo = todoRepository.findById(id);
+    if (todo != null) {
+        todo.setCompleted(!todo.isCompleted());
+        todoRepository.update(todo);
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="mapper-update">
+                    <div class="code-header">
+                        <span class="code-title">TodoMapper.xml（UPDATE文）</span>
+                        <button class="download-btn" onclick="downloadCode('mapper-update', 'TodoMapper_update.xml')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>&lt;update id="update"&gt;
+    UPDATE todo
+    SET author = #{author},
+        title = #{title},
+        detail = #{detail},
+        completed = #{completed},
+        updated_at = CURRENT_TIMESTAMP
+    WHERE id = #{id}
+&lt;/update&gt;</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- セクション 2-5 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 2-5</span>
+                    <h2 class="section-title">条件分岐表示</h2>
+                </div>
+
+                <div class="intro-text">
+                    <p>
+                        Thymeleafで<code>th:if</code>を使い、ステータスに応じた表示を切り替えます。
+                    </p>
+                </div>
+
+                <div class="code-block" id="index-html">
+                    <div class="code-header">
+                        <span class="code-title">index.html</span>
+                        <button class="download-btn" onclick="downloadCode('index-html', 'index.html')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>&lt;table class="data-table"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th&gt;No&lt;/th&gt;
+            &lt;th&gt;タイトル&lt;/th&gt;
+            &lt;th&gt;登録者&lt;/th&gt;
+            &lt;th&gt;ステータス&lt;/th&gt;
+            &lt;th&gt;操作&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        &lt;tr th:each="todo : ${todoList}"
+            th:classappend="${todo.completed} ? 'completed-row'"&gt;
+            &lt;td th:text="${todo.id}"&gt;&lt;/td&gt;
+            &lt;td th:text="${todo.title}"&gt;&lt;/td&gt;
+            &lt;td th:text="${todo.author}"&gt;&lt;/td&gt;
+
+            &lt;!-- ステータス表示（条件分岐） --&gt;
+            &lt;td&gt;
+                &lt;span th:if="${todo.completed}" class="status-complete"&gt;完了&lt;/span&gt;
+                &lt;span th:unless="${todo.completed}" class="status-incomplete"&gt;未完了&lt;/span&gt;
+            &lt;/td&gt;
+
+            &lt;!-- 操作ボタン --&gt;
+            &lt;td&gt;
+                &lt;form th:action="@{/todo/{id}/toggle(id=${todo.id})}" method="post" style="display:inline;"&gt;
+                    &lt;button type="submit" th:text="${todo.completed} ? '未完了に戻す' : '完了にする'"&gt;&lt;/button&gt;
+                &lt;/form&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;style&gt;
+    .status-complete { background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 4px; }
+    .status-incomplete { background: #fef3c7; color: #92400e; padding: 2px 8px; border-radius: 4px; }
+    .completed-row { background: #f8fafc; }
+    .completed-row td { color: #94a3b8; }
+&lt;/style&gt;</code></pre>
+                    </div>
+                </div>
+
+                <h3>Thymeleafの条件分岐</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>記述</th>
+                            <th>説明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>th:if="${todo.completed}"</code></td>
+                            <td>completedがtrueの場合に表示</td>
+                        </tr>
+                        <tr>
+                            <td><code>th:unless="${todo.completed}"</code></td>
+                            <td>completedがfalseの場合に表示（th:ifの逆）</td>
+                        </tr>
+                        <tr>
+                            <td><code>th:text="${condition} ? 'A' : 'B'"</code></td>
+                            <td>三項演算子でテキストを切り替え</td>
+                        </tr>
+                        <tr>
+                            <td><code>th:classappend="${condition} ? 'class-name'"</code></td>
+                            <td>条件に応じてCSSクラスを追加</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="info-box">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title">完了タスクの視覚的な区別</span>
+                    </div>
+                    <p>完了したタスクは<code>completed-row</code>クラスで背景色を変え、<br>
+                    文字色をグレーにすることで視覚的に区別しています。</p>
+                </div>
+            </section>
+        </div>
+
+        <footer class="footer">
+            <p>Spring Framework 入門チュートリアル - 初級レベル</p>
+        </footer>
+
+        <div class="page-nav">
+            <a href="01_validation.html" class="page-nav-btn prev">
+                <span>←</span>
+                <div>
+                    <div class="page-nav-label">前の機能</div>
+                    <div class="page-nav-title">入力バリデーション</div>
+                </div>
+            </a>
+            <a href="03_search.html" class="page-nav-btn next">
+                <div>
+                    <div class="page-nav-label">次の機能</div>
+                    <div class="page-nav-title">検索機能</div>
+                </div>
+                <span>→</span>
+            </a>
+        </div>
+
+        <script>
+            function toggleMenu() {
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+                toggle.classList.toggle("active");
+                menu.classList.toggle("active");
+            }
+
+            document.addEventListener("click", function (e) {
+                const nav = document.querySelector(".global-nav");
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+
+                if (!nav.contains(e.target) && menu.classList.contains("active")) {
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+
+            function downloadCode(elementId, filename) {
+                const element = document.getElementById(elementId);
+                const preElement = element.querySelector('pre');
+                const codeElement = preElement.querySelector('code') || preElement;
+                const text = codeElement.textContent;
+
+                const blob = new Blob([text], { type: 'text/plain; charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+        </script>
+    </body>
+</html>

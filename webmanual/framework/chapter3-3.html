@@ -1,0 +1,900 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>3-3 DIについて知ろう（インスタンス生成）｜初学者向け資料（ソースコード定義・解説付き）</title>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --panel:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --accent:#2563eb;
+      --accent2:#7c3aed;
+      --good:#16a34a;
+      --warn:#d97706;
+      --bad:#dc2626;
+
+      --codebg:#0b1220;
+      --codeborder:#111827;
+
+      --shadow: 0 10px 25px rgba(0,0,0,.08);
+      --radius: 16px;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+      line-height: 1.85;
+    }
+    .wrap{ max-width: 1100px; margin: 0 auto; padding: 28px 16px 72px; }
+
+    header{
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, #f8fafc, #ffffff);
+      box-shadow: var(--shadow);
+      padding: 18px 18px 22px;
+    }
+    .kicker{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:950;
+      color: var(--accent);
+      letter-spacing: .02em;
+    }
+    .kicker .sq{
+      width: 40px; height: 40px;
+      border-radius: 12px;
+      background:#dbeafe;
+      border:1px solid #bfdbfe;
+      display:grid; place-items:center;
+      font-weight: 1000;
+    }
+    h1{ margin: 10px 0 6px; font-size: 26px; line-height: 1.35; }
+    .lead{ margin:0; color:var(--muted); font-size: 14.5px; }
+
+    nav{ margin-top: 14px; border-top: 1px dashed #cbd5e1; padding-top: 14px; }
+    .toc{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin:0;
+      padding:0;
+      list-style:none;
+    }
+    .toc a{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      text-decoration:none;
+      color: var(--text);
+      border:1px solid var(--border);
+      background:#fff;
+      padding: 6px 10px;
+      border-radius: 999px;
+      box-shadow: 0 6px 14px rgba(0,0,0,.06);
+      font-size: 13px;
+    }
+    .toc a:hover{ border-color:#cbd5e1; }
+    .dot{
+      width: 8px; height: 8px;
+      border-radius:999px;
+      background:#93c5fd;
+      border:1px solid #bfdbfe;
+    }
+
+    main{ margin-top: 18px; display:grid; gap: 16px; }
+    section{
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+    h2{
+      margin: 0 0 10px;
+      font-size: 18px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .pill{
+      font-size: 12px;
+      padding: 2px 10px;
+      border-radius: 999px;
+      border:1px solid var(--border);
+      color: var(--muted);
+      background:#f9fafb;
+      font-weight:900;
+      white-space:nowrap;
+    }
+    .muted{ color: var(--muted); }
+
+    .term{
+      display:inline-block;
+      padding: 0 6px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background:#f9fafb;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.95em;
+    }
+
+    ul{ margin: 10px 0 0; padding-left: 20px; }
+    li{ margin: 6px 0; }
+
+    .note{
+      margin-top: 12px;
+      padding: 12px;
+      border-left: 4px solid #bfdbfe;
+      background: #eff6ff;
+      border-radius: 10px;
+      color:#1f2937;
+      font-size: 14px;
+    }
+    .warn{ border-left-color:#fed7aa; background:#fff7ed; }
+    .danger{ border-left-color:#fecaca; background:#fef2f2; }
+
+    /* Diagrams */
+    .diagram{
+      margin-top: 10px;
+      padding: 14px;
+      border: 1px dashed #cbd5e1;
+      border-radius: 14px;
+      background:#f8fafc;
+    }
+    .diagram-title{
+      font-weight: 1000;
+      margin-bottom: 10px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .chip{
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border:1px solid #e2e8f0;
+      background:#fff;
+      color: var(--muted);
+      font-weight:1000;
+      white-space: nowrap;
+    }
+    .node{
+      border:1px solid var(--border);
+      background:#fff;
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 0 8px 18px rgba(0,0,0,.06);
+    }
+    .node .t{
+      font-weight: 1000;
+      margin-bottom: 4px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap:10px;
+      font-size: 14px;
+    }
+    .node .d{ margin:0; color: var(--muted); font-size: 13px; }
+    .tag{
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border:1px solid var(--border);
+      background:#f9fafb;
+      color: var(--muted);
+      font-weight: 1000;
+      white-space: nowrap;
+    }
+    .node.blue{ border-color:#bfdbfe; }
+    .node.blue .t{ color: var(--accent); }
+    .node.purple{ border-color:#ddd6fe; }
+    .node.purple .t{ color: var(--accent2); }
+    .node.green{ border-color:#bbf7d0; }
+    .node.green .t{ color: var(--good); }
+
+    .arrow{
+      height: 18px;
+      position: relative;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .02em;
+      margin: 6px 0;
+    }
+    .arrow::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:0;
+      width:2px;
+      height:18px;
+      background:#cbd5e1;
+      transform: translateX(-50%);
+    }
+    .arrow::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      bottom:-2px;
+      width:10px;
+      height:10px;
+      border-right:2px solid #cbd5e1;
+      border-bottom:2px solid #cbd5e1;
+      transform: translateX(-50%) rotate(45deg);
+    }
+
+    /* Code blocks */
+    details{
+      border:1px solid var(--border);
+      border-radius: 14px;
+      background:#fff;
+      box-shadow: 0 8px 18px rgba(0,0,0,.06);
+      padding: 10px 12px;
+      margin-top: 12px;
+    }
+    summary{
+      cursor:pointer;
+      list-style:none;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      font-weight: 1000;
+    }
+    summary::-webkit-details-marker{ display:none; }
+
+    .code-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12.5px;
+    }
+
+    pre{
+      margin: 10px 0 0;
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid var(--codeborder);
+      background: var(--codebg);
+      color:#e5e7eb;
+      overflow:auto;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    pre code{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+
+    .callouts{
+      margin-top: 10px;
+      display:grid;
+      gap: 10px;
+    }
+    @media (min-width: 900px){
+      .callouts{ grid-template-columns: 1fr 1fr; }
+    }
+    .callout{
+      border:1px solid var(--border);
+      border-radius: 14px;
+      background:#fff;
+      padding: 12px;
+    }
+    .callout h3{
+      margin:0 0 6px;
+      font-size: 14px;
+    }
+    .callout p{ margin:0; color: var(--muted); font-size: 13.5px; }
+
+    /* File definition table */
+    .tbl{
+      width:100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 13.5px;
+    }
+    .tbl th, .tbl td{
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      vertical-align: top;
+    }
+    .tbl th{
+      background:#f9fafb;
+      text-align:left;
+      white-space: nowrap;
+      width: 210px;
+    }
+
+    footer{
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 12.5px;
+      text-align:center;
+    }
+
+    @media print{
+      header, section, details{ box-shadow:none; }
+      .toc a{ box-shadow:none; }
+      body{ background:#fff; }
+    }
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">
+      <span class="sq">3-3</span>
+      <span>DIについて知ろう（インスタンス生成）｜初学者向けまとめ</span>
+    </div>
+    <h1>Bean・DIコンテナ・Bean定義（アノテーション／Java Config）を「流れ」で理解する</h1>
+    <p class="lead">
+      このページは「Spring がインスタンスを作り、管理し、必要な場所へ注入する」までを一気に理解するための教材です。
+      <strong>最後に、実際のソースコード（定義と説明）</strong>も付けています。
+    </p>
+
+    <nav aria-label="目次">
+      <ul class="toc">
+        <li><a href="#bean"><span class="dot"></span>3-3-1 Beanとは</a></li>
+        <li><a href="#define"><span class="dot"></span>3-3-2 Bean定義</a></li>
+        <li><a href="#javaconfig"><span class="dot"></span>3-3-3 Java Config</a></li>
+        <li><a href="#code"><span class="dot"></span>ソースコード定義・解説</a></li>
+        <li><a href="#summary"><span class="dot"></span>3-3-4 まとめ</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <!-- 3-3-1 -->
+    <section id="bean">
+      <h2>3-3-1 Beanとは？ <span class="pill">最重要用語</span></h2>
+      <p class="muted" style="margin:0;">
+        Spring はアプリで使うオブジェクト（インスタンス）を、起動時にまとめて用意して管理します。
+        この <strong>Spring が管理しているインスタンス</strong> を <strong>Bean（ビーン）</strong> と呼びます。
+      </p>
+
+      <ul>
+        <li><strong>DIコンテナ</strong>：Bean を保存して管理する「箱」</li>
+        <li><strong>Bean</strong>：箱の中の「部品」（Spring 管理のインスタンス）</li>
+      </ul>
+
+      <div class="diagram">
+        <div class="diagram-title">
+          図：Bean と DIコンテナの関係
+          <span class="chip">保管→注入</span>
+        </div>
+
+        <div class="node blue">
+          <div class="t">イメージ <span class="tag">ざっくり</span></div>
+          <p class="d">
+            Spring が「部品を作って箱に入れておく」。必要になったら「箱から取り出して渡す」。<br>
+            つまり、あなたが <span class="term">new</span> する回数が減る（Spring が代わりにやる）ということです。
+          </p>
+        </div>
+      </div>
+
+      <div class="note warn">
+        <strong>誤解しがちな点：</strong> Bean は魔法の概念ではなく、ただのインスタンスです。<br>
+        違いは「誰が作って、誰が管理しているか」だけです（Spring が管理している＝Bean）。
+      </div>
+    </section>
+
+    <!-- 3-3-2 -->
+    <section id="define">
+      <h2>3-3-2 Bean定義とは？ <span class="pill">登録方法</span></h2>
+      <p class="muted" style="margin:0;">
+        Spring に「このクラス（またはオブジェクト）を Bean として管理して」と伝えることを、ここでは <strong>Bean定義</strong> と呼びます。
+        Bean定義の代表例は次の 3 つです。
+      </p>
+
+      <table class="tbl" aria-label="Bean定義の代表例">
+        <tr>
+          <th>方法</th>
+          <th>概要</th>
+        </tr>
+        <tr>
+          <td>アノテーション方式</td>
+          <td>
+            <span class="term">@Component</span> などで「部品登録」を宣言し、起動時のスキャンで登録する。<br>
+            例：<span class="term">@Component</span> / <span class="term">@Service</span> / <span class="term">@Controller</span> など
+          </td>
+        </tr>
+        <tr>
+          <td>Java Config方式</td>
+          <td>
+            <span class="term">@Configuration</span>（設定クラス）と <span class="term">@Bean</span>（Beanを返すメソッド）で登録する。<br>
+            Beanの「作り方」をコードで明示できるため、理解しやすい。
+          </td>
+        </tr>
+        <tr>
+          <td>XML方式</td>
+          <td>
+            XML で Bean を登録する（古いプロジェクトで残っていることがある）。
+          </td>
+        </tr>
+      </table>
+
+      <div class="note">
+        この教材では、理解を段階的にするために次の順で扱います。<br>
+        <strong>①アノテーション方式（@Component）</strong> → <strong>②Java Config方式（@Configuration/@Bean）</strong>
+      </div>
+    </section>
+
+    <!-- 3-3-3 -->
+    <section id="javaconfig">
+      <h2>3-3-3 Java Configを使用したDIの考え方 <span class="pill">複数実装の扱い</span></h2>
+      <p class="muted" style="margin:0;">
+        Java Config は、Bean を「メソッドの戻り値」として登録する方式です。<br>
+        実装が複数ある場合は、Bean に名前を付けて区別し、注入時に <span class="term">@Qualifier</span> で選びます。
+      </p>
+
+      <div class="diagram">
+        <div class="diagram-title">
+          図：Java Config の流れ（3ステップ）
+          <span class="chip">SCAN → REGISTER → INJECT</span>
+        </div>
+
+        <div class="node purple">
+          <div class="t">1. 設定クラスを見つける <span class="tag">@Configuration</span></div>
+          <p class="d">起動時の探索で設定クラスが対象になる。</p>
+        </div>
+        <div class="arrow">設定クラス内を読む</div>
+        <div class="node green">
+          <div class="t">2. Bean を登録する <span class="tag">@Bean</span></div>
+          <p class="d">@Bean メソッドの戻り値が DIコンテナに登録される（Bean化）。</p>
+        </div>
+        <div class="arrow">注入先を探す</div>
+        <div class="node blue">
+          <div class="t">3. 注入する <span class="tag">@Autowired</span></div>
+          <p class="d">必要な場所へ Bean が注入される。複数候補なら <span class="term">@Qualifier</span> で指定する。</p>
+        </div>
+      </div>
+
+      <div class="note warn">
+        <strong>直球で言うと：</strong> 実装が2つあると Spring は迷います。<br>
+        迷わせないために「名前で指定」するのが <span class="term">@Qualifier</span> です。
+      </div>
+    </section>
+
+    <!-- ソースコード定義・説明 -->
+    <section id="code">
+      <h2>ソースコードの定義と説明 <span class="pill">この教材のサンプル</span></h2>
+      <p class="muted" style="margin:0;">
+        ここからは、サンプルの各ファイルが「何を定義しているか（定義）」と「なぜそう書くか（説明）」をセットで整理します。<br>
+        まずは <strong>アノテーション方式（@Component + @Autowired）</strong> の実コードを扱い、その後に Java Config の例を示します。
+      </p>
+
+      <h3 style="margin:16px 0 6px; font-size:15px;">A. アノテーション方式（@Component / @Autowired）</h3>
+
+      <table class="tbl" aria-label="アノテーション方式のファイル定義">
+        <tr>
+          <th>ファイル</th>
+          <th>定義（何を決めるか）</th>
+        </tr>
+        <tr>
+          <td><strong>Greet.java</strong></td>
+          <td>「あいさつを返す」ことだけを約束する <strong>インターフェース</strong>（仕様の入口）。</td>
+        </tr>
+        <tr>
+          <td><strong>MorningGreet.java</strong></td>
+          <td>朝用の実装（<span class="term">Greet</span> を実装）。必要なら <span class="term">@Component</span> を付けて Bean 登録する。</td>
+        </tr>
+        <tr>
+          <td><strong>EveningGreet.java</strong></td>
+          <td>夜用の実装（<span class="term">Greet</span> を実装）。<span class="term">@Component</span> が付いていれば Bean として登録される。</td>
+        </tr>
+        <tr>
+          <td><strong>DiSampleApplication.java</strong></td>
+          <td>起動クラス。<span class="term">@Autowired</span> により <span class="term">Greet</span> の実装が注入され、実行時に <span class="term">greeting()</span> が呼ばれる。</td>
+        </tr>
+        <tr>
+          <td><strong>DemoApplicationTests.java</strong></td>
+          <td>起動（コンテキスト生成）テスト。DI の仕組み理解としては「起動確認用」と捉えれば十分。</td>
+        </tr>
+      </table>
+
+      <div class="diagram">
+        <div class="diagram-title">
+          図：このサンプルの実行フロー
+          <span class="chip">RUN → SCAN → INJECT → EXEC</span>
+        </div>
+        <div class="node blue">
+          <div class="t">起動 <span class="tag">SpringApplication.run</span></div>
+          <p class="d">アプリが起動し、コンポーネントスキャンが動く。</p>
+        </div>
+        <div class="arrow">スキャン</div>
+        <div class="node green">
+          <div class="t">Bean 登録 <span class="tag">@Component</span></div>
+          <p class="d">EveningGreet など、@Component 付きのクラスが Bean として登録される。</p>
+        </div>
+        <div class="arrow">注入</div>
+        <div class="node purple">
+          <div class="t">DI <span class="tag">@Autowired</span></div>
+          <p class="d">DiSampleApplication の <span class="term">private Greet g;</span> に Bean が入る。</p>
+        </div>
+        <div class="arrow">実行</div>
+        <div class="node blue">
+          <div class="t">メソッド実行 <span class="tag">g.greeting()</span></div>
+          <p class="d">注入された実装（Morning/Evening）の greeting が実行される。</p>
+        </div>
+      </div>
+
+      <!-- Code: Greet -->
+      <details open>
+        <summary>
+          <span>Greet.java（インターフェース：仕様を定義）</span>
+          <span class="tag">定義：契約（約束）</span>
+        </summary>
+        <div class="code-meta">
+          <span class="chip">役割：使う側が依存する型</span>
+          <span class="chip">ポイント：実装の差し替えが可能になる</span>
+        </div>
+        <pre><code>package com.example.demo;
+
+
+// 挨拶インターフェース
+
+public interface Greet {
+
+    // 挨拶を返す
+    // @return 挨拶
+
+    String greeting();
+    
+}</code></pre>
+
+        <div class="callouts">
+          <div class="callout">
+            <h3>定義（何を決めている？）</h3>
+            <p>
+              <span class="term">greeting()</span> というメソッドが存在し、<strong>文字列を返す</strong>という約束だけを定義しています。
+              中身（朝/夜）はここでは決めません。
+            </p>
+          </div>
+          <div class="callout">
+            <h3>説明（なぜ必要？）</h3>
+            <p>
+              使う側は <strong>Greet 型</strong>だけを見て処理できるため、実装（Morning/Evening）を差し替えても、使う側のコードを変えずに済みます。
+            </p>
+          </div>
+        </div>
+      </details>
+
+      <!-- Code: Morning -->
+      <details>
+        <summary>
+          <span>MorningGreet.java（実装：朝のあいさつ）</span>
+          <span class="tag">定義：実装（振る舞い）</span>
+        </summary>
+        <div class="code-meta">
+          <span class="chip">役割：Greet の中身（朝）</span>
+          <span class="chip">ポイント：@Component を付けると Bean 化</span>
+        </div>
+        <pre><code>package com.example.demo;
+
+// import org.springframework.stereotype.Component;
+
+// @Component
+public class MorningGreet implements Greet {
+    @Override
+    public String greeting(){
+        return "おはようございます";
+    }
+}
+    </code></pre>
+
+        <div class="callouts">
+          <div class="callout">
+            <h3>定義（何を決めている？）</h3>
+            <p>
+              <span class="term">Greet</span> を実装し、<span class="term">greeting()</span> の戻り値を「おはようございます」に決めています。
+            </p>
+          </div>
+          <div class="callout">
+            <h3>説明（今はなぜ注入されない？）</h3>
+            <p>
+              このファイルでは <span class="term">@Component</span> がコメントアウトされているため、Spring のスキャン対象になりません。
+              つまり、Bean として登録されず、注入候補にもなりません。
+            </p>
+          </div>
+        </div>
+
+        <div class="note warn">
+          <strong>切り替え演習：</strong> Morning を使いたい場合は <span class="term">@Component</span> を有効化し、
+          Evening 側の <span class="term">@Component</span> を外してください（両方有効だと Spring が迷います）。
+        </div>
+      </details>
+
+      <!-- Code: Evening -->
+      <details open>
+        <summary>
+          <span>EveningGreet.java（実装：夜のあいさつ）</span>
+          <span class="tag">定義：Bean（部品）</span>
+        </summary>
+        <div class="code-meta">
+          <span class="chip">役割：Greet の中身（夜）</span>
+          <span class="chip">ポイント：@Component により Bean 登録</span>
+        </div>
+        <pre><code>package com.example.demo;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class EveningGreet implements Greet{
+    @Override    
+    public String greeting(){
+    return "こんばんは";
+    }
+
+}</code></pre>
+
+        <div class="callouts">
+          <div class="callout">
+            <h3>定義（何を決めている？）</h3>
+            <p>
+              <span class="term">@Component</span> により「このクラスは部品（Bean）として使う」と宣言しています。
+              実装内容としては、<span class="term">greeting()</span> が「こんばんは」を返します。
+            </p>
+          </div>
+          <div class="callout">
+            <h3>説明（@Component の意味）</h3>
+            <p>
+              Spring は起動時に <span class="term">@Component</span> を探し、見つけたクラスのインスタンスを作成して DI コンテナに登録します。
+              その結果、<span class="term">@Autowired</span> の注入候補になります。
+            </p>
+          </div>
+        </div>
+      </details>
+
+      <!-- Code: Application -->
+      <details open>
+        <summary>
+          <span>DiSampleApplication.java（使う側：注入して実行）</span>
+          <span class="tag">定義：起動・実行</span>
+        </summary>
+        <div class="code-meta">
+          <span class="chip">役割：Spring 起動 → 注入 → greeting 実行</span>
+          <span class="chip">ポイント：getBean(...) で自分自身を取り出して実行</span>
+        </div>
+        <pre><code>package com.example.demo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class DiSampleApplication {
+    public static void main(String[] args){
+        SpringApplication.run(DiSampleApplication.class,args).getBean(DiSampleApplication.class).execute();
+    }
+
+    @Autowired
+    private Greet g;
+
+    private void execute(){
+        String msg = g. greeting();
+        System.out.println(msg);
+    }
+}</code></pre>
+
+        <div class="callouts">
+          <div class="callout">
+            <h3>定義（何を決めている？）</h3>
+            <p>
+              <span class="term">@SpringBootApplication</span> により Spring Boot アプリとして起動し、
+              <span class="term">@Autowired</span> された <span class="term">Greet</span> を使って <span class="term">execute()</span> で出力します。
+            </p>
+          </div>
+          <div class="callout">
+            <h3>説明（この書き方の意図）</h3>
+            <p>
+              <span class="term">SpringApplication.run(...).getBean(...)</span> で
+              Spring が管理している自分自身（Bean）を取り出してメソッドを呼んでいます。
+              これにより、DI が完了した状態で <span class="term">execute()</span> を動かせます。
+            </p>
+          </div>
+        </div>
+
+        <div class="note">
+          <strong>このサンプルの実行結果：</strong>
+          現状では EveningGreet が Bean として登録されているため、出力は <strong>「こんばんは」</strong> になります。
+        </div>
+
+        <div class="note danger">
+          <strong>よくある失敗：</strong><br>
+          ・Morning と Evening の両方を <span class="term">@Component</span> にすると「どっちを注入する？」でエラー（候補が多すぎ）。<br>
+          ・両方とも <span class="term">@Component</span> を外すと「注入できる Bean が無い」でエラー（候補ゼロ）。
+        </div>
+      </details>
+
+      <!-- Code: Tests -->
+      <details>
+        <summary>
+          <span>DemoApplicationTests.java（起動確認テスト）</span>
+          <span class="tag">補足</span>
+        </summary>
+        <div class="code-meta">
+          <span class="chip">役割：Spring コンテキストが起動するか確認</span>
+        </div>
+        <pre><code>package com.example.demo;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class DemoApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}</code></pre>
+
+        <div class="callouts">
+          <div class="callout">
+            <h3>定義（何を決めている？）</h3>
+            <p>
+              <span class="term">@SpringBootTest</span> により Spring を起動し、コンテキスト生成が成功するかを確認します。
+            </p>
+          </div>
+          <div class="callout">
+            <h3>説明（初学者の理解）</h3>
+            <p>
+              この段階では「アプリが起動できるかの健康診断」くらいの理解で十分です。
+              DI の中身は本体コードで追います。
+            </p>
+          </div>
+        </div>
+      </details>
+
+      <div class="note warn">
+        <strong>ここまでの結論（アノテーション方式）：</strong>
+        <span class="term">@Component</span> が「登録」、<span class="term">@Autowired</span> が「注入」です。
+        それ以上でもそれ以下でもありません（最初はこれでOK）。
+      </div>
+
+      <hr style="border:none;border-top:1px dashed #cbd5e1;margin:18px 0;" />
+
+      <h3 style="margin:0 0 6px; font-size:15px;">B. Java Config方式（@Configuration / @Bean / @Qualifier）</h3>
+      <p class="muted" style="margin:0;">
+        次は Java Config の「型は同じだが実装が複数ある」ケースです。ここでは <strong>教材用の最小サンプル</strong>を示します。<br>
+        ※教科書のコードと完全一致させる必要がある場合は、該当プロジェクトのソース一式を共有してください（こちらで一致版に整えます）。
+      </p>
+
+      <details>
+        <summary>
+          <span>教材用：Java Config 最小サンプル（抜粋）</span>
+          <span class="tag">例</span>
+        </summary>
+        <div class="code-meta">
+          <span class="chip">目的：2つの実装を Bean として登録し、@Qualifier で注入先を選ぶ</span>
+        </div>
+
+        <pre><code>// BusinessLogic.java（インターフェース）
+public interface BusinessLogic {
+    void doLogic();
+}
+
+// TestLogicImpl.java（実装1）
+public class TestLogicImpl implements BusinessLogic {
+    @Override
+    public void doLogic() {
+        System.out.println("テストです");
+    }
+}
+
+// SampleLogicImpl.java（実装2）
+public class SampleLogicImpl implements BusinessLogic {
+    @Override
+    public void doLogic() {
+        System.out.println("サンプルです");
+    }
+}
+
+// AppConfig.java（Java Config：Bean 登録）
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class AppConfig {
+
+    @Bean(name = "test")
+    public BusinessLogic testLogic() {
+        return new TestLogicImpl();
+    }
+
+    @Bean(name = "sample")
+    public BusinessLogic sampleLogic() {
+        return new SampleLogicImpl();
+    }
+}
+
+// JavaConfigSampleApplication.java（使う側：注入して実行）
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class JavaConfigSampleApplication {
+
+    @Autowired
+    @Qualifier("test")
+    private BusinessLogic logic1;
+
+    @Autowired
+    @Qualifier("sample")
+    private BusinessLogic logic2;
+
+    public static void main(String[] args) {
+        SpringApplication.run(JavaConfigSampleApplication.class, args)
+                         .getBean(JavaConfigSampleApplication.class)
+                         .exec();
+    }
+
+    public void exec() {
+        logic1.doLogic();
+        logic2.doLogic();
+    }
+}</code></pre>
+
+        <div class="callouts">
+          <div class="callout">
+            <h3>定義（何を定義している？）</h3>
+            <p>
+              <span class="term">@Configuration</span> で「設定クラス」を定義し、<span class="term">@Bean</span> で Bean（部品）を明示的に定義します。
+              Bean 名（test/sample）を付けることで区別できます。
+            </p>
+          </div>
+          <div class="callout">
+            <h3>説明（なぜ @Qualifier が要る？）</h3>
+            <p>
+              <span class="term">BusinessLogic</span> 型の Bean が2つあるため、<span class="term">@Autowired</span> だけでは注入先が決まりません。
+              そこで <span class="term">@Qualifier</span> で「この名前の Bean を入れて」と指定します。
+            </p>
+          </div>
+        </div>
+      </details>
+
+      <div class="note">
+        <strong>アノテーション方式との違い（短く）：</strong><br>
+        ・アノテーション方式：クラスに <span class="term">@Component</span> を付けて登録<br>
+        ・Java Config方式：設定クラスの <span class="term">@Bean</span> メソッドで登録（作り方をコードで管理）
+      </div>
+    </section>
+
+    <!-- 3-3-4 -->
+    <section id="summary">
+      <h2>3-3-4 まとめ <span class="pill">覚える順番</span></h2>
+      <ul>
+        <li><strong>Bean</strong>：Spring が管理しているインスタンス</li>
+        <li><strong>DIコンテナ</strong>：Bean を保管・管理する場所</li>
+        <li><strong>Bean定義</strong>：Bean を登録する手段（アノテーション / Java Config / XML）</li>
+        <li><span class="term">@Autowired</span>：必要な場所に注入してもらう合図</li>
+        <li><span class="term">@Qualifier</span>：候補が複数あるとき、どの Bean を使うか指定する</li>
+      </ul>
+
+      <div class="note warn">
+        <strong>初学者におすすめの理解順：</strong><br>
+        ①「@Component で登録 → @Autowired で注入」→ ②「実装が複数なら @Qualifier で選ぶ」→ ③「Java Config で Bean を作る」。<br>
+        逆順にやると高確率で混乱します（人間の脳はそういう仕様です）。
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Spring Boot / Spring Framework 基礎：DI（インスタンス生成・登録・注入）を、実コード付きで説明
+  </footer>
+</div>
+</body>
+</html>

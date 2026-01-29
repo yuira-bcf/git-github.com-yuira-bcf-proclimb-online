@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>上級16 例外ハンドリング</title>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="../style.css" />
+        <style>
+            .download-btn { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-left: auto; }
+            .code-header { display: flex; align-items: center; justify-content: space-between; }
+            .level-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; background: #fee2e2; color: #991b1b; margin-right: 8px; }
+        </style>
+    </head>
+    <body>
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="../1spring-framework-tutorial.html" class="nav-logo"><span class="nav-logo-icon">🌱</span><span>Spring入門</span></a>
+                <button class="nav-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 上級レベル</div>
+                    <ul class="nav-list">
+                        <li class="nav-item"><a href="12_login.html" class="nav-link"><span class="nav-chapter-num">12</span><span>ログイン認証</span></a></li>
+                        <li class="nav-item"><a href="13_user_todo.html" class="nav-link"><span class="nav-chapter-num">13</span><span>ユーザー別ToDo管理</span></a></li>
+                        <li class="nav-item"><a href="14_role.html" class="nav-link"><span class="nav-chapter-num">14</span><span>ロール別権限制御</span></a></li>
+                        <li class="nav-item"><a href="15_rest_api.html" class="nav-link"><span class="nav-chapter-num">15</span><span>REST API化</span></a></li>
+                        <li class="nav-item"><a href="16_exception.html" class="nav-link active"><span class="nav-chapter-num">16</span><span>例外ハンドリング</span></a></li>
+                        <li class="nav-item"><a href="17_aop.html" class="nav-link"><span class="nav-chapter-num">17</span><span>AOPでログ出力</span></a></li>
+                        <li class="nav-item"><a href="18_transaction.html" class="nav-link"><span class="nav-chapter-num">18</span><span>トランザクション管理</span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <header class="chapter-header">
+                <div class="chapter-badge"><span class="level-badge">上級</span>📕 Advanced</div>
+                <div class="chapter-number">16</div>
+                <h1 class="chapter-title">例外ハンドリング</h1>
+            </header>
+
+            <nav class="toc">
+                <h2 class="toc-title">📑 この章の内容</h2>
+                <ul class="toc-list">
+                    <li class="toc-item"><span class="toc-number">16-1</span><span>カスタム例外の作成</span></li>
+                    <li class="toc-item"><span class="toc-number">16-2</span><span>@ControllerAdviceで共通処理</span></li>
+                    <li class="toc-item"><span class="toc-number">16-3</span><span>エラーページの実装</span></li>
+                </ul>
+            </nav>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 16-1</span>
+                    <h2 class="section-title">カスタム例外の作成</h2>
+                </div>
+                <div class="intro-text">
+                    <p><strong>カスタム例外</strong>を作成し、アプリケーション固有のエラーを表現します。</p>
+                </div>
+
+                <div class="module-list">
+                    <div class="module-item"><div class="module-icon">💥</div><div class="module-content"><h4>@ControllerAdvice</h4><p>複数コントローラーに共通の例外処理を適用</p></div></div>
+                    <div class="module-item"><div class="module-icon">🎯</div><div class="module-content"><h4>@ExceptionHandler</h4><p>特定の例外をキャッチして処理</p></div></div>
+                </div>
+
+                <div class="code-block" id="custom-exception">
+                    <div class="code-header">
+                        <span class="code-title">TodoNotFoundException.java</span>
+                        <button class="download-btn" onclick="downloadCode('custom-exception', 'TodoNotFoundException.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>public class TodoNotFoundException extends RuntimeException {
+
+    private final Integer todoId;
+
+    public TodoNotFoundException(Integer todoId) {
+        super("ToDo not found: id=" + todoId);
+        this.todoId = todoId;
+    }
+
+    public Integer getTodoId() {
+        return todoId;
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="business-exception">
+                    <div class="code-header">
+                        <span class="code-title">BusinessException.java（業務例外）</span>
+                        <button class="download-btn" onclick="downloadCode('business-exception', 'BusinessException.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>public class BusinessException extends RuntimeException {
+
+    private final String errorCode;
+
+    public BusinessException(String errorCode, String message) {
+        super(message);
+        this.errorCode = errorCode;
+    }
+
+    public String getErrorCode() {
+        return errorCode;
+    }
+}
+
+// 使用例
+throw new BusinessException("E001", "この操作は許可されていません");</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 16-2</span>
+                    <h2 class="section-title">@ControllerAdviceで共通処理</h2>
+                </div>
+
+                <div class="code-block" id="global-handler">
+                    <div class="code-header">
+                        <span class="code-title">GlobalExceptionHandler.java</span>
+                        <button class="download-btn" onclick="downloadCode('global-handler', 'GlobalExceptionHandler.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.ui.Model;
+
+@ControllerAdvice
+public class GlobalExceptionHandler {
+
+    /**
+     * ToDoが見つからない場合
+     */
+    @ExceptionHandler(TodoNotFoundException.class)
+    public String handleTodoNotFound(TodoNotFoundException ex, Model model) {
+        model.addAttribute("errorMessage", "指定されたToDoが見つかりません");
+        model.addAttribute("todoId", ex.getTodoId());
+        return "error/404";
+    }
+
+    /**
+     * 業務例外
+     */
+    @ExceptionHandler(BusinessException.class)
+    public String handleBusinessException(BusinessException ex, Model model) {
+        model.addAttribute("errorCode", ex.getErrorCode());
+        model.addAttribute("errorMessage", ex.getMessage());
+        return "error/business";
+    }
+
+    /**
+     * その他の例外（フォールバック）
+     */
+    @ExceptionHandler(Exception.class)
+    public String handleException(Exception ex, Model model) {
+        model.addAttribute("errorMessage", "システムエラーが発生しました");
+        // 本番環境では詳細を表示しない
+        // model.addAttribute("detail", ex.getMessage());
+        return "error/500";
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="rest-handler">
+                    <div class="code-header">
+                        <span class="code-title">RestExceptionHandler.java（API用）</span>
+                        <button class="download-btn" onclick="downloadCode('rest-handler', 'RestExceptionHandler.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+
+@RestControllerAdvice(basePackages = "com.example.api")
+public class RestExceptionHandler {
+
+    @ExceptionHandler(TodoNotFoundException.class)
+    public ResponseEntity&lt;ErrorResponse&gt; handleNotFound(TodoNotFoundException ex) {
+        ErrorResponse error = new ErrorResponse(
+            "NOT_FOUND",
+            ex.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity&lt;ErrorResponse&gt; handleValidation(
+            MethodArgumentNotValidException ex) {
+        String message = ex.getBindingResult()
+            .getFieldErrors()
+            .stream()
+            .map(e -> e.getField() + ": " + e.getDefaultMessage())
+            .collect(Collectors.joining(", "));
+
+        ErrorResponse error = new ErrorResponse("VALIDATION_ERROR", message);
+        return ResponseEntity.badRequest().body(error);
+    }
+}
+
+// エラーレスポンス用クラス
+class ErrorResponse {
+    private String code;
+    private String message;
+    private LocalDateTime timestamp = LocalDateTime.now();
+
+    // constructor, getter
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 16-3</span>
+                    <h2 class="section-title">エラーページの実装</h2>
+                </div>
+
+                <div class="code-block" id="error-page">
+                    <div class="code-header">
+                        <span class="code-title">error/404.html</span>
+                        <button class="download-btn" onclick="downloadCode('error-page', 'error_404.html')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;title&gt;404 - Not Found&lt;/title&gt;
+    &lt;link rel="stylesheet" th:href="@{/css/style.css}"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="error-container"&gt;
+        &lt;h1&gt;404&lt;/h1&gt;
+        &lt;h2&gt;ページが見つかりません&lt;/h2&gt;
+        &lt;p th:text="${errorMessage}"&gt;エラーメッセージ&lt;/p&gt;
+        &lt;a th:href="@{/todo}" class="btn btn-primary"&gt;一覧に戻る&lt;/a&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                    </div>
+                </div>
+
+                <h3>例外処理のポイント</h3>
+                <table class="data-table">
+                    <thead><tr><th>ポイント</th><th>説明</th></tr></thead>
+                    <tbody>
+                        <tr><td>例外の階層化</td><td>業務例外とシステム例外を分ける</td></tr>
+                        <tr><td>適切なログ出力</td><td>例外発生時はログを記録する</td></tr>
+                        <tr><td>ユーザーへの通知</td><td>技術的詳細は隠し、分かりやすいメッセージを表示</td></tr>
+                        <tr><td>復旧手段の提示</td><td>一覧に戻るリンクなどを用意</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="warning-box">
+                    <div class="warning-box-header"><span class="warning-box-icon">⚠️</span><span class="warning-box-title">本番環境での注意</span></div>
+                    <p>スタックトレースやシステム内部情報をユーザーに表示しないでください。<br>攻撃者に情報を与えてしまう可能性があります。</p>
+                </div>
+            </section>
+        </div>
+
+        <footer class="footer"><p>Spring Framework 入門チュートリアル - 上級レベル</p></footer>
+
+        <div class="page-nav">
+            <a href="15_rest_api.html" class="page-nav-btn prev"><span>←</span><div><div class="page-nav-label">前の機能</div><div class="page-nav-title">REST API化</div></div></a>
+            <a href="17_aop.html" class="page-nav-btn next"><div><div class="page-nav-label">次の機能</div><div class="page-nav-title">AOPでログ出力</div></div><span>→</span></a>
+        </div>
+
+        <script>
+            function toggleMenu() { document.querySelector(".nav-toggle").classList.toggle("active"); document.querySelector(".nav-menu").classList.toggle("active"); }
+            function downloadCode(id, filename) { const el = document.getElementById(id); const code = el.querySelector('code') || el.querySelector('pre'); const blob = new Blob([code.textContent], {type:'text/plain;charset=utf-8'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url); }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>インスタンスとクラス（精度確認・再考案版）</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body{
+      font-family: system-ui, -apple-system, "Segoe UI",
+                   "Hiragino Kaku Gothic ProN","Yu Gothic", sans-serif;
+      line-height: 1.9;
+      margin: 24px;
+    }
+    h1{ font-size: 1.7rem; margin-bottom: 10px; }
+    .toc{
+      background:#fcfcfc;
+      border:1px solid #e0e0e0;
+      border-radius:10px;
+      padding:14px;
+      margin: 14px 0 22px;
+    }
+    .toc a{ color:#0b57d0; text-decoration:none; }
+    .toc a:hover{ text-decoration:underline; }
+    h2{
+      font-size: 1.25rem;
+      margin-top: 38px;
+      border-left: 6px solid #ccc;
+      padding-left: 10px;
+    }
+    h3{
+      font-size: 1.1rem;
+      margin-top: 24px;
+      border-left: 4px solid #ddd;
+      padding-left: 10px;
+    }
+    h4{
+      font-size: 1.02rem;
+      margin-top: 18px;
+      border-left: 3px solid #eee;
+      padding-left: 10px;
+      color:#333;
+    }
+    p{ margin: 12px 0; }
+    ul,ol{ margin-left: 24px; }
+    pre{
+      background: #fafafa;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 12px;
+      overflow-x: auto;
+      white-space: pre;
+    }
+    code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco,
+                   Consolas, "Noto Sans Mono", monospace;
+    }
+    table{
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 1100px;
+      margin: 12px 0;
+    }
+    th,td{
+      border: 1px solid #e0e0e0;
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th{ background:#fafafa; }
+    .key{
+      background: #eef5ff;
+      border-left: 6px solid #7fb3ff;
+      border-radius: 8px;
+      padding: 14px;
+      margin: 18px 0;
+      font-weight: bold;
+    }
+    .box{
+      background: #fcfcfc;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 14px;
+      margin: 18px 0;
+    }
+    .note{
+      background: #fff7e6;
+      border-left: 6px solid #f0c36d;
+      border-radius: 8px;
+      padding: 14px;
+      margin: 18px 0;
+    }
+    .summary{
+      background: #effaf3;
+      border-left: 6px solid #7ad39a;
+      border-radius: 8px;
+      padding: 14px;
+      margin: 24px 0;
+      font-weight: bold;
+    }
+    hr{ border: none; border-top: 1px solid #e6e6e6; margin: 28px 0; }
+  </style>
+</head>
+<body>
+
+<h1>インスタンスとクラス（精度確認・再考案版）</h1>
+<p>
+  このページは「インスタンスとクラス」の説明を、用語のブレや誤解が起きやすい点を中心に、
+  <strong>より正確・より伝わる構成</strong>に組み直したものです。
+</p>
+
+<div class="toc">
+  <strong>目次</strong>
+  <ol>
+    <li><a href="#intro">概論（この章のゴール）</a></li>
+    <li><a href="#defs">定義（重要用語）</a></li>
+    <li><a href="#world">仮想世界の作り方</a></li>
+    <li><a href="#why-separate">クラスとインスタンスが別である理由</a></li>
+    <li><a href="#ambiguity">「オブジェクト」「クラス」という言葉の曖昧さ</a></li>
+    <li><a href="#class-howto">クラスの定義方法（属性・操作・ルール）</a></li>
+    <li><a href="#effects">クラス定義による効果（クラス型変数の意味）</a></li>
+    <li><a href="#instance-use">インスタンスの利用方法</a></li>
+    <li><a href="#sample">サンプルプログラム</a></li>
+    <li><a href="#explain">プログラム解説（何が起きているか）</a></li>
+  </ol>
+</div>
+
+<hr>
+
+<section id="intro">
+  <h2>1. 概論（この章のゴール）</h2>
+  <p>
+    オブジェクト指向を学ぶとき、最初の関門は <strong>new の書き方</strong>ではありません。
+    本当の関門は、次の2点を区別して考えることです。
+  </p>
+
+  <div class="key">
+    クラス＝設計図（開発時に書く定義）<br>
+    インスタンス＝実体（実行時に生まれて動くもの）
+  </div>
+
+  <p>
+    この区別ができるようになると、以後の学習（配列・参照・メソッド・継承など）が一気につながります。
+    逆にここが曖昧なままだと、どの章でも同じ場所でつまずきます。
+  </p>
+</section>
+
+<hr>
+
+<section id="defs">
+  <h2>2. 定義（重要用語）</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>用語</th>
+        <th>正確な意味（初学者向け）</th>
+        <th>よくある誤解</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>クラス（class）</td>
+        <td>「どんなデータ（属性）と処理（操作）を持つか」を書いた定義。設計図。</td>
+        <td>クラス自体が“動くもの”だと思ってしまう</td>
+      </tr>
+      <tr>
+        <td>インスタンス（instance）</td>
+        <td>クラスから作られた実体。実行中にメモリ上に存在し、フィールド値を持つ。</td>
+        <td>インスタンスとクラスを同じものだと思ってしまう</td>
+      </tr>
+      <tr>
+        <td>オブジェクト（object）</td>
+        <td>多くの場面で「インスタンス」とほぼ同義。ただし文脈で意味が揺れやすい言葉。</td>
+        <td>オブジェクト＝必ずインスタンス、と決めつける</td>
+      </tr>
+      <tr>
+        <td>フィールド（属性）</td>
+        <td>インスタンスが持つデータ（状態）。例：name, score。</td>
+        <td>ローカル変数と同じ扱いだと思う</td>
+      </tr>
+      <tr>
+        <td>メソッド（操作）</td>
+        <td>インスタンスに対する処理（振る舞い）。例：show(), addScore()。</td>
+        <td>Mainに処理を全部書けばよいと思う</td>
+      </tr>
+      <tr>
+        <td>コンストラクタ</td>
+        <td>new した直後に1回だけ実行される初期化処理（クラス名と同名、戻り値なし）。</td>
+        <td>「初期値は全部フィールドで書くもの」と思う</td>
+      </tr>
+      <tr>
+        <td>クラス型変数</td>
+        <td>インスタンスそのものではなく、「インスタンスを指す情報（参照）」を持つ変数。</td>
+        <td>変数の中にインスタンスが丸ごと入っていると思う</td>
+      </tr>
+      <tr>
+        <td>static</td>
+        <td>インスタンスではなくクラスに属するメンバ（共有の値や処理）。</td>
+        <td>とりあえず付けるもの、と思う</td>
+      </tr>
+      <tr>
+        <td>final</td>
+        <td>再代入できない（定数や「変更させない」設計に使う）。</td>
+        <td>値が絶対に変化しない、と誤解する（参照型では注意）</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<hr>
+
+<section id="world">
+  <h2>3. 仮想世界の作り方</h2>
+
+  <h3>3-1. オブジェクトを生み出す手順</h3>
+  <p>
+    プログラムは「現実世界をそのままコピー」するのではなく、
+    必要な範囲だけ切り出して「仮想世界」を作ります。
+    その手順は、次の流れが基本です。
+  </p>
+
+  <div class="box">
+    <ol>
+      <li><strong>登場人物（モノ）</strong>を決める（例：Student）</li>
+      <li><strong>属性（情報）</strong>を決める（例：name, score）</li>
+      <li><strong>操作（できること）</strong>を決める（例：show, addScore）</li>
+      <li><strong>クラス</strong>として定義する（開発時に書く）</li>
+      <li>実行時に <strong>new</strong> で <strong>インスタンス</strong>を生成する</li>
+      <li>インスタンス同士が <strong>メソッド呼び出し</strong>でやり取りする</li>
+    </ol>
+  </div>
+
+  <div class="note">
+    <p>
+      Main に全部詰め込むと、Main が「入口」ではなく「全部屋の鍵」を握る黒幕になります。<br>
+      オブジェクト指向は、黒幕を作らないための考え方でもあります。
+    </p>
+  </div>
+</section>
+
+<hr>
+
+<section id="why-separate">
+  <h2>4. クラスとインスタンスが別である理由</h2>
+
+  <h3>4-1. 1つの設計図から何個でも実体を作るため</h3>
+  <div class="key">
+    クラスが1つでも、インスタンスは何個でも作れます。
+  </div>
+  <p>
+    例えば「学生」は何人も存在しますが、学生の設計（名前と点数を持つ等）は共通です。
+    共通部分をクラスにし、個別のデータをインスタンスに持たせることで、整理された構造になります。
+  </p>
+
+  <h3>4-2. 開発時（定義）と実行時（実体）を分けるため</h3>
+  <p>
+    クラスはソースコードとして書かれ、コンパイルされます（開発時の成果物）。
+    インスタンスは実行中にメモリ上に生成されます（実行時の存在物）。
+    この時点で、同じものではありません。
+  </p>
+</section>
+
+<hr>
+
+<section id="ambiguity">
+  <h2>5. 「オブジェクト」「クラス」という言葉の曖昧さ</h2>
+
+  <h3>5-1. オブジェクトという用語の曖昧さ</h3>
+  <div class="box">
+    <ul>
+      <li>一般的な会話：オブジェクト ＝ だいたいインスタンス</li>
+      <li>Java言語：<code>java.lang.Object</code>（すべてのクラスの親）という意味でも出てくる</li>
+    </ul>
+  </div>
+  <p>
+    学習段階では、まず「オブジェクト＝インスタンス」寄りで理解して大丈夫です。
+    ただし、後で <code>Object</code> クラスが出てきたときに混乱しないよう、
+    「言葉が二重に使われる」ことだけ覚えておくと安心です。
+  </p>
+
+  <h3>5-2. プログラムに登場する二つ（以上）の「クラス」</h3>
+  <p>
+    「クラス」という言葉も、実は文脈で意味が変わります。
+  </p>
+  <div class="box">
+    <ul>
+      <li><strong>① 設計図としてのクラス</strong>：<code>class Student { ... }</code></li>
+      <li><strong>② 型としてのクラス</strong>：<code>Student s;</code> の <code>Student</code></li>
+      <li><strong>（参考）③ Classクラス</strong>：<code>java.lang.Class</code>（クラス情報を表す仕組み、後半で登場しがち）</li>
+    </ul>
+  </div>
+
+  <div class="note">
+    <p>
+      初学者がよく混乱するのは②です。<br>
+      「Student はクラス（設計図）なのに、型としても書くの？」という疑問は自然です。<br>
+      答えは「同じ定義を、型として利用できるようになっているから」です。
+    </p>
+  </div>
+</section>
+
+<hr>
+
+<section id="class-howto">
+  <h2>6. クラスの定義方法（属性・操作・ルール）</h2>
+
+  <h3>6-1. クラスの宣言方法</h3>
+  <pre><code>public class クラス名 {
+    // フィールド（属性）
+    // コンストラクタ
+    // メソッド（操作）
+}</code></pre>
+
+  <h3>6-2. 登場人物クラスの作り方（属性と操作をまとめる）</h3>
+  <p>
+    「そのモノが持つ情報」と「その情報に関する処理」を同じクラスに置くことで、
+    データと処理の関係が分かりやすくなります。
+  </p>
+
+  <h3>6-3. 属性（フィールド）の宣言方法</h3>
+  <pre><code>public class Student {
+    String name;  // 属性（フィールド）
+    int score;    // 属性（フィールド）
+}</code></pre>
+
+  <div class="note">
+    <p><strong>精度ポイント（重要）：</strong></p>
+    <ul>
+      <li>フィールド（インスタンス変数）は、初期化しなくても「既定値」が入ります（例：int は 0、参照型は null）。</li>
+      <li>一方、メソッド内のローカル変数は、初期化しないと使えません（コンパイルエラー）。</li>
+    </ul>
+  </div>
+
+  <h3>6-4. 属性の初期値指定と定数フィールド</h3>
+  <p>
+    初期値はフィールド宣言時に指定できます。定数は通常 <code>static final</code> を使います。
+  </p>
+  <pre><code>public class Student {
+    String name = "未設定";  // 初期値
+    int score = 0;           // 初期値
+
+    static final int MAX_SCORE = 100; // 定数（クラスに1つ）
+}</code></pre>
+
+  <div class="note">
+    <p><strong>精度ポイント：</strong></p>
+    <ul>
+      <li><code>static final</code>：クラスに1つで全員共通の定数（例：上限値）。</li>
+      <li><code>final</code>（staticなし）：インスタンスごとに固定したい値に使います（後で学ぶケースも多いです）。</li>
+    </ul>
+  </div>
+
+  <h3>6-5. 操作（メソッド）の宣言方法</h3>
+  <pre><code>戻り値の型 メソッド名(引数...) {
+    // 処理
+}</code></pre>
+
+  <p>例：</p>
+  <pre><code>void show() {
+    System.out.println(name + " : " + score);
+}</code></pre>
+
+  <h3>6-6. コンストラクタ（初期化の入口）</h3>
+  <p>
+    コンストラクタは、インスタンス生成直後に1回だけ呼ばれる初期化処理です。
+    フィールド初期値だけでは足りない場合に、とても役立ちます。
+  </p>
+  <pre><code>public class Student {
+    String name;
+    int score;
+
+    // コンストラクタ（クラス名と同名、戻り値なし）
+    public Student(String name, int score) {
+        this.name = name;
+        this.score = score;
+    }
+}</code></pre>
+
+  <h3>6-7. クラス内メンバ名のルール（基本）</h3>
+  <div class="box">
+    <ul>
+      <li>クラス名：先頭大文字（PascalCase）例：Student, ScoreCalculator</li>
+      <li>フィールド・メソッド名：先頭小文字（camelCase）例：name, score, addScore</li>
+      <li>定数：大文字＋アンダースコア（UPPER_SNAKE_CASE）例：MAX_SCORE</li>
+      <li>意味が伝わる名前を付ける（x, a 連発は後で自分が泣きます）</li>
+    </ul>
+  </div>
+
+  <h3>コラム：「this. とは」</h3>
+  <div class="note">
+    <p>
+      <code>this</code> は「このインスタンス自身」を表します。<br>
+      フィールドと引数の名前が同じときに、<strong>どちらを指しているか</strong>を明確にできます。
+    </p>
+    <pre><code>public class Student {
+    String name;
+
+    public Student(String name) {
+        this.name = name; // フィールドname に 引数name を入れる
+    }
+}</code></pre>
+  </div>
+
+  <div class="summary">
+    クラスは「属性（データ）」と「操作（処理）」をセットで定義します。<br>
+    その結果、データと処理の関係が見えるようになり、Main に処理を詰め込まなくて済みます。
+  </div>
+</section>
+
+<hr>
+
+<section id="effects">
+  <h2>7. クラス定義による効果（クラス型変数の意味）</h2>
+
+  <h3>7-1. クラス定義によって可能になる2つのこと</h3>
+  <div class="box">
+    <ol>
+      <li><strong>同じ設計のインスタンスを何個でも生成できる</strong></li>
+      <li><strong>データと処理をひとまとまりとして扱える</strong>（責任の分離ができる）</li>
+    </ol>
+  </div>
+
+  <h3>7-2. クラス型変数とは</h3>
+  <p>
+    クラス型変数は「インスタンスそのもの」ではなく、
+    <strong>インスタンスを指す情報（参照）</strong>を持ちます。
+  </p>
+  <pre><code>Student s;     // 参照を入れる箱（この時点ではインスタンスはまだ無い）
+s = new Student("田中", 80);  // 参照が入る（この時点でインスタンスが生まれる）</code></pre>
+
+  <div class="note">
+    <p><strong>精度ポイント：</strong></p>
+    <ul>
+      <li><code>Student s;</code> は「Student を作った」ではありません。「Student を指す変数を用意した」です。</li>
+      <li>インスタンスが存在しない参照は <code>null</code> になることがあります（後で NullPointerException と関係します）。</li>
+    </ul>
+  </div>
+
+  <h3>7-3. クラス型変数が必要な理由</h3>
+  <p>
+    インスタンスは、作ったあとに操作しないと意味がありません。
+    その操作対象を指し示すために、クラス型変数が必要です。
+  </p>
+</section>
+
+<hr>
+
+<section id="instance-use">
+  <h2>8. インスタンスの利用方法</h2>
+
+  <div class="key">
+    手順はシンプルです：<br>
+    ① クラス定義 → ② 変数宣言 → ③ newで生成 → ④ フィールド/メソッド利用
+  </div>
+
+  <h3>8-1. インスタンスの生成方法</h3>
+  <pre><code>Student s = new Student("田中", 80);</code></pre>
+
+  <h3>8-2. インスタンスフィールドの利用</h3>
+  <pre><code>s.score = 85;
+System.out.println(s.name);</code></pre>
+
+  <h3>8-3. インスタンスメソッドの呼び出し</h3>
+  <pre><code>s.show();
+s.addScore(10);</code></pre>
+
+  <h3>8-4. インスタンス利用のまとめ</h3>
+  <div class="box">
+    <ol>
+      <li>クラスは「型」と「設計図」の両方の役割を持つ</li>
+      <li>new するとインスタンスが生まれる</li>
+      <li>変数はインスタンスを指す（参照を持つ）</li>
+      <li>メソッドは「そのインスタンスのデータ」を使って動く</li>
+    </ol>
+  </div>
+
+  <h3>8-5. オブジェクト思考のクラスは世界と繋がっている</h3>
+  <p>
+    クラスは単なるコードの箱ではなく、「現実の役割」を表現するための道具です。<br>
+    クラス分けが上手いほど、変更があっても壊れにくいプログラムになります。
+  </p>
+</section>
+
+<hr>
+
+<section id="sample">
+  <h2>9. サンプルプログラム（概論 → 定義 → 利用の総合例）</h2>
+
+  <p>
+    以下は、クラスとインスタンスの関係が分かりやすいように、次を全部入れた例です。
+  </p>
+  <ul>
+    <li>属性（フィールド）</li>
+    <li>コンストラクタ</li>
+    <li>定数フィールド（static final）</li>
+    <li>インスタンスメソッド（操作）</li>
+    <li>this の利用</li>
+  </ul>
+
+  <h3>Student.java</h3>
+  <pre><code>public class Student {
+    // 定数（クラスに1つ）
+    static final int MAX_SCORE = 100;
+
+    // 属性（インスタンスごとに別）
+    String name;
+    int score;
+
+    // コンストラクタ（初期化）
+    public Student(String name, int score) {
+        this.name = name;
+        this.score = score;
+    }
+
+    // 表示する（操作）
+    void show() {
+        System.out.println("名前: " + name);
+        System.out.println("点数: " + score);
+    }
+
+    // 点数を加算する（操作）
+    void addScore(int delta) {
+        int next = this.score + delta;
+
+        // 上限を超えないように調整（ルールをクラス内に閉じ込める）
+        if (next &gt; MAX_SCORE) {
+            next = MAX_SCORE;
+        }
+        if (next &lt; 0) {
+            next = 0;
+        }
+
+        this.score = next;
+    }
+}</code></pre>
+
+  <h3>Main.java</h3>
+  <pre><code>public class Main {
+    public static void main(String[] args) {
+
+        Student s1 = new Student("田中", 80);
+        Student s2 = new Student("佐藤", 95);
+
+        s1.addScore(10);   // 80 → 90
+        s2.addScore(10);   // 95 → 100（上限で止まる）
+
+        s1.show();
+        System.out.println("---");
+        s2.show();
+    }
+}</code></pre>
+
+  <h3>実行結果（例）</h3>
+  <pre><code>名前: 田中
+点数: 90
+---
+名前: 佐藤
+点数: 100</code></pre>
+</section>
+
+<hr>
+
+<section id="explain">
+  <h2>10. プログラム解説（何が起きているか）</h2>
+
+  <h3>解説1：クラスは「ルールを置く場所」</h3>
+  <p>
+    <code>Student</code> クラスには、学生が持つ情報（name, score）だけでなく、
+    点数のルール（0〜100に収める）も入っています。
+    これは、ルールを Main に書かないための重要な設計です。
+  </p>
+
+  <h3>解説2：new するとインスタンスが生まれる</h3>
+  <p>
+    <code>new Student("田中", 80)</code> を実行すると、
+    Student の実体（インスタンス）がメモリ上に作られます。
+    変数 <code>s1</code> は、そのインスタンスを指す参照を持ちます。
+  </p>
+
+  <h3>解説3：同じクラスから複数のインスタンスを作れる</h3>
+  <p>
+    <code>s1</code> と <code>s2</code> は、同じ Student クラスから作られています。
+    しかし、それぞれ別のインスタンスなので、score などの値は独立しています。
+  </p>
+
+  <h3>解説4：インスタンスメソッドは「そのインスタンス」に作用する</h3>
+  <p>
+    <code>s1.addScore(10)</code> は s1 の score を変更し、
+    <code>s2.addScore(10)</code> は s2 の score を変更します。
+    ここが「同じメソッドでも、誰が呼ぶかで結果が変わる」という点です。
+  </p>
+
+  <div class="summary">
+    ・クラスは設計図であり、属性と操作（ルール）をまとめる場所です。<br>
+    ・インスタンスは実行時に new で生まれる実体です。<br>
+    ・クラス型変数は参照を持ち、インスタンスを操作するために必要です。<br>
+    ・同じクラスから複数インスタンスを作り、役割分担でプログラムを組み立てます。
+  </div>
+</section>
+
+</body>
+</html>

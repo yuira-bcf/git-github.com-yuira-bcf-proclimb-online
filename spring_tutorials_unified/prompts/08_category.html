@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>中級8 カテゴリ/タグ機能</title>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="../style.css" />
+        <style>
+            .download-btn { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-left: auto; }
+            .code-header { display: flex; align-items: center; justify-content: space-between; }
+            .level-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; background: #fef9c3; color: #854d0e; margin-right: 8px; }
+            .tag { display: inline-block; background: #e0e7ff; color: #3730a3; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; margin: 2px; }
+        </style>
+    </head>
+    <body>
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="../1spring-framework-tutorial.html" class="nav-logo"><span class="nav-logo-icon">🌱</span><span>Spring入門</span></a>
+                <button class="nav-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 中級レベル</div>
+                    <ul class="nav-list">
+                        <li class="nav-item"><a href="06_pagination.html" class="nav-link"><span class="nav-chapter-num">6</span><span>ページネーション</span></a></li>
+                        <li class="nav-item"><a href="07_priority.html" class="nav-link"><span class="nav-chapter-num">7</span><span>優先度設定</span></a></li>
+                        <li class="nav-item"><a href="08_category.html" class="nav-link active"><span class="nav-chapter-num">8</span><span>カテゴリ/タグ機能</span></a></li>
+                        <li class="nav-item"><a href="09_deadline.html" class="nav-link"><span class="nav-chapter-num">9</span><span>期限日と期限切れ警告</span></a></li>
+                        <li class="nav-item"><a href="10_bulk_delete.html" class="nav-link"><span class="nav-chapter-num">10</span><span>一括削除機能</span></a></li>
+                        <li class="nav-item"><a href="11_csv_export.html" class="nav-link"><span class="nav-chapter-num">11</span><span>CSVエクスポート</span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <header class="chapter-header">
+                <div class="chapter-badge"><span class="level-badge">中級</span>📘 Intermediate</div>
+                <div class="chapter-number">8</div>
+                <h1 class="chapter-title">カテゴリ/タグ機能</h1>
+            </header>
+
+            <nav class="toc">
+                <h2 class="toc-title">📑 この章の内容</h2>
+                <ul class="toc-list">
+                    <li class="toc-item"><span class="toc-number">8-1</span><span>テーブル設計（1対多）</span></li>
+                    <li class="toc-item"><span class="toc-number">8-2</span><span>MyBatisでの結合</span></li>
+                    <li class="toc-item"><span class="toc-number">8-3</span><span>タグの表示</span></li>
+                </ul>
+            </nav>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 8-1</span>
+                    <h2 class="section-title">テーブル設計（1対多）</h2>
+                </div>
+                <div class="intro-text">
+                    <p>ToDoに<strong>複数のタグ</strong>を紐付ける機能を追加します。</p>
+                </div>
+                <h3>完成イメージ</h3>
+                <div style="margin: 1rem 0;">
+                    <span class="tag">仕事</span>
+                    <span class="tag">重要</span>
+                    <span class="tag">会議</span>
+                </div>
+
+                <div class="code-block" id="schema-category">
+                    <div class="code-header">
+                        <span class="code-title">schema.sql</span>
+                        <button class="download-btn" onclick="downloadCode('schema-category', 'schema_category.sql')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>-- カテゴリ/タグテーブル
+CREATE TABLE category (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL
+);
+
+-- ToDo-カテゴリ中間テーブル（多対多の場合）
+CREATE TABLE todo_category (
+    todo_id INT NOT NULL,
+    category_id INT NOT NULL,
+    PRIMARY KEY (todo_id, category_id),
+    FOREIGN KEY (todo_id) REFERENCES todo(id),
+    FOREIGN KEY (category_id) REFERENCES category(id)
+);
+
+-- 初期データ
+INSERT INTO category (name) VALUES ('仕事'), ('プライベート'), ('重要'), ('会議');</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 8-2</span>
+                    <h2 class="section-title">MyBatisでの結合</h2>
+                </div>
+                <div class="code-block" id="mapper-collection">
+                    <div class="code-header">
+                        <span class="code-title">TodoMapper.xml（collection使用）</span>
+                        <button class="download-btn" onclick="downloadCode('mapper-collection', 'TodoMapper_collection.xml')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>&lt;resultMap id="todoWithCategories" type="Todo"&gt;
+    &lt;id property="id" column="id"/&gt;
+    &lt;result property="title" column="title"/&gt;
+    &lt;result property="author" column="author"/&gt;
+    &lt;!-- 1対多のカテゴリリスト --&gt;
+    &lt;collection property="categories" ofType="Category"&gt;
+        &lt;id property="id" column="category_id"/&gt;
+        &lt;result property="name" column="category_name"/&gt;
+    &lt;/collection&gt;
+&lt;/resultMap&gt;
+
+&lt;select id="findAllWithCategories" resultMap="todoWithCategories"&gt;
+    SELECT
+        t.id, t.title, t.author,
+        c.id AS category_id, c.name AS category_name
+    FROM todo t
+    LEFT JOIN todo_category tc ON t.id = tc.todo_id
+    LEFT JOIN category c ON tc.category_id = c.id
+    ORDER BY t.id
+&lt;/select&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="todo-entity-cat">
+                    <div class="code-header">
+                        <span class="code-title">Todo.java（カテゴリリスト追加）</span>
+                        <button class="download-btn" onclick="downloadCode('todo-entity-cat', 'Todo_category.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>private List&lt;Category&gt; categories = new ArrayList&lt;&gt;();
+
+public List&lt;Category&gt; getCategories() {
+    return categories;
+}
+
+public void setCategories(List&lt;Category&gt; categories) {
+    this.categories = categories;
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 8-3</span>
+                    <h2 class="section-title">タグの表示</h2>
+                </div>
+                <div class="code-block" id="tag-display">
+                    <div class="code-header">
+                        <span class="code-title">index.html（タグ表示）</span>
+                        <button class="download-btn" onclick="downloadCode('tag-display', 'index_tags.html')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>&lt;td&gt;
+    &lt;span th:each="category : ${todo.categories}"
+          class="tag"
+          th:text="${category.name}"&gt;&lt;/span&gt;
+    &lt;span th:if="${#lists.isEmpty(todo.categories)}"
+          style="color: #94a3b8;"&gt;なし&lt;/span&gt;
+&lt;/td&gt;
+
+&lt;style&gt;
+.tag {
+    display: inline-block;
+    background: #e0e7ff;
+    color: #3730a3;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    margin: 2px;
+}
+&lt;/style&gt;</code></pre>
+                    </div>
+                </div>
+
+                <h3>MyBatis collection タグ</h3>
+                <table class="data-table">
+                    <thead><tr><th>属性</th><th>説明</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>property</code></td><td>Javaオブジェクトのフィールド名</td></tr>
+                        <tr><td><code>ofType</code></td><td>コレクション内の要素の型</td></tr>
+                        <tr><td><code>column</code></td><td>SQLの結果カラム名</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+
+        <footer class="footer"><p>Spring Framework 入門チュートリアル - 中級レベル</p></footer>
+
+        <div class="page-nav">
+            <a href="07_priority.html" class="page-nav-btn prev"><span>←</span><div><div class="page-nav-label">前の機能</div><div class="page-nav-title">優先度設定</div></div></a>
+            <a href="09_deadline.html" class="page-nav-btn next"><div><div class="page-nav-label">次の機能</div><div class="page-nav-title">期限日と期限切れ警告</div></div><span>→</span></a>
+        </div>
+
+        <script>
+            function toggleMenu() { document.querySelector(".nav-toggle").classList.toggle("active"); document.querySelector(".nav-menu").classList.toggle("active"); }
+            function downloadCode(id, filename) { const el = document.getElementById(id); const code = el.querySelector('code') || el.querySelector('pre'); const blob = new Blob([code.textContent], {type:'text/plain;charset=utf-8'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url); }
+        </script>
+    </body>
+</html>

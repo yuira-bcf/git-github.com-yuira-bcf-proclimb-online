@@ -1,0 +1,744 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>第16章 ToDoアプリ機能追加提案（学習テーマ別）</title>
+
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&family=M+PLUS+Rounded+1c:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="style.css" />
+        <style>
+            .level-badge {
+                display: inline-block;
+                padding: 4px 12px;
+                border-radius: 20px;
+                font-size: 0.85rem;
+                font-weight: 600;
+                margin-right: 8px;
+            }
+            .level-beginner { background: #dcfce7; color: #166534; }
+            .level-intermediate { background: #fef9c3; color: #854d0e; }
+            .level-advanced { background: #ffedd5; color: #9a3412; }
+            .level-expert { background: #fee2e2; color: #991b1b; }
+
+            .feature-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 1rem 0;
+            }
+            .feature-table th,
+            .feature-table td {
+                border: 1px solid #e2e8f0;
+                padding: 0.75rem;
+                text-align: left;
+            }
+            .feature-table th {
+                background: #f1f5f9;
+                font-weight: 600;
+                color: #334155;
+            }
+            .feature-table th:first-child {
+                width: 50px;
+                text-align: center;
+            }
+            .feature-table td:first-child {
+                text-align: center;
+                font-weight: 600;
+                color: #64748b;
+            }
+            .feature-table code {
+                background: #f1f5f9;
+                padding: 2px 6px;
+                border-radius: 4px;
+                font-size: 0.85rem;
+            }
+            .feature-table a {
+                color: #3b82f6;
+                text-decoration: none;
+            }
+            .feature-table a:hover {
+                text-decoration: underline;
+            }
+
+            .course-card {
+                background: #f8fafc;
+                border: 2px solid #e2e8f0;
+                border-radius: 12px;
+                padding: 1.5rem;
+                margin: 1rem 0;
+            }
+            .course-card h4 {
+                margin: 0 0 1rem 0;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .course-steps {
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+            .course-steps li {
+                padding: 0.5rem 0;
+                padding-left: 1.5rem;
+                position: relative;
+                border-left: 2px solid #e2e8f0;
+                margin-left: 0.5rem;
+            }
+            .course-steps li:last-child {
+                border-left-color: transparent;
+            }
+            .course-steps li::before {
+                content: '';
+                position: absolute;
+                left: -6px;
+                top: 0.75rem;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background: #3b82f6;
+            }
+            .course-steps li:last-child::before {
+                background: #22c55e;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- グローバルナビゲーション -->
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="1spring-framework-tutorial.html" class="nav-logo">
+                    <span class="nav-logo-icon">🌱</span>
+                    <span>Spring入門</span>
+                </a>
+                <button class="nav-toggle" onclick="toggleMenu()" aria-label="メニュー">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 章を選択</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="0promptprograming.html" class="nav-link">
+                                <span class="nav-chapter-num">0</span>
+                                <span>プロンプトプログラミング</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="1spring-framework-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">1</span>
+                                <span>Spring Frameworkについて知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="2java_basics.html" class="nav-link">
+                                <span class="nav-chapter-num">2</span>
+                                <span>基礎知識を身に付けよう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="3di-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">3</span>
+                                <span>DIを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="4aop-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">4</span>
+                                <span>AOPを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="5mvc-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">5</span>
+                                <span>MVCを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="6thymeleaf-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">6</span>
+                                <span>Thymeleafを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="7ServerDataSubmission.html" class="nav-link">
+                                <span class="nav-chapter-num">7</span>
+                                <span>サーバーへのデータ送信</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="8Validation_Textbook_Rewrite.html" class="nav-link">
+                                <span class="nav-chapter-num">8</span>
+                                <span>バリデーション</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="9_MyBatis_Tutorial__2_.html" class="nav-link">
+                                <span class="nav-chapter-num">9</span>
+                                <span>MyBatisチュートリアル</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="10app-preparation-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">10</span>
+                                <span>アプリケーション作成準備</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="11-database-operations.html" class="nav-link">
+                                <span class="nav-chapter-num">11</span>
+                                <span>データベース操作</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="12service-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">12</span>
+                                <span>サービス層</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="13_application_layer.html" class="nav-link">
+                                <span class="nav-chapter-num">13</span>
+                                <span>アプリケーション層</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="14_validation.html" class="nav-link">
+                                <span class="nav-chapter-num">14</span>
+                                <span>バリデーション（応用）</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="15-spring-security-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">15</span>
+                                <span>Spring Security</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="16extends-todo.html" class="nav-link active">
+                                <span class="nav-chapter-num">16</span>
+                                <span>機能追加提案</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <!-- ヘッダー -->
+            <header class="chapter-header">
+                <div class="chapter-badge">📘 Chapter</div>
+                <div class="chapter-number">16</div>
+                <h1 class="chapter-title">ToDoアプリ機能追加提案（学習テーマ別）</h1>
+            </header>
+
+            <!-- 目次 -->
+            <nav class="toc">
+                <h2 class="toc-title">📑 この章の内容</h2>
+                <ul class="toc-list">
+                    <li class="toc-item">
+                        <span class="toc-number">16-1</span>
+                        <span>初級レベル（基礎固め）</span>
+                    </li>
+                    <li class="toc-item">
+                        <span class="toc-number">16-2</span>
+                        <span>中級レベル（実践的な機能）</span>
+                    </li>
+                    <li class="toc-item">
+                        <span class="toc-number">16-3</span>
+                        <span>上級レベル（Spring機能の深掘り）</span>
+                    </li>
+                    <li class="toc-item">
+                        <span class="toc-number">16-4</span>
+                        <span>発展レベル（実務レベル）</span>
+                    </li>
+                    <li class="toc-item">
+                        <span class="toc-number">16-5</span>
+                        <span>おすすめの学習順序</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- 概要 -->
+            <section class="section">
+                <div class="intro-text">
+                    <p>
+                        ToDoアプリをベースに、<strong>段階的にSpringの技術を学べる機能追加</strong>を提案します。
+                    </p>
+                    <p>
+                        各機能は学習できるSpring技術と紐づいており、自分のレベルに合わせて挑戦できます。
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title">この章の活用方法</span>
+                    </div>
+                    <p>ToDoアプリの基本機能（一覧・登録・確認・完了）を完成させた後、<br>
+                    興味のある機能から順番に追加していくことで、Spring技術を体系的に学べます。</p>
+                </div>
+            </section>
+
+            <!-- セクション 16-1 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 16-1</span>
+                    <h2 class="section-title">
+                        <span class="level-badge level-beginner">初級</span>
+                        初級レベル（基礎固め）
+                    </h2>
+                </div>
+
+                <div class="intro-text">
+                    <p>
+                        Spring MVCとThymeleafの基本を固めるための機能です。<br>
+                        ToDoアプリの使い勝手を向上させながら、基礎技術を習得できます。
+                    </p>
+                </div>
+
+                <table class="feature-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>機能</th>
+                            <th>学習できるSpring技術</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td><a href="prompts/01_validation.html"><strong>入力バリデーション</strong></a></td>
+                            <td>
+                                <code>@Valid</code>, <code>@NotBlank</code>, <code>BindingResult</code>, エラーメッセージ表示
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td><a href="prompts/02_status.html"><strong>完了/未完了ステータス</strong></a></td>
+                            <td>
+                                Boolean型の扱い、条件分岐表示（Thymeleaf <code>th:if</code>）
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td><a href="prompts/03_search.html"><strong>検索機能（タイトル検索）</strong></a></td>
+                            <td>
+                                <code>@RequestParam</code>、動的SQLの基礎
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td><a href="prompts/04_sort.html"><strong>ソート機能</strong></a></td>
+                            <td>
+                                ORDER BY、リンクパラメータの受け渡し
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td><a href="prompts/05_delete_dialog.html"><strong>削除確認ダイアログ</strong></a></td>
+                            <td>
+                                JavaScript連携、<code>th:onclick</code>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="module-list">
+                    <div class="module-item">
+                        <div class="module-icon">📝</div>
+                        <div class="module-content">
+                            <h4>学習のポイント</h4>
+                            <p>初級機能は<strong>1つずつ順番に</strong>実装することをおすすめします。<br>
+                            特にバリデーションは多くの機能で使用するため、最初に習得しましょう。</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- セクション 16-2 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 16-2</span>
+                    <h2 class="section-title">
+                        <span class="level-badge level-intermediate">中級</span>
+                        中級レベル（実践的な機能）
+                    </h2>
+                </div>
+
+                <div class="intro-text">
+                    <p>
+                        実際のWebアプリケーションでよく使われる機能です。<br>
+                        データベース操作やファイル処理など、実践的なスキルを身につけられます。
+                    </p>
+                </div>
+
+                <table class="feature-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>機能</th>
+                            <th>学習できるSpring技術</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>6</td>
+                            <td><a href="prompts/06_pagination.html"><strong>ページネーション</strong></a></td>
+                            <td>
+                                <code>Pageable</code>, <code>Page&lt;T&gt;</code>, ページャーUI実装
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td><a href="prompts/07_priority.html"><strong>優先度設定（高/中/低）</strong></a></td>
+                            <td>
+                                Enum型、<code>&lt;select&gt;</code>タグ、条件付きスタイル
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td><a href="prompts/08_category.html"><strong>カテゴリ/タグ機能</strong></a></td>
+                            <td>
+                                テーブル結合（1対多）、MyBatis <code>&lt;collection&gt;</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td><a href="prompts/09_deadline.html"><strong>期限日と期限切れ警告</strong></a></td>
+                            <td>
+                                日付比較ロジック、条件付きCSS表示
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td><a href="prompts/10_bulk_delete.html"><strong>一括削除機能</strong></a></td>
+                            <td>
+                                チェックボックス、配列パラメータ <code>@RequestParam List&lt;Integer&gt;</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>11</td>
+                            <td><a href="prompts/11_csv_export.html"><strong>CSVエクスポート</strong></a></td>
+                            <td>
+                                ファイルダウンロード、<code>HttpServletResponse</code>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="warning-box">
+                    <div class="warning-box-header">
+                        <span class="warning-box-icon">⚠️</span>
+                        <span class="warning-box-title">前提知識</span>
+                    </div>
+                    <p>中級レベルの機能は、初級レベルの技術（特にバリデーション、検索機能）を<br>
+                    理解していることが前提です。不安な場合は初級から取り組みましょう。</p>
+                </div>
+            </section>
+
+            <!-- セクション 16-3 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 16-3</span>
+                    <h2 class="section-title">
+                        <span class="level-badge level-advanced">上級</span>
+                        上級レベル（Spring機能の深掘り）
+                    </h2>
+                </div>
+
+                <div class="intro-text">
+                    <p>
+                        Springフレームワークの高度な機能を学びます。<br>
+                        セキュリティ、AOP、例外処理など、本格的なアプリ開発に必須の技術です。
+                    </p>
+                </div>
+
+                <table class="feature-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>機能</th>
+                            <th>学習できるSpring技術</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>12</td>
+                            <td><a href="prompts/12_login.html"><strong>ログイン認証</strong></a></td>
+                            <td>
+                                Spring Security基礎、セッション管理
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>13</td>
+                            <td><a href="prompts/13_user_todo.html"><strong>ユーザー別ToDo管理</strong></a></td>
+                            <td>
+                                認証ユーザー情報取得、<code>@AuthenticationPrincipal</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>14</td>
+                            <td><a href="prompts/14_role.html"><strong>ロール別権限制御</strong></a></td>
+                            <td>
+                                <code>@PreAuthorize</code>, 管理者/一般ユーザー分離
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>15</td>
+                            <td><a href="prompts/15_rest_api.html"><strong>REST API化</strong></a></td>
+                            <td>
+                                <code>@RestController</code>, <code>@ResponseBody</code>, JSON返却
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>16</td>
+                            <td><a href="prompts/16_exception.html"><strong>例外ハンドリング</strong></a></td>
+                            <td>
+                                <code>@ControllerAdvice</code>, <code>@ExceptionHandler</code>, エラーページ
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>17</td>
+                            <td><a href="prompts/17_aop.html"><strong>AOPでログ出力</strong></a></td>
+                            <td>
+                                <code>@Aspect</code>, <code>@Before</code>, <code>@After</code>, 処理時間計測
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>18</td>
+                            <td><a href="prompts/18_transaction.html"><strong>トランザクション管理</strong></a></td>
+                            <td>
+                                <code>@Transactional</code>, ロールバック確認
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="module-list">
+                    <div class="module-item">
+                        <div class="module-icon">🔐</div>
+                        <div class="module-content">
+                            <h4>セキュリティ機能について</h4>
+                            <p>12〜14番の機能は連続して実装することをおすすめします。<br>
+                            ログイン → ユーザー別データ → 権限制御の順で進めると理解しやすいです。</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- セクション 16-4 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 16-4</span>
+                    <h2 class="section-title">
+                        <span class="level-badge level-expert">発展</span>
+                        発展レベル（実務レベル）
+                    </h2>
+                </div>
+
+                <div class="intro-text">
+                    <p>
+                        実務で求められる高度な機能です。<br>
+                        ファイル操作、国際化、テスト、非同期処理など、プロフェッショナルなスキルを習得できます。
+                    </p>
+                </div>
+
+                <table class="feature-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>機能</th>
+                            <th>学習できるSpring技術</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>19</td>
+                            <td><strong>ファイル添付機能</strong></td>
+                            <td>
+                                <code>MultipartFile</code>, ファイルアップロード/ダウンロード
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>20</td>
+                            <td><strong>国際化（多言語対応）</strong></td>
+                            <td>
+                                <code>MessageSource</code>, messages_ja.properties, <code>LocaleResolver</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>21</td>
+                            <td><strong>単体テスト</strong></td>
+                            <td>
+                                JUnit5, <code>@SpringBootTest</code>, Mockito
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>22</td>
+                            <td><strong>非同期処理</strong></td>
+                            <td>
+                                <code>@Async</code>, 完了通知
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>23</td>
+                            <td><strong>メール送信通知</strong></td>
+                            <td>
+                                <code>JavaMailSender</code>, 期限リマインダー
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>24</td>
+                            <td><strong>監査ログ機能</strong></td>
+                            <td>
+                                誰がいつ何を変更したか記録、監査テーブル
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="info-box">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title">発展レベルの学習について</span>
+                    </div>
+                    <p>発展レベルの機能は、必ずしもすべてを実装する必要はありません。<br>
+                    <strong>興味のある分野</strong>や<strong>業務で必要な技術</strong>から選んで取り組みましょう。</p>
+                </div>
+            </section>
+
+            <!-- セクション 16-5 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 16-5</span>
+                    <h2 class="section-title">おすすめの学習順序</h2>
+                </div>
+
+                <div class="intro-text">
+                    <p>
+                        目的別に3つの学習コースを用意しました。<br>
+                        自分の目標に合わせてコースを選んでください。
+                    </p>
+                </div>
+
+                <!-- 基礎コース -->
+                <div class="course-card" style="border-left: 4px solid #22c55e;">
+                    <h4>
+                        <span style="font-size: 1.5rem;">📗</span>
+                        基礎コース（5章構成）
+                    </h4>
+                    <p style="color: #64748b; margin-bottom: 1rem;">Spring MVCの基本を網羅的に学ぶコース</p>
+                    <ul class="course-steps">
+                        <li><strong>1章:</strong> バリデーション</li>
+                        <li><strong>2章:</strong> 検索・ソート</li>
+                        <li><strong>3章:</strong> ページネーション</li>
+                        <li><strong>4章:</strong> 例外ハンドリング</li>
+                        <li><strong>5章:</strong> AOPログ出力</li>
+                    </ul>
+                </div>
+
+                <!-- セキュリティコース -->
+                <div class="course-card" style="border-left: 4px solid #f59e0b;">
+                    <h4>
+                        <span style="font-size: 1.5rem;">🔐</span>
+                        セキュリティコース（3章構成）
+                    </h4>
+                    <p style="color: #64748b; margin-bottom: 1rem;">Spring Securityを使った認証・認可を学ぶコース</p>
+                    <ul class="course-steps">
+                        <li><strong>1章:</strong> ログイン認証</li>
+                        <li><strong>2章:</strong> ユーザー別データ管理</li>
+                        <li><strong>3章:</strong> ロール別権限制御</li>
+                    </ul>
+                </div>
+
+                <!-- API開発コース -->
+                <div class="course-card" style="border-left: 4px solid #8b5cf6;">
+                    <h4>
+                        <span style="font-size: 1.5rem;">🔌</span>
+                        API開発コース（3章構成）
+                    </h4>
+                    <p style="color: #64748b; margin-bottom: 1rem;">REST APIとフロントエンド連携を学ぶコース</p>
+                    <ul class="course-steps">
+                        <li><strong>1章:</strong> REST API基礎</li>
+                        <li><strong>2章:</strong> Vue.js/React連携</li>
+                        <li><strong>3章:</strong> JWT認証</li>
+                    </ul>
+                </div>
+
+                <!-- コラム -->
+                <div class="column">
+                    <div class="column-header">
+                        <span class="column-badge">Column</span>
+                        <span class="column-title">学習のコツ</span>
+                    </div>
+                    <p>機能追加を進める際のポイントを紹介します。</p>
+                    <ol class="step-list">
+                        <li><strong>1機能ずつ完成させる</strong>：複数の機能を同時に進めず、1つずつ動作確認しながら進める</li>
+                        <li><strong>Gitでバージョン管理</strong>：機能ごとにコミットして、いつでも戻れるようにする</li>
+                        <li><strong>エラーを恐れない</strong>：エラーメッセージを読んで原因を調べる習慣をつける</li>
+                        <li><strong>公式ドキュメントを参照</strong>：困ったらSpring公式ドキュメントを確認する</li>
+                        <li><strong>AIを活用する</strong>：プロンプトプログラミングで効率的にコードを生成する</li>
+                    </ol>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-box-header">
+                        <span class="warning-box-icon">⚠️</span>
+                        <span class="warning-box-title">注意事項</span>
+                    </div>
+                    <p>各機能の実装には、これまでの章で学んだ知識が必要です。<br>
+                    わからない部分があれば、該当する章に戻って復習しましょう。</p>
+                </div>
+            </section>
+        </div>
+
+        <footer class="footer">
+            <p>Spring Framework 入門チュートリアル</p>
+        </footer>
+
+        <div class="page-nav">
+            <a href="15-spring-security-tutorial.html" class="page-nav-btn prev">
+                <span>←</span>
+                <div>
+                    <div class="page-nav-label">前の章</div>
+                    <div class="page-nav-title">第15章</div>
+                </div>
+            </a>
+        </div>
+
+        <script>
+            function toggleMenu() {
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+                toggle.classList.toggle("active");
+                menu.classList.toggle("active");
+            }
+
+            document.addEventListener("click", function (e) {
+                const nav = document.querySelector(".global-nav");
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+
+                if (!nav.contains(e.target) && menu.classList.contains("active")) {
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+
+            window.addEventListener("resize", function () {
+                if (window.innerWidth >= 1024) {
+                    const toggle = document.querySelector(".nav-toggle");
+                    const menu = document.querySelector(".nav-menu");
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+        </script>
+    </body>
+</html>

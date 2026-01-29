@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>オブジェクト指向を化粧品（コスメ）で説明</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body{
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", "Hiragino Kaku Gothic ProN",
+                   "Yu Gothic", "Meiryo", sans-serif;
+      line-height: 1.75;
+      margin: 0;
+      padding: 24px;
+      max-width: 960px;
+    }
+    header { margin-bottom: 18px; }
+    h1 { font-size: 1.6rem; margin: 0 0 8px; }
+    h2 { font-size: 1.2rem; margin-top: 26px; }
+    p { margin: 10px 0; }
+    ul { margin: 10px 0 10px 1.2em; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+    pre {
+      padding: 14px;
+      border-radius: 10px;
+      overflow: auto;
+      border: 1px solid rgba(127,127,127,.35);
+      background: rgba(127,127,127,.08);
+    }
+    .grid{
+      display: grid;
+      gap: 10px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 760px){
+      .grid{ grid-template-columns: 1fr 1fr; }
+    }
+    .card{
+      border: 1px solid rgba(127,127,127,.35);
+      border-radius: 12px;
+      padding: 14px 16px;
+      background: rgba(127,127,127,.04);
+    }
+    .note{
+      padding: 12px 14px;
+      border-left: 4px solid rgba(127,127,127,.6);
+      background: rgba(127,127,127,.06);
+      border-radius: 6px;
+      margin: 14px 0;
+    }
+    .kbd{
+      display: inline-block;
+      padding: 0 .4em;
+      border: 1px solid rgba(127,127,127,.45);
+      border-bottom-width: 2px;
+      border-radius: 6px;
+      background: rgba(127,127,127,.08);
+      font-family: ui-monospace, monospace;
+      font-size: .95em;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>オブジェクト指向を「化粧品（コスメ）」で例える</h1>
+    <p>コスメで考えると、オブジェクト指向はだいぶ現実的に見える。ポンプは正義。</p>
+  </header>
+
+  <main>
+    <section>
+      <h2>クラスとオブジェクト</h2>
+      <div class="grid">
+        <div class="card">
+          <p><strong>クラス（Class）＝商品の設計・レシピ（企画書＋処方）</strong></p>
+          <p>例：<em>この化粧水は保湿メイン、香り控えめ、200ml</em>みたいな仕様（型）。</p>
+        </div>
+        <div class="card">
+          <p><strong>オブジェクト（Object）＝実物の1本</strong></p>
+          <p>あなたの棚にある<strong>その1本</strong>。同じ商品（同じクラス）から、店に何百本も並ぶ。</p>
+        </div>
+      </div>
+      <p>例：</p>
+      <ul>
+        <li>クラス：<code>MoistLotion</code>（保湿化粧水）</li>
+        <li>オブジェクト：<code>my_lotion_1</code>（家の1本）、<code>store_lotion_254</code>（店の254本目）</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>プロパティ（属性）とメソッド（振る舞い）</h2>
+      <div class="grid">
+        <div class="card">
+          <p><strong>属性（プロパティ）＝商品が持ってるデータ</strong></p>
+          <ul>
+            <li><code>brand</code>（ブランド）</li>
+            <li><code>volume_ml</code>（容量）</li>
+            <li><code>ingredients</code>（成分）</li>
+            <li><code>skin_type</code>（対象肌質）</li>
+            <li><code>opened_at</code>（開封日）</li>
+            <li><code>remaining_ml</code>（残量）</li>
+            <li><code>expiry_date</code>（使用期限）</li>
+          </ul>
+        </div>
+        <div class="card">
+          <p><strong>メソッド（メンバ関数）＝その商品でできる操作</strong></p>
+          <ul>
+            <li><code>open()</code>：開封</li>
+            <li><code>dispense(amount)</code>：指定量出す（ポンプ押すとか）</li>
+            <li><code>apply(area)</code>：塗る（顔、頬、Tゾーン…）</li>
+            <li><code>close()</code>：フタを閉める</li>
+            <li><code>is_expired()</code>：期限切れチェック</li>
+          </ul>
+        </div>
+      </div>
+      <p>要するに、<strong>データ（属性）＋操作（メソッド）をセットで持つ</strong>のがオブジェクト。</p>
+    </section>
+
+    <section>
+      <h2>カプセル化（Encapsulation）</h2>
+      <p><strong>「中身（処方や製造工程）は触らせない」</strong>がカプセル化。</p>
+      <p>ユーザーが処方（配合比率）を直接いじれたら、品質も安全も崩壊する。</p>
+      <div class="note">
+        <p>外から触れるのは <span class="kbd">open</span> / <span class="kbd">dispense</span> / <span class="kbd">apply</span> みたいな“正規ルート”だけ。<br />
+        ざっくり言うと：<strong>「中身は触るな。ポンプ押して塗れ。」</strong></p>
+      </div>
+    </section>
+
+    <section>
+      <h2>継承（Inheritance）</h2>
+      <p><strong>共通の化粧品カテゴリ</strong>を親クラスにして、共通機能をまとめる。</p>
+      <ul>
+        <li>親クラス：<code>Cosmetic</code>（共通：<code>brand</code>, <code>volume_ml</code>, <code>opened_at</code>, <code>expiry_date</code> など）</li>
+        <li>共通メソッド：<code>open()</code>, <code>close()</code>, <code>is_expired()</code></li>
+        <li>子クラス例：<code>Lotion</code>, <code>Serum</code>, <code>Sunscreen</code>, <code>Foundation</code></li>
+      </ul>
+      <p>親で共通を持って、子で違いを足す（または上書きする）。</p>
+    </section>
+
+    <section>
+      <h2>ポリモーフィズム（Polymorphism）</h2>
+      <p><strong>同じ <code>apply()</code> でも、アイテムによってやり方が違う</strong>。</p>
+      <ul>
+        <li>化粧水：全顔に馴染ませる</li>
+        <li>美容液：気になる箇所に集中</li>
+        <li>日焼け止め：ムラなく一定量＋塗り直し想定</li>
+        <li>ファンデ：スポンジ/ブラシ等で仕上げが変わる</li>
+      </ul>
+      <p>呼び出し側は「全部まとめて <code>apply()</code>」でいい。中で各クラスが自分の流儀で処理する。</p>
+    </section>
+
+    <section>
+      <h2>コンポジション（Composition）</h2>
+      <p><strong>スキンケアルーティンは「親子関係」じゃなく「組み合わせ」</strong>。</p>
+      <p>朝の流れ（例）：洗顔 → 化粧水 → 美容液 → 乳液/クリーム → 日焼け止め。</p>
+      <div class="note">
+        <p>「朝のスキンケアは化粧水の一種です」みたいな継承を始めると意味不明。<br />
+        こういうときは、部品（コスメ）を持って組む<strong>コンポジション</strong>が正解。</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>ざっくり擬似コード（イメージ）</h2>
+      <pre><code>class Cosmetic:
+    def open(self): ...
+    def close(self): ...
+    def is_expired(self): ...
+
+class Lotion(Cosmetic):
+    def apply(self, area="face"): ...
+
+class Sunscreen(Cosmetic):
+    def apply(self, area="face"):
+        # ムラなく一定量、塗り直し想定
+        ...
+
+def morning(cosmetics: list[Cosmetic]):
+    for c in cosmetics:
+        c.apply("face")   # 同じ呼び方でOK（中身はそれぞれ）
+
+routine = [Lotion(), Sunscreen()]
+morning(routine)</code></pre>
+    </section>
+
+    <section>
+      <h2>まとめ（コスメで覚える）</h2>
+      <ul>
+        <li><strong>クラス</strong>：化粧品の仕様（処方・設計）</li>
+        <li><strong>オブジェクト</strong>：あなたの棚のその1本</li>
+        <li><strong>属性</strong>：容量、残量、成分、開封日…</li>
+        <li><strong>メソッド</strong>：開ける、出す、塗る、期限確認…</li>
+        <li><strong>カプセル化</strong>：処方は隠して、使い方だけ公開</li>
+        <li><strong>継承</strong>：共通特性を親にまとめる</li>
+        <li><strong>ポリモーフィズム</strong>：<code>apply()</code> は同じでも挙動は違う</li>
+        <li><strong>コンポジション</strong>：ルーティンは組み合わせ</li>
+      </ul>
+      <p>オブジェクト指向を間違えると「化粧水クラス継承ツリーが10段」とかいう地獄が始まる。肌じゃなくて設計が荒れる。</p>
+    </section>
+  </main>
+</body>
+</html>

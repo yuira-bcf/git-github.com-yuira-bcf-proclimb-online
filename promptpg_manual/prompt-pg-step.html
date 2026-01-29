@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>使い方（最短手順）</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #fafafa;
+      --surface: #ffffff;
+      --text: #222222;
+      --muted: #5f6368;
+      --accent: #1b5e20;
+      --border: #e0e0e0;
+      --code-bg: #f3f4f6;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+      line-height: 1.7;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    .layout {
+      width: 100%;
+      margin: 0;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      gap: 16px;
+    }
+
+    .toc {
+      position: sticky;
+      top: 16px;
+      align-self: start;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 14px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    }
+
+    .toc h2 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      color: var(--muted);
+    }
+
+    .toc ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .toc li {
+      margin: 6px 0;
+    }
+
+    .toc a {
+      color: var(--text);
+      text-decoration: none;
+      display: block;
+      padding: 6px 8px;
+      border-radius: 6px;
+    }
+
+    .toc a:hover,
+    .toc a:focus {
+      background: var(--code-bg);
+    }
+
+    section {
+      max-width: none;
+      margin: 0 0 16px;
+      padding: 24px 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    }
+
+    h1 {
+      margin: 0 0 16px;
+      font-size: 28px;
+      border-left: 6px solid var(--accent);
+      padding-left: 12px;
+    }
+
+    h2 {
+      margin: 24px 0 12px;
+      font-size: 22px;
+    }
+
+    h3 {
+      margin: 20px 0 8px;
+      font-size: 18px;
+      color: var(--accent);
+    }
+
+    h4 {
+      margin: 16px 0 6px;
+      font-size: 16px;
+      color: var(--muted);
+    }
+
+    p {
+      margin: 10px 0;
+    }
+
+    ul,
+    ol {
+      margin: 8px 0 12px 20px;
+      padding: 0;
+    }
+
+    li {
+      margin: 6px 0;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      background: var(--code-bg);
+      padding: 0 4px;
+      border-radius: 4px;
+    }
+
+    pre {
+      background: var(--code-bg);
+      padding: 12px;
+      border-radius: 6px;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+    }
+
+    pre code {
+      background: transparent;
+      padding: 0;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 24px 0;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .toc {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <nav class="toc">
+      <h2>目次</h2>
+      <div class="content">
+        <ul>
+          <li>
+            <a href="#toc-top">使い方（最短手順）</a>
+          </li>
+          <li>
+            <a href="#step-1">1. PROMPT_00_BASELINE</a>
+          </li>
+          <li>
+            <a href="#step-2">2. PROMPT_01_SCOPE〜04_DESIGN</a>
+          </li>
+          <li>
+            <a href="#step-3">3. PROMPT_05_IMPLEMENTATION</a>
+          </li>
+          <li>
+            <a href="#step-4">4. PROMPT_06_VERIFICATION</a>
+          </li>
+          <li>
+            <a href="#step-5">5. PROMPT_07〜08</a>
+          </li>
+          <li>
+            <a href="#step-6">6. PROMPT_09_ASSETIZATION</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <main>
+      <!-- セクション概要: 使い方（最短手順）の全体フロー -->
+      <section>
+        <h2 id="toc-top">使い方（最短手順）</h2>
+        <div class="content">
+          <ol>
+            <li>PROMPT_00_BASELINE.md を貼って、AIから「最終版Baseline」を得ます</li>
+            <li>続けて PROMPT_01_SCOPE.md → PROMPT_02_REQUIREMENTS.md → PROMPT_03_ASSUMPTIONS.md → PROMPT_04_DESIGN.md</li>
+            <li>PROMPT_05_IMPLEMENTATION.md でコード一式を出させます</li>
+            <li>PROMPT_06_VERIFICATION.md でテストを出させます</li>
+            <li>必要なら PROMPT_07_REVIEW.md → PROMPT_08_CHANGE_CONTROL.md で改修します</li>
+            <li>最後に PROMPT_09_ASSETIZATION.md で README/CHANGELOG まで固めます</li>
+          </ol>
+        </div>
+      </section>
+      <!-- セクション概要: PROMPT_00_BASELINE（最終版Baselineの取得） -->
+      <section>
+        <h2 id="step-1">1. PROMPT_00_BASELINE.md を貼って、AIから「最終版Baseline」を得ます</h2>
+        <div class="content">
+          <p>「最終版Baseline」は “以後ずっと守らせるルールの正本（Single Source of Truth）” なので、扱いは 設定ファイルと同じにします。</p>
+          <p>結論から言うと、保存先は 2段構えが一番安定します。</p>
+          <h3>1) 最終版Baselineのおすすめ保存先（結論）</h3>
+          <ul>
+            <li>保存先A（正本）
+              <ul>
+                <li><code>prompts/PROMPT_00_BASELINE.md</code></li>
+                <li>→ Baselineの全文（詳細版）をここに固定します。Git管理の対象です。</li>
+              </ul>
+            </li>
+            <li>保存先B（Codexに“自動で効かせる用”）
+              <ul>
+                <li>リポジトリ直下の <code>AGENTS.md</code></li>
+                <li>→ <strong>短い要約版（守るべき要点だけ）</strong>を書きます。</li>
+                <li>Codexはプロジェクト内の <code>AGENTS.md</code> を探索してガイドとして使う設計です。</li>
+              </ul>
+            </li>
+          </ul>
+          <p>つまり、</p>
+          <ul>
+            <li><code>PROMPT_00_BASELINE.md</code> = 仕様書（詳細）</li>
+            <li><code>AGENTS.md</code> = 現場ルール（短く強制）</li>
+          </ul>
+          <p>の関係にすると、運用が破綻しません。</p>
+          <p>※さらに個人の全リポジトリ共通ルールが欲しいなら <code>~/.codex/AGENTS.md</code> も使えます（グローバル既定）。</p>
+          <h3>2) どうやって「最終版Baseline」を使うのか（実務運用）</h3>
+          <ul>
+            <li>パターン1：AGENTS.mdで常時適用（最もおすすめ）
+              <ul>
+                <li>最終版Baseline（全文）を <code>prompts/PROMPT_00_BASELINE.md</code> に保存</li>
+                <li>その要点（禁止事項・品質・出力形式など）を <code>AGENTS.md</code> に要約して保存</li>
+                <li>以後は、Codexに普通に依頼するだけで <code>AGENTS.md</code> のルールが効きやすい構成になります</li>
+              </ul>
+            </li>
+            <li>パターン2：VSCode内で「@ファイル参照」で毎回読ませる（便利）
+              <ul>
+                <li>Codex IDE拡張は 開いているファイル／選択範囲／@file参照を文脈にできます</li>
+              </ul>
+            </li>
+          </ul>
+          <p>例（VSCodeのCodex入力欄）：</p>
+          <pre><code>@prompts/PROMPT_00_BASELINE.md を必ず前提として守ってください。
+不明点は推測で埋めず「要確認」で止めてください。
+次に @prompts/PROMPT_01_SCOPE.md のテンプレに沿ってスコープ定義を作ってください。</code></pre>
+          <h3>3) 最終版Baselineの保存手順（具体的に）</h3>
+          <p>手順（そのままやればOK）</p>
+          <ol>
+            <li>AIが出した「最終版Baseline」を 一旦その場で目視レビュー
+              <ul>
+                <li>禁止事項（DB/Webなど）が抜けてないか</li>
+                <li>出力形式（省略禁止、ファイル単位）が書かれてるか</li>
+                <li>“推測で埋めない” が書かれてるか</li>
+              </ul>
+            </li>
+            <li>
+              <code>prompts/PROMPT_00_BASELINE.md</code> に 貼り付けて上書き保存
+              <ul>
+                <li>・ここが正本です（全文を置く）</li>
+              </ul>
+            </li>
+            <li>リポジトリ直下に <code>AGENTS.md</code> を作り、Baseline要点だけをコピーして短縮版を作る
+              <ul>
+                <li>Codexはリポジトリ内の <code>AGENTS.md</code> を辿って参照する設計です</li>
+              </ul>
+            </li>
+            <li>Gitを使っているなら コミット（超おすすめ）</li>
+          </ol>
+          <h3>4) AGENTS.mdには何を書けばいいか（テンプレ）</h3>
+          <p><code>AGENTS.md</code> は 長くすると読まれにくいので、10〜20行くらいが実用ラインです。</p>
+          <p>例：</p>
+          <pre><code># AGENTS.md
+
+## Working agreements (Baseline summary)
+
+- Project: Prompt programming workflow (Baseline -&gt; Assetization).
+- Constraints: No DB, no Web, no external API, no network.
+- Language: Java (Bronze-level). Avoid enum/stream/lambda/record/var.
+- Output format: Always file-by-file. No omissions.
+- Quality: Validate inputs. Do not crash on invalid input; ask again.
+- If requirements are unclear: stop and write "要確認" instead of guessing.
+- Detailed baseline: see prompts/PROMPT_00_BASELINE.md</code></pre>
+          <p>Codexはディレクトリ階層に沿って <code>AGENTS.md</code> を探して適用する仕組みがあり、必要ならより深い階層に置いて局所ルールも作れます。</p>
+          <h3>5) 「Baselineが長くて毎回扱いづらい」問題の解決策</h3>
+          <ul>
+            <li>解決策A：AGENTS.mdに要約、PROMPT_00は詳細に分離（推奨）</li>
+            <li>解決策B：カスタムプロンプト化して“呼び出し”にする（個人向け）</li>
+          </ul>
+          <p>まとめ</p>
+          <ul>
+            <li><strong>最終版Baselineは「設定の正本」</strong>として <code>prompts/PROMPT_00_BASELINE.md</code> に保存します。</li>
+            <li>Codexに効かせるための要約を <code>AGENTS.md</code> に置くのが実務で一番安定します。</li>
+            <li>VSCodeでは必要に応じて <code>@prompts/PROMPT_00_BASELINE.md</code> を参照して、毎回貼らずに運用できます。</li>
+          </ul>
+        </div>
+      </section>
+      <!-- セクション概要: PROMPT_01_SCOPE〜04_DESIGN（工程の回し方） -->
+      <section>
+        <h2 id="step-2">2. 続けて PROMPT_01_SCOPE.md → PROMPT_02_REQUIREMENTS.md → PROMPT_03_ASSUMPTIONS.md → PROMPT_04_DESIGN.md</h2>
+        <div class="content">
+          <p>各工程の結果は “成果物（決定事項）”としてファイルに保存し、次工程の入力として参照します。</p>
+          <h3>1) 結果の扱い方の基本ルール</h3>
+          <ul>
+            <li>ルール1：工程の出力は「その工程の確定版ドキュメント」として保存する
+              <ul>
+                <li>PROMPT_01 の結果 → スコープ定義（確定版）</li>
+                <li>PROMPT_02 の結果 → 要件定義（確定版）</li>
+                <li>PROMPT_03 の結果 → 仮定・未決定（確定版）</li>
+                <li>PROMPT_04 の結果 → 設計（確定版）</li>
+              </ul>
+            </li>
+            <li>ルール2：次工程では「前工程の確定版」を入力として渡す
+              <ul>
+                <li>PROMPT_02 は PROMPT_01 の結果を前提にする</li>
+                <li>PROMPT_03 は PROMPT_02 の結果を前提にする</li>
+                <li>PROMPT_04 は PROMPT_02 + PROMPT_03 の結果を前提にする</li>
+              </ul>
+            </li>
+            <li>ルール3：「要確認」が残ったまま次工程へ進まない
+              <ul>
+                <li>要確認が出たら、その場で 解消 or 明示的に仮定として固定してから進む</li>
+                <li>（要確認を放置して設計に入ると、後で手戻りが増えます）</li>
+              </ul>
+            </li>
+          </ul>
+          <h3>2) 保存場所（VSCodeプロジェクト内）</h3>
+          <p>テンプレは <code>prompts/</code>、結果は <code>docs/</code>（または <code>prompts/results/</code>）に分けるのが楽です。</p>
+          <p>パターンA（おすすめ：テンプレと成果物を分離）</p>
+          <pre><code>your-project/
+prompts/                # テンプレ（穴埋め用）
+    PROMPT_00_BASELINE.md
+    PROMPT_01_SCOPE.md
+    PROMPT_02_REQUIREMENTS.md
+    PROMPT_03_ASSUMPTIONS.md
+    PROMPT_04_DESIGN.md
+
+docs/                   # 確定した成果物（AI出力を保存）
+    00_BASELINE_FINAL.md
+    01_SCOPE_FINAL.md
+    02_REQUIREMENTS_FINAL.md
+    03_ASSUMPTIONS_FINAL.md
+    04_DESIGN_FINAL.md
+
+README.md
+CHANGELOG.md
+src/</code></pre>
+          <ul>
+            <li><code>prompts/</code> は「指示文テンプレ」なので基本いじらない</li>
+            <li><code>docs/</code> は「確定版成果物」なのでここを正本にする</li>
+          </ul>
+          <h3>3) 各工程の「実務的な」回し方（手順）</h3>
+          <ol>
+            <li>PROMPT_01_SCOPE を実行したら
+              <ol>
+                <li>Codex出力のうち、<strong>「スコープ定義（最終版）」</strong>をコピー</li>
+                <li><code>docs/01_SCOPE_FINAL.md</code> に貼って保存</li>
+                <li>出力に「要確認」があれば、この時点で解消
+                  <ul>
+                    <li>追加プロンプトで詰めるか</li>
+                    <li>次の工程に影響しないなら「仮定」としてPROMPT_03で固定する</li>
+                  </ul>
+                </li>
+              </ol>
+              <p>次工程（PROMPT_02）に渡すもの</p>
+              <ul>
+                <li><code>docs/01_SCOPE_FINAL.md</code></li>
+              </ul>
+            </li>
+            <li>PROMPT_02_REQUIREMENTS を実行したら
+              <ol>
+                <li><strong>「要件定義（FR/NFR/入出力仕様/受入条件）」</strong>をコピー</li>
+                <li><code>docs/02_REQUIREMENTS_FINAL.md</code> に保存</li>
+                <li>受入条件が「テスト可能な文」になってるかだけチェック
+                  <ul>
+                    <li>NG例：「適切に表示する」</li>
+                    <li>OK例：「不正入力時はエラーメッセージを表示し、再入力を促す」</li>
+                  </ul>
+                </li>
+              </ol>
+              <p>次工程（PROMPT_03）に渡すもの</p>
+              <ul>
+                <li><code>docs/02_REQUIREMENTS_FINAL.md</code></li>
+              </ul>
+            </li>
+            <li>PROMPT_03_ASSUMPTIONS を実行したら
+              <ol>
+                <li><strong>「採用する仮定（最終版）」</strong>と「未決定事項」を保存</li>
+                <li><code>docs/03_ASSUMPTIONS_FINAL.md</code> に保存</li>
+                <li>未決定事項が残るなら、ここで決め切る（おすすめ）
+                  <ul>
+                    <li>決め切れないなら「この未決定は設計に影響する/しない」を明記しておく</li>
+                    <li>（影響するのに放置すると設計が壊れます）</li>
+                  </ul>
+                </li>
+              </ol>
+              <p>次工程（PROMPT_04）に渡すもの</p>
+              <ul>
+                <li><code>docs/02_REQUIREMENTS_FINAL.md</code></li>
+                <li><code>docs/03_ASSUMPTIONS_FINAL.md</code></li>
+              </ul>
+            </li>
+            <li>PROMPT_04_DESIGN を実行したら
+              <ol>
+                <li><strong>設計（クラス構成・責務・主要メソッド・データ構造・処理フロー）</strong>を保存</li>
+                <li><code>docs/04_DESIGN_FINAL.md</code> に保存</li>
+                <li>「要件→設計対応チェック」があるか確認
+                  <ul>
+                    <li>要件にあるのに設計に出てこない機能があれば、ここで直す</li>
+                    <li>（実装に入ってから直すと二度手間）</li>
+                  </ul>
+                </li>
+              </ol>
+              <p>次工程（PROMPT_05）に渡すもの</p>
+              <ul>
+                <li><code>docs/04_DESIGN_FINAL.md</code></li>
+              </ul>
+            </li>
+          </ol>
+          <h3>4) 次工程に渡すときの具体的な入力方法（VSCode/Codex）</h3>
+          <ul>
+            <li>方法A（確実）：前工程の結果をプロンプトに貼る
+              <p>例：PROMPT_02 を実行するとき</p>
+              <pre><code>以下は確定したスコープです。
+---ここから---
+（docs/01_SCOPE_FINAL.md の中身を貼る）
+---ここまで---
+
+このスコープに従って要件定義を作ってください。
+不明点は推測で埋めず要確認にしてください。</code></pre>
+            </li>
+            <li>方法B（便利）：ファイル参照できる拡張なら参照する
+              <ul>
+                <li>拡張が対応しているなら、<code>docs/01_SCOPE_FINAL.md</code> を参照して進めます。</li>
+                <li>（参照方法は拡張機能ごとに違うので、あなたの環境の作法に合わせます）</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </section>
+      <!-- セクション概要: PROMPT_05_IMPLEMENTATION（実装生成の進め方） -->
+      <section>
+        <h2 id="step-3">3. PROMPT_05_IMPLEMENTATION.md でコード一式を出させます</h2>
+        <div class="content">
+          <p>前提：PROMPT_05を叩く前に揃っているべきもの</p>
+          <p>最低限、これが「確定版」として保存されている状態が理想です。</p>
+          <ul>
+            <li><code>docs/00_BASELINE_FINAL.md</code>（または <code>prompts/PROMPT_00_BASELINE.md</code> の最終版）</li>
+            <li><code>docs/04_DESIGN_FINAL.md</code>（設計確定版：クラス、責務、主要メソッド、データ構造、処理フロー）</li>
+          </ul>
+          <p>実装生成は 設計が正本です。設計が曖昧なまま実装に入ると、出てきたコードの責任が全部あなたに降ってきます。</p>
+          <h3>作業の流れ（PROMPT_05_IMPLEMENTATION）</h3>
+          <h4>STEP 0：プロジェクト側の準備（VSCode）</h4>
+          <ol>
+            <li>プロジェクトをVSCodeで開く</li>
+            <li>次を作っておく（空でOK）
+              <ul>
+                <li><code>src/</code>（Javaなら <code>src/</code> か <code>src/main/java/</code>）</li>
+                <li><code>docs/</code>（確定版の保管）</li>
+                <li><code>prompts/</code>（テンプレ保管）</li>
+              </ul>
+            </li>
+          </ol>
+          <p>おすすめ例：</p>
+          <pre><code>your-project/
+src/
+docs/
+prompts/</code></pre>
+          <h4>STEP 1：Codexに渡す「入力セット」を作る</h4>
+          <p>PROMPT_05で渡すべき情報は、基本的にこの3点です。</p>
+          <ol>
+            <li>Baseline（守るルール）</li>
+            <li>Design（今回の設計確定版）</li>
+            <li>出力条件（ファイル単位で省略なし、など）</li>
+          </ol>
+          <p>実務的にはこうする</p>
+          <ul>
+            <li>プロンプト欄に 全部貼る（一番確実）</li>
+            <li>長い場合は「Baselineは要点だけ」＋「Designは全文」でもOK</li>
+          </ul>
+          <p>例：PROMPT_05入力の骨格（コピペ用）</p>
+          <pre><code>【基本ルール（要点）】
+- DB/Web/外部API/ネットワーク禁止
+- Java Bronze範囲（enum/stream/lambda/record/var禁止）
+- 出力はファイル単位「ファイル名→コード全文」、省略禁止
+- 入力バリデーション必須、例外で落とさない
+
+【設計（確定版）】
+---ここから---
+（docs/04_DESIGN_FINAL.md の内容を貼る）
+---ここまで---
+
+【実装生成の指示】
+1) 最初にファイル構成を提示
+2) 次に各ファイルを「ファイル名→コード全文」で順に出す（省略禁止）
+3) 最後にコンパイル/実行手順を書く</code></pre>
+          <h4>STEP 2：Codexに「分割出力」を前提に依頼する（ここ重要）</h4>
+          <p>コード一式は長くなりがちなので、最初からこう指示するのが安定します。</p>
+          <p>推奨の出力方式（事故が少ない）</p>
+          <ul>
+            <li>まず：ファイル構成だけ</li>
+            <li>次に：1ファイルずつコード全文</li>
+          </ul>
+          <p>例：最初の依頼（ファイル構成だけ）</p>
+          <pre><code>上記の設計に従い、まずファイル構成だけ提示してください。
+その後、私が「OK」と言ったら1ファイルずつコード全文を出してください。</code></pre>
+          <p>こうすると、</p>
+          <ul>
+            <li>いきなり大量出力で途中欠落</li>
+            <li>途中で設計と違う構成になる</li>
+          </ul>
+          <p>を事前に潰せます。</p>
+          <h4>STEP 3：ファイル構成を受け取ったら、VSCode側に“空ファイル”を作る</h4>
+          <p>ファイル構成が出たら、VSCodeでそのファイルを作ります（中身は空でOK）。</p>
+          <p>例：</p>
+          <ul>
+            <li><code>src/Main.java</code></li>
+            <li><code>src/RpsGame.java</code></li>
+            <li><code>src/RpsJudge.java</code></li>
+            <li><code>src/Stats.java</code></li>
+          </ul>
+          <h4>STEP 4：1ファイルずつコードを受け取り、貼り付けて保存</h4>
+          <p>Codexにこう返します。</p>
+          <pre><code>OK。まず Main.java をコード全文で出してください。</code></pre>
+          <p>出てきたら：</p>
+          <ol>
+            <li>VSCodeで Main.java を開く</li>
+            <li>全文を貼り付け</li>
+            <li>保存（Ctrl+S）</li>
+            <li>次を依頼</li>
+          </ol>
+          <pre><code>次に RpsGame.java をコード全文で出してください。</code></pre>
+          <p>これを繰り返します。1ファイルずつにする理由：</p>
+          <ul>
+            <li>コピペミスが減る</li>
+            <li>欠落が減る</li>
+            <li>レビューしやすい</li>
+            <li>失敗しても戻せる</li>
+          </ul>
+          <h4>STEP 5：生成物チェック（コンパイル前の最低確認）</h4>
+          <p>全部貼り終わったら、最低限これだけ確認します。</p>
+          <ul>
+            <li>クラス名とファイル名が一致してるか</li>
+            <li>public class が複数ファイルに散っているか（同名重複してないか）</li>
+            <li>package 宣言が揃ってるか（使うなら統一）</li>
+          </ul>
+          <h4>STEP 6：コンパイル＆実行（VSCodeのターミナル）</h4>
+          <p>packageなしの場合（例：srcに置いた）</p>
+          <pre><code class="language-bash">cd src
+javac *.java
+java Main</code></pre>
+          <h4>STEP 7：動かなかったときの流れ（ここが“運用”）</h4>
+          <p>まずやること（人間側）</p>
+          <ul>
+            <li>エラーメッセージをそのままコピーする</li>
+            <li>どの操作で発生したかを書く（再現手順）</li>
+          </ul>
+          <p>Codexへの修正依頼（PROMPT_08形式が理想）</p>
+          <p>雑に「動かない」ではなく、こうです。</p>
+          <pre><code>【不具合】
+- 現象：コンパイルエラー
+- エラー全文：（貼る）
+- 再現：javac *.java
+
+【変更禁止】
+- 仕様、メニュー構成は変えない
+- DB/Web禁止
+
+【依頼】
+- 原因と修正方針を先に説明し、差分修正したコードを出してください</code></pre>
+          <p>まとめ：PROMPT_05の“現場フロー”</p>
+          <ol>
+            <li>設計（確定版）を用意</li>
+            <li>PROMPT_05で ファイル構成だけ出させる</li>
+            <li>VSCodeで空ファイル作る</li>
+            <li>1ファイルずつコード全文を出させて貼る</li>
+            <li>コンパイル＆実行</li>
+            <li>エラーはログ＋再現手順で差分修正依頼</li>
+          </ol>
+          <h2 id="step-4">4. PROMPT_06_VERIFICATION.md でテストを出させます</h2>
+          <p>PROMPT_06（Verification）作業フロー</p>
+          <p>前提：PROMPT_06を叩く前に揃えるもの</p>
+          <p>最低限、これが確定している状態が理想です。</p>
+          <ul>
+            <li><code>docs/02_REQUIREMENTS_FINAL.md</code>（要件定義・受入条件）</li>
+            <li><code>docs/04_DESIGN_FINAL.md</code>（設計：責務分割、主要メソッド）</li>
+            <li><code>src/</code> のコード一式（PROMPT_05で生成したもの）</li>
+          </ul>
+          <p>テストは「コード」だけ見てもダメで、要件が正本です。要件なしのテストは、ほぼ占いです。</p>
+          <h3>STEP 0：VSCode側でテスト格納場所を作る</h3>
+          <p>テスト成果物もファイルに残します。おすすめは <code>docs/test/</code>。</p>
+          <p>例：</p>
+          <pre><code>your-project/
+docs/
+    test/
+        06_TEST_PLAN.md
+        06_TEST_CASES.md
+        06_TEST_RESULTS.md
+
+（最初は 06_TEST_PLAN.md と 06_TEST_CASES.md だけでOK）</code></pre>
+          <h3>STEP 1：Codexに渡す「入力セット」を作る</h3>
+          <p>PROMPT_06で必要な入力は3つです。</p>
+          <ol>
+            <li>Baseline（守るルール） ※要点でOK</li>
+            <li>Requirements（受入条件） ← これが最重要</li>
+            <li>実装の概要（できればコードも、無理なら構成と要点）</li>
+          </ol>
+          <p>実務のやり方（確実）</p>
+          <ul>
+            <li>受入条件（Acceptance Criteria）は 必ず貼る</li>
+            <li>コード全部を貼れない場合は、
+              <ul>
+                <li>ファイル構成</li>
+                <li>入力仕様</li>
+                <li>主要な表示文言</li>
+                <li>judgeロジックの仕様</li>
+              </ul>だけでも貼る（これで大事故は減ります）
+            </li>
+          </ul>
+          <h3>STEP 2：PROMPT_06の依頼は「出力物を分けて」出させる</h3>
+          <p>テスト出力は3点セットに分けると運用しやすいです。</p>
+          <ul>
+            <li>テスト観点（何を見てるか）</li>
+            <li>手動テスト手順（操作→期待結果）</li>
+            <li>テストケース表（ID、前提、入力、期待結果、備考）</li>
+          </ul>
+          <p>PROMPT_06入力の骨格（コピペ用）</p>
+          <pre><code>【基本ルール（要点）】
+- 推測で埋めない。曖昧な点は「要確認」にする。
+- 出力は省略しない。
+
+【要件定義（受入条件を含む）】
+---ここから---
+（docs/02_REQUIREMENTS_FINAL.md を貼る）
+---ここまで---
+
+【実装情報】
+- ファイル構成：
+- Main.java
+- RpsGame.java
+- RpsJudge.java
+- Stats.java
+- 入力仕様：メニュー 0/1/2/3、手は g/c/p（大小OK）、不正入力は再入力
+- 5回勝負：5回実施して集計、勝ち越し判定
+- 戦績表示：勝ち/負け/あいこ、勝率（あいこ含む/除外）
+
+【依頼】
+1) テスト観点一覧
+2) 手動テスト手順（操作→期待結果）
+3) テストケース表（ID、前提、入力、期待結果、備考）を15件以上
+4) 受入条件→テストケース対応チェック（抜けがあれば追加）
+5) 乱数で結果が変わる箇所は、judgeメソッド単体で固定テストできる形でテスト案を出す</code></pre>
+          <h3>STEP 3：出力を受け取ったら「保存」する（ここからが運用）</h3>
+          <p>Codex出力は、そのまま保存して正本化します。</p>
+          <ul>
+            <li>テスト観点＋手順 → <code>docs/test/06_TEST_PLAN.md</code></li>
+            <li>テストケース表 → <code>docs/test/06_TEST_CASES.md</code></li>
+          </ul>
+          <p>以後、テストはこのファイルが基準になります。会話ログは捨ててOK（捨てないけど参照しない）。</p>
+          <h3>STEP 4：自分で最低限の整合チェック（5分でいい）</h3>
+          <p>テストがズレてないか、ここだけ確認します。</p>
+          <p>チェック項目（最低限）</p>
+          <ul>
+            <li>受入条件の各項目が、テストケース表に最低1つは対応しているか</li>
+            <li>異常系が入っているか
+              <ul>
+                <li>メニューに文字入力</li>
+                <li>手入力に x など不正値</li>
+                <li>空入力</li>
+              </ul>
+            </li>
+            <li>表示系が含まれるか
+              <ul>
+                <li>結果表示（あなた/CPUの手、勝敗）</li>
+                <li>戦績表示（勝率2種）</li>
+              </ul>
+            </li>
+          </ul>
+          <p>ズレがあったら次のSTEPへ。</p>
+          <h3>STEP 5：ズレがあったら「テストを修正させる」プロンプトを出す</h3>
+          <p>ここで雑に「直して」じゃなく、追加・修正指示でいきます。</p>
+          <p>例：</p>
+          <pre><code>テストケースに以下が不足しています。
+
+- 受入条件「大文字入力（G/C/P）も許可」のケースがない
+- 5回勝負で「あいこを含めても5回実施する」確認ケースがない
+
+上記2点を追加したテストケース表を再出力してください。
+既存のIDは維持し、追加分は末尾に追記してください。</code></pre>
+          <h3>STEP 6：実際にテストを実行し、結果を残す（超重要）</h3>
+          <p>PROMPT_06で作ったテストは、実行して初めて価値があります。</p>
+          <p>実行ログの残し方（簡単でOK）</p>
+          <pre><code>docs/test/06_TEST_RESULTS.md を作って、以下の形で残します。
+
+# テスト結果
+
+## 実行環境
+- OS:
+- Java:
+- 実行日:
+
+## 結果サマリ
+- 実施: 15件
+- OK: 14件
+- NG: 1件
+
+## NG詳細
+- TC-12: 不正入力時に再入力にならず終了してしまう
+- 再現手順: ...
+- 期待結果: ...
+- 実際: ...</code></pre>
+          <h3>STEP 7：NGが出たらPROMPT_08（変更管理）へ送る</h3>
+          <p>テストNGは、PROMPT_08で直すのが王道です。</p>
+          <ul>
+            <li>現象</li>
+            <li>再現手順</li>
+            <li>期待結果</li>
+            <li>実際結果</li>
+            <li>変更禁止事項</li>
+            <li>対象コード</li>
+          </ul>
+          <p>これで「直したら別のところ壊れた」が激減します。</p>
+          <p>まとめ：PROMPT_06の現場フロー</p>
+          <ol>
+            <li>要件（受入条件）とコードを用意</li>
+            <li>PROMPT_06で
+              <ul>
+                <li>観点</li>
+                <li>手順</li>
+                <li>ケース表</li>
+                <li>受入条件→対応チェック</li>
+              </ul>を出させる
+            </li>
+            <li><code>docs/test/</code> に保存して正本化</li>
+            <li>5分だけ整合チェック</li>
+            <li>足りないところは追加指示で修正</li>
+            <li>実行して <code>06_TEST_RESULTS.md</code> に記録</li>
+            <li>NGはPROMPT_08で差分修正へ</li>
+          </ol>
+        </div>
+      </section>
+      <!-- セクション概要: PROMPT_07〜08（レビューと改修） -->
+      <section>
+        <h2 id="step-5">5. 必要なら PROMPT_07_REVIEW.md → PROMPT_08_CHANGE_CONTROL.md で改修します</h2>
+        <div class="content">
+          <p>PROMPT_07 → PROMPT_08 改修フロー（作業の流れ）</p>
+          <p>前提：改修に入る前に揃えるもの</p>
+          <p>最低限これを手元に用意します。</p>
+          <ul>
+            <li><code>docs/02_REQUIREMENTS_FINAL.md</code>（要件・受入条件）</li>
+            <li><code>docs/04_DESIGN_FINAL.md</code>（設計）</li>
+            <li><code>src/</code> の現行コード一式</li>
+            <li><code>docs/test/06_TEST_RESULTS.md</code>（テスト結果があれば強い）</li>
+          </ul>
+          <p>改修は「気分」ではなく「根拠（要件/テスト/現象）」で動かします。</p>
+          <h3>全体像（結論）</h3>
+          <ol>
+            <li>PROMPT_07_REVIEW.mdで
+              <ul>
+                <li>仕様ズレ</li>
+                <li>バグの原因候補</li>
+                <li>改善点（優先度付き）</li>
+                <li>Change Request（変更指示ドラフト）</li>
+              </ul>を出させる
+            </li>
+            <li>人間が 採用する変更だけを確定する（やらない変更も決める）</li>
+            <li>PROMPT_08_CHANGE_CONTROL.mdで
+              <ul>
+                <li>差分</li>
+                <li>理由</li>
+                <li>影響範囲</li>
+                <li>再テスト</li>
+              </ul>をセットで改修させる
+            </li>
+            <li>VSCodeでコード反映 → 実行 → 再テスト</li>
+            <li>結果を CHANGELOG.md と 06_TEST_RESULTS.md に残す</li>
+          </ol>
+          <h3>STEP別のやり方</h3>
+          <h4>STEP 1：PROMPT_07（レビュー）を実行する</h4>
+          <p>目的</p>
+          <ul>
+            <li>「何を直すべきか」を整理し、修正指示の材料を作る工程です。</li>
+            <li>ここでは まだコードを直させないのがポイント（先に論点を揃える）。</li>
+          </ul>
+          <p>入力（Codexへ渡すもの）</p>
+          <ul>
+            <li>要件：<code>docs/02_REQUIREMENTS_FINAL.md</code></li>
+            <li>設計：<code>docs/04_DESIGN_FINAL.md</code></li>
+            <li>現行コード：<code>src/</code>（全文が無理なら対象ファイル）</li>
+            <li>テスト結果：NGがあれば必ず貼る（エラー文、再現手順）</li>
+          </ul>
+          <p>出力（欲しいもの）</p>
+          <ul>
+            <li>指摘一覧（優先度：高/中/低）</li>
+            <li>修正方針（どう直すか）</li>
+            <li>Change Requestドラフト（このあとPROMPT_08で使う）</li>
+          </ul>
+          <p>ここで人間がやること（超重要）</p>
+          <ul>
+            <li>指摘を全部やらない。採用する変更だけ選ぶ</li>
+            <li>「触るなリスト」も決める</li>
+          </ul>
+          <h4>STEP 2：Change Request（変更指示）を確定する</h4>
+          <p>PROMPT_07のドラフトを、そのままPROMPT_08に投げるのは半分正解で半分危険です。あなたが最終決定して、変更指示を確定させます。</p>
+          <p>Change Requestに必ず入れる項目</p>
+          <ul>
+            <li>変更目的（なぜ）</li>
+            <li>変更内容（Before/After）</li>
+            <li>変更対象ファイル</li>
+            <li>変更禁止事項（触るな）</li>
+            <li>期待する挙動（受入条件）</li>
+            <li>再テスト項目</li>
+          </ul>
+          <h4>STEP 3：PROMPT_08（Change Control）で改修を実行させる</h4>
+          <p>目的</p>
+          <ul>
+            <li>「差分」「理由」「影響」「再テスト」をセットにして安全に修正させます。</li>
+          </ul>
+          <p>入力（Codexへ渡すもの）</p>
+          <ul>
+            <li>確定したChange Request</li>
+            <li>現行コード（対象ファイルの全文）</li>
+            <li>必要なら要件の該当箇所（受入条件）</li>
+          </ul>
+          <p>出力（受け取るもの）</p>
+          <ul>
+            <li>修正計画（短く）</li>
+            <li>修正版コード（ファイル単位）</li>
+            <li>変更理由 / 影響範囲 / 再テスト項目</li>
+            <li>要確認（あれば）</li>
+          </ul>
+          <h4>STEP 4：VSCodeに反映（1ファイルずつが安全）</h4>
+          <ol>
+            <li>変更対象ファイルを開く</li>
+            <li>修正版コードを貼り付け</li>
+            <li>保存</li>
+            <li>コンパイル＆実行</li>
+          </ol>
+          <p>まとめて全部貼るより、変更したファイルだけ貼る方がミスが減ります。</p>
+          <h4>STEP 5：再テスト（PROMPT_06で作ったテストが活きる）</h4>
+          <ul>
+            <li><code>docs/test/06_TEST_CASES.md</code> の該当ケースを再実行</li>
+            <li>NGが解消したか確認</li>
+            <li>影響範囲のケースも実行（改修で壊れやすい場所）</li>
+          </ul>
+          <p>結果は <code>docs/test/06_TEST_RESULTS.md</code> に追記します。</p>
+          <h4>STEP 6：変更履歴を残す（資産化）</h4>
+          <p>最後に必ず残します。</p>
+          <p>CHANGELOG.md に最低限書く</p>
+          <ul>
+            <li>変更内容</li>
+            <li>変更理由</li>
+            <li>影響範囲</li>
+            <li>再テスト結果</li>
+          </ul>
+          <p>実務で一番多いパターン別フロー</p>
+          <ul>
+            <li>パターンA：バグ修正（最優先で回す）
+              <ul>
+                <li>PROMPT_07：NG原因の推測＋修正案</li>
+                <li>PROMPT_08：差分修正</li>
+                <li>再テスト</li>
+                <li>CHANGELOG更新</li>
+              </ul>
+            </li>
+            <li>パターンB：仕様追加（機能拡張）
+              <ul>
+                <li>PROMPT_02に追記（要件更新）</li>
+                <li>PROMPT_03で仮定更新</li>
+                <li>PROMPT_04で設計更新</li>
+                <li>PROMPT_08で改修（※PROMPT_05をやり直さない）</li>
+                <li>PROMPT_06でテスト追加</li>
+              </ul>
+            </li>
+          </ul>
+          <p>仕様追加は レビュー→変更だけで済ませず、要件と設計を先に更新すると破綻しません。</p>
+          <p>まとめ（この順で回せばOK）</p>
+          <ul>
+            <li>PROMPT_07：直すべき点を整理して Change Request を作る</li>
+            <li>人間が採用変更を確定（やる/やらないを決める）</li>
+            <li>PROMPT_08：差分・理由・影響・再テストで改修させる</li>
+            <li>VSCodeで反映 → 再テスト → CHANGELOG更新</li>
+          </ul>
+        </div>
+      </section>
+      <!-- セクション概要: PROMPT_09_ASSETIZATION（資産化） -->
+      <section>
+        <h2 id="step-6">6. 最後に PROMPT_09_ASSETIZATION.md で README/CHANGELOG まで固めます</h2>
+        <div class="content"></div>
+        <p>会話と途中成果物を、再現可能な“プロジェクト資産”に変換する作業</p>
+        <p>PROMPT_09（Assetization）作業フロー</p>
+        <h3>前提：PROMPT_09を叩く前に揃えるもの</h3>
+        <p>最低限これが揃っているのが理想です（全部揃ってなくても進められるが、品質が落ちます）。</p>
+        <ul>
+          <li><code>docs/00_BASELINE_FINAL.md</code>（または <code>prompts/PROMPT_00_BASELINE.md</code> の最終版）</li>
+          <li><code>docs/01_SCOPE_FINAL.md</code></li>
+          <li><code>docs/02_REQUIREMENTS_FINAL.md</code></li>
+          <li><code>docs/03_ASSUMPTIONS_FINAL.md</code></li>
+          <li><code>docs/04_DESIGN_FINAL.md</code></li>
+          <li><code>src/</code> のコード一式</li>
+          <li><code>docs/test/06_TEST_PLAN.md</code>（または 06_VERIFICATION の出力）</li>
+          <li><code>docs/test/06_TEST_CASES.md</code></li>
+          <li><code>docs/test/06_TEST_RESULTS.md</code>（実行したなら）</li>
+          <li><code>CHANGELOG.md</code>（すでにあるなら、現状）</li>
+          <li>変更があれば：PROMPT_08の出力（差分、理由、影響、再テスト）</li>
+        </ul>
+        <p>Assetizationは「情報を集める工程」ではなく、<strong>集まった情報を“整形して固定する工程”</strong>です。</p>
+        <h3>STEP 0：VSCode側で保存先を決める（先に固定）</h3>
+        <p>おすすめの保存先はこの2つ。</p>
+        <ul>
+          <li><code>README.md</code>（プロジェクト直下）</li>
+          <li><code>CHANGELOG.md</code>（プロジェクト直下）</li>
+        </ul>
+        <p>補助として、<code>docs/</code> に “確定版ドキュメント” を残します。</p>
+        <h3>STEP 1：Codexに渡す「入力セット」を準備する</h3>
+        <p>PROMPT_09に渡すべき入力は、ざっくり次の3カテゴリです。</p>
+        <ol>
+          <li>仕様の正本（要件とルール）
+            <ul>
+              <li>Baseline（禁止事項、品質基準、出力形式）</li>
+              <li>Scope（in/out, Done）</li>
+              <li>Requirements（FR/NFR、受入条件）</li>
+              <li>Assumptions（仮定、未決定）</li>
+            </ul>
+          </li>
+          <li>実装の正本
+            <ul>
+              <li>コード一式（全部貼れないなら「ファイル構成＋主要クラス＋実行方法」でも可）</li>
+            </ul>
+          </li>
+          <li>検証の正本
+            <ul>
+              <li>テスト観点・ケース</li>
+              <li>実行結果（やったなら）</li>
+            </ul>
+          </li>
+        </ol>
+        <h3>STEP 2：PROMPT_09の依頼は「出力を分割」させる（現場のコツ）</h3>
+        <p>いきなり全部を一発生成させると、長すぎて欠けやすいです。なので、PROMPT_09は 3段階出力が安全です。</p>
+        <ul>
+          <li>段階A：README案を生成（READMEだけ先に作らせる）</li>
+          <li>段階B：CHANGELOG案を生成（変更がないなら初版だけ）</li>
+          <li>段階C：資産化インデックス（保存すべきファイル一覧＋再開手順）</li>
+        </ul>
+        <h3>STEP 3：PROMPT_09の実行（コピペ骨格）</h3>
+        <p>この形で叩くと安定します。</p>
+        <pre><code>【基本ルール（要点）】
+- DB/Web/外部API/ネットワーク禁止
+- Java Bronze範囲
+- 推測で埋めない。曖昧なら「要確認」
+
+【スコープ確定版】
+---ここから---
+（docs/01_SCOPE_FINAL.md を貼る）
+---ここまで---
+
+【要件定義確定版】
+---ここから---
+（docs/02_REQUIREMENTS_FINAL.md を貼る）
+---ここまで---
+
+【仮定確定版】
+---ここから---
+（docs/03_ASSUMPTIONS_FINAL.md を貼る）
+---ここまで---
+
+【設計確定版】
+---ここから---
+（docs/04_DESIGN_FINAL.md を貼る）
+---ここまで---
+
+【実装情報】
+- ファイル構成：（貼る）
+- 実行方法：（貼る）
+- 主要クラス概要：（貼る）
+
+【テスト情報】
+---ここから---
+（docs/test/06_TEST_PLAN.md と 06_TEST_CASES.md の要点、結果があれば 06_TEST_RESULTS.md）
+---ここまで---
+
+【依頼】
+1) README.md を生成してください（概要/実行方法/仕様/入力/制約/テスト方法を含める）
+2) CHANGELOG.md を生成してください（変更がなければ初版として作る）
+3) 最後に「次回再開手順」と「保存ファイル一覧」を出してください
+
+出力は3セクションに分けてください：
+- README.md
+- CHANGELOG.md
+- 再開手順・保存一覧</code></pre>
+        <h3>STEP 4：出力をVSCodeに保存（ここから“固定化”）</h3>
+        <p>Codexから出た内容を、それぞれファイルに貼ります。</p>
+        <ul>
+          <li>README部分 → <code>README.md</code></li>
+          <li>CHANGELOG部分 → <code>CHANGELOG.md</code></li>
+          <li>再開手順・保存一覧 → <code>docs/ASSETIZATION_NOTES.md</code>（おすすめ）</li>
+        </ul>
+        <p>保存しておくと強い補助ファイル：</p>
+        <ul>
+          <li><code>docs/ASSETIZATION_NOTES.md</code>（再開手順・構成一覧・決定事項まとめ）</li>
+        </ul>
+        <h3>STEP 5：最低限の目視チェック（5分でOK）</h3>
+        <p>README/CHANGELOGが使い物になるか、ここだけ確認します。</p>
+        <p>READMEチェック</p>
+        <ul>
+          <li>実行方法が書いてある（コマンド or VSCode手順）</li>
+          <li>メニュー仕様が書いてある（0/1/2/3）</li>
+          <li>入力仕様が書いてある（g/c/p、大文字OK、不正入力は再入力）</li>
+          <li>禁止事項（DB/Webなし）が書いてある</li>
+        </ul>
+        <p>CHANGELOGチェック</p>
+        <ul>
+          <li>変更があるなら「理由」「影響範囲」「再テスト」が書いてある</li>
+          <li>変更がないなら「初版」として成立している</li>
+        </ul>
+        <p>ズレがあれば、PROMPT_09に「ここ直して」で再生成させます。（この工程の良いところは、コードを触らずに直せる点）</p>
+        <h3>STEP 6：Gitでコミット（推奨）</h3>
+        <p>README/CHANGELOG更新は、必ずコミットしておくのが強いです。</p>
+        <ul>
+          <li>docs: add README and CHANGELOG</li>
+          <li>docs: update assetization notes</li>
+        </ul>
+        <h3>よくある落とし穴と回避策</h3>
+        <ul>
+          <li>落とし穴1：READMEが「説明不足」になる → 回避：READMEのセクションを固定する（下にテンプレあり）</li>
+          <li>落とし穴2：CHANGELOGが「何をしたか」だけで終わる → 回避：「理由」「影響」「再テスト」を必須にする</li>
+          <li>落とし穴3：Assetizationが一発出力で途中欠ける → 回避：README→CHANGELOG→再開手順の3段階で出させる</li>
+        </ul>
+        <h3>READMEの標準構成（参考テンプレ）</h3>
+        <ul>
+          <li>概要</li>
+          <li>実行方法</li>
+          <li>機能（メニュー説明）</li>
+          <li>入力仕様</li>
+          <li>仕様（勝敗判定、戦績、勝率）</li>
+          <li>制約（DB/Webなし等）</li>
+          <li>テスト方法</li>
+          <li>既知の制限 / 今後の改善</li>
+        </ul>
+        <p>まとめ：PROMPT_09の作業フロー</p>
+        <ol>
+          <li>前工程の確定版（要件/設計/テスト/コード）を揃える</li>
+          <li>PROMPT_09で README → CHANGELOG → 再開手順の順に生成させる</li>
+          <li>VSCodeで README.md と CHANGELOG.md に保存して正本化</li>
+          <li>5分だけ目視チェックしてズレを直す</li>
+          <li>Gitコミットして完了</li>
+        </ol>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

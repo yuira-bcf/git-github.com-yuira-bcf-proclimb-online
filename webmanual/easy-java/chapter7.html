@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>オブジェクト指向とは（歴史・定義・効果・メリット）</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body{
+      font-family: system-ui, -apple-system, "Segoe UI",
+                   "Hiragino Kaku Gothic ProN","Yu Gothic", sans-serif;
+      line-height: 1.9;
+      margin: 24px;
+    }
+    h1{ font-size: 1.6rem; margin-bottom: 16px; }
+    h2{
+      font-size: 1.25rem;
+      margin-top: 36px;
+      border-left: 6px solid #ccc;
+      padding-left: 10px;
+    }
+    h3{
+      font-size: 1.1rem;
+      margin-top: 22px;
+      border-left: 4px solid #ddd;
+      padding-left: 10px;
+    }
+    p{ margin: 12px 0; }
+    ul{ margin-left: 24px; }
+    pre{
+      background: #fafafa;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 12px;
+      overflow-x: auto;
+    }
+    .key{
+      background: #eef5ff;
+      border-left: 6px solid #7fb3ff;
+      border-radius: 8px;
+      padding: 14px;
+      margin: 18px 0;
+      font-weight: bold;
+    }
+    .box{
+      background: #fcfcfc;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 14px;
+      margin: 18px 0;
+    }
+    .summary{
+      background: #effaf3;
+      border-left: 6px solid #7ad39a;
+      border-radius: 8px;
+      padding: 14px;
+      margin: 24px 0;
+      font-weight: bold;
+    }
+    hr{ border: none; border-top: 1px solid #e6e6e6; margin: 28px 0; }
+  </style>
+</head>
+<body>
+
+<h1>オブジェクト指向</h1>
+
+<section>
+  <h2>1. オブジェクト指向誕生の歴史</h2>
+  <p>
+    初期のプログラムは、上から下へ処理を順番に書く
+    <strong>手続き型プログラミング</strong>が主流でした。
+    規模が小さいうちは問題ありませんでしたが、
+    プログラムが大きくなるにつれて次のような問題が発生しました。
+  </p>
+
+  <div class="box">
+    <ul>
+      <li>処理の流れが複雑になり、全体像が分からなくなる</li>
+      <li>1か所の修正が、別の場所に影響しやすい</li>
+      <li>人が増えると、管理や分業が難しい</li>
+    </ul>
+  </div>
+
+  <p>
+    こうした問題を解決するために、
+    「現実世界の考え方をプログラムに持ち込もう」
+    という発想から生まれたのが
+    <strong>オブジェクト指向</strong>です。
+  </p>
+
+  <div class="key">
+    オブジェクト指向は「大規模・長期開発」に対応するために生まれた考え方
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2>2. オブジェクト指向とは</h2>
+  <p>
+    オブジェクト指向とは、
+    プログラムを
+    <strong>「モノ（オブジェクト）」の集まり</strong>
+    として考える設計手法です。
+  </p>
+
+  <p>
+    それぞれのオブジェクトは、
+  </p>
+
+  <ul>
+    <li>データ（状態）</li>
+    <li>処理（振る舞い）</li>
+  </ul>
+
+  <p>
+    をひとまとまりとして持ちます。
+  </p>
+
+  <div class="key">
+    オブジェクト ＝ データ ＋ 処理
+  </div>
+
+  <p>
+    例えば「人」をプログラムで表す場合、
+    名前や年齢といった情報（データ）と、
+    話す・動くといった動作（処理）を
+    1つのオブジェクトとして扱います。
+  </p>
+</section>
+
+<hr>
+
+<section>
+  <h2>3. オブジェクト指向の定義と効果</h2>
+
+  <h3>3-1. オブジェクト指向の定義</h3>
+  <p>
+    オブジェクト指向は、次のように定義できます。
+  </p>
+
+  <div class="key">
+    プログラムを、役割を持ったオブジェクト同士の<br>
+    やり取りとして設計・実装する考え方
+  </div>
+
+  <p>
+    Java では、この考え方を
+    <strong>クラス</strong>と<strong>インスタンス</strong>
+    という仕組みで表現します。
+  </p>
+
+  <h3>3-2. 効果</h3>
+  <div class="box">
+    <ul>
+      <li>処理とデータの関係が明確になる</li>
+      <li>役割分担がはっきりする</li>
+      <li>変更に強い構造になる</li>
+    </ul>
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2>4. オブジェクト指向のメリット</h2>
+
+  <h3>4-1. 可読性が高くなる</h3>
+  <p>
+    オブジェクトごとに役割が分かれているため、
+    「どこに何が書いてあるか」が分かりやすくなります。
+  </p>
+
+  <h3>4-2. 保守・修正がしやすい</h3>
+  <p>
+    変更が必要な場合でも、
+    関連するオブジェクトだけを修正すればよく、
+    影響範囲を限定できます。
+  </p>
+
+  <h3>4-3. 再利用しやすい</h3>
+  <p>
+    一度作ったクラスは、
+    他のプログラムや機能でも再利用できます。
+  </p>
+
+  <h3>4-4. 分業しやすい</h3>
+  <p>
+    オブジェクトごとに作業を分担できるため、
+    チーム開発に向いています。
+  </p>
+
+  <div class="key">
+    オブジェクト指向は「作る人が増えても破綻しにくい」設計手法
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2>まとめ</h2>
+  <div class="summary">
+    ・オブジェクト指向は、プログラムの大規模化に対応するために生まれた。<br>
+    ・プログラムを「オブジェクトの集まり」として考える設計手法である。<br>
+    ・データと処理をひとまとまりにすることで、構造が分かりやすくなる。<br>
+    ・可読性、保守性、再利用性、分業のしやすさが大きなメリットである。
+  </div>
+</section>
+
+<h1>オブジェクト指向の全体像と本質</h1>
+
+<section>
+  <h2>1. オブジェクト指向と現実世界</h2>
+  <p>
+    オブジェクト指向では、プログラムを
+    <strong>「現実世界のモノや役割」</strong>に近い形で表現します。
+    たとえば、学校の仕組みを考えると、
+    「生徒」「先生」「授業」「教室」などの登場人物（モノ）が存在し、
+    それぞれが役割を持って動いています。
+  </p>
+
+  <div class="key">
+    現実世界の「モノ」と「役割」を、プログラム上のオブジェクトとして表す
+  </div>
+
+  <p>
+    重要なのは、オブジェクト指向は「現実のコピー」ではなく、
+    <strong>プログラムとして必要な範囲だけを切り出して表現する</strong>
+    という点です。
+  </p>
+</section>
+
+<hr>
+
+<section>
+  <h2>2. 開発時に作るクラス</h2>
+  <p>
+    Java の開発では、まず <strong>クラス</strong>を作成します。
+    クラスは「設計図」であり、
+    <strong>どのようなデータ（状態）と処理（振る舞い）を持つか</strong>
+    を定義します。
+  </p>
+
+  <div class="key">
+    クラス = オブジェクトの設計図（開発時に作る）
+  </div>
+
+  <p>
+    例として「生徒」を表すクラスを考えます。
+  </p>
+
+  <pre><code>public class Student {
+    String name;
+    int score;
+
+    void show() {
+        System.out.println(name + " : " + score);
+    }
+}</code></pre>
+
+  <div class="note">
+    <p>
+      <strong>ポイント：</strong><br>
+      クラスの中には「情報（フィールド）」と「動作（メソッド）」をまとめて書きます。
+      これにより「データと処理の関係」が自然に結び付きます。
+    </p>
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2>3. 実行時に動くオブジェクト</h2>
+  <p>
+    クラスは設計図なので、作っただけでは動きません。
+    実行時には <code>new</code> を使ってオブジェクト（インスタンス）を作成し、
+    それを動かしてプログラムを進めます。
+  </p>
+
+  <div class="key">
+    オブジェクト（インスタンス）= クラスから作られる実体（実行時に動く）
+  </div>
+
+  <p>
+    例として、先ほどの <code>Student</code> クラスから
+    オブジェクトを作成して使用します。
+  </p>
+
+  <pre><code>public class Main {
+    public static void main(String[] args) {
+
+        Student s1 = new Student();
+        s1.name = "田中";
+        s1.score = 80;
+
+        Student s2 = new Student();
+        s2.name = "佐藤";
+        s2.score = 90;
+
+        s1.show();
+        s2.show();
+    }
+}</code></pre>
+
+  <div class="box">
+    <p><strong>ここで重要な点：</strong></p>
+    <ul>
+      <li><code>Student</code> クラスは1つでも、オブジェクトは何個でも作れる</li>
+      <li>それぞれのオブジェクトは、独自のデータ（name/score）を持つ</li>
+      <li>同じメソッド（show）でも、表示内容はオブジェクトごとに変わる</li>
+    </ul>
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2>4. オブジェクト指向における開発者の役割</h2>
+  <p>
+    オブジェクト指向で開発者が行うべきことは、
+    単にクラスを書くだけではありません。
+    最も重要なのは、次の判断です。
+  </p>
+
+  <div class="key">
+    「どんなオブジェクトが必要か」<br>
+    「それぞれにどんな責任（役割）を持たせるか」<br>
+    を決めることが開発者の役割
+  </div>
+
+  <p>
+    つまり、開発者はプログラムの世界の「登場人物」と「役割分担」を設計します。
+  </p>
+
+  <div class="box">
+    <p><strong>設計時の主な観点：</strong></p>
+    <ul>
+      <li>現実世界の要素のうち、プログラムに必要なものだけを選ぶ</li>
+      <li>1つのクラスに役割を詰め込みすぎない（責任を分ける）</li>
+      <li>変更が起きそうな部分を分離して、影響範囲を小さくする</li>
+    </ul>
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2>5. オブジェクト思考の本質</h2>
+  <p>
+    初学者が「オブジェクト指向」を難しく感じる原因は、
+    クラスや new の書き方よりも、
+    <strong>考え方（設計の視点）</strong>が新しいためです。
+  </p>
+
+  <p>
+    オブジェクト思考の本質は、次の1点に集約できます。
+  </p>
+
+  <div class="key">
+    変化しやすい現実に対応するために、<br>
+    責任（役割）を分けたオブジェクト同士のやり取りとして設計する
+  </div>
+
+  <p>
+    さらに言い換えると、
+  </p>
+
+  <div class="box">
+    <ul>
+      <li>「この処理は誰の責任か？」を常に考える</li>
+      <li>「情報を持っているオブジェクトが、その情報に関する処理も担当する」</li>
+      <li>「Main に全部書かない。役割を分散する」</li>
+    </ul>
+  </div>
+
+  <p>
+    この考え方が身につくと、プログラムは次のように変わります。
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>オブジェクト指向が弱い設計</th>
+        <th>オブジェクト思考の設計</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Main に処理とデータが集中する</td>
+        <td>役割ごとにクラスが分かれ、見通しが良い</td>
+      </tr>
+      <tr>
+        <td>変更に弱く、影響範囲が読めない</td>
+        <td>変更が局所化され、修正がしやすい</td>
+      </tr>
+      <tr>
+        <td>同じ処理が重複しやすい</td>
+        <td>再利用できる部品として整理される</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<hr>
+
+<section>
+  <h2>まとめ</h2>
+  <div class="summary">
+    ・オブジェクト指向は、現実世界の「モノ」と「役割」を参考にプログラムを設計する考え方である。<br>
+    ・開発時にクラス（設計図）を作り、実行時にオブジェクト（実体）が動く。<br>
+    ・開発者の役割は「必要なオブジェクト」と「責任（役割分担）」を設計することである。<br>
+    ・オブジェクト思考の本質は、責任を分けたオブジェクト同士のやり取りとしてプログラムを組み立てる点にある。
+  </div>
+</section>
+
+</body>
+</html>

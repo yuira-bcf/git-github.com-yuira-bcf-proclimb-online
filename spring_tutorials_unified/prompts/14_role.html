@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>上級14 ロール別権限制御</title>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="../style.css" />
+        <style>
+            .download-btn { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-left: auto; }
+            .code-header { display: flex; align-items: center; justify-content: space-between; }
+            .level-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; background: #fee2e2; color: #991b1b; margin-right: 8px; }
+        </style>
+    </head>
+    <body>
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="../1spring-framework-tutorial.html" class="nav-logo"><span class="nav-logo-icon">🌱</span><span>Spring入門</span></a>
+                <button class="nav-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 上級レベル</div>
+                    <ul class="nav-list">
+                        <li class="nav-item"><a href="12_login.html" class="nav-link"><span class="nav-chapter-num">12</span><span>ログイン認証</span></a></li>
+                        <li class="nav-item"><a href="13_user_todo.html" class="nav-link"><span class="nav-chapter-num">13</span><span>ユーザー別ToDo管理</span></a></li>
+                        <li class="nav-item"><a href="14_role.html" class="nav-link active"><span class="nav-chapter-num">14</span><span>ロール別権限制御</span></a></li>
+                        <li class="nav-item"><a href="15_rest_api.html" class="nav-link"><span class="nav-chapter-num">15</span><span>REST API化</span></a></li>
+                        <li class="nav-item"><a href="16_exception.html" class="nav-link"><span class="nav-chapter-num">16</span><span>例外ハンドリング</span></a></li>
+                        <li class="nav-item"><a href="17_aop.html" class="nav-link"><span class="nav-chapter-num">17</span><span>AOPでログ出力</span></a></li>
+                        <li class="nav-item"><a href="18_transaction.html" class="nav-link"><span class="nav-chapter-num">18</span><span>トランザクション管理</span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <header class="chapter-header">
+                <div class="chapter-badge"><span class="level-badge">上級</span>📕 Advanced</div>
+                <div class="chapter-number">14</div>
+                <h1 class="chapter-title">ロール別権限制御</h1>
+            </header>
+
+            <nav class="toc">
+                <h2 class="toc-title">📑 この章の内容</h2>
+                <ul class="toc-list">
+                    <li class="toc-item"><span class="toc-number">14-1</span><span>メソッドセキュリティの有効化</span></li>
+                    <li class="toc-item"><span class="toc-number">14-2</span><span>@PreAuthorizeによる権限制御</span></li>
+                    <li class="toc-item"><span class="toc-number">14-3</span><span>管理者専用機能の実装</span></li>
+                </ul>
+            </nav>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 14-1</span>
+                    <h2 class="section-title">メソッドセキュリティの有効化</h2>
+                </div>
+                <div class="intro-text">
+                    <p><strong>@PreAuthorize</strong>を使って、ロールに基づいたアクセス制御を実装します。</p>
+                </div>
+
+                <div class="module-list">
+                    <div class="module-item"><div class="module-icon">🛡️</div><div class="module-content"><h4>@PreAuthorize</h4><p>メソッド実行前に権限をチェック</p></div></div>
+                    <div class="module-item"><div class="module-icon">👑</div><div class="module-content"><h4>ROLE_ADMIN</h4><p>管理者権限を持つユーザー</p></div></div>
+                </div>
+
+                <div class="code-block" id="method-security">
+                    <div class="code-header">
+                        <span class="code-title">SecurityConfig.java（メソッドセキュリティ有効化）</span>
+                        <button class="download-btn" onclick="downloadCode('method-security', 'SecurityConfig_method.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity  // メソッドセキュリティを有効化
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/admin/**").hasRole("ADMIN")  // 管理者のみ
+                .requestMatchers("/todo/**").hasAnyRole("USER", "ADMIN")
+                .anyRequest().authenticated()
+            )
+            // ... 他の設定
+        ;
+        return http.build();
+    }
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 14-2</span>
+                    <h2 class="section-title">@PreAuthorizeによる権限制御</h2>
+                </div>
+
+                <div class="code-block" id="preauthorize">
+                    <div class="code-header">
+                        <span class="code-title">TodoController.java</span>
+                        <button class="download-btn" onclick="downloadCode('preauthorize', 'TodoController_role.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.springframework.security.access.prepost.PreAuthorize;
+
+@Controller
+@RequestMapping("/todo")
+public class TodoController {
+
+    /**
+     * 全ユーザーのToDo一覧（管理者のみ）
+     */
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String allTodos(Model model) {
+        List&lt;Todo&gt; allTodos = todoService.findAll();
+        model.addAttribute("todoList", allTodos);
+        return "todo/all";
+    }
+
+    /**
+     * ToDo削除（管理者または作成者のみ）
+     */
+    @PostMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @todoService.isOwner(#id, authentication.name)")
+    public String delete(@PathVariable Integer id) {
+        todoService.delete(id);
+        return "redirect:/todo";
+    }
+
+    /**
+     * 一括削除（管理者のみ）
+     */
+    @PostMapping("/bulk-delete")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String bulkDelete(@RequestParam List&lt;Integer&gt; ids) {
+        todoService.deleteByIds(ids);
+        return "redirect:/todo";
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="service-owner">
+                    <div class="code-header">
+                        <span class="code-title">TodoService.java（所有者チェック）</span>
+                        <button class="download-btn" onclick="downloadCode('service-owner', 'TodoService_owner.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>@Service
+public class TodoService {
+
+    private final TodoMapper todoMapper;
+
+    /**
+     * 指定したToDoの所有者かどうかを確認
+     */
+    public boolean isOwner(Integer todoId, String username) {
+        Todo todo = todoMapper.findById(todoId);
+        if (todo == null) return false;
+        return username.equals(todo.getAuthor());
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <h3>@PreAuthorize式</h3>
+                <table class="data-table">
+                    <thead><tr><th>式</th><th>説明</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>hasRole('ADMIN')</code></td><td>ADMIN権限を持つ場合</td></tr>
+                        <tr><td><code>hasAnyRole('USER', 'ADMIN')</code></td><td>いずれかの権限を持つ場合</td></tr>
+                        <tr><td><code>isAuthenticated()</code></td><td>認証済みの場合</td></tr>
+                        <tr><td><code>#id</code></td><td>メソッド引数を参照</td></tr>
+                        <tr><td><code>authentication.name</code></td><td>ログインユーザー名</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 14-3</span>
+                    <h2 class="section-title">管理者専用機能の実装</h2>
+                </div>
+
+                <div class="code-block" id="admin-menu">
+                    <div class="code-header">
+                        <span class="code-title">index.html（管理者メニュー）</span>
+                        <button class="download-btn" onclick="downloadCode('admin-menu', 'index_admin.html')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"&gt;
+&lt;head&gt;
+    &lt;title&gt;ToDo一覧&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;nav&gt;
+        &lt;!-- 一般ユーザー向けメニュー --&gt;
+        &lt;a th:href="@{/todo}"&gt;マイToDo&lt;/a&gt;
+        &lt;a th:href="@{/todo/new}"&gt;新規作成&lt;/a&gt;
+
+        &lt;!-- 管理者のみ表示 --&gt;
+        &lt;div sec:authorize="hasRole('ADMIN')"&gt;
+            &lt;span style="color: #dc2626;"&gt;[管理者メニュー]&lt;/span&gt;
+            &lt;a th:href="@{/todo/all}"&gt;全ToDo一覧&lt;/a&gt;
+            &lt;a th:href="@{/admin/users}"&gt;ユーザー管理&lt;/a&gt;
+        &lt;/div&gt;
+    &lt;/nav&gt;
+
+    &lt;!-- 一括削除ボタン（管理者のみ） --&gt;
+    &lt;form th:action="@{/todo/bulk-delete}" method="post"
+          sec:authorize="hasRole('ADMIN')"&gt;
+        &lt;button type="submit" class="btn btn-danger"&gt;
+            選択した項目を削除（管理者）
+        &lt;/button&gt;
+    &lt;/form&gt;
+
+    &lt;table&gt;
+        &lt;tr th:each="todo : ${todoList}"&gt;
+            &lt;!-- 管理者のみチェックボックス表示 --&gt;
+            &lt;td sec:authorize="hasRole('ADMIN')"&gt;
+                &lt;input type="checkbox" name="ids" th:value="${todo.id}"&gt;
+            &lt;/td&gt;
+            &lt;td th:text="${todo.title}"&gt;&lt;/td&gt;
+            &lt;td&gt;
+                &lt;!-- 自分のToDoまたは管理者のみ編集可能 --&gt;
+                &lt;a th:href="@{/todo/edit/{id}(id=${todo.id})}"
+                   th:if="${todo.author == #authentication.name}"&gt;編集&lt;/a&gt;
+                &lt;a th:href="@{/todo/edit/{id}(id=${todo.id})}"
+                   sec:authorize="hasRole('ADMIN')"&gt;編集（管理者）&lt;/a&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-box-header"><span class="warning-box-icon">⚠️</span><span class="warning-box-title">二重チェックの重要性</span></div>
+                    <p>画面での表示制御だけでなく、必ずサーバー側でも権限チェックを行ってください。<br><code>@PreAuthorize</code>でサーバー側を保護し、<code>sec:authorize</code>で画面を整理します。</p>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-header"><span class="info-box-icon">💡</span><span class="info-box-title">権限不足時のエラー処理</span></div>
+                    <p>権限がない場合は<code>AccessDeniedException</code>が発生します。<br>カスタムエラーページを用意しておくとユーザー体験が向上します。</p>
+                </div>
+            </section>
+        </div>
+
+        <footer class="footer"><p>Spring Framework 入門チュートリアル - 上級レベル</p></footer>
+
+        <div class="page-nav">
+            <a href="13_user_todo.html" class="page-nav-btn prev"><span>←</span><div><div class="page-nav-label">前の機能</div><div class="page-nav-title">ユーザー別ToDo管理</div></div></a>
+            <a href="15_rest_api.html" class="page-nav-btn next"><div><div class="page-nav-label">次の機能</div><div class="page-nav-title">REST API化</div></div><span>→</span></a>
+        </div>
+
+        <script>
+            function toggleMenu() { document.querySelector(".nav-toggle").classList.toggle("active"); document.querySelector(".nav-menu").classList.toggle("active"); }
+            function downloadCode(id, filename) { const el = document.getElementById(id); const code = el.querySelector('code') || el.querySelector('pre'); const blob = new Blob([code.textContent], {type:'text/plain;charset=utf-8'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url); }
+        </script>
+    </body>
+</html>

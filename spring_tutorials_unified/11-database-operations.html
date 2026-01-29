@@ -1,0 +1,2152 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>第11章 アプリを作成しよう（データベース操作）</title>
+
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&family=M+PLUS+Rounded+1c:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <!-- グローバルナビゲーション -->
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="1spring-framework-tutorial.html" class="nav-logo">
+                    <span class="nav-logo-icon">🌱</span>
+                    <span>Spring入門</span>
+                </a>
+                <button class="nav-toggle" onclick="toggleMenu()" aria-label="メニュー">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 章を選択</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="0promptprograming.html" class="nav-link">
+                                <span class="nav-chapter-num">0</span>
+                                <span>プロンプトプログラミング</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="1spring-framework-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">1</span>
+                                <span>Spring Frameworkについて知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="2java_basics.html" class="nav-link">
+                                <span class="nav-chapter-num">2</span>
+                                <span>基礎知識を身に付けよう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="3di-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">3</span>
+                                <span>DIを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="4aop-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">4</span>
+                                <span>AOPを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="5mvc-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">5</span>
+                                <span>MVCを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="6thymeleaf-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">6</span>
+                                <span>Thymeleafを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="7ServerDataSubmission.html" class="nav-link">
+                                <span class="nav-chapter-num">7</span>
+                                <span>サーバーへのデータ送信</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="8Validation_Textbook_Rewrite.html" class="nav-link">
+                                <span class="nav-chapter-num">8</span>
+                                <span>バリデーション</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="9_MyBatis_Tutorial__2_.html" class="nav-link">
+                                <span class="nav-chapter-num">9</span>
+                                <span>MyBatisチュートリアル</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="10app-preparation-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">10</span>
+                                <span>アプリケーション作成準備</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="11-database-operations.html" class="nav-link active">
+                                <span class="nav-chapter-num">11</span>
+                                <span>データベース操作</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="12service-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">12</span>
+                                <span>サービス層</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="13_application_layer.html" class="nav-link">
+                                <span class="nav-chapter-num">13</span>
+                                <span>アプリケーション層</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="14_validation.html" class="nav-link">
+                                <span class="nav-chapter-num">14</span>
+                                <span>バリデーション（応用）</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="15-spring-security-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">15</span>
+                                <span>Spring Security</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <!-- ヘッダー -->
+            <header class="chapter-header">
+                <div class="chapter-badge">📘 Chapter</div>
+                <div class="chapter-number">11</div>
+                <h1 class="chapter-title">アプリを作成しよう</h1>
+                <p class="chapter-subtitle">〜 データベース操作編 〜</p>
+            </header>
+
+            <!-- 目次 -->
+            <nav class="toc">
+                <h2 class="toc-title">📑 📚 この章で学ぶこと</h2>
+                <ul class="toc-list">
+                    <li class="toc-item">
+                        <a href="#section-11-1">
+                            <span class="toc-number">11-1</span>
+                            「Domain Object」と「Repository」を作成しよう
+                        </a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#section-11-2">
+                            <span class="toc-number">11-2</span>
+                            「SQL」を考えよう
+                        </a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#section-11-3">
+                            <span class="toc-number">11-3</span>
+                            「マッパーファイル」を作成しよう
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- イントロダクション -->
+            <div class="info-box beginner">
+                <div class="info-box-icon">🎯</div>
+                <div class="info-box-content">
+                    <div class="info-box-title">この章のゴール</div>
+                    <p>
+                        ToDoアプリのデータベース操作部分を実装します。「データの保存」「取得」「更新」「削除」ができるようになることが目標です。難しそうに見えますが、一歩ずつ進めていけば大丈夫です！
+                    </p>
+                </div>
+            </div>
+
+            <!-- 開発環境のセットアップ -->
+            <section class="section" id="section-setup">
+                <div class="section-header">
+                    <span class="section-number">準備</span>
+                    <h2 class="section-title">開発環境とプロジェクト作成</h2>
+                </div>
+                <div class="section-content">
+                    <div class="info-box note">
+                        <div class="info-box-icon">💻</div>
+                        <div class="info-box-content">
+                            <div class="info-box-title">使用する開発環境</div>
+                            <p>
+                                このチュートリアルでは以下の環境を使用します：<br>
+                                <strong>ビルドツール</strong>：Maven<br>
+                                <strong>IDE</strong>：Visual Studio Code（VSCode）<br>
+                                <strong>データベース</strong>：MySQL
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">準備-1</span>
+                            <h3 class="subsection-title">Spring Initializrでプロジェクトを作成</h3>
+                        </div>
+
+                        <p>
+                            Spring Initializr（<a href="https://start.spring.io/" target="_blank">https://start.spring.io/</a>）を使用してプロジェクトを作成します。
+                        </p>
+
+                        <h4>■ Spring Initializrの設定</h4>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>項目</th>
+                                        <th>設定値</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Project</td>
+                                        <td><strong>Maven</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Language</td>
+                                        <td>Java</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Spring Boot</td>
+                                        <td>3.x.x（最新の安定版）</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Group</td>
+                                        <td>com.example</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Artifact</td>
+                                        <td>webapp</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Name</td>
+                                        <td>webapp</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Packaging</td>
+                                        <td>Jar</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Java</td>
+                                        <td>21（または17）</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h4>■ 追加する Dependencies</h4>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>依存関係</th>
+                                        <th>説明</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Spring Web</td>
+                                        <td>Webアプリケーション構築用</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Thymeleaf</td>
+                                        <td>テンプレートエンジン</td>
+                                    </tr>
+                                    <tr>
+                                        <td>MyBatis Framework</td>
+                                        <td>O/Rマッパー</td>
+                                    </tr>
+                                    <tr>
+                                        <td>MySQL Driver</td>
+                                        <td>MySQL接続用ドライバ</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Lombok</td>
+                                        <td>ボイラープレートコード削減</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Validation</td>
+                                        <td>入力値検証</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="info-box tip">
+                            <div class="info-box-icon">📥</div>
+                            <div class="info-box-content">
+                                <div class="info-box-title">ダウンロードと展開</div>
+                                <p>
+                                    設定が完了したら「Generate」ボタンをクリックしてZIPファイルをダウンロードし、任意のフォルダに展開してください。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">準備-2</span>
+                            <h3 class="subsection-title">VSCodeでプロジェクトを開く</h3>
+                        </div>
+
+                        <p>VSCodeでSpring Bootプロジェクトを開発するには、以下の拡張機能をインストールしてください。</p>
+
+                        <h4>■ 必須の拡張機能</h4>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>拡張機能名</th>
+                                        <th>説明</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Extension Pack for Java</td>
+                                        <td>Java開発に必要な拡張機能のパック</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Spring Boot Extension Pack</td>
+                                        <td>Spring Boot開発支援</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Lombok Annotations Support</td>
+                                        <td>Lombokサポート</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="info-box beginner">
+                            <div class="info-box-icon">📂</div>
+                            <div class="info-box-content">
+                                <div class="info-box-title">プロジェクトの開き方</div>
+                                <p>
+                                    1. VSCodeを起動<br>
+                                    2.「ファイル」→「フォルダーを開く」を選択<br>
+                                    3. 展開したプロジェクトフォルダ（webapp）を選択<br>
+                                    4. 右下に表示される「Import Java project」をクリック
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">準備-3</span>
+                            <h3 class="subsection-title">application.propertiesの設定</h3>
+                        </div>
+
+                        <p><code>src/main/resources/application.properties</code>にMySQL接続設定を追加します。</p>
+
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">application.properties</span>
+                                <span class="code-lang">Properties</span>
+                            </div>
+                            <div class="code-content">
+                                <pre><span class="code-comment"># MySQL接続設定</span>
+spring.datasource.url=jdbc:mysql://localhost:3306/todo_db?serverTimezone=JST
+spring.datasource.username=root
+spring.datasource.password=password
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+<span class="code-comment"># MyBatis設定</span>
+mybatis.configuration.map-underscore-to-camel-case=true</pre>
+                            </div>
+                        </div>
+
+                        <div class="info-box warning">
+                            <div class="info-box-icon">⚠️</div>
+                            <div class="info-box-content">
+                                <div class="info-box-title">接続情報の変更</div>
+                                <p>
+                                    <code>username</code>、<code>password</code>、データベース名（<code>todo_db</code>）は、お使いの環境に合わせて変更してください。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 11-1 -->
+            <section class="section" id="section-11-1">
+                <div class="section-header">
+                    <span class="section-number">Section 11-1</span>
+                    <h2 class="section-title">「Domain Object」と「Repository」を作成しよう</h2>
+                </div>
+                <div class="section-content">
+                    <!-- 導入 -->
+                    <p>
+                        前の章でデータベースのテーブル構造を作成しました。今回は、そのテーブルと対応する<strong>Javaのクラス</strong>を作っていきます。
+                    </p>
+
+                    <div class="info-box note">
+                        <div class="info-box-icon">💡</div>
+                        <div class="info-box-content">
+                            <div class="info-box-title">初学者の方へ</div>
+                            <p>
+                                プログラムを作る方法はいろいろありますが、初めての方には<strong>「使われる側」のクラスから作る</strong>方法がおすすめです。なぜなら、シンプルなものから順番に作っていけるからです。
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 11-1-1 今回作成するコンポーネント -->
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">11-1-1</span>
+                            <h3 class="subsection-title">今回作成するコンポーネント</h3>
+                        </div>
+
+                        <p>
+                            ToDoアプリを完成させるために必要な部品（コンポーネント）を確認しましょう。今回は<strong>黄色でハイライトした部分</strong>を作成します。
+                        </p>
+
+                        <!-- コンポーネント一覧図 -->
+                        <div class="figure">
+                            <svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                                        <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.15" />
+                                    </filter>
+                                    <linearGradient id="appGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color: #3b82f6" />
+                                        <stop offset="100%" style="stop-color: #2563eb" />
+                                    </linearGradient>
+                                    <linearGradient id="domainGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color: #8b5cf6" />
+                                        <stop offset="100%" style="stop-color: #7c3aed" />
+                                    </linearGradient>
+                                    <linearGradient id="infraGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color: #10b981" />
+                                        <stop offset="100%" style="stop-color: #059669" />
+                                    </linearGradient>
+                                    <linearGradient id="highlightGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color: #fbbf24" />
+                                        <stop offset="100%" style="stop-color: #f59e0b" />
+                                    </linearGradient>
+                                    <marker id="arrowFlow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                        <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
+                                    </marker>
+                                </defs>
+
+                                <!-- 背景 -->
+                                <rect width="800" height="450" fill="#f8fafc" rx="12" />
+
+                                <!-- タイトル -->
+                                <text x="400" y="32" text-anchor="middle" font-family="Noto Sans JP" font-size="16" font-weight="bold" fill="#2c3e50">
+                                    ToDoアプリ コンポーネント構成図
+                                </text>
+                                <text x="400" y="52" text-anchor="middle" font-family="Noto Sans JP" font-size="11" fill="#64748b">
+                                    黄色 = 今回作成するコンポーネント
+                                </text>
+
+                                <!-- アプリケーション層 -->
+                                <g filter="url(#shadow)">
+                                    <rect x="30" y="75" width="220" height="140" rx="12" fill="url(#appGrad)" />
+                                    <text x="140" y="100" text-anchor="middle" font-family="Noto Sans JP" font-size="13" font-weight="bold" fill="white">
+                                        アプリケーション層
+                                    </text>
+                                    <text x="140" y="116" text-anchor="middle" font-family="Noto Sans JP" font-size="9" fill="rgba(255,255,255,0.8)">
+                                        （第13章で作成）
+                                    </text>
+                                    <rect x="45" y="128" width="90" height="32" rx="6" fill="rgba(255,255,255,0.2)" />
+                                    <text x="90" y="149" text-anchor="middle" font-family="Noto Sans JP" font-size="11" fill="white">View</text>
+                                    <rect x="145" y="128" width="90" height="32" rx="6" fill="rgba(255,255,255,0.2)" />
+                                    <text x="190" y="149" text-anchor="middle" font-family="Noto Sans JP" font-size="11" fill="white">Controller</text>
+                                    <rect x="95" y="168" width="90" height="32" rx="6" fill="rgba(255,255,255,0.2)" />
+                                    <text x="140" y="189" text-anchor="middle" font-family="Noto Sans JP" font-size="11" fill="white">Form</text>
+                                </g>
+
+                                <!-- 矢印: アプリケーション層 → ドメイン層 -->
+                                <path d="M 250 145 L 280 145" stroke="#64748b" stroke-width="2" marker-end="url(#arrowFlow)" />
+
+                                <!-- ドメイン層 -->
+                                <g filter="url(#shadow)">
+                                    <rect x="290" y="75" width="220" height="190" rx="12" fill="url(#domainGrad)" />
+                                    <text x="400" y="100" text-anchor="middle" font-family="Noto Sans JP" font-size="13" font-weight="bold" fill="white">
+                                        ドメイン層
+                                    </text>
+
+                                    <!-- Domain Object（ハイライト） -->
+                                    <rect x="305" y="118" width="90" height="45" rx="6" fill="url(#highlightGrad)" stroke="#fff" stroke-width="2" />
+                                    <text x="350" y="138" text-anchor="middle" font-family="Noto Sans JP" font-size="10" fill="#1a202c" font-weight="bold">Domain Object</text>
+                                    <text x="350" y="153" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#1a202c">(ToDo.java)</text>
+
+                                    <!-- Repository（ハイライト） -->
+                                    <rect x="405" y="118" width="90" height="45" rx="6" fill="url(#highlightGrad)" stroke="#fff" stroke-width="2" />
+                                    <text x="450" y="138" text-anchor="middle" font-family="Noto Sans JP" font-size="10" fill="#1a202c" font-weight="bold">Repository</text>
+                                    <text x="450" y="153" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#1a202c">(ToDoMapper.java)</text>
+
+                                    <!-- Service -->
+                                    <rect x="305" y="173" width="90" height="35" rx="6" fill="rgba(255,255,255,0.2)" />
+                                    <text x="350" y="195" text-anchor="middle" font-family="Noto Sans JP" font-size="11" fill="white">Service</text>
+                                    <rect x="405" y="173" width="90" height="35" rx="6" fill="rgba(255,255,255,0.2)" />
+                                    <text x="450" y="195" text-anchor="middle" font-family="Noto Sans JP" font-size="10" fill="white">ServiceImpl</text>
+                                    <text x="400" y="225" text-anchor="middle" font-family="Noto Sans JP" font-size="9" fill="rgba(255,255,255,0.7)">（第12章で作成）</text>
+
+                                    <!-- 今回作成ラベル -->
+                                    <text x="400" y="252" text-anchor="middle" font-family="Noto Sans JP" font-size="11" fill="#fbbf24" font-weight="bold">
+                                        ★ 今回作成
+                                    </text>
+                                </g>
+
+                                <!-- 矢印: ドメイン層 → インフラストラクチャ層 -->
+                                <path d="M 510 145 L 540 145" stroke="#64748b" stroke-width="2" marker-end="url(#arrowFlow)" />
+
+                                <!-- インフラストラクチャ層 -->
+                                <g filter="url(#shadow)">
+                                    <rect x="550" y="75" width="220" height="190" rx="12" fill="url(#infraGrad)" />
+                                    <text x="660" y="100" text-anchor="middle" font-family="Noto Sans JP" font-size="12" font-weight="bold" fill="white">
+                                        インフラストラクチャ層
+                                    </text>
+
+                                    <!-- O/R Mapper（ハイライト） -->
+                                    <rect x="565" y="118" width="95" height="45" rx="6" fill="url(#highlightGrad)" stroke="#fff" stroke-width="2" />
+                                    <text x="612" y="138" text-anchor="middle" font-family="Noto Sans JP" font-size="10" fill="#1a202c" font-weight="bold">O/R Mapper</text>
+                                    <text x="612" y="153" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#1a202c">(ToDoMapper.xml)</text>
+
+                                    <!-- Repository Impl -->
+                                    <rect x="670" y="118" width="85" height="45" rx="6" fill="rgba(255,255,255,0.2)" />
+                                    <text x="712" y="136" text-anchor="middle" font-family="Noto Sans JP" font-size="10" fill="white">Repository</text>
+                                    <text x="712" y="151" text-anchor="middle" font-family="Noto Sans JP" font-size="10" fill="white">Impl</text>
+
+                                    <text x="660" y="185" text-anchor="middle" font-family="Noto Sans JP" font-size="10" fill="rgba(255,255,255,0.8)">
+                                        ↑ MyBatisが自動生成
+                                    </text>
+
+                                    <!-- 今回作成ラベル -->
+                                    <text x="612" y="252" text-anchor="middle" font-family="Noto Sans JP" font-size="11" fill="#fbbf24" font-weight="bold">
+                                        ★ 今回作成
+                                    </text>
+                                </g>
+
+                                <!-- データベース -->
+                                <g filter="url(#shadow)">
+                                    <ellipse cx="660" cy="380" rx="90" ry="45" fill="#64748b" />
+                                    <rect x="570" y="335" width="180" height="45" fill="#64748b" />
+                                    <ellipse cx="660" cy="335" rx="90" ry="45" fill="#94a3b8" />
+                                    <text x="660" y="340" text-anchor="middle" font-family="Noto Sans JP" font-size="13" fill="white" font-weight="bold">
+                                        Database
+                                    </text>
+                                    <text x="660" y="360" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="white">
+                                        todosテーブル
+                                    </text>
+                                </g>
+
+                                <!-- 矢印: インフラストラクチャ層 → データベース -->
+                                <path d="M 660 265 L 660 290" stroke="#64748b" stroke-width="2" marker-end="url(#arrowFlow)" />
+                                <text x="680" y="282" font-family="Noto Sans JP" font-size="9" fill="#64748b">SQL</text>
+
+                                <!-- 凡例 -->
+                                <g filter="url(#shadow)">
+                                    <rect x="30" y="290" width="220" height="110" rx="8" fill="white" stroke="#e2e8f0" />
+                                    <text x="140" y="312" text-anchor="middle" font-family="Noto Sans JP" font-size="11" font-weight="bold" fill="#2c3e50">凡例</text>
+                                    <rect x="45" y="325" width="18" height="18" rx="4" fill="url(#highlightGrad)" />
+                                    <text x="72" y="338" font-family="Noto Sans JP" font-size="10" fill="#2c3e50">今回作成</text>
+                                    <rect x="140" y="325" width="18" height="18" rx="4" fill="rgba(100,100,100,0.3)" />
+                                    <text x="167" y="338" font-family="Noto Sans JP" font-size="10" fill="#2c3e50">別の章で作成</text>
+                                    <line x1="45" y1="365" x2="75" y2="365" stroke="#64748b" stroke-width="2" marker-end="url(#arrowFlow)" />
+                                    <text x="90" y="369" font-family="Noto Sans JP" font-size="10" fill="#2c3e50">依存の方向（呼び出し）</text>
+                                </g>
+                            </svg>
+                            <p class="figure-caption">図11.1 今回作成するコンポーネント</p>
+                        </div>
+
+                        <div class="table-container">
+                            <p style="font-weight: 700; margin-bottom: 12px">表11.1 作成予定コンポーネント</p>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>層</th>
+                                        <th>コンポーネント</th>
+                                        <th>作成物名称</th>
+                                        <th>説明</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="background: #fef3c7">
+                                        <td><strong>6</strong></td>
+                                        <td>ドメイン層</td>
+                                        <td>Domain Object</td>
+                                        <td>ToDo</td>
+                                        <td>テーブルの1行を表すクラス</td>
+                                    </tr>
+                                    <tr style="background: #fef3c7">
+                                        <td><strong>7</strong></td>
+                                        <td>ドメイン層</td>
+                                        <td>Repository</td>
+                                        <td>ToDoMapper</td>
+                                        <td>データベース操作を定義するインターフェース</td>
+                                    </tr>
+                                    <tr style="background: #fef3c7">
+                                        <td><strong>9</strong></td>
+                                        <td>インフラストラクチャ層</td>
+                                        <td>O/R Mapper</td>
+                                        <td>MyBatis</td>
+                                        <td>SQLを記述するXMLファイル</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- フォルダ構成図 -->
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">11-1-1b</span>
+                            <h3 class="subsection-title">プロジェクトのフォルダ構成</h3>
+                        </div>
+
+                        <p>
+                            Spring Bootプロジェクトの標準的なフォルダ構成を確認しましょう。今回作成するファイルの配置場所を理解しておくことが大切です。
+                        </p>
+
+                        <!-- フォルダ構成図（SVG） -->
+                        <div class="figure">
+                            <svg viewBox="0 0 800 620" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <filter id="shadowFolder" x="-20%" y="-20%" width="140%" height="140%">
+                                        <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.1" />
+                                    </filter>
+                                </defs>
+
+                                <!-- 背景 -->
+                                <rect width="800" height="620" fill="#f8fafc" rx="12" />
+
+                                <!-- タイトル -->
+                                <text x="400" y="28" text-anchor="middle" font-family="Noto Sans JP" font-size="15" font-weight="bold" fill="#2c3e50">
+                                    プロジェクトのフォルダ構成（Maven）
+                                </text>
+                                <text x="400" y="48" text-anchor="middle" font-family="Noto Sans JP" font-size="11" fill="#64748b">
+                                    黄色 = 今回作成・編集するファイル
+                                </text>
+
+                                <!-- フォルダツリー -->
+                                <g font-family="JetBrains Mono" font-size="12">
+                                    <!-- webapp（ルート） -->
+                                    <text x="40" y="80" fill="#2563eb" font-weight="bold">📁 webapp/</text>
+
+                                    <!-- pom.xml -->
+                                    <text x="70" y="105" fill="#64748b">├── 📄 pom.xml</text>
+                                    <text x="280" y="105" fill="#94a3b8" font-family="Noto Sans JP" font-size="10">（Maven設定ファイル）</text>
+
+                                    <!-- src -->
+                                    <text x="70" y="130" fill="#2563eb">├── 📁 src/</text>
+
+                                    <!-- main -->
+                                    <text x="100" y="155" fill="#2563eb">│   ├── 📁 main/</text>
+
+                                    <!-- java -->
+                                    <text x="130" y="180" fill="#2563eb">│   │   ├── 📁 java/</text>
+
+                                    <!-- com.example.webapp -->
+                                    <text x="160" y="205" fill="#2563eb">│   │   │   └── 📁 com/example/webapp/</text>
+
+                                    <!-- WebappApplication.java -->
+                                    <text x="190" y="230" fill="#64748b">│   │   │       ├── 📄 WebappApplication.java</text>
+                                    <text x="520" y="230" fill="#94a3b8" font-family="Noto Sans JP" font-size="10">（メインクラス）</text>
+
+                                    <!-- entity パッケージ -->
+                                    <text x="190" y="255" fill="#2563eb">│   │   │       ├── 📁 entity/</text>
+                                    <rect x="380" y="240" width="120" height="22" rx="4" fill="#fef3c7" stroke="#f59e0b" />
+                                    <text x="390" y="256" fill="#92400e" font-size="11">★ ToDo.java</text>
+
+                                    <!-- repository パッケージ -->
+                                    <text x="190" y="285" fill="#2563eb">│   │   │       ├── 📁 repository/</text>
+                                    <rect x="410" y="270" width="150" height="22" rx="4" fill="#fef3c7" stroke="#f59e0b" />
+                                    <text x="420" y="286" fill="#92400e" font-size="11">★ ToDoMapper.java</text>
+
+                                    <!-- service パッケージ -->
+                                    <text x="190" y="315" fill="#94a3b8">│   │   │       ├── 📁 service/</text>
+                                    <text x="410" y="315" fill="#94a3b8" font-family="Noto Sans JP" font-size="10">（第12章で作成）</text>
+
+                                    <!-- controller パッケージ -->
+                                    <text x="190" y="345" fill="#94a3b8">│   │   │       └── 📁 controller/</text>
+                                    <text x="440" y="345" fill="#94a3b8" font-family="Noto Sans JP" font-size="10">（第13章で作成）</text>
+
+                                    <!-- resources -->
+                                    <text x="130" y="380" fill="#2563eb">│   │   └── 📁 resources/</text>
+
+                                    <!-- application.properties -->
+                                    <text x="160" y="405" fill="#64748b">│   │       ├── 📄 application.properties</text>
+                                    <text x="450" y="405" fill="#94a3b8" font-family="Noto Sans JP" font-size="10">（設定ファイル）</text>
+
+                                    <!-- static -->
+                                    <text x="160" y="430" fill="#94a3b8">│   │       ├── 📁 static/</text>
+                                    <text x="310" y="430" fill="#94a3b8" font-family="Noto Sans JP" font-size="10">（CSS, JS等）</text>
+
+                                    <!-- templates -->
+                                    <text x="160" y="455" fill="#94a3b8">│   │       ├── 📁 templates/</text>
+                                    <text x="340" y="455" fill="#94a3b8" font-family="Noto Sans JP" font-size="10">（HTMLテンプレート）</text>
+
+                                    <!-- mapper xml配置場所 -->
+                                    <text x="160" y="485" fill="#2563eb">│   │       └── 📁 com/example/webapp/repository/</text>
+                                    <rect x="520" y="470" width="160" height="22" rx="4" fill="#fef3c7" stroke="#f59e0b" />
+                                    <text x="530" y="486" fill="#92400e" font-size="11">★ ToDoMapper.xml</text>
+
+                                    <!-- test -->
+                                    <text x="100" y="520" fill="#94a3b8">│   └── 📁 test/</text>
+                                    <text x="230" y="520" fill="#94a3b8" font-family="Noto Sans JP" font-size="10">（テストコード）</text>
+
+                                    <!-- target -->
+                                    <text x="70" y="550" fill="#94a3b8">└── 📁 target/</text>
+                                    <text x="200" y="550" fill="#94a3b8" font-family="Noto Sans JP" font-size="10">（ビルド成果物・自動生成）</text>
+                                </g>
+
+                                <!-- 凡例 -->
+                                <g filter="url(#shadowFolder)">
+                                    <rect x="550" y="70" width="220" height="100" rx="8" fill="white" stroke="#e2e8f0" />
+                                    <text x="660" y="92" text-anchor="middle" font-family="Noto Sans JP" font-size="11" font-weight="bold" fill="#374151">凡例</text>
+                                    <rect x="565" y="105" width="18" height="18" rx="4" fill="#fef3c7" stroke="#f59e0b" />
+                                    <text x="592" y="118" font-family="Noto Sans JP" font-size="10" fill="#374151">今回作成するファイル</text>
+                                    <text x="565" y="145" font-family="JetBrains Mono" font-size="11" fill="#2563eb">📁</text>
+                                    <text x="592" y="145" font-family="Noto Sans JP" font-size="10" fill="#374151">フォルダ（青=使用）</text>
+                                    <text x="565" y="160" font-family="JetBrains Mono" font-size="11" fill="#94a3b8">📁</text>
+                                    <text x="592" y="160" font-family="Noto Sans JP" font-size="10" fill="#94a3b8">フォルダ（灰=後で使用）</text>
+                                </g>
+
+                                <!-- 重要ポイント -->
+                                <g filter="url(#shadowFolder)">
+                                    <rect x="40" y="570" width="720" height="40" rx="6" fill="#dbeafe" stroke="#3b82f6" />
+                                    <text x="60" y="595" font-family="Noto Sans JP" font-size="11" fill="#1e40af">
+                                        💡 ポイント：マッパーXMLファイルは resources 配下に、Javaインターフェースと同じパッケージ構成で配置します
+                                    </text>
+                                </g>
+                            </svg>
+                            <p class="figure-caption">図11.1b プロジェクトのフォルダ構成</p>
+                        </div>
+
+                        <div class="info-box tip">
+                            <div class="info-box-icon">📂</div>
+                            <div class="info-box-content">
+                                <div class="info-box-title">VSCodeでのフォルダ作成</div>
+                                <p>
+                                    VSCodeでフォルダを作成するには、エクスプローラーで親フォルダを右クリック →「新しいフォルダー」を選択します。パッケージを作成する場合は、<code>entity</code>、<code>repository</code>のようにフォルダ名を入力してください。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 11-1-2 Domain Object：エンティティの作成 -->
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">11-1-2</span>
+                            <h3 class="subsection-title">Domain Object：エンティティの作成</h3>
+                        </div>
+
+                        <p>
+                            まずは<strong>「Domain Object」</strong
+                            >を作成します。これは、データベースのテーブルの<strong>1行分のデータ</strong>を表すクラスです。
+                        </p>
+
+                        <div class="info-box beginner">
+                            <div class="info-box-icon">🍕</div>
+                            <div class="info-box-content">
+                                <div class="info-box-title">例え話で理解しよう</div>
+                                <p>
+                                    データベースのテーブルを「表計算ソフトのシート」だと考えてください。<br />
+                                    <strong>Domain Object（エンティティ）</strong
+                                    >は、そのシートの<strong>「1行分のデータ」</strong>を箱に入れて持ち運べるようにしたものです。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- テーブルとクラスの対応図 -->
+                        <div class="figure">
+                            <svg viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <filter id="shadow2" x="-20%" y="-20%" width="140%" height="140%">
+                                        <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.15" />
+                                    </filter>
+                                    <linearGradient id="tableGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color: #10b981" />
+                                        <stop offset="100%" style="stop-color: #059669" />
+                                    </linearGradient>
+                                    <linearGradient id="classGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color: #8b5cf6" />
+                                        <stop offset="100%" style="stop-color: #7c3aed" />
+                                    </linearGradient>
+                                    <marker id="arrowMap" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                        <polygon points="0 0, 10 3.5, 0 7" fill="#f59e0b" />
+                                    </marker>
+                                </defs>
+
+                                <!-- 背景 -->
+                                <rect width="800" height="380" fill="#f8fafc" rx="12" />
+
+                                <!-- タイトル -->
+                                <text x="400" y="28" text-anchor="middle" font-family="Noto Sans JP" font-size="15" font-weight="bold" fill="#2c3e50">
+                                    テーブルの1行 = Entityクラスの1インスタンス
+                                </text>
+
+                                <!-- データベーステーブル -->
+                                <g filter="url(#shadow2)">
+                                    <rect x="25" y="50" width="330" height="220" rx="10" fill="white" stroke="#10b981" stroke-width="2" />
+                                    <rect x="25" y="50" width="330" height="38" rx="10" fill="url(#tableGrad)" />
+                                    <text x="190" y="76" text-anchor="middle" font-family="Noto Sans JP" font-size="13" font-weight="bold" fill="white">
+                                        todosテーブル（データベース）
+                                    </text>
+
+                                    <!-- ヘッダー行 -->
+                                    <rect x="25" y="88" width="82" height="28" fill="#ecfdf5" stroke="#10b981" />
+                                    <text x="66" y="107" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#059669" font-weight="bold">id</text>
+                                    <rect x="107" y="88" width="82" height="28" fill="#ecfdf5" stroke="#10b981" />
+                                    <text x="148" y="107" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#059669" font-weight="bold">todo</text>
+                                    <rect x="189" y="88" width="82" height="28" fill="#ecfdf5" stroke="#10b981" />
+                                    <text x="230" y="107" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#059669" font-weight="bold">detail</text>
+                                    <rect x="271" y="88" width="84" height="28" fill="#ecfdf5" stroke="#10b981" />
+                                    <text x="313" y="107" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#059669" font-weight="bold">created_at</text>
+
+                                    <!-- データ行1（薄い） -->
+                                    <rect x="25" y="116" width="82" height="28" fill="white" stroke="#e5e7eb" />
+                                    <text x="66" y="135" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#9ca3af">1</text>
+                                    <rect x="107" y="116" width="82" height="28" fill="white" stroke="#e5e7eb" />
+                                    <text x="148" y="135" text-anchor="middle" font-family="Noto Sans JP" font-size="11" fill="#9ca3af">買い物</text>
+                                    <rect x="189" y="116" width="82" height="28" fill="white" stroke="#e5e7eb" />
+                                    <text x="230" y="135" text-anchor="middle" font-family="Noto Sans JP" font-size="10" fill="#9ca3af">牛乳を買う</text>
+                                    <rect x="271" y="116" width="84" height="28" fill="white" stroke="#e5e7eb" />
+                                    <text x="313" y="135" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#9ca3af">2024-03...</text>
+
+                                    <!-- ハイライト行（この1行が対応） -->
+                                    <rect x="25" y="144" width="330" height="32" fill="#fef3c7" stroke="#f59e0b" stroke-width="2" rx="4" />
+                                    <text x="66" y="165" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#92400e" font-weight="bold">2</text>
+                                    <text x="148" y="165" text-anchor="middle" font-family="Noto Sans JP" font-size="11" fill="#92400e" font-weight="bold">勉強</text>
+                                    <text x="230" y="165" text-anchor="middle" font-family="Noto Sans JP" font-size="10" fill="#92400e" font-weight="bold">Java復習</text>
+                                    <text x="313" y="165" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#92400e" font-weight="bold">2024-03-15</text>
+
+                                    <!-- データ行3（薄い） -->
+                                    <rect x="25" y="176" width="82" height="28" fill="white" stroke="#e5e7eb" />
+                                    <text x="66" y="195" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#9ca3af">3</text>
+                                    <rect x="107" y="176" width="82" height="28" fill="white" stroke="#e5e7eb" />
+                                    <text x="148" y="195" text-anchor="middle" font-family="Noto Sans JP" font-size="11" fill="#9ca3af">運動</text>
+                                    <rect x="189" y="176" width="82" height="28" fill="white" stroke="#e5e7eb" />
+                                    <text x="230" y="195" text-anchor="middle" font-family="Noto Sans JP" font-size="10" fill="#9ca3af">ジョギング</text>
+                                    <rect x="271" y="176" width="84" height="28" fill="white" stroke="#e5e7eb" />
+                                    <text x="313" y="195" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#9ca3af">2024-03...</text>
+
+                                    <!-- 説明テキスト -->
+                                    <text x="190" y="230" text-anchor="middle" font-family="Noto Sans JP" font-size="11" fill="#64748b">
+                                        この1行のデータが...
+                                    </text>
+                                    <text x="190" y="248" text-anchor="middle" font-family="Noto Sans JP" font-size="10" fill="#94a3b8">
+                                        （複数行あっても、1行ずつ対応）
+                                    </text>
+                                </g>
+
+                                <!-- 矢印 -->
+                                <path d="M 365 160 L 435 160" stroke="#f59e0b" stroke-width="3" marker-end="url(#arrowMap)" />
+                                <text x="400" y="145" text-anchor="middle" font-family="Noto Sans JP" font-size="12" fill="#f59e0b" font-weight="bold">
+                                    対応
+                                </text>
+
+                                <!-- Javaクラス -->
+                                <g filter="url(#shadow2)">
+                                    <rect x="445" y="50" width="330" height="280" rx="10" fill="white" stroke="#8b5cf6" stroke-width="2" />
+                                    <rect x="445" y="50" width="330" height="38" rx="10" fill="url(#classGrad)" />
+                                    <text x="610" y="76" text-anchor="middle" font-family="Noto Sans JP" font-size="13" font-weight="bold" fill="white">
+                                        ToDoクラス（Java Entity）
+                                    </text>
+
+                                    <!-- コード表示エリア -->
+                                    <rect x="460" y="98" width="300" height="220" rx="6" fill="#faf5ff" />
+
+                                    <!-- コード -->
+                                    <text x="475" y="122" font-family="JetBrains Mono" font-size="11" fill="#7c3aed" font-weight="bold">public class ToDo {</text>
+
+                                    <!-- id フィールド -->
+                                    <text x="495" y="148" font-family="JetBrains Mono" font-size="10" fill="#6b7280">// id列に対応</text>
+                                    <text x="495" y="166" font-family="JetBrains Mono" font-size="11" fill="#1a202c">private Integer <tspan fill="#f59e0b" font-weight="bold">id</tspan>;</text>
+
+                                    <!-- todo フィールド -->
+                                    <text x="495" y="192" font-family="JetBrains Mono" font-size="10" fill="#6b7280">// todo列に対応</text>
+                                    <text x="495" y="210" font-family="JetBrains Mono" font-size="11" fill="#1a202c">private String <tspan fill="#f59e0b" font-weight="bold">todo</tspan>;</text>
+
+                                    <!-- detail フィールド -->
+                                    <text x="495" y="236" font-family="JetBrains Mono" font-size="10" fill="#6b7280">// detail列に対応</text>
+                                    <text x="495" y="254" font-family="JetBrains Mono" font-size="11" fill="#1a202c">private String <tspan fill="#f59e0b" font-weight="bold">detail</tspan>;</text>
+
+                                    <!-- createdAt フィールド -->
+                                    <text x="495" y="280" font-family="JetBrains Mono" font-size="10" fill="#6b7280">// created_at列に対応</text>
+                                    <text x="495" y="298" font-family="JetBrains Mono" font-size="11" fill="#1a202c">private LocalDateTime <tspan fill="#f59e0b" font-weight="bold">createdAt</tspan>;</text>
+
+                                    <text x="475" y="318" font-family="JetBrains Mono" font-size="11" fill="#7c3aed" font-weight="bold">}</text>
+                                </g>
+
+                                <!-- 凡例 -->
+                                <g>
+                                    <rect x="25" y="340" width="180" height="32" rx="6" fill="white" stroke="#e2e8f0" />
+                                    <rect x="35" y="348" width="16" height="16" rx="3" fill="#fef3c7" stroke="#f59e0b" />
+                                    <text x="60" y="361" font-family="Noto Sans JP" font-size="10" fill="#64748b">対応するデータ/フィールド</text>
+                                </g>
+                            </svg>
+                            <p class="figure-caption">図11.2 テーブルの1行とエンティティクラスの対応</p>
+                        </div>
+
+                        <h4>■ 設定内容</h4>
+                        <div class="table-container">
+                            <table class="settings-table">
+                                <tr>
+                                    <th>パッケージ</th>
+                                    <td>com.example.webapp.entity</td>
+                                </tr>
+                                <tr>
+                                    <th>名前</th>
+                                    <td>ToDo</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">リスト11.1 ToDo.java</span>
+                                <span class="code-lang">Java</span>
+                            </div>
+                            <div class="code-content">
+                                <pre><span class="code-keyword">package</span> com.example.webapp.entity;
+
+<span class="code-keyword">import</span> java.time.LocalDateTime;
+
+<span class="code-keyword">import</span> lombok.AllArgsConstructor;
+<span class="code-keyword">import</span> lombok.Data;
+<span class="code-keyword">import</span> lombok.NoArgsConstructor;
+
+<span class="code-comment">/**
+ * すること：エンティティ
+ * todosテーブルの1行分のデータを表すクラスです
+ */</span>
+<span class="code-annotation">@Data</span>
+<span class="code-annotation">@NoArgsConstructor</span>
+<span class="code-annotation">@AllArgsConstructor</span>
+<span class="code-keyword">public class</span> <span class="code-class">ToDo</span> {
+    <span class="code-comment">/** すること ID */</span>
+    <span class="code-keyword">private</span> Integer id;
+    
+    <span class="code-comment">/** すること */</span>
+    <span class="code-keyword">private</span> String todo;
+    
+    <span class="code-comment">/** すること詳細 */</span>
+    <span class="code-keyword">private</span> String detail;
+    
+    <span class="code-comment">/** 作成日時 */</span>
+    <span class="code-keyword">private</span> LocalDateTime createdAt;
+    
+    <span class="code-comment">/** 更新日時 */</span>
+    <span class="code-keyword">private</span> LocalDateTime updatedAt;
+}</pre>
+                            </div>
+                        </div>
+
+                        <div class="info-box tip">
+                            <div class="info-box-icon">🔧</div>
+                            <div class="info-box-content">
+                                <div class="info-box-title">Lombokアノテーションの説明</div>
+                                <p>
+                                    <code>@Data</code> - getter/setterを自動生成します<br />
+                                    <code>@NoArgsConstructor</code> - 引数なしコンストラクタを自動生成します<br />
+                                    <code>@AllArgsConstructor</code> -
+                                    全フィールドを引数に持つコンストラクタを自動生成します
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 11-1-3 Repositoryの作成 -->
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">11-1-3</span>
+                            <h3 class="subsection-title">Repositoryの作成</h3>
+                        </div>
+
+                        <p>
+                            次に<strong>「Repository」</strong>を作成します。「Repository」は<strong>インターフェース</strong>として作成し、データベースを操作するメソッドを定義します。
+                        </p>
+
+                        <div class="info-box beginner">
+                            <div class="info-box-icon">📋</div>
+                            <div class="info-box-content">
+                                <div class="info-box-title">インターフェースって何？</div>
+                                <p>
+                                    インターフェースは「約束事のリスト」のようなものです。「このメソッドを使えるようにしてね」という<strong>定義だけ</strong>を書きます。<br />実際の処理内容（中身）は、後でMyBatisのマッパーファイルに書きます。
+                                </p>
+                            </div>
+                        </div>
+
+                        <h4>■ 設定内容</h4>
+                        <div class="table-container">
+                            <table class="settings-table">
+                                <tr>
+                                    <th>パッケージ</th>
+                                    <td>com.example.webapp.repository</td>
+                                </tr>
+                                <tr>
+                                    <th>名前</th>
+                                    <td>ToDoMapper</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">リスト11.2 ToDoMapper.java</span>
+                                <span class="code-lang">Java</span>
+                            </div>
+                            <div class="code-content">
+                                <pre><span class="code-keyword">package</span> com.example.webapp.repository;
+
+<span class="code-keyword">import</span> java.util.List;
+
+<span class="code-keyword">import</span> org.apache.ibatis.annotations.Mapper;
+<span class="code-keyword">import</span> org.apache.ibatis.annotations.Param;
+
+<span class="code-keyword">import</span> com.example.webapp.entity.ToDo;
+
+<span class="code-comment">/**
+ * ToDo：リポジトリ
+ * データベースの操作を定義するインターフェースです
+ */</span>
+<span class="code-annotation">@Mapper</span>
+<span class="code-keyword">public interface</span> <span class="code-class">ToDoMapper</span> {
+    
+    <span class="code-comment">/**
+     * 全ての「すること」を取得します。
+     */</span>
+    List&lt;ToDo&gt; <span class="code-method">selectAll</span>();
+    
+    <span class="code-comment">/**
+     * 指定されたIDに対応する「すること」を取得します。
+     */</span>
+    ToDo <span class="code-method">selectById</span>(<span class="code-annotation">@Param</span>(<span class="code-string">"id"</span>) Integer id);
+    
+    <span class="code-comment">/**
+     * 「すること」を登録します。
+     */</span>
+    <span class="code-keyword">void</span> <span class="code-method">insert</span>(ToDo toDo);
+    
+    <span class="code-comment">/**
+     * 「すること」を更新します。
+     */</span>
+    <span class="code-keyword">void</span> <span class="code-method">update</span>(ToDo toDo);
+    
+    <span class="code-comment">/**
+     * 指定されたIDの「すること」を削除します。
+     */</span>
+    <span class="code-keyword">void</span> <span class="code-method">delete</span>(<span class="code-annotation">@Param</span>(<span class="code-string">"id"</span>) Integer id);
+}</pre>
+                            </div>
+                        </div>
+
+                        <div class="info-box note">
+                            <div class="info-box-icon">📝</div>
+                            <div class="info-box-content">
+                                <div class="info-box-title">@Mapperアノテーション</div>
+                                <p>
+                                    <code>@Mapper</code
+                                    >を付けることで、このインターフェースがMyBatisの「マッパー」であることを示します。MyBatisは、このインターフェースの実装クラスを<strong>自動的に生成</strong>してくれます。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- CRUD操作の図 -->
+                        <div class="figure">
+                            <svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="800" height="200" fill="#f8fafc" rx="12" />
+                                <text
+                                    x="400"
+                                    y="30"
+                                    text-anchor="middle"
+                                    font-family="Noto Sans JP"
+                                    font-size="14"
+                                    font-weight="bold"
+                                    fill="#2c3e50"
+                                >
+                                    CRUD操作とメソッドの対応
+                                </text>
+
+                                <!-- Create -->
+                                <g>
+                                    <rect
+                                        x="40"
+                                        y="55"
+                                        width="160"
+                                        height="120"
+                                        rx="10"
+                                        fill="#ecfdf5"
+                                        stroke="#10b981"
+                                        stroke-width="2"
+                                    />
+                                    <circle cx="70" cy="85" r="18" fill="#10b981" />
+                                    <text
+                                        x="70"
+                                        y="91"
+                                        text-anchor="middle"
+                                        font-family="Noto Sans JP"
+                                        font-size="12"
+                                        font-weight="bold"
+                                        fill="white"
+                                    >
+                                        C
+                                    </text>
+                                    <text
+                                        x="130"
+                                        y="85"
+                                        text-anchor="middle"
+                                        font-family="Noto Sans JP"
+                                        font-size="14"
+                                        font-weight="bold"
+                                        fill="#059669"
+                                    >
+                                        Create
+                                    </text>
+                                    <text
+                                        x="120"
+                                        y="110"
+                                        text-anchor="middle"
+                                        font-family="Noto Sans JP"
+                                        font-size="12"
+                                        fill="#374151"
+                                    >
+                                        登録
+                                    </text>
+                                    <rect x="55" y="125" width="130" height="35" rx="5" fill="white" />
+                                    <text
+                                        x="120"
+                                        y="148"
+                                        text-anchor="middle"
+                                        font-family="JetBrains Mono"
+                                        font-size="11"
+                                        fill="#10b981"
+                                    >
+                                        insert()
+                                    </text>
+                                </g>
+
+                                <!-- Read -->
+                                <g>
+                                    <rect
+                                        x="220"
+                                        y="55"
+                                        width="160"
+                                        height="120"
+                                        rx="10"
+                                        fill="#e6f7fc"
+                                        stroke="#00A3E0"
+                                        stroke-width="2"
+                                    />
+                                    <circle cx="250" cy="85" r="18" fill="#00A3E0" />
+                                    <text
+                                        x="250"
+                                        y="91"
+                                        text-anchor="middle"
+                                        font-family="Noto Sans JP"
+                                        font-size="12"
+                                        font-weight="bold"
+                                        fill="white"
+                                    >
+                                        R
+                                    </text>
+                                    <text
+                                        x="310"
+                                        y="85"
+                                        text-anchor="middle"
+                                        font-family="Noto Sans JP"
+                                        font-size="14"
+                                        font-weight="bold"
+                                        fill="#0077a3"
+                                    >
+                                        Read
+                                    </text>
+                                    <text
+                                        x="300"
+                                        y="110"
+                                        text-anchor="middle"
+                                        font-family="Noto Sans JP"
+                                        font-size="12"
+                                        fill="#374151"
+                                    >
+                                        取得
+                                    </text>
+                                    <rect x="235" y="125" width="130" height="35" rx="5" fill="white" />
+                                    <text
+                                        x="300"
+                                        y="143"
+                                        text-anchor="middle"
+                                        font-family="JetBrains Mono"
+                                        font-size="10"
+                                        fill="#00A3E0"
+                                    >
+                                        selectAll()
+                                    </text>
+                                    <text
+                                        x="300"
+                                        y="158"
+                                        text-anchor="middle"
+                                        font-family="JetBrains Mono"
+                                        font-size="10"
+                                        fill="#00A3E0"
+                                    >
+                                        selectById()
+                                    </text>
+                                </g>
+
+                                <!-- Update -->
+                                <g>
+                                    <rect
+                                        x="400"
+                                        y="55"
+                                        width="160"
+                                        height="120"
+                                        rx="10"
+                                        fill="#fef3c7"
+                                        stroke="#f59e0b"
+                                        stroke-width="2"
+                                    />
+                                    <circle cx="430" cy="85" r="18" fill="#f59e0b" />
+                                    <text
+                                        x="430"
+                                        y="91"
+                                        text-anchor="middle"
+                                        font-family="Noto Sans JP"
+                                        font-size="12"
+                                        font-weight="bold"
+                                        fill="white"
+                                    >
+                                        U
+                                    </text>
+                                    <text
+                                        x="490"
+                                        y="85"
+                                        text-anchor="middle"
+                                        font-family="Noto Sans JP"
+                                        font-size="14"
+                                        font-weight="bold"
+                                        fill="#d97706"
+                                    >
+                                        Update
+                                    </text>
+                                    <text
+                                        x="480"
+                                        y="110"
+                                        text-anchor="middle"
+                                        font-family="Noto Sans JP"
+                                        font-size="12"
+                                        fill="#374151"
+                                    >
+                                        更新
+                                    </text>
+                                    <rect x="415" y="125" width="130" height="35" rx="5" fill="white" />
+                                    <text
+                                        x="480"
+                                        y="148"
+                                        text-anchor="middle"
+                                        font-family="JetBrains Mono"
+                                        font-size="11"
+                                        fill="#f59e0b"
+                                    >
+                                        update()
+                                    </text>
+                                </g>
+
+                                <!-- Delete -->
+                                <g>
+                                    <rect
+                                        x="580"
+                                        y="55"
+                                        width="160"
+                                        height="120"
+                                        rx="10"
+                                        fill="#fef2f2"
+                                        stroke="#ef4444"
+                                        stroke-width="2"
+                                    />
+                                    <circle cx="610" cy="85" r="18" fill="#ef4444" />
+                                    <text
+                                        x="610"
+                                        y="91"
+                                        text-anchor="middle"
+                                        font-family="Noto Sans JP"
+                                        font-size="12"
+                                        font-weight="bold"
+                                        fill="white"
+                                    >
+                                        D
+                                    </text>
+                                    <text
+                                        x="670"
+                                        y="85"
+                                        text-anchor="middle"
+                                        font-family="Noto Sans JP"
+                                        font-size="14"
+                                        font-weight="bold"
+                                        fill="#dc2626"
+                                    >
+                                        Delete
+                                    </text>
+                                    <text
+                                        x="660"
+                                        y="110"
+                                        text-anchor="middle"
+                                        font-family="Noto Sans JP"
+                                        font-size="12"
+                                        fill="#374151"
+                                    >
+                                        削除
+                                    </text>
+                                    <rect x="595" y="125" width="130" height="35" rx="5" fill="white" />
+                                    <text
+                                        x="660"
+                                        y="148"
+                                        text-anchor="middle"
+                                        font-family="JetBrains Mono"
+                                        font-size="11"
+                                        fill="#ef4444"
+                                    >
+                                        delete()
+                                    </text>
+                                </g>
+                            </svg>
+                            <p class="figure-caption">図11.3 CRUD操作とメソッドの対応</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 11-2 -->
+            <section class="section" id="section-11-2">
+                <div class="section-header">
+                    <span class="section-number">Section 11-2</span>
+                    <h2 class="section-title">「SQL」を考えよう</h2>
+                </div>
+                <div class="section-content">
+                    <p>
+                        ToDoアプリに必要な機能（一覧表示、詳細表示、登録、更新、削除）で使用するSQLを考えてみましょう。
+                    </p>
+
+                    <div class="info-box beginner">
+                        <div class="info-box-icon">🎓</div>
+                        <div class="info-box-content">
+                            <div class="info-box-title">なぜ先にSQLを考えるの？</div>
+                            <p>
+                                プログラムを作る際は「小さなステップで進める」ことが大切です。<br />
+                                先にSQLを単体でテストしておくと、エラーが出た時に「SQLの問題か」「プログラムの問題か」を切り分けやすくなります。
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 11-2-1 SQLの作成 -->
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">11-2-1</span>
+                            <h3 class="subsection-title">SQLの作成</h3>
+                        </div>
+
+                        <p>以下のSQLを、MySQL Workbench等のツールで実行して動作確認しましょう。</p>
+
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">リスト11.3 SQL文</span>
+                                <span class="code-lang">SQL</span>
+                            </div>
+                            <div class="code-content">
+                                <pre><span class="code-comment">-- メソッド：selectAllで使用（全件取得）</span>
+<span class="code-keyword">SELECT</span> id, todo, detail, created_at, updated_at <span class="code-keyword">FROM</span> todos;
+
+<span class="code-comment">-- メソッド：selectByIdで使用（1件取得）</span>
+<span class="code-keyword">SELECT</span> id, todo, detail, created_at, updated_at <span class="code-keyword">FROM</span> todos <span class="code-keyword">WHERE</span> id = <span class="code-string">1</span>;
+
+<span class="code-comment">-- メソッド：insertで使用（登録）</span>
+<span class="code-keyword">INSERT INTO</span> todos (todo, detail, created_at, updated_at)
+<span class="code-keyword">VALUES</span> (<span class="code-string">'チケット購入'</span>, <span class="code-string">'東京ドーム（新日本）'</span>, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+<span class="code-comment">-- メソッド：updateで使用（更新）</span>
+<span class="code-keyword">UPDATE</span> todos <span class="code-keyword">SET</span> todo=<span class="code-string">'ショッピング'</span>, detail=<span class="code-string">'デパートで散財する'</span>,
+       updated_at=CURRENT_TIMESTAMP <span class="code-keyword">WHERE</span> id = <span class="code-string">1</span>;
+
+<span class="code-comment">-- メソッド：deleteで使用（削除）</span>
+<span class="code-keyword">DELETE FROM</span> todos <span class="code-keyword">WHERE</span> id = <span class="code-string">4</span>;</pre>
+                            </div>
+                        </div>
+
+                        <!-- SQL操作の視覚化 -->
+                        <div class="figure">
+                            <svg viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <filter id="shadow4" x="-20%" y="-20%" width="140%" height="140%">
+                                        <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.15" />
+                                    </filter>
+                                    <linearGradient id="dbGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color: #64748b" />
+                                        <stop offset="100%" style="stop-color: #475569" />
+                                    </linearGradient>
+                                    <linearGradient id="selectGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color: #3b82f6" />
+                                        <stop offset="100%" style="stop-color: #2563eb" />
+                                    </linearGradient>
+                                    <linearGradient id="insertGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color: #10b981" />
+                                        <stop offset="100%" style="stop-color: #059669" />
+                                    </linearGradient>
+                                    <linearGradient id="updateGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color: #f59e0b" />
+                                        <stop offset="100%" style="stop-color: #d97706" />
+                                    </linearGradient>
+                                    <linearGradient id="deleteGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color: #ef4444" />
+                                        <stop offset="100%" style="stop-color: #dc2626" />
+                                    </linearGradient>
+                                    <marker id="arrowSelect" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                                        <polygon points="0 0, 8 3, 0 6" fill="#3b82f6" />
+                                    </marker>
+                                    <marker id="arrowInsert" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                                        <polygon points="0 0, 8 3, 0 6" fill="#10b981" />
+                                    </marker>
+                                    <marker id="arrowUpdate" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                                        <polygon points="0 0, 8 3, 0 6" fill="#f59e0b" />
+                                    </marker>
+                                    <marker id="arrowDelete" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                                        <polygon points="0 0, 8 3, 0 6" fill="#ef4444" />
+                                    </marker>
+                                </defs>
+
+                                <!-- 背景 -->
+                                <rect width="800" height="420" fill="#f8fafc" rx="12" />
+
+                                <!-- タイトル -->
+                                <text x="400" y="28" text-anchor="middle" font-family="Noto Sans JP" font-size="15" font-weight="bold" fill="#2c3e50">
+                                    CRUD操作とSQL文の対応
+                                </text>
+                                <text x="400" y="48" text-anchor="middle" font-family="Noto Sans JP" font-size="11" fill="#64748b">
+                                    データベースに対する4つの基本操作
+                                </text>
+
+                                <!-- 中央のテーブル -->
+                                <g filter="url(#shadow4)">
+                                    <rect x="250" y="120" width="300" height="180" rx="10" fill="white" stroke="#64748b" stroke-width="2" />
+                                    <rect x="250" y="120" width="300" height="35" rx="10" fill="url(#dbGrad)" />
+                                    <text x="400" y="144" text-anchor="middle" font-family="Noto Sans JP" font-size="12" font-weight="bold" fill="white">
+                                        todosテーブル
+                                    </text>
+
+                                    <!-- ヘッダー行 -->
+                                    <rect x="250" y="155" width="75" height="25" fill="#f1f5f9" stroke="#e2e8f0" />
+                                    <text x="287" y="172" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#475569" font-weight="bold">id</text>
+                                    <rect x="325" y="155" width="100" height="25" fill="#f1f5f9" stroke="#e2e8f0" />
+                                    <text x="375" y="172" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#475569" font-weight="bold">todo</text>
+                                    <rect x="425" y="155" width="125" height="25" fill="#f1f5f9" stroke="#e2e8f0" />
+                                    <text x="487" y="172" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#475569" font-weight="bold">detail</text>
+
+                                    <!-- データ行1: SELECT対象 -->
+                                    <rect x="250" y="180" width="300" height="25" fill="#dbeafe" stroke="#3b82f6" stroke-width="1" />
+                                    <text x="287" y="197" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#1e40af">1</text>
+                                    <text x="375" y="197" text-anchor="middle" font-family="Noto Sans JP" font-size="10" fill="#1e40af">買い物</text>
+                                    <text x="487" y="197" text-anchor="middle" font-family="Noto Sans JP" font-size="9" fill="#1e40af">牛乳を買う</text>
+
+                                    <!-- データ行2: UPDATE対象 -->
+                                    <rect x="250" y="205" width="300" height="25" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" />
+                                    <text x="287" y="222" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#92400e">2</text>
+                                    <text x="375" y="222" text-anchor="middle" font-family="Noto Sans JP" font-size="10" fill="#92400e">勉強</text>
+                                    <text x="487" y="222" text-anchor="middle" font-family="Noto Sans JP" font-size="9" fill="#92400e">Java復習</text>
+
+                                    <!-- データ行3: DELETE対象 -->
+                                    <rect x="250" y="230" width="300" height="25" fill="#fee2e2" stroke="#ef4444" stroke-width="1" />
+                                    <text x="287" y="247" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#991b1b">3</text>
+                                    <text x="375" y="247" text-anchor="middle" font-family="Noto Sans JP" font-size="10" fill="#991b1b" text-decoration="line-through">運動</text>
+                                    <text x="487" y="247" text-anchor="middle" font-family="Noto Sans JP" font-size="9" fill="#991b1b" text-decoration="line-through">ジョギング</text>
+
+                                    <!-- INSERT行 -->
+                                    <rect x="250" y="255" width="300" height="25" fill="#d1fae5" stroke="#10b981" stroke-width="1" stroke-dasharray="4,2" />
+                                    <text x="287" y="272" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#047857">?</text>
+                                    <text x="375" y="272" text-anchor="middle" font-family="Noto Sans JP" font-size="10" fill="#047857">新規</text>
+                                    <text x="487" y="272" text-anchor="middle" font-family="Noto Sans JP" font-size="9" fill="#047857">新しいデータ</text>
+                                </g>
+
+                                <!-- SELECT操作 -->
+                                <g filter="url(#shadow4)">
+                                    <rect x="30" y="155" width="100" height="70" rx="10" fill="url(#selectGrad)" />
+                                    <text x="80" y="182" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="bold" fill="white">SELECT</text>
+                                    <text x="80" y="202" text-anchor="middle" font-family="Noto Sans JP" font-size="11" fill="rgba(255,255,255,0.9)">取得・検索</text>
+                                    <path d="M 130 190 L 245 190" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowSelect)" />
+                                </g>
+
+                                <!-- INSERT操作 -->
+                                <g filter="url(#shadow4)">
+                                    <rect x="670" y="230" width="100" height="70" rx="10" fill="url(#insertGrad)" />
+                                    <text x="720" y="257" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="bold" fill="white">INSERT</text>
+                                    <text x="720" y="277" text-anchor="middle" font-family="Noto Sans JP" font-size="11" fill="rgba(255,255,255,0.9)">追加</text>
+                                    <path d="M 670 267 L 555 267" stroke="#10b981" stroke-width="2" marker-end="url(#arrowInsert)" />
+                                </g>
+
+                                <!-- UPDATE操作 -->
+                                <g filter="url(#shadow4)">
+                                    <rect x="670" y="145" width="100" height="70" rx="10" fill="url(#updateGrad)" />
+                                    <text x="720" y="172" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="bold" fill="white">UPDATE</text>
+                                    <text x="720" y="192" text-anchor="middle" font-family="Noto Sans JP" font-size="11" fill="rgba(255,255,255,0.9)">更新</text>
+                                    <path d="M 670 180 L 555 217" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowUpdate)" />
+                                </g>
+
+                                <!-- DELETE操作 -->
+                                <g filter="url(#shadow4)">
+                                    <rect x="30" y="230" width="100" height="70" rx="10" fill="url(#deleteGrad)" />
+                                    <text x="80" y="257" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="bold" fill="white">DELETE</text>
+                                    <text x="80" y="277" text-anchor="middle" font-family="Noto Sans JP" font-size="11" fill="rgba(255,255,255,0.9)">削除</text>
+                                    <path d="M 130 265 L 245 242" stroke="#ef4444" stroke-width="2" marker-end="url(#arrowDelete)" />
+                                </g>
+
+                                <!-- 下部の説明カード -->
+                                <g filter="url(#shadow4)">
+                                    <rect x="40" y="330" width="170" height="75" rx="8" fill="white" stroke="#3b82f6" stroke-width="2" />
+                                    <rect x="40" y="330" width="170" height="24" rx="8" fill="#dbeafe" />
+                                    <text x="125" y="347" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="bold" fill="#1e40af">SELECT</text>
+                                    <text x="125" y="370" text-anchor="middle" font-family="Noto Sans JP" font-size="10" fill="#374151">条件に合うデータを</text>
+                                    <text x="125" y="388" text-anchor="middle" font-family="Noto Sans JP" font-size="10" fill="#374151">取得する（Read）</text>
+                                </g>
+
+                                <g filter="url(#shadow4)">
+                                    <rect x="225" y="330" width="170" height="75" rx="8" fill="white" stroke="#10b981" stroke-width="2" />
+                                    <rect x="225" y="330" width="170" height="24" rx="8" fill="#d1fae5" />
+                                    <text x="310" y="347" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="bold" fill="#047857">INSERT</text>
+                                    <text x="310" y="370" text-anchor="middle" font-family="Noto Sans JP" font-size="10" fill="#374151">新しい行を</text>
+                                    <text x="310" y="388" text-anchor="middle" font-family="Noto Sans JP" font-size="10" fill="#374151">追加する（Create）</text>
+                                </g>
+
+                                <g filter="url(#shadow4)">
+                                    <rect x="410" y="330" width="170" height="75" rx="8" fill="white" stroke="#f59e0b" stroke-width="2" />
+                                    <rect x="410" y="330" width="170" height="24" rx="8" fill="#fef3c7" />
+                                    <text x="495" y="347" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="bold" fill="#92400e">UPDATE</text>
+                                    <text x="495" y="370" text-anchor="middle" font-family="Noto Sans JP" font-size="10" fill="#374151">既存データを</text>
+                                    <text x="495" y="388" text-anchor="middle" font-family="Noto Sans JP" font-size="10" fill="#374151">書き換える（Update）</text>
+                                </g>
+
+                                <g filter="url(#shadow4)">
+                                    <rect x="595" y="330" width="170" height="75" rx="8" fill="white" stroke="#ef4444" stroke-width="2" />
+                                    <rect x="595" y="330" width="170" height="24" rx="8" fill="#fee2e2" />
+                                    <text x="680" y="347" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="bold" fill="#991b1b">DELETE</text>
+                                    <text x="680" y="370" text-anchor="middle" font-family="Noto Sans JP" font-size="10" fill="#374151">指定した行を</text>
+                                    <text x="680" y="388" text-anchor="middle" font-family="Noto Sans JP" font-size="10" fill="#374151">削除する（Delete）</text>
+                                </g>
+                            </svg>
+                            <p class="figure-caption">図11.4 CRUD操作とSQL文の対応</p>
+                        </div>
+
+                        <div class="info-box tip">
+                            <div class="info-box-icon">✅</div>
+                            <div class="info-box-content">
+                                <div class="info-box-title">確認ポイント</div>
+                                <p>
+                                    MySQL WorkbenchでSQLを実行して、各SQLが正常に動くことを確認してください。特にINSERT後は、SELECTで追加されたデータを確認しましょう。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 11-3 -->
+            <section class="section" id="section-11-3">
+                <div class="section-header">
+                    <span class="section-number">Section 11-3</span>
+                    <h2 class="section-title">「マッパーファイル」を作成しよう</h2>
+                </div>
+                <div class="section-content">
+                    <p>
+                        MySQL Workbenchで確認したSQLを、MyBatisの「マッパーファイル」に記述します。マッパーファイルは、Repositoryインターフェースのメソッドと、実際に実行するSQLを紐づける役割を持っています。
+                    </p>
+
+                    <!-- 11-3-1 マッパーファイルの作成 -->
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">11-3-1</span>
+                            <h3 class="subsection-title">マッパーファイルの作成</h3>
+                        </div>
+
+                        <!-- マッパーファイルの仕組み図 -->
+                        <div class="figure">
+                            <svg viewBox="0 0 800 340" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <filter id="shadow5" x="-20%" y="-20%" width="140%" height="140%">
+                                        <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.15" />
+                                    </filter>
+                                    <linearGradient id="javaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color: #8b5cf6" />
+                                        <stop offset="100%" style="stop-color: #7c3aed" />
+                                    </linearGradient>
+                                    <linearGradient id="xmlGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color: #10b981" />
+                                        <stop offset="100%" style="stop-color: #059669" />
+                                    </linearGradient>
+                                    <linearGradient id="dbGrad5" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color: #64748b" />
+                                        <stop offset="100%" style="stop-color: #475569" />
+                                    </linearGradient>
+                                    <marker id="arrowJava" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                                        <polygon points="0 0, 8 3, 0 6" fill="#8b5cf6" />
+                                    </marker>
+                                    <marker id="arrowDb" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                                        <polygon points="0 0, 8 3, 0 6" fill="#64748b" />
+                                    </marker>
+                                </defs>
+
+                                <!-- 背景 -->
+                                <rect width="800" height="340" fill="#f8fafc" rx="12" />
+
+                                <!-- タイトル -->
+                                <text x="400" y="28" text-anchor="middle" font-family="Noto Sans JP" font-size="15" font-weight="bold" fill="#2c3e50">
+                                    MyBatisマッパーの仕組み
+                                </text>
+                                <text x="400" y="48" text-anchor="middle" font-family="Noto Sans JP" font-size="11" fill="#64748b">
+                                    Javaインターフェースのメソッド名 = XMLのid属性で紐づく
+                                </text>
+
+                                <!-- Javaインターフェース -->
+                                <g filter="url(#shadow5)">
+                                    <rect x="30" y="70" width="220" height="220" rx="10" fill="white" stroke="#8b5cf6" stroke-width="2" />
+                                    <rect x="30" y="70" width="220" height="38" rx="10" fill="url(#javaGrad)" />
+                                    <text x="140" y="95" text-anchor="middle" font-family="Noto Sans JP" font-size="12" font-weight="bold" fill="white">
+                                        ToDoMapper.java
+                                    </text>
+
+                                    <!-- コード表示エリア -->
+                                    <rect x="42" y="118" width="196" height="160" rx="6" fill="#faf5ff" />
+
+                                    <text x="52" y="138" font-family="JetBrains Mono" font-size="10" fill="#7c3aed" font-weight="bold">@Mapper</text>
+                                    <text x="52" y="156" font-family="JetBrains Mono" font-size="10" fill="#374151">public interface ToDoMapper {</text>
+
+                                    <!-- メソッド一覧 -->
+                                    <rect x="60" y="165" width="110" height="18" rx="3" fill="#dbeafe" />
+                                    <text x="68" y="178" font-family="JetBrains Mono" font-size="9" fill="#1e40af">selectAll()</text>
+
+                                    <rect x="60" y="188" width="130" height="18" rx="3" fill="#dbeafe" />
+                                    <text x="68" y="201" font-family="JetBrains Mono" font-size="9" fill="#1e40af">selectById(id)</text>
+
+                                    <rect x="60" y="211" width="130" height="18" rx="3" fill="#d1fae5" />
+                                    <text x="68" y="224" font-family="JetBrains Mono" font-size="9" fill="#047857">insert(todo)</text>
+
+                                    <rect x="60" y="234" width="130" height="18" rx="3" fill="#fef3c7" />
+                                    <text x="68" y="247" font-family="JetBrains Mono" font-size="9" fill="#92400e">update(todo)</text>
+
+                                    <rect x="60" y="257" width="110" height="18" rx="3" fill="#fee2e2" />
+                                    <text x="68" y="270" font-family="JetBrains Mono" font-size="9" fill="#991b1b">delete(id)</text>
+                                </g>
+
+                                <!-- XMLマッパーファイル -->
+                                <g filter="url(#shadow5)">
+                                    <rect x="300" y="70" width="250" height="220" rx="10" fill="white" stroke="#10b981" stroke-width="2" />
+                                    <rect x="300" y="70" width="250" height="38" rx="10" fill="url(#xmlGrad)" />
+                                    <text x="425" y="95" text-anchor="middle" font-family="Noto Sans JP" font-size="12" font-weight="bold" fill="white">
+                                        ToDoMapper.xml
+                                    </text>
+
+                                    <!-- コード表示エリア -->
+                                    <rect x="312" y="118" width="226" height="160" rx="6" fill="#ecfdf5" />
+
+                                    <text x="322" y="138" font-family="JetBrains Mono" font-size="9" fill="#db2777">&lt;mapper namespace="...ToDoMapper"&gt;</text>
+
+                                    <!-- select -->
+                                    <text x="332" y="158" font-family="JetBrains Mono" font-size="9" fill="#2563eb">&lt;select <tspan fill="#f59e0b">id="selectAll"</tspan>&gt;</text>
+                                    <text x="345" y="174" font-family="JetBrains Mono" font-size="9" fill="#374151">SELECT * FROM todos</text>
+                                    <text x="332" y="190" font-family="JetBrains Mono" font-size="9" fill="#2563eb">&lt;/select&gt;</text>
+
+                                    <!-- insert -->
+                                    <text x="332" y="210" font-family="JetBrains Mono" font-size="9" fill="#059669">&lt;insert <tspan fill="#f59e0b">id="insert"</tspan>&gt;...</text>
+
+                                    <!-- update -->
+                                    <text x="332" y="230" font-family="JetBrains Mono" font-size="9" fill="#d97706">&lt;update <tspan fill="#f59e0b">id="update"</tspan>&gt;...</text>
+
+                                    <!-- delete -->
+                                    <text x="332" y="250" font-family="JetBrains Mono" font-size="9" fill="#dc2626">&lt;delete <tspan fill="#f59e0b">id="delete"</tspan>&gt;...</text>
+
+                                    <text x="322" y="270" font-family="JetBrains Mono" font-size="9" fill="#db2777">&lt;/mapper&gt;</text>
+                                </g>
+
+                                <!-- 対応線（点線）: メソッド → XMLのid属性 -->
+                                <path d="M 175 174 L 332 158" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="4,2" />
+                                <path d="M 190 220 L 332 210" stroke="#10b981" stroke-width="1.5" stroke-dasharray="4,2" />
+                                <path d="M 190 243 L 332 230" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4,2" />
+                                <path d="M 175 266 L 332 250" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,2" />
+
+                                <!-- 矢印: Java → XML -->
+                                <g>
+                                    <path d="M 250 180 L 290 180" stroke="#8b5cf6" stroke-width="2" marker-end="url(#arrowJava)" />
+                                    <rect x="255" y="158" width="50" height="18" rx="4" fill="#f5f3ff" stroke="#8b5cf6" />
+                                    <text x="280" y="171" text-anchor="middle" font-family="Noto Sans JP" font-size="9" fill="#7c3aed" font-weight="bold">紐づく</text>
+                                </g>
+
+                                <!-- 矢印: XML → DB -->
+                                <g>
+                                    <path d="M 550 180 L 600 180" stroke="#64748b" stroke-width="2" marker-end="url(#arrowDb)" />
+                                    <rect x="555" y="158" width="60" height="18" rx="4" fill="#f1f5f9" stroke="#64748b" />
+                                    <text x="585" y="171" text-anchor="middle" font-family="Noto Sans JP" font-size="9" fill="#475569" font-weight="bold">SQL実行</text>
+                                </g>
+
+                                <!-- データベース -->
+                                <g filter="url(#shadow5)">
+                                    <ellipse cx="700" cy="200" rx="75" ry="55" fill="url(#dbGrad5)" />
+                                    <rect x="625" y="145" width="150" height="55" fill="url(#dbGrad5)" />
+                                    <ellipse cx="700" cy="145" rx="75" ry="55" fill="#94a3b8" />
+                                    <text x="700" y="150" text-anchor="middle" font-family="Noto Sans JP" font-size="13" fill="white" font-weight="bold">
+                                        Database
+                                    </text>
+                                    <text x="700" y="172" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="white">
+                                        todosテーブル
+                                    </text>
+                                </g>
+
+                                <!-- 説明テキスト -->
+                                <g>
+                                    <rect x="30" y="302" width="520" height="28" rx="6" fill="white" stroke="#e2e8f0" />
+                                    <text x="45" y="320" font-family="Noto Sans JP" font-size="10" fill="#64748b">
+                                        ポイント: メソッド名（selectAll）とXMLのid属性（id="selectAll"）を<tspan fill="#f59e0b" font-weight="bold">同じ名前</tspan>にすることで自動的に紐づく
+                                    </text>
+                                </g>
+                            </svg>
+                            <p class="figure-caption">図11.5 MyBatisマッパーの仕組み</p>
+                        </div>
+
+                        <h4>■ ファイルの配置場所（重要！）</h4>
+                        <div class="info-box warning">
+                            <div class="info-box-icon">⚠️</div>
+                            <div class="info-box-content">
+                                <div class="info-box-title">配置ルール</div>
+                                <p>
+                                    マッパーファイルは、<code>src/main/resources</code>フォルダの下に、Repositoryインターフェースと<strong>同じパッケージ構成</strong>のフォルダを作成して配置します。
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="table-container">
+                            <table class="settings-table">
+                                <tr>
+                                    <th>親フォルダを入力または選択</th>
+                                    <td>webapp/src/main/resources/com/example/webapp/repository</td>
+                                </tr>
+                                <tr>
+                                    <th>ファイル名</th>
+                                    <td>ToDoMapper.xml</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">リスト11.4 ToDoMapper.xml</span>
+                                <span class="code-lang">XML</span>
+                            </div>
+                            <div class="code-content">
+                                <pre><span class="tag">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="tag">&lt;!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;</span>
+
+<span class="tag">&lt;mapper</span> <span class="attr">namespace</span>=<span class="value">"com.example.webapp.repository.ToDoMapper"</span><span class="tag">&gt;</span>
+    
+    <span class="code-comment">&lt;!-- 全件検索 --&gt;</span>
+    <span class="tag">&lt;select</span> <span class="attr">id</span>=<span class="value">"selectAll"</span> <span class="attr">resultType</span>=<span class="value">"com.example.webapp.entity.ToDo"</span><span class="tag">&gt;</span>
+        SELECT id, todo, detail, created_at as createdAt,
+               updated_at as updatedAt FROM todos
+    <span class="tag">&lt;/select&gt;</span>
+
+    <span class="code-comment">&lt;!-- 1件検索 --&gt;</span>
+    <span class="tag">&lt;select</span> <span class="attr">id</span>=<span class="value">"selectById"</span> <span class="attr">resultType</span>=<span class="value">"com.example.webapp.entity.ToDo"</span><span class="tag">&gt;</span>
+        SELECT id, todo, detail, created_at as createdAt,
+               updated_at as updatedAt FROM todos WHERE id = #{id}
+    <span class="tag">&lt;/select&gt;</span>
+
+    <span class="code-comment">&lt;!-- 登録 --&gt;</span>
+    <span class="tag">&lt;insert</span> <span class="attr">id</span>=<span class="value">"insert"</span><span class="tag">&gt;</span>
+        INSERT INTO todos (todo, detail, created_at, updated_at)
+        VALUES (#{todo}, #{detail}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    <span class="tag">&lt;/insert&gt;</span>
+
+    <span class="code-comment">&lt;!-- 更新 --&gt;</span>
+    <span class="tag">&lt;update</span> <span class="attr">id</span>=<span class="value">"update"</span><span class="tag">&gt;</span>
+        UPDATE todos SET todo = #{todo}, detail = #{detail},
+               updated_at = CURRENT_TIMESTAMP WHERE id = #{id}
+    <span class="tag">&lt;/update&gt;</span>
+
+    <span class="code-comment">&lt;!-- 削除 --&gt;</span>
+    <span class="tag">&lt;delete</span> <span class="attr">id</span>=<span class="value">"delete"</span><span class="tag">&gt;</span>
+        DELETE FROM todos WHERE id = #{id}
+    <span class="tag">&lt;/delete&gt;</span>
+
+<span class="tag">&lt;/mapper&gt;</span></pre>
+                            </div>
+                        </div>
+
+                        <div class="info-box note">
+                            <div class="info-box-icon">📝</div>
+                            <div class="info-box-content">
+                                <div class="info-box-title">ポイント解説</div>
+                                <p>
+                                    <strong>namespace</strong
+                                    >：Repositoryインターフェースの完全修飾名（FQCN）を指定します<br />
+                                    <strong>id</strong>：Repositoryインターフェースのメソッド名と一致させます<br />
+                                    <strong>resultType</strong>：SQLの結果をマッピングするクラスを指定します<br />
+                                    <strong>#{フィールド名}</strong>：パラメータを安全に埋め込むプレースホルダです
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 11-3-2 動作確認 -->
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-number">11-3-2</span>
+                            <h3 class="subsection-title">ここまでの動作確認</h3>
+                        </div>
+
+                        <p>
+                            作成したプログラムの動作を確認しましょう。メインクラス（WebappApplication）を以下のように修正して、データベース操作をテストします。
+                        </p>
+
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-title">リスト11.5 WebappApplication.java（テスト用）</span>
+                                <span class="code-lang">Java</span>
+                            </div>
+                            <div class="code-content">
+                                <pre><span class="code-keyword">package</span> com.example.webapp;
+
+<span class="code-keyword">import</span> org.springframework.boot.SpringApplication;
+<span class="code-keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;
+
+<span class="code-keyword">import</span> com.example.webapp.entity.ToDo;
+<span class="code-keyword">import</span> com.example.webapp.repository.ToDoMapper;
+
+<span class="code-keyword">import</span> lombok.RequiredArgsConstructor;
+
+<span class="code-annotation">@SpringBootApplication</span>
+<span class="code-annotation">@RequiredArgsConstructor</span>
+<span class="code-keyword">public class</span> <span class="code-class">WebappApplication</span> {
+
+    <span class="code-keyword">public static void</span> <span class="code-method">main</span>(String[] args) {
+        SpringApplication.run(WebappApplication.class, args)
+                .getBean(WebappApplication.class).exe();
+    }
+
+    <span class="code-comment">/** DI */</span>
+    <span class="code-keyword">private final</span> ToDoMapper mapper;
+
+    <span class="code-keyword">public void</span> <span class="code-method">exe</span>() {
+        <span class="code-comment">// ★全件検索</span>
+        System.out.println(<span class="code-string">"=== 全件検索 ==="</span>);
+        <span class="code-keyword">for</span> (ToDo row : mapper.selectAll()) {
+            System.out.println(row);
+        }
+
+        <span class="code-comment">// ★1件検索</span>
+        System.out.println(<span class="code-string">"=== 1件検索 ==="</span>);
+        System.out.println(mapper.selectById(1));
+
+        <span class="code-comment">// ★登録</span>
+        ToDo todo = <span class="code-keyword">new</span> ToDo();
+        todo.setTodo(<span class="code-string">"リポジトリのテスト"</span>);
+        todo.setDetail(<span class="code-string">"DBへの登録処理"</span>);
+        mapper.insert(todo);
+        System.out.println(<span class="code-string">"=== 登録確認 ==="</span>);
+        System.out.println(mapper.selectById(4));
+
+        <span class="code-comment">// ★更新</span>
+        ToDo target = mapper.selectById(4);
+        target.setTodo(<span class="code-string">"リポジトリのテスト：更新"</span>);
+        target.setDetail(<span class="code-string">"DBへの更新処理"</span>);
+        mapper.update(target);
+        System.out.println(<span class="code-string">"=== 更新確認 ==="</span>);
+        System.out.println(mapper.selectById(4));
+
+        <span class="code-comment">// ★削除</span>
+        mapper.delete(4);
+        System.out.println(<span class="code-string">"=== 削除確認 ==="</span>);
+        <span class="code-keyword">for</span> (ToDo row : mapper.selectAll()) {
+            System.out.println(row);
+        }
+    }
+}</pre>
+                            </div>
+                        </div>
+
+                        <div class="info-box tip">
+                            <div class="info-box-icon">▶️</div>
+                            <div class="info-box-content">
+                                <div class="info-box-title">実行方法</div>
+                                <p>
+                                    「WebappApplication」クラスを右クリック → 「実行」→「Spring
+                                    Bootアプリケーション」を選択してアプリケーションを起動します。コンソールに各操作の結果が表示されれば成功です！
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 進捗図 -->
+                        <div class="figure">
+                            <svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <filter id="shadow6" x="-20%" y="-20%" width="140%" height="140%">
+                                        <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.15" />
+                                    </filter>
+                                    <linearGradient id="appGrad6" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color: #3b82f6" />
+                                        <stop offset="100%" style="stop-color: #2563eb" />
+                                    </linearGradient>
+                                    <linearGradient id="domainGrad6" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color: #8b5cf6" />
+                                        <stop offset="100%" style="stop-color: #7c3aed" />
+                                    </linearGradient>
+                                    <linearGradient id="infraGrad6" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color: #10b981" />
+                                        <stop offset="100%" style="stop-color: #059669" />
+                                    </linearGradient>
+                                    <linearGradient id="completeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color: #fbbf24" />
+                                        <stop offset="100%" style="stop-color: #f59e0b" />
+                                    </linearGradient>
+                                </defs>
+
+                                <!-- 背景 -->
+                                <rect width="800" height="450" fill="#f8fafc" rx="12" />
+
+                                <!-- タイトル -->
+                                <text x="400" y="28" text-anchor="middle" font-family="Noto Sans JP" font-size="15" font-weight="bold" fill="#2c3e50">
+                                    第11章 ここまでの進捗
+                                </text>
+                                <text x="400" y="48" text-anchor="middle" font-family="Noto Sans JP" font-size="11" fill="#64748b">
+                                    データベース操作に必要なコンポーネントが完成しました
+                                </text>
+
+                                <!-- アプリケーション層 -->
+                                <g filter="url(#shadow6)">
+                                    <rect x="30" y="75" width="180" height="140" rx="10" fill="white" stroke="#3b82f6" stroke-width="2" />
+                                    <rect x="30" y="75" width="180" height="45" rx="10" fill="url(#appGrad6)" />
+                                    <text x="120" y="95" text-anchor="middle" font-family="Noto Sans JP" font-size="12" font-weight="bold" fill="white">
+                                        アプリケーション層
+                                    </text>
+                                    <text x="120" y="112" text-anchor="middle" font-family="Noto Sans JP" font-size="9" fill="rgba(255,255,255,0.9)">
+                                        （第13章で作成）
+                                    </text>
+
+                                    <rect x="45" y="132" width="70" height="28" rx="5" fill="rgba(59,130,246,0.2)" stroke="#3b82f6" stroke-dasharray="3,2" />
+                                    <text x="80" y="151" text-anchor="middle" font-family="Noto Sans JP" font-size="10" fill="#3b82f6">View</text>
+                                    <rect x="125" y="132" width="70" height="28" rx="5" fill="rgba(59,130,246,0.2)" stroke="#3b82f6" stroke-dasharray="3,2" />
+                                    <text x="160" y="151" text-anchor="middle" font-family="Noto Sans JP" font-size="9" fill="#3b82f6">Controller</text>
+                                    <rect x="85" y="168" width="70" height="28" rx="5" fill="rgba(59,130,246,0.2)" stroke="#3b82f6" stroke-dasharray="3,2" />
+                                    <text x="120" y="187" text-anchor="middle" font-family="Noto Sans JP" font-size="10" fill="#3b82f6">Form</text>
+                                </g>
+
+                                <!-- ドメイン層 -->
+                                <g filter="url(#shadow6)">
+                                    <rect x="230" y="75" width="340" height="185" rx="10" fill="white" stroke="#8b5cf6" stroke-width="2" />
+                                    <rect x="230" y="75" width="340" height="45" rx="10" fill="url(#domainGrad6)" />
+                                    <text x="400" y="100" text-anchor="middle" font-family="Noto Sans JP" font-size="13" font-weight="bold" fill="white">
+                                        ドメイン層
+                                    </text>
+
+                                    <!-- Domain Object - 完了 -->
+                                    <rect x="250" y="135" width="90" height="40" rx="6" fill="url(#completeGrad)" stroke="#fff" stroke-width="2" />
+                                    <text x="295" y="152" text-anchor="middle" font-family="Noto Sans JP" font-size="9" fill="#1a202c" font-weight="bold">Domain Object</text>
+                                    <text x="295" y="166" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#1a202c">(ToDo.java)</text>
+                                    <circle cx="330" cy="130" r="10" fill="#10b981" />
+                                    <text x="330" y="134" text-anchor="middle" font-family="Noto Sans JP" font-size="8" fill="white" font-weight="bold">済</text>
+
+                                    <!-- Repository - 完了 -->
+                                    <rect x="355" y="135" width="90" height="40" rx="6" fill="url(#completeGrad)" stroke="#fff" stroke-width="2" />
+                                    <text x="400" y="152" text-anchor="middle" font-family="Noto Sans JP" font-size="9" fill="#1a202c" font-weight="bold">Repository</text>
+                                    <text x="400" y="166" text-anchor="middle" font-family="JetBrains Mono" font-size="7" fill="#1a202c">(ToDoMapper.java)</text>
+                                    <circle cx="435" cy="130" r="10" fill="#10b981" />
+                                    <text x="435" y="134" text-anchor="middle" font-family="Noto Sans JP" font-size="8" fill="white" font-weight="bold">済</text>
+
+                                    <!-- Service - 未完了 -->
+                                    <rect x="250" y="190" width="90" height="40" rx="6" fill="rgba(139,92,246,0.2)" stroke="#8b5cf6" stroke-dasharray="3,2" />
+                                    <text x="295" y="215" text-anchor="middle" font-family="Noto Sans JP" font-size="10" fill="#7c3aed">Service</text>
+
+                                    <!-- ServiceImpl - 未完了 -->
+                                    <rect x="355" y="190" width="90" height="40" rx="6" fill="rgba(139,92,246,0.2)" stroke="#8b5cf6" stroke-dasharray="3,2" />
+                                    <text x="400" y="215" text-anchor="middle" font-family="Noto Sans JP" font-size="9" fill="#7c3aed">ServiceImpl</text>
+
+                                    <text x="325" y="248" text-anchor="middle" font-family="Noto Sans JP" font-size="10" fill="#7c3aed">
+                                        ↑ 第12章で作成
+                                    </text>
+
+                                    <!-- 今回作成マーク -->
+                                    <text x="510" y="155" text-anchor="middle" font-family="Noto Sans JP" font-size="11" fill="#f59e0b" font-weight="bold">
+                                        ★ 今回完了
+                                    </text>
+                                </g>
+
+                                <!-- インフラストラクチャ層 -->
+                                <g filter="url(#shadow6)">
+                                    <rect x="590" y="75" width="180" height="185" rx="10" fill="white" stroke="#10b981" stroke-width="2" />
+                                    <rect x="590" y="75" width="180" height="45" rx="10" fill="url(#infraGrad6)" />
+                                    <text x="680" y="100" text-anchor="middle" font-family="Noto Sans JP" font-size="11" font-weight="bold" fill="white">
+                                        インフラストラクチャ層
+                                    </text>
+
+                                    <!-- O/R Mapper - 完了 -->
+                                    <rect x="605" y="135" width="90" height="40" rx="6" fill="url(#completeGrad)" stroke="#fff" stroke-width="2" />
+                                    <text x="650" y="152" text-anchor="middle" font-family="Noto Sans JP" font-size="9" fill="#1a202c" font-weight="bold">O/R Mapper</text>
+                                    <text x="650" y="166" text-anchor="middle" font-family="JetBrains Mono" font-size="7" fill="#1a202c">(ToDoMapper.xml)</text>
+                                    <circle cx="685" cy="130" r="10" fill="#10b981" />
+                                    <text x="685" y="134" text-anchor="middle" font-family="Noto Sans JP" font-size="8" fill="white" font-weight="bold">済</text>
+
+                                    <!-- RepositoryImpl - 自動生成 -->
+                                    <rect x="605" y="190" width="150" height="40" rx="6" fill="rgba(16,185,129,0.2)" stroke="#10b981" />
+                                    <text x="680" y="208" text-anchor="middle" font-family="Noto Sans JP" font-size="9" fill="#059669">RepositoryImpl</text>
+                                    <text x="680" y="222" text-anchor="middle" font-family="Noto Sans JP" font-size="8" fill="#6b7280">（MyBatisが自動生成）</text>
+
+                                    <!-- 今回作成マーク -->
+                                    <text x="680" y="248" text-anchor="middle" font-family="Noto Sans JP" font-size="11" fill="#f59e0b" font-weight="bold">
+                                        ★ 今回完了
+                                    </text>
+                                </g>
+
+                                <!-- 接続線 -->
+                                <path d="M 680 260 L 680 300" stroke="#64748b" stroke-width="2" stroke-dasharray="4,2" />
+
+                                <!-- データベース -->
+                                <g filter="url(#shadow6)">
+                                    <ellipse cx="680" cy="380" rx="80" ry="40" fill="#64748b" />
+                                    <rect x="600" y="340" width="160" height="40" fill="#64748b" />
+                                    <ellipse cx="680" cy="340" rx="80" ry="40" fill="#94a3b8" />
+                                    <text x="680" y="343" text-anchor="middle" font-family="Noto Sans JP" font-size="12" fill="white" font-weight="bold">
+                                        Database
+                                    </text>
+                                    <text x="680" y="363" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="white">
+                                        todosテーブル
+                                    </text>
+                                    <circle cx="745" cy="333" r="12" fill="#10b981" />
+                                    <text x="745" y="337" text-anchor="middle" font-family="Noto Sans JP" font-size="9" fill="white" font-weight="bold">済</text>
+                                </g>
+
+                                <!-- 凡例 -->
+                                <g filter="url(#shadow6)">
+                                    <rect x="30" y="270" width="200" height="95" rx="8" fill="white" stroke="#e2e8f0" />
+                                    <text x="130" y="292" text-anchor="middle" font-family="Noto Sans JP" font-size="11" font-weight="bold" fill="#374151">凡例</text>
+
+                                    <rect x="45" y="305" width="18" height="18" rx="4" fill="url(#completeGrad)" />
+                                    <text x="72" y="318" font-family="Noto Sans JP" font-size="10" fill="#374151">今回作成完了</text>
+
+                                    <rect x="145" y="305" width="18" height="18" rx="4" fill="rgba(139,92,246,0.2)" stroke="#8b5cf6" stroke-dasharray="2,1" />
+                                    <text x="172" y="318" font-family="Noto Sans JP" font-size="10" fill="#374151">次の章</text>
+
+                                    <circle cx="54" cy="345" r="9" fill="#10b981" />
+                                    <text x="54" y="348" text-anchor="middle" font-family="Noto Sans JP" font-size="7" fill="white" font-weight="bold">済</text>
+                                    <text x="72" y="349" font-family="Noto Sans JP" font-size="10" fill="#374151">完了マーク</text>
+                                </g>
+                            </svg>
+                            <p class="figure-caption">図11.6 ここまでの進捗</p>
+                        </div>
+                    </div>
+
+                    <!-- まとめ -->
+                    <div class="summary-box">
+                        <h3>📝 第11章のまとめ</h3>
+                        <ul class="summary-list">
+                            <li>
+                                <strong>Domain Object（エンティティ）</strong
+                                >は、データベースのテーブルの1行を表すクラスです
+                            </li>
+                            <li>
+                                <strong>Repository</strong>は、データベース操作のメソッドを定義するインターフェースです
+                            </li>
+                            <li>
+                                <strong>@Mapper</strong
+                                >アノテーションを付けると、MyBatisがインターフェースの実装を自動生成します
+                            </li>
+                            <li>
+                                <strong>マッパーファイル（XML）</strong
+                                >に、Repositoryのメソッドに対応するSQLを記述します
+                            </li>
+                            <li>
+                                マッパーファイルは、<code>src/main/resources</code>配下にRepositoryと同じパッケージ構成で配置します
+                            </li>
+                            <li>
+                                <strong>#{フィールド名}</strong
+                                >でパラメータを安全にSQLに埋め込めます（SQLインジェクション対策）
+                            </li>
+                            <li>CRUD操作（Create, Read, Update, Delete）を実装しました</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box beginner" style="margin-top: 24px">
+                        <div class="info-box-icon">🎉</div>
+                        <div class="info-box-content">
+                            <div class="info-box-title">お疲れさまでした！</div>
+                            <p>
+                                これでデータベース操作の基盤が完成しました。次の章では、ドメイン層の「Service」と「ServiceImpl」を作成して、ビジネスロジックを実装していきます。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <footer>
+                <p>© Spring Boot 学習教材 - 第11章 アプリを作成しよう（データベース操作）</p>
+            </footer>
+        </div>
+
+        <footer class="footer">
+            <p>Spring Framework 入門チュートリアル</p>
+        </footer>
+
+        <div class="page-nav">
+            <a href="10app-preparation-tutorial.html" class="page-nav-btn prev">
+                <span>←</span>
+                <div>
+                    <div class="page-nav-label">前の章</div>
+                    <div class="page-nav-title">第10章</div>
+                </div>
+            </a>
+
+            <a href="12service-tutorial.html" class="page-nav-btn next">
+                <div>
+                    <div class="page-nav-label">次の章</div>
+                    <div class="page-nav-title">第12章</div>
+                </div>
+                <span>→</span>
+            </a>
+        </div>
+
+        <script>
+            function toggleMenu() {
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+                toggle.classList.toggle("active");
+                menu.classList.toggle("active");
+            }
+
+            document.addEventListener("click", function (e) {
+                const nav = document.querySelector(".global-nav");
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+
+                if (!nav.contains(e.target) && menu.classList.contains("active")) {
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+
+            window.addEventListener("resize", function () {
+                if (window.innerWidth >= 1024) {
+                    const toggle = document.querySelector(".nav-toggle");
+                    const menu = document.querySelector(".nav-menu");
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,1511 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>第10章 アプリの作成準備を行おう</title>
+
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&family=M+PLUS+Rounded+1c:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <!-- グローバルナビゲーション -->
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="1spring-framework-tutorial.html" class="nav-logo">
+                    <span class="nav-logo-icon">🌱</span>
+                    <span>Spring入門</span>
+                </a>
+                <button class="nav-toggle" onclick="toggleMenu()" aria-label="メニュー">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 章を選択</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="0promptprograming.html" class="nav-link">
+                                <span class="nav-chapter-num">0</span>
+                                <span>プロンプトプログラミング</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="1spring-framework-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">1</span>
+                                <span>Spring Frameworkについて知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="2java_basics.html" class="nav-link">
+                                <span class="nav-chapter-num">2</span>
+                                <span>基礎知識を身に付けよう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="3di-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">3</span>
+                                <span>DIを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="4aop-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">4</span>
+                                <span>AOPを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="5mvc-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">5</span>
+                                <span>MVCを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="6thymeleaf-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">6</span>
+                                <span>Thymeleafを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="7ServerDataSubmission.html" class="nav-link">
+                                <span class="nav-chapter-num">7</span>
+                                <span>サーバーへのデータ送信</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="8Validation_Textbook_Rewrite.html" class="nav-link">
+                                <span class="nav-chapter-num">8</span>
+                                <span>バリデーション</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="9_MyBatis_Tutorial__2_.html" class="nav-link">
+                                <span class="nav-chapter-num">9</span>
+                                <span>MyBatisチュートリアル</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="10app-preparation-tutorial.html" class="nav-link active">
+                                <span class="nav-chapter-num">10</span>
+                                <span>アプリケーション作成準備</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="11-database-operations.html" class="nav-link">
+                                <span class="nav-chapter-num">11</span>
+                                <span>データベース操作</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="12service-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">12</span>
+                                <span>サービス層</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="13_application_layer.html" class="nav-link">
+                                <span class="nav-chapter-num">13</span>
+                                <span>アプリケーション層</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="14_validation.html" class="nav-link">
+                                <span class="nav-chapter-num">14</span>
+                                <span>バリデーション（応用）</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="15-spring-security-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">15</span>
+                                <span>Spring Security</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <!-- ヘッダー -->
+            <header class="chapter-header">
+                <div class="chapter-badge">📘 Chapter</div>
+                <div class="chapter-number">10</div>
+                <h1 class="chapter-title">アプリの作成準備を行おう</h1>
+                <p class="chapter-subtitle">実践的なToDoアプリ開発に向けた環境構築とレイヤ設計</p>
+            </header>
+
+            <!-- 目次 -->
+            <nav class="toc">
+                <h2 class="toc-title">📚 この章で学ぶこと</h2>
+                <ul class="toc-list">
+                    <li class="toc-item">
+                        <span class="toc-number">10-1</span>
+                        <span class="toc-text">アプリケーションの概要</span>
+                    </li>
+                    <li class="toc-item">
+                        <span class="toc-number">10-2</span>
+                        <span class="toc-text">「ToDoアプリ」の作成を準備しよう</span>
+                    </li>
+                    <li class="toc-item">
+                        <span class="toc-number">10-3</span>
+                        <span class="toc-text">テーブルとデータを作成しよう</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Section 10-1 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 10-1</span>
+                    <h2 class="section-title">アプリケーションの概要</h2>
+                </div>
+
+                <div class="intro-box">
+                    <p>
+                        この章からは<span class="highlight">後半パート</span
+                        >になります。1章から9章までに学習した内容を活かして、実際に「Spring」を使用したWebアプリケーションを作成していきます。今回作成するアプリケーションは、IT研修でよく題材にされる「<strong>ToDoアプリ</strong>」です。
+                    </p>
+                </div>
+
+                <!-- 10-1-1 ToDoアプリとは？ -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-number">10-1-1</span>
+                        <h3 class="subsection-title">「ToDoアプリ」とは？</h3>
+                    </div>
+
+                    <p>
+                        「ToDoアプリ」は、<span class="highlight">日々のタスクや予定を管理する</span
+                        >ためのアプリケーションです。簡単に言うと、ユーザーが自分のタスクを作成して、表示して、更新して、削除することで、効率的に「すること」を整理し、管理します。
+                    </p>
+
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">📋</div>
+                            <div class="feature-title">タスク一覧</div>
+                            <p class="feature-desc">登録したタスクを一覧で確認できます</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">➕</div>
+                            <div class="feature-title">タスク登録</div>
+                            <p class="feature-desc">新しいタスクを追加できます</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">✏️</div>
+                            <div class="feature-title">タスク更新</div>
+                            <p class="feature-desc">既存のタスクを編集できます</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🗑️</div>
+                            <div class="feature-title">タスク削除</div>
+                            <p class="feature-desc">不要なタスクを削除できます</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 10-1-2 プロジェクト作成準備 -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-number">10-1-2</span>
+                        <h3 class="subsection-title">プロジェクト作成準備</h3>
+                    </div>
+
+                    <h4>機能一覧</h4>
+                    <p>「ToDoアプリ」の機能を以下に記述します。</p>
+
+                    <div class="table-container">
+                        <p class="table-title">表10.1 機能一覧</p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>機能</th>
+                                    <th>説明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>一覧表示</td>
+                                    <td>登録されている「すること」を一覧表示します</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>詳細表示</td>
+                                    <td>PK（プライマリキー）で対象の「すること」の詳細を表示します</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>登録</td>
+                                    <td>「すること」を登録します</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>更新</td>
+                                    <td>登録されている「すること」を変更します</td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>削除</td>
+                                    <td>登録されている「すること」を削除します</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4>URLマッピング</h4>
+                    <p>「ToDoアプリ」のURLに対する役割を以下に記述します。ルーティング処理作成時に使用します。</p>
+
+                    <div class="table-container">
+                        <p class="table-title">表10.2 URL一覧</p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>役割</th>
+                                    <th>HTTPメソッド</th>
+                                    <th>URL</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>一覧画面を表示する</td>
+                                    <td>GET</td>
+                                    <td><code>/todos</code></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>詳細画面を表示する</td>
+                                    <td>GET</td>
+                                    <td><code>/todos/{id}</code></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>登録画面を表示する</td>
+                                    <td>GET</td>
+                                    <td><code>/todos/form</code></td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>登録処理を実行する</td>
+                                    <td>POST</td>
+                                    <td><code>/todos/save</code></td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>更新画面を表示する</td>
+                                    <td>GET</td>
+                                    <td><code>/todos/edit/{id}</code></td>
+                                </tr>
+                                <tr>
+                                    <td>6</td>
+                                    <td>更新処理を実行する</td>
+                                    <td>POST</td>
+                                    <td><code>/todos/update</code></td>
+                                </tr>
+                                <tr>
+                                    <td>7</td>
+                                    <td>削除処理を実行する</td>
+                                    <td>POST</td>
+                                    <td><code>/todos/delete/{id}</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4>テーブル構成</h4>
+                    <p>
+                        「ToDoアプリ」で扱うテーブル構成を以下に示します。今回はデータベースに「MySQL」を使用します。
+                    </p>
+
+                    <div class="table-container">
+                        <p class="table-title">表10.3 todosテーブル</p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>列</th>
+                                    <th>型</th>
+                                    <th>制約</th>
+                                    <th>備考</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <strong>id</strong><br /><span
+                                            style="color: var(--text-light); font-size: 0.85rem"
+                                            >（することのID）</span
+                                        >
+                                    </td>
+                                    <td>INT AUTO_INCREMENT</td>
+                                    <td>PK</td>
+                                    <td>
+                                        AUTO_INCREMENTを使用すると、新しいレコードが追加されるたびに、そのカラムの値が自動的に1ずつ増加されます。PKです
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>todo</strong><br /><span
+                                            style="color: var(--text-light); font-size: 0.85rem"
+                                            >（すること）</span
+                                        >
+                                    </td>
+                                    <td>varchar(255)</td>
+                                    <td>NOT NULL</td>
+                                    <td>255文字までの可変長文字列を格納します。制約によりNULLを許可しません</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>detail</strong><br /><span
+                                            style="color: var(--text-light); font-size: 0.85rem"
+                                            >（詳細）</span
+                                        >
+                                    </td>
+                                    <td>text</td>
+                                    <td>-</td>
+                                    <td>長さ制限がない文字列を格納します</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>created_at</strong><br /><span
+                                            style="color: var(--text-light); font-size: 0.85rem"
+                                            >（作成日時）</span
+                                        >
+                                    </td>
+                                    <td>DATETIME</td>
+                                    <td>-</td>
+                                    <td>
+                                        レコードが作成された日時を記録します。通常、このフィールドはレコード作成時に自動的に設定され、その後変更しません
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>updated_at</strong><br /><span
+                                            style="color: var(--text-light); font-size: 0.85rem"
+                                            >（更新日時）</span
+                                        >
+                                    </td>
+                                    <td>DATETIME</td>
+                                    <td>-</td>
+                                    <td>
+                                        レコードが更新された日時を記録します。レコードが更新されるたびに値を更新します
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4>画面遷移図</h4>
+                    <p>作成する画面遷移を以下に示します。</p>
+
+                    <div class="screen-flow">
+                        <h4 class="screen-flow-title">図10.1 画面遷移</h4>
+                        <div class="flow-container">
+                            <!-- 上段：登録画面 -->
+                            <div class="flow-row">
+                                <div class="screen-box">
+                                    <span class="crud-badge crud-c">C</span>
+                                    <div class="screen-icon">📝</div>
+                                    <div class="screen-name">登録画面</div>
+                                </div>
+                            </div>
+
+                            <div class="flow-arrow"><span class="flow-arrow-num">1</span>↕</div>
+
+                            <!-- 中段：一覧画面（メイン） -->
+                            <div class="flow-row">
+                                <div class="screen-box main">
+                                    <div class="screen-icon">📋</div>
+                                    <div class="screen-name">一覧画面</div>
+                                </div>
+                            </div>
+
+                            <!-- 詳細画面 -->
+                            <div class="flow-arrow"><span class="flow-arrow-num">2</span>↓</div>
+                            <div class="flow-row">
+                                <div class="screen-box">
+                                    <span class="crud-badge crud-r">R</span>
+                                    <div class="screen-icon">🔍</div>
+                                    <div class="screen-name">詳細画面</div>
+                                </div>
+                            </div>
+
+                            <!-- 詳細から D と U への分岐 -->
+                            <div class="flow-row" style="gap: 60px">
+                                <div style="display: flex; flex-direction: column; align-items: center">
+                                    <div class="flow-arrow"><span class="flow-arrow-num">3</span>↙</div>
+                                    <div
+                                        class="screen-box"
+                                        style="background: #fee2e2; border: 2px solid var(--danger)"
+                                    >
+                                        <span class="crud-badge crud-d">D</span>
+                                        <div class="screen-icon">🗑️</div>
+                                        <div class="screen-name">削除処理</div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; flex-direction: column; align-items: center">
+                                    <div class="flow-arrow">↘<span class="flow-arrow-num">4</span></div>
+                                    <div class="screen-box">
+                                        <span class="crud-badge crud-u">U</span>
+                                        <div class="screen-icon">✏️</div>
+                                        <div class="screen-name">更新画面</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 24px; text-align: center; font-size: 0.9rem; color: var(--text-light)">
+                            <p style="margin: 4px 0">
+                                <span class="flow-arrow-num" style="display: inline-flex; width: 20px; height: 20px; font-size: 0.7rem;">1</span>
+                                「一覧画面」から「登録画面」を表示し、「登録処理」を実行した後は「一覧画面」を表示します
+                            </p>
+                            <p style="margin: 4px 0">
+                                <span class="flow-arrow-num" style="display: inline-flex; width: 20px; height: 20px; font-size: 0.7rem;">2</span>
+                                「一覧画面」から「詳細画面」を表示します
+                            </p>
+                            <p style="margin: 4px 0">
+                                <span class="flow-arrow-num" style="display: inline-flex; width: 20px; height: 20px; font-size: 0.7rem;">3</span>
+                                「詳細画面」から「削除処理」を実行し、実行後は「一覧画面」を表示します
+                            </p>
+                            <p style="margin: 4px 0">
+                                <span class="flow-arrow-num" style="display: inline-flex; width: 20px; height: 20px; font-size: 0.7rem;">4</span>
+                                「詳細画面」からPKである「ID」を利用して対象のToDoデータを取得し「更新画面」を表示します
+                            </p>
+                            <p style="margin: 4px 0; font-weight: 600">※ 図の「C」「R」「U」「D」はCRUDを表す</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 10-2 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 10-2</span>
+                    <h2 class="section-title">「ToDoアプリ」の作成を準備しよう</h2>
+                </div>
+
+                <div class="intro-box">
+                    <p>
+                        今回作成する「ToDoアプリ」について概要を整理できたので、<span class="highlight"
+                            >データベースやプロジェクト</span
+                        >を作成していきます。またプログラム作成時に意識しなければならない「<strong>レイヤ化</strong>」についても説明します。
+                    </p>
+                </div>
+
+                <!-- 10-2-1 データベースの作成 -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-number">10-2-1</span>
+                        <h3 class="subsection-title">データベースの作成</h3>
+                    </div>
+
+                    <p>
+                        環境構築でインストールしたMySQLデータベースに対して、今回のWebアプリケーションで使用するDBやユーザーを作成します。
+                    </p>
+
+                    <h4>MySQL Workbenchの起動</h4>
+                    <p>
+                        Windowsの検索バーに「MySQL Workbench」と入力し、表示されるアイコンをクリックして「MySQL Workbench」を起動します。
+                    </p>
+
+                    <div class="point-box">
+                        <div class="point-title">MySQL Workbenchとは？</div>
+                        <p style="margin: 0">
+                            MySQL WorkbenchはMySQLを操作するための<strong>GUI管理ツール</strong>です。コマンドを打たなくても、画面上でデータベースの作成やデータの確認ができます。
+                        </p>
+                    </div>
+
+                    <p>
+                        「MySQL Connections」の「Local instance MySQL」をクリックすると、パスワードが求められます。インストール時に設定したパスワードを入力し、「Save password in vault」にチェックを入れて「OK」ボタンをクリックします。本書ではパスワードを「root」と設定しています。
+                    </p>
+
+                    <h4>ユーザーの作成</h4>
+                    <p>
+                        メニューから「Server」→「Users and Privileges」をクリックします。
+                    </p>
+
+                    <div class="settings-table">
+                        <div class="settings-row">
+                            <div class="settings-label">項目</div>
+                            <div class="settings-value">設定内容</div>
+                        </div>
+                        <div class="settings-row">
+                            <div class="settings-label">Login Name</div>
+                            <div class="settings-value">springuser</div>
+                        </div>
+                        <div class="settings-row">
+                            <div class="settings-label">Authentication Type</div>
+                            <div class="settings-value">Standard</div>
+                        </div>
+                        <div class="settings-row">
+                            <div class="settings-label">Password</div>
+                            <div class="settings-value">p@ss</div>
+                        </div>
+                    </div>
+
+                    <p>
+                        画面左下の「Add Account」をクリックして新しいユーザーを追加し、上記の情報を入力します。「Administrative Roles」タブで「DBA」にチェックを入れて管理者権限を付与します。
+                    </p>
+
+                    <div class="table-container">
+                        <p class="table-title">表10.4 ユーザー設定の項目説明</p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>説明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Login Name</td>
+                                    <td>データベースにログインする際に使用するユーザー名を設定します</td>
+                                </tr>
+                                <tr>
+                                    <td>Password</td>
+                                    <td>データベースにログインする際に使用するパスワードを設定します</td>
+                                </tr>
+                                <tr>
+                                    <td>Administrative Roles</td>
+                                    <td>
+                                        ユーザーに付与する権限を設定します。DBAを選択すると全ての権限が付与されます
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p>設定が完了したら、画面右下の「Apply」ボタンをクリックしてユーザーを作成します。</p>
+
+                    <h4>DBの作成</h4>
+                    <p>
+                        メニューから「Server」→「Data Import」の左にあるアイコンの中から、「Create a new schema」（円柱のアイコン）をクリックするか、クエリタブで以下のSQLを実行します。
+                    </p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">データベース作成SQL</span>
+                            <span class="code-lang">SQL</span>
+                        </div>
+                        <div class="code-content">
+                            <pre><span class="code-keyword">CREATE DATABASE</span> springdb <span class="code-keyword">CHARACTER SET</span> utf8mb4;</pre>
+                        </div>
+                    </div>
+
+                    <div class="settings-table">
+                        <div class="settings-row">
+                            <div class="settings-label">Schema Name</div>
+                            <div class="settings-value">springdb</div>
+                        </div>
+                        <div class="settings-row">
+                            <div class="settings-label">Character Set</div>
+                            <div class="settings-value">utf8mb4</div>
+                        </div>
+                    </div>
+
+                    <p>
+                        設定後、「Apply」ボタンをクリックすると、「Schemas」の中に「springdb」が作成されたことを確認できます。
+                    </p>
+                </div>
+
+                <!-- 10-2-2 プロジェクトの作成 -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-number">10-2-2</span>
+                        <h3 class="subsection-title">プロジェクトの作成</h3>
+                    </div>
+
+                    <p>
+                        「Spring
+                        Initializr」を使用して、Springプロジェクトを作成します。作成後、IDE（今回はVSCode）にプロジェクトを取り込みます。直接「Spring Initializr」を利用することで<span
+                            class="highlight"
+                            >IDEに縛られることなく</span
+                        >Springプロジェクトの開発が行えます。
+                    </p>
+
+                    <div class="column-box">
+                        <span class="column-badge">Column</span>
+                        <div class="column-title">Spring Initializrとは？</div>
+                        <p>
+                            Spring Bootプロジェクトを簡単に始めるためのツールです。Webサイトを通じて、新規Spring
+                            Bootプロジェクトの雛形（テンプレート）を生成できます。
+                        </p>
+                        <p style="margin: 0">
+                            使い方は、Spring Initializr（<a href="https://start.spring.io/" target="_blank"
+                                >https://start.spring.io/</a
+                            >）のWebサイトにアクセスします。
+                        </p>
+                    </div>
+
+                    <h4>プロジェクトの設定</h4>
+                    <p>
+                        プロジェクトの設定（プログラミング言語、Spring
+                        Bootのバージョン、プロジェクトのメタデータなど）を選択します。
+                    </p>
+
+                    <div class="table-container">
+                        <p class="table-title">表10.6 Project Metadata</p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>説明</th>
+                                    <th>今回の設定</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Project</td>
+                                    <td>
+                                        プロジェクトのタイプを選びます。これはプロジェクトの依存関係を管理するためのツールです
+                                    </td>
+                                    <td>Maven</td>
+                                </tr>
+                                <tr>
+                                    <td>Language</td>
+                                    <td>プログラミング言語を選びます</td>
+                                    <td>Java</td>
+                                </tr>
+                                <tr>
+                                    <td>Spring Boot</td>
+                                    <td>
+                                        Spring
+                                        Bootのバージョンを選びます。「SNAPSHOT」は開発中、「M.x」は比較的安定していますが、まだ正式リリース前のバージョンです
+                                    </td>
+                                    <td>3.2.3</td>
+                                </tr>
+                                <tr>
+                                    <td>Group</td>
+                                    <td>通常は組織名や会社名が入ります。Javaのパッケージ名としても使用されます</td>
+                                    <td>com.example</td>
+                                </tr>
+                                <tr>
+                                    <td>Artifact</td>
+                                    <td>
+                                        プロジェクトの名前です。この名前がそのまま生成されるJARファイルやWARファイルの名前になります
+                                    </td>
+                                    <td>webapp</td>
+                                </tr>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>プロジェクトの表示名です。通常はArtifactと同じにします</td>
+                                    <td>webapp</td>
+                                </tr>
+                                <tr>
+                                    <td>Description</td>
+                                    <td>プロジェクトの説明です</td>
+                                    <td>任意</td>
+                                </tr>
+                                <tr>
+                                    <td>Package name</td>
+                                    <td>Javaのパッケージ名です。通常は「Group＋Artifact」から自動生成されます</td>
+                                    <td>com.example.webapp</td>
+                                </tr>
+                                <tr>
+                                    <td>Packaging</td>
+                                    <td>
+                                        「Jar」：Javaのスタンドアロンアプリケーションを作成します。「War」：Webアプリケーションを作成します
+                                    </td>
+                                    <td>Jar</td>
+                                </tr>
+                                <tr>
+                                    <td>Java</td>
+                                    <td>使用するJavaのバージョンを選びます。通常は安定版を選びます</td>
+                                    <td>21</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4>依存関係の選択</h4>
+                    <p>
+                        必要な依存関係（Spring Boot DevTools、Lombok、Spring Web、MyBatis
+                        Framework、Thymeleaf、MySQL Driver）を選びます。「ADD
+                        DEPENDENCIES」ボタンをクリックして選択してください。
+                    </p>
+
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">🔧</div>
+                            <div class="feature-title">Spring Boot DevTools</div>
+                            <p class="feature-desc">開発時の自動リロードなど便利な機能</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">📝</div>
+                            <div class="feature-title">Lombok</div>
+                            <p class="feature-desc">getter/setterなどを自動生成</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🌐</div>
+                            <div class="feature-title">Spring Web</div>
+                            <p class="feature-desc">Webアプリケーション開発に必要</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🗄️</div>
+                            <div class="feature-title">MyBatis Framework</div>
+                            <p class="feature-desc">データベース操作を簡単に</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🎨</div>
+                            <div class="feature-title">Thymeleaf</div>
+                            <p class="feature-desc">HTMLテンプレートエンジン</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🐬</div>
+                            <div class="feature-title">MySQL Driver</div>
+                            <p class="feature-desc">MySQLとの接続に必要</p>
+                        </div>
+                    </div>
+
+                    <p>
+                        「GENERATE」ボタンをクリックしてプロジェクトを生成します。ダウンロードしたプロジェクトZIPファイルを解凍し、VSCodeで開きます。
+                    </p>
+
+                    <h4>VSCodeでプロジェクトを開く</h4>
+                    <p>
+                        VSCodeを起動し、「ファイル」→「フォルダーを開く」を選択して、先ほど解凍したプロジェクトフォルダを選択します。
+                    </p>
+
+                    <div class="point-box">
+                        <div class="point-title">VSCode拡張機能のインストール</div>
+                        <p style="margin: 0">
+                            VSCodeでSpring Boot開発を行うには、以下の拡張機能をインストールしてください。
+                        </p>
+                        <ul style="margin: 8px 0 0 0; padding-left: 20px">
+                            <li><strong>Extension Pack for Java</strong> - Java開発に必要な基本機能</li>
+                            <li><strong>Spring Boot Extension Pack</strong> - Spring Boot開発支援</li>
+                            <li><strong>Lombok Annotations Support for VS Code</strong> - Lombokサポート</li>
+                        </ul>
+                    </div>
+
+                    <p>
+                        プロジェクトを開くと、VSCodeが自動的にMavenプロジェクトとして認識し、必要な依存関係をダウンロードします。右下に表示される「Import」ポップアップが表示されたら「Yes」をクリックしてください。
+                    </p>
+                </div>
+
+                <!-- 10-2-3 application.propertiesの設定 -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-number">10-2-3</span>
+                        <h3 class="subsection-title">application.propertiesの設定</h3>
+                    </div>
+
+                    <p>
+                        プロジェクト内にある「application.properties」にDBへの接続やMyBatisのログ表示などを設定し、「schema.sql」と「data.sql」を用意し、DBに対してテーブルの作成、ダミーデータの登録を実施します。
+                    </p>
+
+                    <h4>application.propertiesへの記述</h4>
+                    <p>「src/main/resources」フォルダにある「application.properties」に以下の内容を記述します。</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">リスト10.1 application.properties</span>
+                            <span class="code-lang">Properties</span>
+                        </div>
+                        <div class="code-content">
+                            <pre><span class="code-comment"># DataSource</span>
+<span class="code-comment"># MySQLのドライバーの設定</span>
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+<span class="code-comment"># データベースへの接続URLを設定</span>
+spring.datasource.url=jdbc:mysql://localhost:3306/springdb?serverTimezone=Asia/Tokyo
+<span class="code-comment"># データベース接続のためのユーザー名を設定</span>
+spring.datasource.username=springuser
+<span class="code-comment"># データベース接続のためのパスワードを設定</span>
+spring.datasource.password=p@ss
+<span class="code-comment"># SQLスクリプトの初期化モードを設定</span>
+spring.sql.init.mode=always
+<span class="code-comment"># Log表示設定</span>
+logging.level.com.example.webapp.repository=DEBUG</pre>
+                        </div>
+                    </div>
+
+                    <div class="point-box">
+                        <div class="point-title">設定のポイント</div>
+                        <ul style="margin: 0; padding-left: 20px">
+                            <li>
+                                <code>spring.sql.init.mode=always</code>は、Spring
+                                Bootアプリケーションが起動するたびにSQLスクリプトを実行するようにする設定です
+                            </li>
+                            <li>
+                                <code>logging.level</code
+                                >をDEBUGに設定すると、実行されるSQLクエリやパラメータなどの詳細な情報がログに出力されます
+                            </li>
+                        </ul>
+                    </div>
+
+                    <h4>schema.sqlの作成</h4>
+                    <p>
+                        「src/main/resources」フォルダを選択し、右クリック→「新規」→「ファイル」を選択します。ファイル名「schema.sql」を作成し、以下の内容を記述します。
+                    </p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">リスト10.2 schema.sql</span>
+                            <span class="code-lang">SQL</span>
+                        </div>
+                        <div class="code-content">
+                            <pre><span class="code-comment">-- テーブルが存在したら削除する</span>
+<span class="code-keyword">DROP TABLE IF EXISTS</span> todos;
+
+<span class="code-comment">-- テーブルの作成</span>
+<span class="code-keyword">CREATE TABLE</span> todos (
+    <span class="code-comment">-- id（することのID）：主キー</span>
+    id <span class="code-class">INT AUTO_INCREMENT</span> <span class="code-keyword">PRIMARY KEY</span>,
+    <span class="code-comment">-- todo（すること）：NULL不許可</span>
+    todo <span class="code-class">VARCHAR</span>(255) <span class="code-keyword">NOT NULL</span>,
+    <span class="code-comment">-- detail（説明）</span>
+    detail <span class="code-class">TEXT</span>,
+    <span class="code-comment">-- created_at（作成日）</span>
+    created_at <span class="code-class">DATETIME</span>,
+    <span class="code-comment">-- updated_at（更新日）</span>
+    updated_at <span class="code-class">DATETIME</span>
+);</pre>
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-title">注意：DROP TABLE IF EXISTSについて</div>
+                        <p style="margin: 0">
+                            2行目の「DROP TABLE IF
+                            EXISTS」は、指定されたテーブルがデータベースに存在する場合、そのテーブルを削除するSQLコマンドです。アプリケーションを起動する度にテーブルを削除して、再構築を行い、ダミーデータを登録する方法で今回アプリケーションを作成しようと思うため、このような記述をしています。
+                        </p>
+                    </div>
+
+                    <h4>data.sqlの作成</h4>
+                    <p>
+                        「src/main/resources」フォルダを選択し、右クリック→「新規」→「ファイル」を選択します。ファイル名「data.sql」を作成し、以下の内容を記述します。
+                    </p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">リスト10.3 data.sql</span>
+                            <span class="code-lang">SQL</span>
+                        </div>
+                        <div class="code-content">
+                            <pre><span class="code-comment">-- 1件目のデータ登録</span>
+<span class="code-keyword">INSERT INTO</span> todos (todo, detail, created_at, updated_at)
+<span class="code-keyword">VALUES</span>
+(<span class="code-string">'買い物'</span>, <span class="code-string">'スーパーで食材を購入する'</span>, <span class="code-method">CURRENT_TIMESTAMP</span>, <span class="code-method">CURRENT_TIMESTAMP</span>);
+
+<span class="code-comment">-- 2件目のデータ登録</span>
+<span class="code-keyword">INSERT INTO</span> todos (todo, detail, created_at, updated_at)
+<span class="code-keyword">VALUES</span>
+(<span class="code-string">'図書館に行く'</span>, <span class="code-string">'本を借りる'</span>, <span class="code-method">CURRENT_TIMESTAMP</span>, <span class="code-method">CURRENT_TIMESTAMP</span>);
+
+<span class="code-comment">-- 3件目のデータ登録</span>
+<span class="code-keyword">INSERT INTO</span> todos (todo, detail, created_at, updated_at)
+<span class="code-keyword">VALUES</span>
+(<span class="code-string">'ジムに行く'</span>, <span class="code-string">'運動する'</span>, <span class="code-method">CURRENT_TIMESTAMP</span>, <span class="code-method">CURRENT_TIMESTAMP</span>);</pre>
+                        </div>
+                    </div>
+
+                    <p>schema.sqlで作成したテーブルに対して、ダミーデータを登録するINSERT文を記述しています。</p>
+                </div>
+
+                <!-- 10-2-4 レイヤ化 -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-number">10-2-4</span>
+                        <h3 class="subsection-title">レイヤ化</h3>
+                    </div>
+
+                    <p>
+                        「3-2-2
+                        5つのルール」でアプリケーションを作成する時、レイヤで分ける事が推奨されていることを説明しました。今回作成するWebアプリケーションは次の<span
+                            class="highlight"
+                            >3レイヤで分割</span
+                        >して開発します。
+                    </p>
+
+                    <div class="layer-diagram">
+                        <div class="layer-container">
+                            <div class="layer-row">
+                                <div class="layer-box layer-app">
+                                    <div class="layer-header">
+                                        <div class="layer-icon">📱</div>
+                                        <div>
+                                            <div class="layer-title">アプリケーション層</div>
+                                            <div class="layer-subtitle">Application Layer</div>
+                                        </div>
+                                    </div>
+                                    <div class="layer-components">
+                                        <span class="layer-component">View</span>
+                                        <span class="layer-component">Controller</span>
+                                        <span class="layer-component">Form</span>
+                                    </div>
+                                </div>
+                                <div class="layer-box layer-infra">
+                                    <div class="layer-header">
+                                        <div class="layer-icon">🗄️</div>
+                                        <div>
+                                            <div class="layer-title">インフラストラクチャ層</div>
+                                            <div class="layer-subtitle">Infrastructure Layer</div>
+                                        </div>
+                                    </div>
+                                    <div class="layer-components">
+                                        <span class="layer-component">O/R Mapper</span>
+                                        <span class="layer-component">RepositoryImpl</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layer-row">
+                                <div class="layer-box layer-domain">
+                                    <div class="layer-header">
+                                        <div class="layer-icon">⚙️</div>
+                                        <div>
+                                            <div class="layer-title">ドメイン層</div>
+                                            <div class="layer-subtitle">Domain Layer</div>
+                                        </div>
+                                    </div>
+                                    <div class="layer-components">
+                                        <span class="layer-component">Service</span>
+                                        <span class="layer-component">ServiceImpl</span>
+                                        <span class="layer-component">Domain Object</span>
+                                        <span class="layer-component">Repository</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <p class="table-title">表10.7 レイヤの説明</p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>レイヤ</th>
+                                    <th>役割</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>アプリケーション層</strong></td>
+                                    <td>
+                                        「クライアント」から受取った「リクエスト」を制御し、「ドメイン層」を使ってアプリケーションを制御します
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ドメイン層</strong></td>
+                                    <td>「Domain Object」に対するアプリケーションの「業務処理」を実行します</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>インフラストラクチャ層</strong></td>
+                                    <td>
+                                        「Domain
+                                        Object」に対する「CRUD操作」を行い、データ永続化（データの保存）を担当します
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="point-box">
+                        <div class="point-title">レイヤ化のルール</div>
+                        <p>
+                            「アプリケーション層」も「インフラストラクチャ層」も「ドメイン層」に依存しますが、「ドメイン層」は他の層に依存してはいけないというルールがあります。
+                        </p>
+                        <p style="margin: 0">
+                            依存とは簡単に言うと「import」して使用することです。つまり「ドメイン層」の変更によって「アプリケーション層」に変更が生じることは許可されますが、「アプリケーション層」の変更によって「ドメイン層」に変更が生じることは許可されません。
+                        </p>
+                    </div>
+
+                    <h4>レイヤ別コンポーネントの説明</h4>
+                    <p>
+                        アプリケーション層、ドメイン層、インフラストラクチャ層のレイヤ別にコンポーネントの説明を以下に示します。
+                    </p>
+
+                    <div class="table-container">
+                        <p class="table-title">表10.8 アプリケーション層のコンポーネント</p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>コンポーネント</th>
+                                    <th>説明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Controller</strong></td>
+                                    <td>
+                                        「リクエスト」を処理にマッピングし、結果を「View」に渡すという制御を行います。主処理は「Controller」内では行わず「ドメイン層」の「Service」を呼び出します
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Form</strong></td>
+                                    <td>
+                                        「画面のフォーム」を表現します。画面からの入力値を「Controller」に渡す場合や、「Controller」から画面に結果を出力する際などに使用します
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>View</strong></td>
+                                    <td>簡単に言うと「見た目」を表す部分です</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-container">
+                        <p class="table-title">表10.9 ドメイン層のコンポーネント</p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>コンポーネント</th>
+                                    <th>説明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Domain Object</strong></td>
+                                    <td>
+                                        業務処理を実行する上で必要な概念やルールを表現する広い概念です（本書では、エンティティがDomain
+                                        Objectに対応します）
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Service</strong></td>
+                                    <td>
+                                        「Service」は「インターフェース」です。「業務処理」の定義のみ記述します（実装内容は記述しません）
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ServiceImpl</strong></td>
+                                    <td>
+                                        「Service」インターフェースの実装クラスです。アプリケーションの「業務処理」そのものを表します
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Repository</strong></td>
+                                    <td>
+                                        「Repository」は「インターフェース」です。「データベースへのデータ操作」「CRUD処理」などの定義を記述します（実装内容は記述しません）
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-container">
+                        <p class="table-title">表10.10 インフラストラクチャ層のコンポーネント</p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>コンポーネント</th>
+                                    <th>説明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>RepositoryImpl</strong></td>
+                                    <td>
+                                        「ドメイン層」で定めた「Repository」インターフェースの実装クラスです。「O/R
+                                        Mapper」が「Repository」の実装クラスを作成する場合もあります
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>O/R Mapper</strong></td>
+                                    <td>
+                                        「O：オブジェクト」と「R：リレーショナルデータベース」とのデータをマッピングするツールです
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4>プロジェクトのフォルダ構成</h4>
+                    <p>
+                        Spring Bootプロジェクト（Maven）の典型的なフォルダ構成を以下に示します。レイヤごとにパッケージを分けて管理します。
+                    </p>
+
+                    <div class="folder-structure">
+                        <div class="folder-title">図10.2 プロジェクトフォルダ構成</div>
+                        <div class="folder-tree">
+<pre style="background: var(--code-bg); padding: 20px; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; line-height: 1.8; overflow-x: auto;">
+<span style="color: var(--primary);">webapp/</span>                             <span style="color: var(--text-light);">← プロジェクトルート</span>
+├── <span style="color: var(--primary);">src/</span>
+│   ├── <span style="color: var(--primary);">main/</span>
+│   │   ├── <span style="color: var(--primary);">java/</span>
+│   │   │   └── <span style="color: var(--primary);">com/example/webapp/</span>
+│   │   │       ├── <span style="color: var(--accent);">WebappApplication.java</span>   <span style="color: var(--text-light);">← メインクラス（エントリーポイント）</span>
+│   │   │       │
+│   │   │       ├── <span style="color: var(--primary);">controller/</span>              <span style="color: var(--text-light);">← アプリケーション層</span>
+│   │   │       │   └── <span style="color: var(--accent);">ToDoController.java</span>
+│   │   │       │
+│   │   │       ├── <span style="color: var(--primary);">form/</span>                    <span style="color: var(--text-light);">← アプリケーション層（フォーム）</span>
+│   │   │       │   └── <span style="color: var(--accent);">ToDoForm.java</span>
+│   │   │       │
+│   │   │       ├── <span style="color: var(--primary);">service/</span>                 <span style="color: var(--text-light);">← ドメイン層（サービス）</span>
+│   │   │       │   ├── <span style="color: var(--accent);">ToDoService.java</span>
+│   │   │       │   └── <span style="color: var(--accent);">ToDoServiceImpl.java</span>
+│   │   │       │
+│   │   │       ├── <span style="color: var(--primary);">entity/</span>                  <span style="color: var(--text-light);">← ドメイン層（エンティティ）</span>
+│   │   │       │   └── <span style="color: var(--accent);">ToDo.java</span>
+│   │   │       │
+│   │   │       └── <span style="color: var(--primary);">repository/</span>              <span style="color: var(--text-light);">← インフラストラクチャ層</span>
+│   │   │           └── <span style="color: var(--accent);">ToDoMapper.java</span>
+│   │   │
+│   │   └── <span style="color: var(--primary);">resources/</span>
+│   │       ├── <span style="color: var(--accent);">application.properties</span>       <span style="color: var(--text-light);">← 設定ファイル</span>
+│   │       ├── <span style="color: var(--accent);">schema.sql</span>                   <span style="color: var(--text-light);">← テーブル定義SQL</span>
+│   │       ├── <span style="color: var(--accent);">data.sql</span>                     <span style="color: var(--text-light);">← 初期データSQL</span>
+│   │       ├── <span style="color: var(--primary);">static/</span>                      <span style="color: var(--text-light);">← 静的ファイル（CSS, JS, 画像）</span>
+│   │       └── <span style="color: var(--primary);">templates/</span>                   <span style="color: var(--text-light);">← Thymeleafテンプレート</span>
+│   │           └── <span style="color: var(--primary);">todo/</span>
+│   │               ├── <span style="color: var(--accent);">list.html</span>            <span style="color: var(--text-light);">← 一覧画面</span>
+│   │               ├── <span style="color: var(--accent);">detail.html</span>          <span style="color: var(--text-light);">← 詳細画面</span>
+│   │               ├── <span style="color: var(--accent);">form.html</span>            <span style="color: var(--text-light);">← 登録画面</span>
+│   │               └── <span style="color: var(--accent);">edit.html</span>            <span style="color: var(--text-light);">← 更新画面</span>
+│   │
+│   └── <span style="color: var(--primary);">test/</span>                            <span style="color: var(--text-light);">← テストコード</span>
+│       └── <span style="color: var(--primary);">java/</span>
+│
+└── <span style="color: var(--accent);">pom.xml</span>                              <span style="color: var(--text-light);">← Maven設定ファイル（依存関係定義）</span>
+</pre>
+                        </div>
+                    </div>
+
+                    <div class="point-box">
+                        <div class="point-title">フォルダ構成のポイント</div>
+                        <ul style="margin: 0; padding-left: 20px">
+                            <li>
+                                <strong>controller/</strong> - HTTPリクエストを受け取り、レスポンスを返す役割
+                            </li>
+                            <li>
+                                <strong>service/</strong> - ビジネスロジック（業務処理）を記述する場所
+                            </li>
+                            <li>
+                                <strong>repository/</strong> - データベースとのやり取りを行うインターフェース
+                            </li>
+                            <li>
+                                <strong>entity/</strong> - データベースのテーブルに対応するクラス
+                            </li>
+                            <li>
+                                <strong>form/</strong> - 画面からの入力データを受け取るクラス
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 10-3 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 10-3</span>
+                    <h2 class="section-title">テーブルとデータを作成しよう</h2>
+                </div>
+
+                <div class="intro-box">
+                    <p>
+                        作成した「application.properties」、「schema.sql」、「data.sql」を利用して、MySQLにテーブルとダミーデータが登録されることを確認します。MySQLの管理ツールである<span
+                            class="highlight"
+                            >MySQL Workbenchの使用方法</span
+                        >についても説明します。
+                    </p>
+                </div>
+
+                <!-- 10-3-1 アプリケーションの起動 -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-number">10-3-1</span>
+                        <h3 class="subsection-title">アプリケーションの起動</h3>
+                    </div>
+
+                    <p>VSCodeでプロジェクトを起動します。左側のエクスプローラーから「SPRING BOOT DASHBOARD」パネルを開き、「webapp」を右クリックして「Run」を選択するか、メインクラス（WebappApplication.java）を開いて「Run」ボタンをクリックします。</p>
+
+                    <p>
+                        Spring
+                        Bootプロジェクトでは、起動時に「application.properties」ファイルに記述された設定内容を参照します。その後、対象のデータベースに対して順番に「src/main/resources」フォルダ配下の「schema.sql」からテーブルが作成され、「data.sql」からデータが登録されます。
+                    </p>
+
+                    <div class="db-diagram">
+                        <div class="db-box">
+                            <div class="db-icon">🚀</div>
+                            <div class="db-name">起動</div>
+                        </div>
+                        <div class="db-arrow">→</div>
+                        <div class="db-box">
+                            <div class="db-icon">⚙️</div>
+                            <div class="db-name">設定<br /><small>application.properties</small></div>
+                        </div>
+                        <div class="db-arrow">→</div>
+                        <div class="db-box">
+                            <div class="db-icon">📋</div>
+                            <div class="db-name">構造<br /><small>schema.sql</small></div>
+                        </div>
+                        <div class="db-arrow">→</div>
+                        <div class="db-box">
+                            <div class="db-icon">💾</div>
+                            <div class="db-name">データ<br /><small>data.sql</small></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 10-3-2 テーブルの確認 -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-number">10-3-2</span>
+                        <h3 class="subsection-title">テーブルの確認</h3>
+                    </div>
+
+                    <p>
+                        MySQL Workbenchを起動して、DBが作成され、対象テーブルにテストデータが投入されたことを確認しましょう。Windowsの検索バーに「MySQL Workbench」と入力し、アイコンが表示されたらダブルクリックしてMySQL Workbenchを起動します。
+                    </p>
+
+                    <p>
+                        「Local instance MySQL」をクリックしてパスワードを求める画面が表示された場合は、インストール時に設定したパスワードを入力します（本書ではrootというパスワードにしています）。
+                    </p>
+
+                    <p>左側のナビゲーターパネルの「Schemas」で「springdb」が作成されていることを確認します。</p>
+
+                    <p>「springdb」→「Tables」→「todos」が作成されていることを確認します。</p>
+                </div>
+
+                <!-- 10-3-3 データの確認 -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-number">10-3-3</span>
+                        <h3 class="subsection-title">データの確認</h3>
+                    </div>
+
+                    <p>「todos」テーブルを選択して、右クリック後「Select Rows - Limit 1000」をクリックします。</p>
+
+                    <p>または、クエリタブで以下のSELECT文を記述して実行することもできます。</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">Query Tool</span>
+                            <span class="code-lang">SQL</span>
+                        </div>
+                        <div class="code-content">
+                            <pre><span class="code-keyword">SELECT</span> id, todo, detail, created_at, updated_at
+    <span class="code-keyword">FROM</span> springdb.todos;</pre>
+                        </div>
+                    </div>
+
+                    <p>「⚡」（Execute）をクリックすることで、選択したテーブルに登録されているデータが確認できます。</p>
+
+                    <div class="screenshot-box">
+                        <div class="screenshot-header">
+                            <span class="screenshot-dot red"></span>
+                            <span class="screenshot-dot yellow"></span>
+                            <span class="screenshot-dot green"></span>
+                            <span style="margin-left: 12px; font-weight: 500">登録データの確認結果</span>
+                        </div>
+                        <div class="screenshot-content">
+                            <table style="font-size: 0.9rem">
+                                <thead>
+                                    <tr>
+                                        <th>id</th>
+                                        <th>todo</th>
+                                        <th>detail</th>
+                                        <th>created_at</th>
+                                        <th>updated_at</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>買い物</td>
+                                        <td>スーパーで食材を購入する</td>
+                                        <td>2023-12-23 17:29:39</td>
+                                        <td>2023-12-23 17:29:39</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>図書館に行く</td>
+                                        <td>本を借りる</td>
+                                        <td>2023-12-23 17:29:39</td>
+                                        <td>2023-12-23 17:29:39</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>ジムに行く</td>
+                                        <td>運動する</td>
+                                        <td>2023-12-23 17:29:39</td>
+                                        <td>2023-12-23 17:29:39</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 作成コンポーネントの一覧 -->
+                <div class="subsection">
+                    <h4>作成コンポーネントの一覧</h4>
+                    <p>「ToDoアプリ」で作成する「コンポーネント」を以下に記述します。</p>
+
+                    <div class="table-container">
+                        <p class="table-title">表10.11 作成予定コンポーネント</p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>層</th>
+                                    <th>コンポーネント</th>
+                                    <th>作成物名称</th>
+                                    <th>備考</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>アプリケーション層</td>
+                                    <td>View</td>
+                                    <td>―</td>
+                                    <td>見た目、画面です</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>アプリケーション層</td>
+                                    <td>Controller</td>
+                                    <td>ToDoController</td>
+                                    <td>制御の役割を担います</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>アプリケーション層</td>
+                                    <td>Form</td>
+                                    <td>ToDoForm</td>
+                                    <td>「画面のフォーム」を表現します</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>ドメイン層</td>
+                                    <td>Service</td>
+                                    <td>ToDoService</td>
+                                    <td>インターフェースで作成します</td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>ドメイン層</td>
+                                    <td>ServiceImpl</td>
+                                    <td>ToDoServiceImpl</td>
+                                    <td>「Service」を実装します</td>
+                                </tr>
+                                <tr>
+                                    <td>6</td>
+                                    <td>ドメイン層</td>
+                                    <td>Domain Object</td>
+                                    <td>ToDo</td>
+                                    <td>ここでは「Entity」と同様です</td>
+                                </tr>
+                                <tr>
+                                    <td>7</td>
+                                    <td>ドメイン層</td>
+                                    <td>Repository</td>
+                                    <td>ToDoMapper</td>
+                                    <td>
+                                        インターフェースで作成します（今回はMyBatisのマッパーファイルを使用する方法で作成するので名前は「××Mapper」とします）
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>8</td>
+                                    <td>インフラストラクチャ層</td>
+                                    <td>RepositoryImpl</td>
+                                    <td>―</td>
+                                    <td>O/Rマッパーにより自動作成されます</td>
+                                </tr>
+                                <tr>
+                                    <td>9</td>
+                                    <td>インフラストラクチャ層</td>
+                                    <td>O/R Mapper</td>
+                                    <td>―</td>
+                                    <td>MyBatis</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 進捗確認 -->
+                <div class="progress-diagram">
+                    <h4 class="progress-title">ここまでの進捗</h4>
+                    <div class="progress-items">
+                        <div class="progress-item">
+                            <span class="progress-check done">✓</span>
+                            <span>データベース</span>
+                        </div>
+                        <div class="progress-item">
+                            <span class="progress-check done">✓</span>
+                            <span>テーブル</span>
+                        </div>
+                        <div class="progress-item">
+                            <span class="progress-check done">✓</span>
+                            <span>データ</span>
+                        </div>
+                        <div class="progress-item">
+                            <span class="progress-check done">✓</span>
+                            <span>プロジェクト</span>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 20px; color: var(--text-light)">
+                        プロジェクトのテンプレート、データベース、テーブル、ダミーデータを作成し、アプリケーション開発の準備ができました。<br />次章からStep
+                        by Stepを心掛け「ToDoアプリ」の作成を開始しましょう。
+                    </p>
+                </div>
+            </section>
+
+            <!-- フッター -->
+            <footer class="chapter-footer">
+                <p style="margin-bottom: 20px">第10章 完了！🎉</p>
+                <a href="#" class="next-chapter">
+                    次章へ進む：ToDoアプリの実装
+                    <span>→</span>
+                </a>
+            </footer>
+        </div>
+
+        <footer class="footer">
+            <p>Spring Framework 入門チュートリアル</p>
+        </footer>
+
+        <div class="page-nav">
+            <a href="9_MyBatis_Tutorial__2_.html" class="page-nav-btn prev">
+                <span>←</span>
+                <div>
+                    <div class="page-nav-label">前の章</div>
+                    <div class="page-nav-title">第9章</div>
+                </div>
+            </a>
+
+            <a href="11-database-operations.html" class="page-nav-btn next">
+                <div>
+                    <div class="page-nav-label">次の章</div>
+                    <div class="page-nav-title">第11章</div>
+                </div>
+                <span>→</span>
+            </a>
+        </div>
+
+        <script>
+            function toggleMenu() {
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+                toggle.classList.toggle("active");
+                menu.classList.toggle("active");
+            }
+
+            document.addEventListener("click", function (e) {
+                const nav = document.querySelector(".global-nav");
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+
+                if (!nav.contains(e.target) && menu.classList.contains("active")) {
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+
+            window.addEventListener("resize", function () {
+                if (window.innerWidth >= 1024) {
+                    const toggle = document.querySelector(".nav-toggle");
+                    const menu = document.querySelector(".nav-menu");
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+        </script>
+    </body>
+</html>

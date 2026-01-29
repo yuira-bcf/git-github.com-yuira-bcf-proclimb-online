@@ -1,0 +1,2085 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>第15章 ログイン認証を実装しよう - Spring Security入門</title>
+
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&family=M+PLUS+Rounded+1c:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <!-- グローバルナビゲーション -->
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="1spring-framework-tutorial.html" class="nav-logo">
+                    <span class="nav-logo-icon">🌱</span>
+                    <span>Spring入門</span>
+                </a>
+                <button class="nav-toggle" onclick="toggleMenu()" aria-label="メニュー">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 章を選択</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="0promptprograming.html" class="nav-link">
+                                <span class="nav-chapter-num">0</span>
+                                <span>プロンプトプログラミング</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="1spring-framework-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">1</span>
+                                <span>Spring Frameworkについて知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="2java_basics.html" class="nav-link">
+                                <span class="nav-chapter-num">2</span>
+                                <span>基礎知識を身に付けよう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="3di-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">3</span>
+                                <span>DIを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="4aop-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">4</span>
+                                <span>AOPを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="5mvc-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">5</span>
+                                <span>MVCを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="6thymeleaf-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">6</span>
+                                <span>Thymeleafを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="7ServerDataSubmission.html" class="nav-link">
+                                <span class="nav-chapter-num">7</span>
+                                <span>サーバーへのデータ送信</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="8Validation_Textbook_Rewrite.html" class="nav-link">
+                                <span class="nav-chapter-num">8</span>
+                                <span>バリデーション</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="9_MyBatis_Tutorial__2_.html" class="nav-link">
+                                <span class="nav-chapter-num">9</span>
+                                <span>MyBatisチュートリアル</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="10app-preparation-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">10</span>
+                                <span>アプリケーション作成準備</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="11-database-operations.html" class="nav-link">
+                                <span class="nav-chapter-num">11</span>
+                                <span>データベース操作</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="12service-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">12</span>
+                                <span>サービス層</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="13_application_layer.html" class="nav-link">
+                                <span class="nav-chapter-num">13</span>
+                                <span>アプリケーション層</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="14_validation.html" class="nav-link">
+                                <span class="nav-chapter-num">14</span>
+                                <span>バリデーション（応用）</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="15-spring-security-tutorial.html" class="nav-link active">
+                                <span class="nav-chapter-num">15</span>
+                                <span>Spring Security</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <!-- ヘッダー -->
+            <header class="chapter-header">
+                <div class="chapter-badge">📘 Chapter</div>
+                <div class="chapter-number">15</div>
+                <h1 class="chapter-title">ログイン認証を実装しよう</h1>
+                <p class="chapter-subtitle">Spring Securityでアプリケーションを守る</p>
+            </header>
+
+            <!-- 目次 -->
+            <nav class="toc">
+                <h2 class="toc-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="8" y1="6" x2="21" y2="6" />
+                        <line x1="8" y1="12" x2="21" y2="12" />
+                        <line x1="8" y1="18" x2="21" y2="18" />
+                        <line x1="3" y1="6" x2="3.01" y2="6" />
+                        <line x1="3" y1="12" x2="3.01" y2="12" />
+                        <line x1="3" y1="18" x2="3.01" y2="18" />
+                    </svg>
+                    この章で学ぶこと
+                </h2>
+                <ul class="toc-list">
+                    <li>
+                        <a href="#section1"><span class="toc-number">15-1</span>Spring Securityの概要</a>
+                    </li>
+                    <li>
+                        <a href="#section2"><span class="toc-number">15-2</span>Spring Securityを導入しよう</a>
+                    </li>
+                    <li>
+                        <a href="#section3"><span class="toc-number">15-3</span>認可について知ろう</a>
+                    </li>
+                    <li>
+                        <a href="#section4"><span class="toc-number">15-4</span>カスタムエラーページとは？</a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- セクション15-1 -->
+            <section class="section" id="section1">
+                <div class="section-header">
+                    <span class="section-number">15-1</span>
+                    <h2 class="section-title">Spring Securityの概要</h2>
+                </div>
+
+                <div class="intro-box">
+                    <p>
+                        この章からは少し難易度が上がります。「認証（Authentication）」とは、ユーザーが自分の身元を証明する方法のことです。簡単に言えば、これは「ログイン処理」に相当します。Springには「ログイン処理」を容易に実装できる機能が備わっています。
+                    </p>
+                </div>
+
+                <!-- プロジェクトの作成 -->
+                <div class="subsection">
+                    <h3 class="subsection-title">プロジェクトの作成（Spring Initializr）</h3>
+
+                    <p>
+                        この章で使用するSpring Bootプロジェクトの作成方法を説明します。新規でプロジェクトを作成する場合は、以下の手順に従ってください。
+                    </p>
+
+                    <div class="hint-box">
+                        <div class="hint-box-title">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="16" x2="12" y2="12" />
+                                <line x1="12" y1="8" x2="12.01" y2="8" />
+                            </svg>
+                            Spring Initializrでのプロジェクト作成手順
+                        </div>
+                        <ol style="margin: 16px 0; padding-left: 24px; line-height: 2;">
+                            <li>ブラウザで「<code>https://start.spring.io/</code>」にアクセスします。</li>
+                            <li>以下の設定を行います：
+                                <ul style="margin-top: 8px;">
+                                    <li><strong>Project</strong>: Maven</li>
+                                    <li><strong>Language</strong>: Java</li>
+                                    <li><strong>Spring Boot</strong>: 3.x.x（最新安定版）</li>
+                                    <li><strong>Group</strong>: com.example</li>
+                                    <li><strong>Artifact</strong>: webapp</li>
+                                    <li><strong>Packaging</strong>: Jar</li>
+                                    <li><strong>Java</strong>: 17 または 21</li>
+                                </ul>
+                            </li>
+                            <li>「ADD DEPENDENCIES」をクリックし、以下の依存関係を追加します：
+                                <ul style="margin-top: 8px;">
+                                    <li><strong>Spring Web</strong> - Webアプリケーション開発用</li>
+                                    <li><strong>Thymeleaf</strong> - テンプレートエンジン</li>
+                                    <li><strong>Validation</strong> - 入力チェック機能</li>
+                                    <li><strong>Spring Boot DevTools</strong> - 開発時の自動リロード</li>
+                                    <li><strong>Lombok</strong> - ボイラープレートコードの削減</li>
+                                    <li><strong>MyBatis Framework</strong> - データベースアクセス</li>
+                                    <li><strong>MySQL Driver</strong> - MySQLデータベース接続</li>
+                                    <li><strong>Spring Security</strong> - 認証・認可機能（本章で使用）</li>
+                                </ul>
+                            </li>
+                            <li>「GENERATE」ボタンをクリックしてZIPファイルをダウンロードし、任意のフォルダに展開します。</li>
+                            <li>VSCodeを起動し、「ファイル」→「フォルダーを開く」から展開したプロジェクトフォルダを選択します。</li>
+                        </ol>
+                    </div>
+
+                    <!-- フォルダ構成の図解 -->
+                    <h4 style="font-size: 16px; font-weight: 700; margin: 24px 0 16px; color: var(--text-dark)">
+                        ■ プロジェクトのフォルダ構成
+                    </h4>
+                    <p>作成されるMavenプロジェクトのフォルダ構成は以下のようになります。</p>
+
+                    <div class="diagram-container">
+                        <div class="diagram-title">図15.0 Mavenプロジェクトのフォルダ構成</div>
+                        <svg viewBox="0 0 700 620" style="max-width: 700px; width: 100%">
+                            <defs>
+                                <filter id="folderShadow15" x="-10%" y="-10%" width="120%" height="120%">
+                                    <feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.1"/>
+                                </filter>
+                            </defs>
+
+                            <!-- 背景 -->
+                            <rect x="0" y="0" width="700" height="620" fill="#fafbfc" rx="8"/>
+
+                            <!-- タイトル -->
+                            <text x="350" y="28" text-anchor="middle" fill="#2c3e50" font-size="15" font-weight="bold">
+                                Mavenプロジェクトのフォルダ構成
+                            </text>
+
+                            <!-- フォルダツリー -->
+                            <g transform="translate(50, 50)" font-family="JetBrains Mono, monospace" font-size="13">
+                                <!-- webapp (root) -->
+                                <g filter="url(#folderShadow15)">
+                                    <rect x="0" y="0" width="600" height="28" rx="4" fill="#3498db"/>
+                                    <text x="12" y="19" fill="white" font-weight="bold">webapp/</text>
+                                    <text x="120" y="19" fill="rgba(255,255,255,0.8)" font-size="11">← プロジェクトルート</text>
+                                </g>
+
+                                <!-- pom.xml -->
+                                <g transform="translate(20, 36)">
+                                    <text x="0" y="14" fill="#666">├─</text>
+                                    <rect x="25" y="0" width="120" height="22" rx="3" fill="#e74c3c"/>
+                                    <text x="35" y="15" fill="white" font-size="12">pom.xml</text>
+                                    <text x="160" y="15" fill="#888" font-size="11">← Maven設定ファイル</text>
+                                </g>
+
+                                <!-- mvnw -->
+                                <g transform="translate(20, 62)">
+                                    <text x="0" y="14" fill="#666">├─</text>
+                                    <rect x="25" y="0" width="80" height="22" rx="3" fill="#95a5a6"/>
+                                    <text x="35" y="15" fill="white" font-size="12">mvnw</text>
+                                    <text x="120" y="15" fill="#888" font-size="11">← Maven Wrapper（Mac/Linux）</text>
+                                </g>
+
+                                <!-- mvnw.cmd -->
+                                <g transform="translate(20, 88)">
+                                    <text x="0" y="14" fill="#666">├─</text>
+                                    <rect x="25" y="0" width="100" height="22" rx="3" fill="#95a5a6"/>
+                                    <text x="35" y="15" fill="white" font-size="12">mvnw.cmd</text>
+                                    <text x="140" y="15" fill="#888" font-size="11">← Maven Wrapper（Windows）</text>
+                                </g>
+
+                                <!-- src -->
+                                <g transform="translate(20, 118)">
+                                    <text x="0" y="14" fill="#666">└─</text>
+                                    <rect x="25" y="0" width="60" height="22" rx="3" fill="#f39c12"/>
+                                    <text x="35" y="15" fill="white" font-size="12">src/</text>
+                                </g>
+
+                                <!-- src/main -->
+                                <g transform="translate(50, 148)">
+                                    <text x="0" y="14" fill="#666">├─</text>
+                                    <rect x="25" y="0" width="70" height="22" rx="3" fill="#f39c12"/>
+                                    <text x="35" y="15" fill="white" font-size="12">main/</text>
+                                </g>
+
+                                <!-- src/main/java -->
+                                <g transform="translate(80, 178)">
+                                    <text x="0" y="14" fill="#666">├─</text>
+                                    <rect x="25" y="0" width="65" height="22" rx="3" fill="#27ae60"/>
+                                    <text x="35" y="15" fill="white" font-size="12">java/</text>
+                                    <text x="105" y="15" fill="#888" font-size="11">← Javaソースコード</text>
+                                </g>
+
+                                <!-- com.example.webapp パッケージ -->
+                                <g transform="translate(110, 208)">
+                                    <text x="0" y="14" fill="#666">└─</text>
+                                    <rect x="25" y="0" width="180" height="22" rx="3" fill="#27ae60" fill-opacity="0.7"/>
+                                    <text x="35" y="15" fill="white" font-size="11">com/example/webapp/</text>
+                                </g>
+
+                                <!-- controller -->
+                                <g transform="translate(140, 238)">
+                                    <text x="0" y="14" fill="#666">├─</text>
+                                    <rect x="25" y="0" width="100" height="22" rx="3" fill="#2ecc71"/>
+                                    <text x="35" y="15" fill="white" font-size="11">controller/</text>
+                                    <text x="140" y="15" fill="#888" font-size="11">← コントローラ</text>
+                                </g>
+
+                                <!-- service -->
+                                <g transform="translate(140, 264)">
+                                    <text x="0" y="14" fill="#666">├─</text>
+                                    <rect x="25" y="0" width="85" height="22" rx="3" fill="#2ecc71"/>
+                                    <text x="35" y="15" fill="white" font-size="11">service/</text>
+                                    <text x="125" y="15" fill="#888" font-size="11">← サービス層</text>
+                                </g>
+
+                                <!-- config -->
+                                <g transform="translate(140, 290)">
+                                    <text x="0" y="14" fill="#666">├─</text>
+                                    <rect x="25" y="0" width="80" height="22" rx="3" fill="#10b981"/>
+                                    <text x="35" y="15" fill="white" font-size="11">config/</text>
+                                    <text x="120" y="15" fill="#888" font-size="11">← Security設定（本章）</text>
+                                </g>
+
+                                <!-- repository -->
+                                <g transform="translate(140, 316)">
+                                    <text x="0" y="14" fill="#666">├─</text>
+                                    <rect x="25" y="0" width="100" height="22" rx="3" fill="#2ecc71"/>
+                                    <text x="35" y="15" fill="white" font-size="11">repository/</text>
+                                    <text x="140" y="15" fill="#888" font-size="11">← データアクセス</text>
+                                </g>
+
+                                <!-- entity -->
+                                <g transform="translate(140, 342)">
+                                    <text x="0" y="14" fill="#666">├─</text>
+                                    <rect x="25" y="0" width="75" height="22" rx="3" fill="#2ecc71"/>
+                                    <text x="35" y="15" fill="white" font-size="11">entity/</text>
+                                    <text x="115" y="15" fill="#888" font-size="11">← エンティティ</text>
+                                </g>
+
+                                <!-- form -->
+                                <g transform="translate(140, 368)">
+                                    <text x="0" y="14" fill="#666">└─</text>
+                                    <rect x="25" y="0" width="65" height="22" rx="3" fill="#2ecc71"/>
+                                    <text x="35" y="15" fill="white" font-size="11">form/</text>
+                                    <text x="105" y="15" fill="#888" font-size="11">← Formクラス</text>
+                                </g>
+
+                                <!-- src/main/resources -->
+                                <g transform="translate(80, 398)">
+                                    <text x="0" y="14" fill="#666">└─</text>
+                                    <rect x="25" y="0" width="105" height="22" rx="3" fill="#3498db"/>
+                                    <text x="35" y="15" fill="white" font-size="12">resources/</text>
+                                    <text x="145" y="15" fill="#888" font-size="11">← リソースファイル</text>
+                                </g>
+
+                                <!-- templates -->
+                                <g transform="translate(110, 428)">
+                                    <text x="0" y="14" fill="#666">├─</text>
+                                    <rect x="25" y="0" width="105" height="22" rx="3" fill="#3498db" fill-opacity="0.7"/>
+                                    <text x="35" y="15" fill="white" font-size="11">templates/</text>
+                                    <text x="145" y="15" fill="#888" font-size="11">← Thymeleafテンプレート</text>
+                                </g>
+
+                                <!-- templates/error -->
+                                <g transform="translate(140, 458)">
+                                    <text x="0" y="14" fill="#666">└─</text>
+                                    <rect x="25" y="0" width="70" height="22" rx="3" fill="#3498db" fill-opacity="0.5"/>
+                                    <text x="35" y="15" fill="white" font-size="11">error/</text>
+                                    <text x="110" y="15" fill="#888" font-size="11">← エラーページ用HTML</text>
+                                </g>
+
+                                <!-- static -->
+                                <g transform="translate(110, 488)">
+                                    <text x="0" y="14" fill="#666">├─</text>
+                                    <rect x="25" y="0" width="75" height="22" rx="3" fill="#3498db" fill-opacity="0.7"/>
+                                    <text x="35" y="15" fill="white" font-size="11">static/</text>
+                                    <text x="115" y="15" fill="#888" font-size="11">← CSS/JS/画像</text>
+                                </g>
+
+                                <!-- application.properties -->
+                                <g transform="translate(110, 518)">
+                                    <text x="0" y="14" fill="#666">└─</text>
+                                    <rect x="25" y="0" width="175" height="22" rx="3" fill="#e74c3c" fill-opacity="0.8"/>
+                                    <text x="35" y="15" fill="white" font-size="11">application.properties</text>
+                                    <text x="220" y="15" fill="#888" font-size="11">← 設定ファイル</text>
+                                </g>
+                            </g>
+
+                            <!-- 凡例 -->
+                            <g transform="translate(50, 580)">
+                                <rect x="0" y="0" width="600" height="30" rx="4" fill="#f0f0f0"/>
+                                <text x="15" y="20" fill="#666" font-size="11">凡例：</text>
+                                <rect x="60" y="8" width="14" height="14" rx="2" fill="#f39c12"/>
+                                <text x="80" y="19" fill="#666" font-size="10">フォルダ</text>
+                                <rect x="140" y="8" width="14" height="14" rx="2" fill="#27ae60"/>
+                                <text x="160" y="19" fill="#666" font-size="10">Javaパッケージ</text>
+                                <rect x="250" y="8" width="14" height="14" rx="2" fill="#10b981"/>
+                                <text x="270" y="19" fill="#666" font-size="10">config（本章）</text>
+                                <rect x="360" y="8" width="14" height="14" rx="2" fill="#3498db"/>
+                                <text x="380" y="19" fill="#666" font-size="10">リソース</text>
+                                <rect x="450" y="8" width="14" height="14" rx="2" fill="#e74c3c"/>
+                                <text x="470" y="19" fill="#666" font-size="10">設定ファイル</text>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <div class="hint-box">
+                        <div class="hint-box-title">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="16" x2="12" y2="12" />
+                                <line x1="12" y1="8" x2="12.01" y2="8" />
+                            </svg>
+                            VSCode必須拡張機能
+                        </div>
+                        <p>VSCodeでSpring Boot開発を行うには、以下の拡張機能をインストールしてください。</p>
+                        <ul style="margin: 12px 0; padding-left: 24px;">
+                            <li><strong>Extension Pack for Java</strong> - Java開発の基本機能</li>
+                            <li><strong>Spring Boot Extension Pack</strong> - Spring Boot開発サポート</li>
+                            <li><strong>Lombok Annotations Support</strong> - Lombokサポート</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Spring Securityとは -->
+                <div class="subsection">
+                    <h3 class="subsection-title">Spring Securityとは？</h3>
+
+                    <p>
+                        Spring
+                        Securityは、認証や認可、およびその他多くのセキュリティ対策を簡易に実装できるSpringプロジェクトが提供するフレームワークです。多機能であるため、ビギナーの方にはやや敷居が高いかもしれません。本書ではSpring
+                        Securityの基本的な部分について説明します。
+                    </p>
+
+                    <!-- Spring Security図解 -->
+                    <div class="diagram-container">
+                        <div class="diagram-title">図15.1 Spring Security</div>
+                        <svg viewBox="0 0 600 320" style="max-width: 600px; width: 100%">
+                            <defs>
+                                <marker id="arrow151" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
+                                </marker>
+                                <!-- グラデーション -->
+                                <linearGradient id="securityGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#10b981" />
+                                    <stop offset="100%" style="stop-color:#059669" />
+                                </linearGradient>
+                            </defs>
+
+                            <!-- ユーザー（左側） -->
+                            <circle cx="60" cy="140" r="25" fill="#f1f5f9" stroke="#64748b" stroke-width="2" />
+                            <circle cx="60" cy="130" r="10" fill="#64748b" />
+                            <path d="M40 160 Q60 145 80 160" stroke="#64748b" stroke-width="3" fill="none" />
+                            <text x="60" y="195" text-anchor="middle" fill="#475569" font-size="12" font-weight="bold">ユーザー</text>
+
+                            <!-- リクエスト矢印 -->
+                            <line x1="95" y1="140" x2="145" y2="140" stroke="#64748b" stroke-width="2" marker-end="url(#arrow151)" />
+                            <text x="120" y="130" text-anchor="middle" fill="#64748b" font-size="10">リクエスト</text>
+
+                            <!-- Spring Security 中央ボックス -->
+                            <rect x="155" y="50" width="290" height="200" rx="12" fill="#f0fdf4" stroke="#10b981" stroke-width="3" stroke-dasharray="8,4" />
+                            <text x="300" y="30" text-anchor="middle" fill="#059669" font-size="16" font-weight="bold">Spring Security</text>
+
+                            <!-- 認証ボックス -->
+                            <rect x="175" y="75" width="120" height="70" rx="8" fill="#0ea5e9" stroke="#0284c7" stroke-width="2" />
+                            <text x="235" y="100" text-anchor="middle" fill="white" font-size="13" font-weight="bold">認証</text>
+                            <text x="235" y="118" text-anchor="middle" fill="#e0f2fe" font-size="10">Authentication</text>
+                            <!-- 鍵アイコン -->
+                            <circle cx="235" cy="135" r="8" fill="white" opacity="0.3" />
+                            <text x="235" y="139" text-anchor="middle" fill="white" font-size="12">🔑</text>
+
+                            <!-- 認可ボックス -->
+                            <rect x="305" y="75" width="120" height="70" rx="8" fill="#8b5cf6" stroke="#7c3aed" stroke-width="2" />
+                            <text x="365" y="100" text-anchor="middle" fill="white" font-size="13" font-weight="bold">認可</text>
+                            <text x="365" y="118" text-anchor="middle" fill="#ede9fe" font-size="10">Authorization</text>
+                            <!-- 盾アイコン -->
+                            <circle cx="365" cy="135" r="8" fill="white" opacity="0.3" />
+                            <text x="365" y="139" text-anchor="middle" fill="white" font-size="12">🛡️</text>
+
+                            <!-- 認証の説明 -->
+                            <rect x="175" y="160" width="120" height="40" rx="6" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="1" />
+                            <text x="235" y="177" text-anchor="middle" fill="#0369a1" font-size="10">「あなたは誰？」</text>
+                            <text x="235" y="192" text-anchor="middle" fill="#0369a1" font-size="9">＝ログイン処理</text>
+
+                            <!-- 認可の説明 -->
+                            <rect x="305" y="160" width="120" height="40" rx="6" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1" />
+                            <text x="365" y="177" text-anchor="middle" fill="#6b21a8" font-size="10">「何ができる？」</text>
+                            <text x="365" y="192" text-anchor="middle" fill="#6b21a8" font-size="9">＝権限チェック</text>
+
+                            <!-- セキュリティ機能 -->
+                            <rect x="200" y="210" width="200" height="30" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" />
+                            <text x="300" y="230" text-anchor="middle" fill="#b45309" font-size="10">+ CSRF対策、セッション管理など</text>
+
+                            <!-- 認証後の矢印 -->
+                            <line x1="455" y1="140" x2="495" y2="140" stroke="#64748b" stroke-width="2" marker-end="url(#arrow151)" />
+
+                            <!-- 保護されたリソース -->
+                            <rect x="505" y="100" width="80" height="80" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="2" />
+                            <text x="545" y="135" text-anchor="middle" fill="#dc2626" font-size="10" font-weight="bold">保護された</text>
+                            <text x="545" y="150" text-anchor="middle" fill="#dc2626" font-size="10" font-weight="bold">リソース</text>
+                            <text x="545" y="170" text-anchor="middle" fill="#ef4444" font-size="18">🔒</text>
+
+                            <!-- フロー説明 -->
+                            <text x="300" y="290" text-anchor="middle" fill="#64748b" font-size="11">Spring Security がリクエストを検証し、認証・認可を行う</text>
+                            <text x="300" y="308" text-anchor="middle" fill="#64748b" font-size="10">✓ 認証成功 + 認可OK → リソースにアクセス可能</text>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- 認証と認可 -->
+                <div class="subsection">
+                    <h3 class="subsection-title">認証と認可</h3>
+
+                    <p>Spring Securityが提供する「認証」と「認可」について、以下の表で確認しましょう。</p>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>用語</th>
+                                    <th>説明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>認証（Authentication）</strong></td>
+                                    <td>ユーザーが自分の身元を証明する方法。簡単に言うと「ログイン」のことです</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>認可（Authorization）</strong></td>
+                                    <td>
+                                        認証されたユーザーが特定のリソースにアクセスできるかどうかを決定する方法。簡単に言うと「権限」のことです
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 認証と認可の違いを図解 - ビルのセキュリティ比喩 -->
+                    <div class="diagram-container">
+                        <div class="diagram-title">認証と認可のイメージ ～会社のビルに例えると～</div>
+                        <svg viewBox="0 0 700 380" style="max-width: 700px; width: 100%">
+                            <defs>
+                                <marker id="flowArrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
+                                </marker>
+                                <linearGradient id="buildingGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#f8fafc" />
+                                    <stop offset="100%" style="stop-color:#e2e8f0" />
+                                </linearGradient>
+                                <linearGradient id="doorGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#78716c" />
+                                    <stop offset="100%" style="stop-color:#a8a29e" />
+                                </linearGradient>
+                            </defs>
+
+                            <!-- ステップ1: 認証 -->
+                            <rect x="20" y="20" width="300" height="340" rx="16" fill="#eff6ff" stroke="#3b82f6" stroke-width="2" />
+                            <rect x="20" y="20" width="300" height="45" rx="16" fill="#3b82f6" />
+                            <rect x="20" y="45" width="300" height="20" fill="#3b82f6" />
+                            <text x="170" y="50" text-anchor="middle" font-size="15" font-weight="bold" fill="white">STEP 1: 認証（Authentication）</text>
+
+                            <!-- 訪問者 -->
+                            <circle cx="70" cy="140" r="28" fill="#f1f5f9" stroke="#64748b" stroke-width="2" />
+                            <circle cx="70" cy="128" r="11" fill="#64748b" />
+                            <path d="M48 158 Q70 142 92 158" stroke="#64748b" stroke-width="3" fill="none" />
+                            <text x="70" y="185" text-anchor="middle" font-size="11" fill="#475569">訪問者</text>
+                            <text x="70" y="198" text-anchor="middle" font-size="9" fill="#94a3b8">（ユーザー）</text>
+
+                            <!-- 矢印: 訪問者→正門 -->
+                            <line x1="105" y1="140" x2="140" y2="140" stroke="#64748b" stroke-width="2" marker-end="url(#flowArrow)" />
+
+                            <!-- 正門ゲート -->
+                            <rect x="150" y="100" width="80" height="90" rx="4" fill="url(#buildingGrad)" stroke="#64748b" stroke-width="2" />
+                            <rect x="175" y="140" width="30" height="50" fill="url(#doorGrad)" />
+                            <circle cx="200" cy="165" r="3" fill="#fbbf24" />
+                            <text x="190" y="118" text-anchor="middle" font-size="10" fill="#475569" font-weight="bold">正門</text>
+
+                            <!-- 受付（認証チェック） -->
+                            <rect x="245" y="105" width="60" height="80" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="2" />
+                            <circle cx="275" cy="130" r="12" fill="#3b82f6" />
+                            <circle cx="275" cy="125" r="5" fill="white" />
+                            <path d="M267 138 Q275 132 283 138" stroke="white" stroke-width="2" fill="none" />
+                            <text x="275" y="160" text-anchor="middle" font-size="9" fill="#1e40af" font-weight="bold">受付</text>
+                            <text x="275" y="172" text-anchor="middle" font-size="8" fill="#3b82f6">ID確認</text>
+
+                            <!-- 吹き出し：あなたは誰？ -->
+                            <path d="M275 95 L275 70 L340 70 L340 95" stroke="#3b82f6" stroke-width="1" fill="#dbeafe" />
+                            <polygon points="285,95 290,105 295,95" fill="#dbeafe" stroke="#3b82f6" stroke-width="1" />
+                            <text x="307" y="87" text-anchor="middle" font-size="10" fill="#1e40af" font-weight="bold">あなたは誰？</text>
+
+                            <!-- 認証の説明 -->
+                            <rect x="40" y="230" width="260" height="110" rx="8" fill="white" stroke="#93c5fd" stroke-width="1" />
+                            <text x="170" y="255" text-anchor="middle" font-size="12" fill="#1e40af" font-weight="bold">認証 = 本人確認</text>
+                            <text x="170" y="278" text-anchor="middle" font-size="10" fill="#475569">・ユーザー名とパスワードで確認</text>
+                            <text x="170" y="296" text-anchor="middle" font-size="10" fill="#475569">・「社員証を見せてください」</text>
+                            <text x="170" y="314" text-anchor="middle" font-size="10" fill="#475569">・確認できれば入館OK</text>
+
+                            <!-- ステップ2: 認可 -->
+                            <rect x="380" y="20" width="300" height="340" rx="16" fill="#faf5ff" stroke="#8b5cf6" stroke-width="2" />
+                            <rect x="380" y="20" width="300" height="45" rx="16" fill="#8b5cf6" />
+                            <rect x="380" y="45" width="300" height="20" fill="#8b5cf6" />
+                            <text x="530" y="50" text-anchor="middle" font-size="15" font-weight="bold" fill="white">STEP 2: 認可（Authorization）</text>
+
+                            <!-- 認証済みユーザー -->
+                            <circle cx="420" cy="130" r="22" fill="#22c55e" stroke="#16a34a" stroke-width="2" />
+                            <path d="M410 130 L417 137 L432 122" stroke="white" stroke-width="3" fill="none" />
+                            <text x="420" y="165" text-anchor="middle" font-size="9" fill="#166534" font-weight="bold">入館済み</text>
+
+                            <!-- 矢印: 認証済み→部屋 -->
+                            <line x1="445" y1="130" x2="475" y2="130" stroke="#64748b" stroke-width="2" marker-end="url(#flowArrow)" />
+
+                            <!-- 部屋（複数のドア） -->
+                            <g transform="translate(485, 115)">
+                                <!-- 一般社員の部屋（アクセスOK） -->
+                                <rect x="0" y="0" width="70" height="55" rx="4" fill="#dcfce7" stroke="#22c55e" stroke-width="2" />
+                                <rect x="25" y="20" width="20" height="35" fill="#86efac" />
+                                <circle cx="42" cy="38" r="3" fill="#22c55e" />
+                                <text x="35" y="14" text-anchor="middle" font-size="8" fill="#166534" font-weight="bold">一般社員室</text>
+                                <circle cx="60" cy="10" r="8" fill="#22c55e" />
+                                <text x="60" y="13" text-anchor="middle" font-size="8" fill="white" font-weight="bold">OK</text>
+
+                                <!-- 管理者の部屋（アクセスNG） -->
+                                <rect x="85" y="0" width="70" height="55" rx="4" fill="#fee2e2" stroke="#ef4444" stroke-width="2" />
+                                <rect x="110" y="20" width="20" height="35" fill="#fca5a5" />
+                                <circle cx="127" cy="38" r="3" fill="#ef4444" />
+                                <text x="120" y="14" text-anchor="middle" font-size="8" fill="#dc2626" font-weight="bold">管理者室</text>
+                                <circle cx="145" cy="10" r="8" fill="#ef4444" />
+                                <text x="145" y="13" text-anchor="middle" font-size="8" fill="white" font-weight="bold">NG</text>
+                            </g>
+
+                            <!-- 吹き出し：権限はある？ -->
+                            <path d="M530 105 L530 80 L610 80 L610 105" stroke="#8b5cf6" stroke-width="1" fill="#f3e8ff" />
+                            <polygon points="540,105 545,115 550,105" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="1" />
+                            <text x="570" y="97" text-anchor="middle" font-size="10" fill="#6b21a8" font-weight="bold">権限はある？</text>
+
+                            <!-- 認可の説明 -->
+                            <rect x="400" y="230" width="260" height="110" rx="8" fill="white" stroke="#c4b5fd" stroke-width="1" />
+                            <text x="530" y="255" text-anchor="middle" font-size="12" fill="#6b21a8" font-weight="bold">認可 = 権限チェック</text>
+                            <text x="530" y="278" text-anchor="middle" font-size="10" fill="#475569">・どの部屋に入れるか判定</text>
+                            <text x="530" y="296" text-anchor="middle" font-size="10" fill="#475569">・「この部屋に入る権限は？」</text>
+                            <text x="530" y="314" text-anchor="middle" font-size="10" fill="#475569">・一般社員→管理者室はNG</text>
+
+                            <!-- 中央の矢印（認証→認可） -->
+                            <line x1="330" y1="180" x2="370" y2="180" stroke="#64748b" stroke-width="3" marker-end="url(#flowArrow)" />
+                            <text x="350" y="200" text-anchor="middle" font-size="9" fill="#64748b">認証後</text>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- メニュー画面の作成 -->
+                <div class="subsection">
+                    <h3 class="subsection-title">メニュー画面の作成</h3>
+
+                    <p>
+                        Spring
+                        Securityの説明に入る前に、後に作成する「ログイン画面」で「認証」が成功した場合、「メニュー画面」に遷移させたいため、まずは「メニュー画面」を作成します。メニュー画面には、「ToDo一覧へのリンク」を設置します。
+                    </p>
+
+                    <!-- Controller作成 -->
+                    <div class="sub-subsection">
+                        <h4 class="sub-subsection-title">
+                            <span class="step-number">01</span>
+                            Controllerの作成
+                        </h4>
+
+                        <p>
+                            メニュー用のControllerを作成します。「webapp」の「src/main/java」フォルダを選択し、マウスを右クリックし、「新規」→「クラス」を選択します。クラス設定画面にて以下の「設定内容」を記述後、「完了」ボタンを押します。
+                        </p>
+
+                        <div class="config-table">
+                            <h4>◎ 設定内容</h4>
+                            <div class="config-row">
+                                <span class="config-label">パッケージ</span>
+                                <span class="config-value">com.example.webapp.controller</span>
+                            </div>
+                            <div class="config-row">
+                                <span class="config-label">名前</span>
+                                <span class="config-value">MenuController</span>
+                            </div>
+                        </div>
+
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span>📄</span>
+                                <span class="filename" style="color: white;">リスト15.1 MenuController</span>
+                            </div>
+                            <div class="code-content">
+                                <pre><span class="code-keyword">package</span> com.example.webapp.controller;
+
+<span class="code-keyword">import</span> org.springframework.stereotype.Controller;
+<span class="code-keyword">import</span> org.springframework.web.bind.annotation.GetMapping;
+<span class="code-keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;
+
+<span class="code-comment">/**
+ * Menu：コントローラ
+ */</span>
+<span class="code-annotation">@Controller</span>
+<span class="code-annotation">@RequestMapping</span>(<span class="code-string">"/"</span>)
+<span class="code-keyword">public class</span> <span class="code-class">MenuController</span> {
+
+    <span class="code-comment">/**
+     * メニュー画面を表示する
+     */</span>
+    <span class="code-annotation">@GetMapping</span>
+    <span class="code-keyword">public</span> String <span class="code-method">showMenu</span>() {
+        <span class="code-comment">// templatesフォルダ配下のmenu.htmlに遷移</span>
+        <span class="code-keyword">return</span> <span class="code-string">"menu"</span>;
+    }
+}</pre>
+                            </div>
+                        </div>
+
+                        <p>
+                            URL「http://localhost:8080/」で、メニュー画面に遷移するリクエストハンドラーメソッドのみ記述しています。
+                        </p>
+                    </div>
+
+                    <!-- View作成 -->
+                    <div class="sub-subsection">
+                        <h4 class="sub-subsection-title">
+                            <span class="step-number">02</span>
+                            Viewの作成（メニュー画面）
+                        </h4>
+
+                        <p>
+                            「templates」フォルダ配下にメニュー画面用の「menu.html」ファイルを作成します。「webapp」の「src/main/resources」フォルダを選択し、マウスを右クリックし、「新規」→「HTMLファイル」を選択します。HTML設定画面にて以下の「設定内容」を記述後、「完了」ボタンを押します。
+                        </p>
+
+                        <div class="config-table">
+                            <h4>◎ 設定内容</h4>
+                            <div class="config-row">
+                                <span class="config-label">親フォルダを入力または選択</span>
+                                <span class="config-value">webapp/src/main/resources/templates</span>
+                            </div>
+                            <div class="config-row">
+                                <span class="config-label">ファイル名</span>
+                                <span class="config-value">menu.html</span>
+                            </div>
+                        </div>
+
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span>📄</span>
+                                <span class="filename" style="color: white;">リスト15.2 menu.html</span>
+                            </div>
+                            <div class="code-content">
+                                <pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attribute">xmlns:th</span>=<span class="value">"http://www.thymeleaf.org"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;title&gt;</span>メニュー<span class="tag">&lt;/title&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+    <span class="tag">&lt;h2&gt;</span>メニュー画面<span class="tag">&lt;/h2&gt;</span>
+    <span class="tag">&lt;hr&gt;</span>
+    <span class="tag">&lt;a</span> <span class="attribute">th:href</span>=<span class="value">"@{/todos}"</span><span class="tag">&gt;</span>ToDo一覧へ<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+                            </div>
+                        </div>
+
+                        <p>9行目に「ToDo一覧画面」に遷移するリンクが記述されています。</p>
+                    </div>
+
+                    <!-- 動作確認 -->
+                    <div class="sub-subsection">
+                        <h4 class="sub-subsection-title">
+                            <span class="step-number">03</span>
+                            動作確認
+                        </h4>
+
+                        <p>
+                            VSCodeの左側サイドバーにある「SPRING BOOT DASHBOARD」パネルで「webapp」を選択し、再生ボタンをクリックしてプロジェクトを起動します。または、ターミナルで<code>./mvnw spring-boot:run</code>（Windows: <code>mvnw spring-boot:run</code>）を実行します。ブラウザを立ち上げURL「http://localhost:8080/」を指定すると「メニュー画面」が表示されます。
+                        </p>
+
+                        <div class="screenshot">
+                            <div class="screenshot-header">
+                                <span class="screenshot-dot red"></span>
+                                <span class="screenshot-dot yellow"></span>
+                                <span class="screenshot-dot green"></span>
+                            </div>
+                            <div class="screenshot-content">
+                                <h3 style="margin-bottom: 16px; font-size: 18px">メニュー画面</h3>
+                                <hr style="margin-bottom: 16px" />
+                                <a href="#" style="color: var(--primary)">ToDo一覧へ</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- セクション15-2 -->
+            <section class="section" id="section2">
+                <div class="section-header">
+                    <span class="section-number">15-2</span>
+                    <h2 class="section-title">Spring Securityを導入しよう</h2>
+                </div>
+
+                <p>Spring SecurityをSpring Bootプロジェクトに導入するには、「build.gradle」に依存関係を追加します。</p>
+
+                <!-- Spring Initializrで依存関係を追加 -->
+                <div class="subsection">
+                    <h3 class="subsection-title">「Spring Initializr」で依存関係を追加</h3>
+
+                    <p>
+                        URL「https://start.spring.io/」にアクセスして、「Spring
+                        Initializr」を表示します。画面右にある「Dependencies」の横の「ADD
+                        DEPENDENCIES」をクリックします。「spring security」と入力して、表示された「Spring
+                        Security」をクリックします。
+                    </p>
+
+                    <!-- Spring Initializr図解 -->
+                    <div class="diagram-container">
+                        <div class="diagram-title">図15.3 ADD DEPENDENCIES</div>
+                        <svg viewBox="0 0 550 200" style="max-width: 550px; width: 100%">
+                            <defs>
+                                <filter id="dropShadow153" x="-20%" y="-20%" width="140%" height="140%">
+                                    <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+                                </filter>
+                            </defs>
+
+                            <!-- 背景パネル -->
+                            <rect x="20" y="10" width="510" height="180" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" filter="url(#dropShadow153)" />
+
+                            <!-- ヘッダー部分 -->
+                            <rect x="20" y="10" width="510" height="40" rx="12" fill="#1e293b" />
+                            <rect x="20" y="35" width="510" height="15" fill="#1e293b" />
+                            <text x="40" y="35" font-size="13" fill="white" font-weight="bold">Dependencies</text>
+                            <text x="460" y="35" font-size="10" fill="#94a3b8">ADD...</text>
+                            <circle cx="500" cy="30" r="10" fill="#3b82f6" />
+                            <text x="500" y="34" text-anchor="middle" font-size="12" fill="white" font-weight="bold">+</text>
+
+                            <!-- 検索入力欄 -->
+                            <rect x="40" y="60" width="470" height="38" rx="6" fill="white" stroke="#cbd5e1" stroke-width="1" />
+                            <circle cx="60" cy="79" r="10" fill="none" stroke="#94a3b8" stroke-width="2" />
+                            <line x1="67" y1="86" x2="73" y2="92" stroke="#94a3b8" stroke-width="2" />
+                            <text x="85" y="84" font-size="14" fill="#334155">spring security</text>
+                            <text x="480" y="84" text-anchor="end" font-size="9" fill="#94a3b8">Ctrl for multiple</text>
+
+                            <!-- 検索結果ドロップダウン -->
+                            <rect x="40" y="100" width="470" height="75" rx="6" fill="white" stroke="#e2e8f0" stroke-width="1" filter="url(#dropShadow153)" />
+
+                            <!-- Spring Security選択項目 -->
+                            <rect x="50" y="108" width="450" height="58" rx="6" fill="#eff6ff" stroke="#3b82f6" stroke-width="2" />
+
+                            <!-- シールドアイコン -->
+                            <circle cx="75" cy="137" r="18" fill="#3b82f6" />
+                            <path d="M75 125 L75 145 M67 133 L75 141 L83 133" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+
+                            <!-- テキスト情報 -->
+                            <text x="105" y="128" font-size="14" font-weight="bold" fill="#1e293b">Spring Security</text>
+                            <rect x="220" y="115" width="70" height="20" rx="10" fill="#3b82f6" />
+                            <text x="255" y="129" text-anchor="middle" font-size="9" fill="white" font-weight="bold">SECURITY</text>
+                            <text x="105" y="148" font-size="10" fill="#64748b">Highly customizable authentication and access-control</text>
+                            <text x="105" y="160" font-size="10" fill="#64748b">framework for Spring applications.</text>
+
+                            <!-- 選択マーク -->
+                            <circle cx="475" cy="137" r="12" fill="#22c55e" />
+                            <path d="M469 137 L473 141 L481 133" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+
+                    <p>画面下にある「EXPLORE」をクリックします。</p>
+
+                    <div class="diagram-container">
+                        <div class="diagram-title">図15.4 ADD DEPENDENCIES2</div>
+                        <svg viewBox="0 0 550 100" style="max-width: 550px; width: 100%">
+                            <defs>
+                                <filter id="btnShadow154" x="-20%" y="-20%" width="140%" height="140%">
+                                    <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.15"/>
+                                </filter>
+                                <linearGradient id="exploreBtnGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#6d28d9" />
+                                    <stop offset="100%" style="stop-color:#5b21b6" />
+                                </linearGradient>
+                            </defs>
+
+                            <!-- 背景 -->
+                            <rect x="20" y="15" width="510" height="70" rx="10" fill="#1e293b" />
+
+                            <!-- GENERATEボタン -->
+                            <rect x="40" y="30" width="140" height="42" rx="6" fill="#334155" filter="url(#btnShadow154)" />
+                            <text x="85" y="55" font-size="12" fill="#e2e8f0" font-weight="bold">GENERATE</text>
+                            <rect x="135" y="40" width="35" height="18" rx="3" fill="#475569" />
+                            <text x="152" y="53" text-anchor="middle" font-size="8" fill="#94a3b8">Ctrl+⏎</text>
+
+                            <!-- EXPLOREボタン（強調表示） -->
+                            <rect x="195" y="25" width="160" height="52" rx="8" fill="url(#exploreBtnGrad)" filter="url(#btnShadow154)" stroke="#a78bfa" stroke-width="2" />
+                            <text x="248" y="55" font-size="13" fill="white" font-weight="bold">EXPLORE</text>
+                            <rect x="305" y="42" width="40" height="18" rx="3" fill="rgba(255,255,255,0.2)" />
+                            <text x="325" y="54" text-anchor="middle" font-size="7" fill="white">Ctrl+Space</text>
+
+                            <!-- クリック指示矢印 -->
+                            <path d="M275 10 L275 22" stroke="#fbbf24" stroke-width="3" fill="none" marker-end="url(#clickArrow154)" />
+                            <defs>
+                                <marker id="clickArrow154" markerWidth="8" markerHeight="6" refX="4" refY="3" orient="auto">
+                                    <polygon points="0 0, 8 3, 0 6" fill="#fbbf24" />
+                                </marker>
+                            </defs>
+                            <text x="275" y="8" text-anchor="middle" font-size="9" fill="#fbbf24" font-weight="bold">Click!</text>
+
+                            <!-- SHARE...ボタン -->
+                            <rect x="370" y="30" width="140" height="42" rx="6" fill="#334155" filter="url(#btnShadow154)" />
+                            <text x="440" y="55" text-anchor="middle" font-size="12" fill="#e2e8f0" font-weight="bold">SHARE...</text>
+                        </svg>
+                    </div>
+
+                    <p>
+                        表示された画面の「dependencies」のブロックに注目し、「implementation
+                        'org.springframework.boot:spring-boot-starter-security'」 と「testImplementation
+                        'org.springframework.security:spring-security-test'」をコピーします。
+                    </p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>📄</span>
+                            <span class="filename" style="color: white;">図15.5 ADD DEPENDENCIES3</span>
+                        </div>
+                        <div class="code-content">
+                            <pre>dependencies {
+    <span class="code-string">implementation 'org.springframework.boot:spring-boot-starter-security'</span>
+    <span class="code-string">testImplementation 'org.springframework.boot:spring-boot-starter-test'</span>
+    <span class="code-string">testImplementation 'org.springframework.security:spring-security-test'</span>
+}</pre>
+                        </div>
+                    </div>
+
+                    <p>
+                        Spring
+                        Initializrの使用が完了したら、その画面を閉じてください。次に、VSCodeで開いている「webapp」プロジェクトを参照し、「pom.xml」ファイル内の「&lt;dependencies&gt;」ブロックに、先ほどコピーした依存関係を追加します。
+                    </p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>📄</span>
+                            <span class="filename" style="color: white;">リスト15.3 pom.xml</span>
+                        </div>
+                        <div class="code-content">
+                            <pre><span class="tag">&lt;dependencies&gt;</span>
+    <span class="tag">&lt;dependency&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>org.springframework.boot<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>spring-boot-starter-thymeleaf<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;/dependency&gt;</span>
+    <span class="tag">&lt;dependency&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>org.springframework.boot<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>spring-boot-starter-validation<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;/dependency&gt;</span>
+    <span class="tag">&lt;dependency&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>org.springframework.boot<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>spring-boot-starter-web<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;/dependency&gt;</span>
+    <span class="tag">&lt;dependency&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>org.mybatis.spring.boot<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>mybatis-spring-boot-starter<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;version&gt;</span>3.0.3<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;/dependency&gt;</span>
+    <span class="tag">&lt;dependency&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>org.springframework.boot<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>spring-boot-starter-security<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;/dependency&gt;</span>
+    <span class="tag">&lt;dependency&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>org.projectlombok<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>lombok<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;optional&gt;</span>true<span class="tag">&lt;/optional&gt;</span>
+    <span class="tag">&lt;/dependency&gt;</span>
+    <span class="tag">&lt;dependency&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>org.springframework.boot<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>spring-boot-devtools<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;scope&gt;</span>runtime<span class="tag">&lt;/scope&gt;</span>
+        <span class="tag">&lt;optional&gt;</span>true<span class="tag">&lt;/optional&gt;</span>
+    <span class="tag">&lt;/dependency&gt;</span>
+    <span class="tag">&lt;dependency&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>com.mysql<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>mysql-connector-j<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;scope&gt;</span>runtime<span class="tag">&lt;/scope&gt;</span>
+    <span class="tag">&lt;/dependency&gt;</span>
+    <span class="tag">&lt;dependency&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>org.springframework.boot<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>spring-boot-starter-test<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+    <span class="tag">&lt;/dependency&gt;</span>
+    <span class="tag">&lt;dependency&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>org.springframework.security<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>spring-security-test<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+    <span class="tag">&lt;/dependency&gt;</span>
+    <span class="tag">&lt;dependency&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>org.mybatis.spring.boot<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>mybatis-spring-boot-starter-test<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;version&gt;</span>3.0.3<span class="tag">&lt;/version&gt;</span>
+        <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+    <span class="tag">&lt;/dependency&gt;</span>
+<span class="tag">&lt;/dependencies&gt;</span></pre>
+                        </div>
+                    </div>
+
+                    <p>
+                        「spring-boot-starter-security」という記述は、Spring
+                        Bootアプリケーションにセキュリティ機能を簡単に組み込むための依存関係です。この依存関係をプロジェクトのビルド設定に追加することで、Spring
+                        Securityの機能をアプリケーション内で利用できるようになります。適切なセキュリティ設定を施すことで、アプリケーションを保護することが可能です。
+                    </p>
+
+                    <p>
+                        また、「spring-security-test」は、Spring BootプロジェクトでSpring
+                        Securityに関連するテストを行う際に使用される依存関係です。この依存関係はテスト実行時のみに必要で、主にセキュリティ機能を含むアプリケーションのテストをサポートするために使われます（本書ではSpring
+                        Securityのテストに関する詳細は扱いません）。
+                    </p>
+
+                    <div class="hint-box">
+                        <div class="hint-box-title">
+                            <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="16" x2="12" y2="12" />
+                                <line x1="12" y1="8" x2="12.01" y2="8" />
+                            </svg>
+                            Mavenプロジェクトの更新
+                        </div>
+                        <p>
+                            「pom.xml」に記述を追加した後は、VSCodeでMavenプロジェクトを更新して設定を反映します。VSCodeの左側サイドバーにある「JAVA PROJECTS」パネルでプロジェクトを右クリックし、「Update Project」を選択します。または、コマンドパレット（Ctrl+Shift+P / Cmd+Shift+P）から「Java: Update Project Configuration」を実行します。この操作により、設定が更新され、プロジェクト内でSpring
+                            Securityの機能を使用できるようになります。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- デフォルト設定の確認 -->
+                <div class="subsection">
+                    <h3 class="subsection-title">デフォルト設定の確認</h3>
+
+                    <p>
+                        Spring
+                        Securityをプロジェクトに依存関係として追加すると、いくつかの基本的なセキュリティ機能が自動的に有効化されます。これらの機能を実際に動かしながら確認していきましょう。
+                    </p>
+
+                    <!-- ログイン -->
+                    <div class="sub-subsection">
+                        <h4 class="sub-subsection-title">
+                            <span class="step-number">01</span>
+                            ログイン
+                        </h4>
+
+                        <p>
+                            フォームベース認証は、Webアプリケーションで広く使われている認証方法の一つです。この方法では、ユーザーがWebページのフォームに「ユーザー名」と「パスワード」を入力し、それを用いてシステムにログインします。
+                        </p>
+
+                        <p>
+                            Spring
+                            Securityをプロジェクトの依存関係に追加すると、自動的にデフォルトのログイン画面が用意され、フォームベース認証が可能になります。VSCodeの「SPRING BOOT DASHBOARD」パネルで「webapp」を選択しアプリケーションを起動します。その後、ブラウザで「http://localhost:8080/login」にアクセスすると、デフォルトのログイン画面が表示されます。Spring
+                            Securityが使用するデフォルトのユーザー名は「user」です。
+                        </p>
+
+                        <div class="form-preview">
+                            <h3>Please sign in</h3>
+                            <div class="form-group">
+                                <input type="text" class="form-input" placeholder="Username" value="user" />
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-input" placeholder="Password" />
+                            </div>
+                            <button class="form-button">Sign in</button>
+                        </div>
+
+                        <p>パスワードは、VSCodeのターミナル上にランダムに生成されたパスワードが表示されます。</p>
+
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span>💻</span>
+                                <span class="filename" style="color: white;">図15.7 デフォルトのパスワード（コンソール出力）</span>
+                            </div>
+                            <div class="code-content">
+                                <pre>Using generated security password: <span class="code-string">90756205-8c66-4e6f-a54c-f528e6b88930</span></pre>
+                            </div>
+                        </div>
+
+                        <p>
+                            プロジェクトに追加した場合、初期設定では、正しいユーザー名とパスワードでログインに成功すると「http://localhost:8080/」にリダイレクトされます。これにより、以前に作成した「メニュー画面」が表示されます。
+                        </p>
+
+                        <!-- デフォルト認証の動き -->
+                        <div class="diagram-container">
+                            <div class="diagram-title">図15.8 デフォルト認証の動き</div>
+                            <svg viewBox="0 0 700 280" style="max-width: 700px; width: 100%">
+                                <defs>
+                                    <filter id="shadow158" x="-10%" y="-10%" width="120%" height="120%">
+                                        <feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity="0.15"/>
+                                    </filter>
+                                    <marker id="flowArrow158" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                        <polygon points="0 0, 10 3.5, 0 7" fill="#3b82f6" />
+                                    </marker>
+                                    <linearGradient id="successGrad158" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" style="stop-color:#22c55e" />
+                                        <stop offset="100%" style="stop-color:#16a34a" />
+                                    </linearGradient>
+                                </defs>
+
+                                <!-- ステップ1: ログイン画面 -->
+                                <g transform="translate(20, 30)">
+                                    <!-- ブラウザウィンドウ風 -->
+                                    <rect x="0" y="0" width="180" height="180" rx="10" fill="white" stroke="#e2e8f0" stroke-width="2" filter="url(#shadow158)" />
+                                    <rect x="0" y="0" width="180" height="28" rx="10" fill="#f1f5f9" />
+                                    <rect x="0" y="18" width="180" height="10" fill="#f1f5f9" />
+                                    <circle cx="18" cy="14" r="5" fill="#ef4444" />
+                                    <circle cx="34" cy="14" r="5" fill="#fbbf24" />
+                                    <circle cx="50" cy="14" r="5" fill="#22c55e" />
+                                    <rect x="65" y="8" width="100" height="12" rx="3" fill="white" />
+                                    <text x="115" y="17" text-anchor="middle" font-size="7" fill="#64748b">localhost:8080/login</text>
+
+                                    <!-- ログインフォーム -->
+                                    <text x="90" y="50" text-anchor="middle" font-size="12" fill="#1e293b" font-weight="bold">Please sign in</text>
+
+                                    <text x="25" y="72" font-size="9" fill="#64748b">Username</text>
+                                    <rect x="20" y="76" width="140" height="26" rx="4" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1" />
+                                    <text x="30" y="93" font-size="11" fill="#1e293b">user</text>
+
+                                    <text x="25" y="115" font-size="9" fill="#64748b">Password</text>
+                                    <rect x="20" y="119" width="140" height="26" rx="4" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1" />
+                                    <text x="30" y="136" font-size="9" fill="#94a3b8">••••••••••</text>
+
+                                    <rect x="20" y="152" width="140" height="28" rx="5" fill="#3b82f6" />
+                                    <text x="90" y="170" text-anchor="middle" font-size="11" fill="white" font-weight="bold">Sign in</text>
+                                </g>
+                                <text x="110" y="230" text-anchor="middle" font-size="11" fill="#475569" font-weight="bold">ログイン画面</text>
+                                <text x="110" y="245" text-anchor="middle" font-size="9" fill="#94a3b8">Username: user</text>
+                                <text x="110" y="258" text-anchor="middle" font-size="9" fill="#94a3b8">Password: コンソール出力値</text>
+
+                                <!-- ステップ2: Spring Security認証 -->
+                                <g transform="translate(240, 70)">
+                                    <rect x="0" y="0" width="140" height="100" rx="12" fill="#f0fdf4" stroke="#22c55e" stroke-width="2" stroke-dasharray="5,3" />
+                                    <text x="70" y="25" text-anchor="middle" font-size="10" fill="#166534" font-weight="bold">Spring Security</text>
+
+                                    <!-- 認証チェックアイコン -->
+                                    <circle cx="70" cy="55" r="22" fill="url(#successGrad158)" />
+                                    <path d="M58 55 L66 63 L82 47" stroke="white" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+
+                                    <text x="70" y="90" text-anchor="middle" font-size="9" fill="#16a34a" font-weight="bold">認証成功!</text>
+                                </g>
+
+                                <!-- 矢印1: ログイン → 認証 -->
+                                <line x1="205" y1="120" x2="235" y2="120" stroke="#3b82f6" stroke-width="2" marker-end="url(#flowArrow158)" />
+                                <text x="220" y="110" text-anchor="middle" font-size="8" fill="#64748b">POST</text>
+
+                                <!-- 矢印2: 認証 → メニュー -->
+                                <line x1="385" y1="120" x2="430" y2="120" stroke="#22c55e" stroke-width="3" marker-end="url(#flowArrow158)" />
+                                <text x="408" y="100" text-anchor="middle" font-size="8" fill="#16a34a">リダイレクト</text>
+                                <text x="408" y="112" text-anchor="middle" font-size="7" fill="#64748b">302 Found</text>
+
+                                <!-- ステップ3: メニュー画面 -->
+                                <g transform="translate(440, 30)">
+                                    <!-- ブラウザウィンドウ風 -->
+                                    <rect x="0" y="0" width="200" height="180" rx="10" fill="white" stroke="#22c55e" stroke-width="2" filter="url(#shadow158)" />
+                                    <rect x="0" y="0" width="200" height="28" rx="10" fill="#f0fdf4" />
+                                    <rect x="0" y="18" width="200" height="10" fill="#f0fdf4" />
+                                    <circle cx="18" cy="14" r="5" fill="#ef4444" />
+                                    <circle cx="34" cy="14" r="5" fill="#fbbf24" />
+                                    <circle cx="50" cy="14" r="5" fill="#22c55e" />
+                                    <rect x="65" y="8" width="120" height="12" rx="3" fill="white" />
+                                    <text x="125" y="17" text-anchor="middle" font-size="7" fill="#16a34a">localhost:8080/</text>
+
+                                    <!-- メニュー画面コンテンツ -->
+                                    <text x="100" y="55" text-anchor="middle" font-size="14" fill="#1e293b" font-weight="bold">メニュー</text>
+                                    <line x1="20" y1="65" x2="180" y2="65" stroke="#e2e8f0" stroke-width="1" />
+
+                                    <!-- リンク -->
+                                    <rect x="30" y="80" width="140" height="35" rx="6" fill="#eff6ff" stroke="#3b82f6" stroke-width="1" />
+                                    <text x="100" y="102" text-anchor="middle" font-size="11" fill="#3b82f6" font-weight="bold">ToDo一覧へ →</text>
+
+                                    <!-- ログアウトリンク -->
+                                    <rect x="30" y="125" width="140" height="30" rx="6" fill="#fef2f2" stroke="#ef4444" stroke-width="1" />
+                                    <text x="100" y="144" text-anchor="middle" font-size="10" fill="#ef4444">ログアウト</text>
+
+                                    <!-- 認証済みバッジ -->
+                                    <circle cx="175" cy="55" r="12" fill="#22c55e" />
+                                    <path d="M170 55 L173 58 L180 51" stroke="white" stroke-width="2" fill="none" />
+                                </g>
+                                <text x="540" y="230" text-anchor="middle" font-size="11" fill="#475569" font-weight="bold">メニュー画面</text>
+                                <text x="540" y="245" text-anchor="middle" font-size="9" fill="#16a34a">認証成功後のデフォルト遷移先</text>
+                                <text x="540" y="258" text-anchor="middle" font-size="9" fill="#94a3b8">http://localhost:8080/</text>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- ログアウト -->
+                    <div class="sub-subsection">
+                        <h4 class="sub-subsection-title">
+                            <span class="step-number">02</span>
+                            ログアウト
+                        </h4>
+
+                        <p>
+                            Spring
+                            Securityは、デフォルトでログアウト機能を提供しています。ログアウトするには、URL「/logout」に対してPOSTリクエストを送信します。これにより、ログアウト処理が実行されます。
+                        </p>
+
+                        <p>次に、このログアウト機能を「メニュー画面」に組み込んでみましょう。</p>
+
+                        <div class="config-table">
+                            <h4>◎ 修正内容</h4>
+                            <div class="config-row">
+                                <span class="config-label">親フォルダを入力または選択</span>
+                                <span class="config-value">webapp/src/main/resources/templates</span>
+                            </div>
+                            <div class="config-row">
+                                <span class="config-label">ファイル名</span>
+                                <span class="config-value">menu.html</span>
+                            </div>
+                        </div>
+
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span>📄</span>
+                                <span class="filename" style="color: white;">リスト15.4 menu.html</span>
+                            </div>
+                            <div class="code-content">
+                                <pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attribute">xmlns:th</span>=<span class="value">"http://www.thymeleaf.org"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;title&gt;</span>メニュー<span class="tag">&lt;/title&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+    <span class="tag">&lt;h2&gt;</span>メニュー画面<span class="tag">&lt;/h2&gt;</span>
+    <span class="tag">&lt;hr&gt;</span>
+    <span class="tag">&lt;a</span> <span class="attribute">th:href</span>=<span class="value">"@{/todos}"</span><span class="tag">&gt;</span>ToDo一覧へ<span class="tag">&lt;/a&gt;</span>
+    <span class="tag">&lt;br&gt;</span>
+    <span class="code-comment">&lt;!-- ログアウト --&gt;</span>
+    <span class="tag">&lt;form</span> <span class="attribute">th:action</span>=<span class="value">"@{/logout}"</span> <span class="attribute">method</span>=<span class="value">"post"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="value">"submit"</span> <span class="attribute">value</span>=<span class="value">"ログアウト"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;/form&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+                            </div>
+                        </div>
+
+                        <p>
+                            12行目〜14行目にてURL「/logout」に対するPOSTリクエストを送信する「ログアウト」ボタンを追加しています。
+                        </p>
+
+                        <p>
+                            VSCodeの「SPRING BOOT DASHBOARD」パネルで「webapp」を選択し、プロジェクトを起動します。ブラウザを立ち上げURL「http://localhost:8080/login」を指定し表示された「デフォルトのログイン画面」にて「username」に「user」、「password」にターミナルに表示されたランダムな文字列を入力して、「Sign
+                            in」ボタンをクリックします。ログアウトボタンが追加された「メニュー画面」が表示されます。なお、セッションの状態によっては、はじめからメニュー画面が表示される場合があります。その場合は、「ログアウト」ボタンをクリックしログイン画面を表示してください。
+                        </p>
+
+                        <div class="screenshot">
+                            <div class="screenshot-header">
+                                <span class="screenshot-dot red"></span>
+                                <span class="screenshot-dot yellow"></span>
+                                <span class="screenshot-dot green"></span>
+                            </div>
+                            <div class="screenshot-content">
+                                <h3 style="margin-bottom: 16px; font-size: 18px">メニュー画面</h3>
+                                <hr style="margin-bottom: 16px" />
+                                <a href="#" style="color: var(--primary); display: block; margin-bottom: 12px"
+                                    >ToDo一覧へ</a
+                                >
+                                <button
+                                    style="
+                                        padding: 8px 16px;
+                                        background: #f1f5f9;
+                                        border: 1px solid #e2e8f0;
+                                        border-radius: 4px;
+                                        cursor: pointer;
+                                    "
+                                >
+                                    ログアウト
+                                </button>
+                            </div>
+                        </div>
+
+                        <p>
+                            ログアウトボタンをクリックすることで、ログアウトが実行され、デフォルトのログイン画面に遷移します。
+                        </p>
+
+                        <div class="form-preview">
+                            <h3>Please sign in</h3>
+                            <div class="form-message">You have been signed out</div>
+                            <div class="form-group">
+                                <input type="text" class="form-input" placeholder="Username" />
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-input" placeholder="Password" />
+                            </div>
+                            <button class="form-button">Sign in</button>
+                        </div>
+                    </div>
+
+                    <!-- セキュリティチェック -->
+                    <div class="sub-subsection">
+                        <h4 class="sub-subsection-title">
+                            <span class="step-number">03</span>
+                            セキュリティチェック
+                        </h4>
+
+                        <p>
+                            Spring
+                            Securityをプロジェクトの依存関係に加えると、デフォルトの設定によりアプリケーションの全てのURLへのアクセスに認証が必要になります。認証されていないユーザーがアプリケーションのURLにアクセスしようとした場合、Spring
+                            Securityはセキュリティチェックを行い、ログインページへリダイレクトします。
+                        </p>
+
+                        <p>
+                            アプリケーションを起動した後、認証されていない状態で「ToDo一覧」のURL「http://localhost:8080/todos」にアクセスしてみましょう。すると、リダイレクトが実行され、デフォルトのログイン画面が表示されます。このプロセスのイメージを図15.11に示しています。
+                        </p>
+
+                        <div class="diagram-container">
+                            <div class="diagram-title">図15.11 セキュリティチェック</div>
+                            <svg viewBox="0 0 500 580" style="max-width: 500px; width: 100%">
+                                <defs>
+                                    <filter id="shadow1511" x="-10%" y="-10%" width="120%" height="120%">
+                                        <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.1"/>
+                                    </filter>
+                                    <marker id="arrowDown1511" markerWidth="8" markerHeight="6" refX="4" refY="6" orient="auto">
+                                        <polygon points="0 0, 8 0, 4 6" fill="#64748b" />
+                                    </marker>
+                                    <marker id="arrowDownOrange1511" markerWidth="8" markerHeight="6" refX="4" refY="6" orient="auto">
+                                        <polygon points="0 0, 8 0, 4 6" fill="#f59e0b" />
+                                    </marker>
+                                </defs>
+
+                                <!-- STEP 1: ユーザーがアクセス試行 -->
+                                <rect x="20" y="15" width="460" height="100" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" />
+                                <rect x="20" y="15" width="80" height="24" rx="10" fill="#64748b" />
+                                <rect x="20" y="29" width="80" height="10" fill="#64748b" />
+                                <text x="60" y="32" text-anchor="middle" font-size="10" fill="white" font-weight="bold">STEP 1</text>
+
+                                <!-- ユーザーアイコン -->
+                                <circle cx="70" cy="75" r="22" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2" />
+                                <circle cx="70" cy="68" r="8" fill="#94a3b8" />
+                                <path d="M56 88 Q70 78 84 88" stroke="#94a3b8" stroke-width="2" fill="none" />
+                                <text x="70" y="108" text-anchor="middle" font-size="8" fill="#64748b">未認証ユーザー</text>
+
+                                <!-- 矢印（横） -->
+                                <line x1="100" y1="75" x2="140" y2="75" stroke="#64748b" stroke-width="2" marker-end="url(#arrowDown1511)" />
+
+                                <!-- アクセス先 -->
+                                <rect x="150" y="50" width="180" height="50" rx="6" fill="white" stroke="#ef4444" stroke-width="2" stroke-dasharray="5,3" filter="url(#shadow1511)" />
+                                <text x="240" y="72" text-anchor="middle" font-size="11" fill="#1e293b" font-weight="bold">/todos</text>
+                                <text x="240" y="88" text-anchor="middle" font-size="9" fill="#ef4444">ToDo一覧（保護されたページ）</text>
+
+                                <!-- 説明 -->
+                                <text x="400" y="70" text-anchor="middle" font-size="9" fill="#64748b">アクセス</text>
+                                <text x="400" y="85" text-anchor="middle" font-size="9" fill="#64748b">試行</text>
+
+                                <!-- 下矢印 1 -->
+                                <line x1="250" y1="115" x2="250" y2="145" stroke="#64748b" stroke-width="2" marker-end="url(#arrowDown1511)" />
+
+                                <!-- STEP 2: Spring Securityチェック -->
+                                <rect x="20" y="155" width="460" height="140" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="2" />
+                                <rect x="20" y="155" width="460" height="28" rx="10" fill="#3b82f6" />
+                                <rect x="20" y="173" width="460" height="10" fill="#3b82f6" />
+                                <text x="250" y="175" text-anchor="middle" font-size="11" fill="white" font-weight="bold">STEP 2: Spring Security セキュリティチェック</text>
+
+                                <!-- シールドアイコン -->
+                                <circle cx="80" cy="235" r="28" fill="#dbeafe" stroke="#3b82f6" stroke-width="2" />
+                                <path d="M80 215 L80 250 M66 230 L80 244 L94 230" stroke="#3b82f6" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+
+                                <!-- 判定フロー -->
+                                <rect x="130" y="200" width="140" height="70" rx="8" fill="white" stroke="#cbd5e1" stroke-width="1" />
+                                <text x="200" y="225" text-anchor="middle" font-size="10" fill="#475569" font-weight="bold">認証チェック</text>
+                                <text x="200" y="243" text-anchor="middle" font-size="9" fill="#64748b">isAuthenticated()?</text>
+                                <text x="200" y="258" text-anchor="middle" font-size="8" fill="#94a3b8">ユーザーは認証済み？</text>
+
+                                <!-- 矢印（横） -->
+                                <line x1="275" y1="235" x2="315" y2="235" stroke="#64748b" stroke-width="2" marker-end="url(#arrowDown1511)" />
+
+                                <!-- 結果 -->
+                                <rect x="325" y="200" width="140" height="70" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="2" />
+                                <text x="395" y="225" text-anchor="middle" font-size="12" fill="#dc2626" font-weight="bold">NO</text>
+                                <text x="395" y="243" text-anchor="middle" font-size="9" fill="#7f1d1d">未認証</text>
+                                <text x="395" y="258" text-anchor="middle" font-size="8" fill="#94a3b8">→ アクセス拒否</text>
+
+                                <!-- 下矢印 2 -->
+                                <line x1="250" y1="295" x2="250" y2="325" stroke="#f59e0b" stroke-width="3" marker-end="url(#arrowDownOrange1511)" />
+                                <text x="285" y="315" font-size="9" fill="#f59e0b" font-weight="bold">リダイレクト</text>
+
+                                <!-- STEP 3: ログイン画面へ -->
+                                <rect x="20" y="335" width="460" height="230" rx="10" fill="#fffbeb" stroke="#f59e0b" stroke-width="2" />
+                                <rect x="20" y="335" width="460" height="28" rx="10" fill="#f59e0b" />
+                                <rect x="20" y="353" width="460" height="10" fill="#f59e0b" />
+                                <text x="250" y="355" text-anchor="middle" font-size="11" fill="white" font-weight="bold">STEP 3: ログイン画面へリダイレクト</text>
+
+                                <!-- ログイン画面 -->
+                                <g transform="translate(100, 380)">
+                                    <rect x="0" y="0" width="300" height="160" rx="8" fill="white" stroke="#e2e8f0" stroke-width="2" filter="url(#shadow1511)" />
+                                    <rect x="0" y="0" width="300" height="25" rx="8" fill="#f1f5f9" />
+                                    <rect x="0" y="17" width="300" height="8" fill="#f1f5f9" />
+                                    <circle cx="15" cy="12" r="4" fill="#ef4444" />
+                                    <circle cx="28" cy="12" r="4" fill="#fbbf24" />
+                                    <circle cx="41" cy="12" r="4" fill="#22c55e" />
+                                    <rect x="55" y="5" width="180" height="15" rx="3" fill="white" />
+                                    <text x="145" y="16" text-anchor="middle" font-size="8" fill="#64748b">localhost:8080/login</text>
+
+                                    <text x="150" y="50" text-anchor="middle" font-size="13" fill="#1e293b" font-weight="bold">Please sign in</text>
+
+                                    <text x="50" y="75" font-size="9" fill="#64748b">Username</text>
+                                    <rect x="45" y="80" width="210" height="26" rx="4" fill="#f8fafc" stroke="#cbd5e1" />
+
+                                    <text x="50" y="120" font-size="9" fill="#64748b">Password</text>
+                                    <rect x="45" y="125" width="210" height="26" rx="4" fill="#f8fafc" stroke="#cbd5e1" />
+                                </g>
+
+                                <!-- 説明テキスト -->
+                                <text x="250" y="565" text-anchor="middle" font-size="9" fill="#64748b">ログイン成功後、元のURL（/todos）へ自動的にリダイレクトされます</text>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- カスタマイズ設定の概要 -->
+                <div class="subsection">
+                    <h3 class="subsection-title">カスタマイズ設定の概要</h3>
+
+                    <p>
+                        Spring Securityのデフォルト設定を説明してきましたが、実際にSpring
+                        Securityを使用する場合は、デフォルト設定ではアプリケーションの要件を完全に満たせない場合があります。そんな時は、実際の使用状況に合わせてセキュリティ設定をカスタマイズしましょう。
+                    </p>
+
+                    <p>
+                        Spring
+                        Securityのカスタマイズは、アプリケーションのセキュリティ要件に応じて、様々なセキュリティ機能を調整するために重要です。このカスタマイズには、URLベースのアクセス制御、カスタムログインフォームの作成、さまざまな認証メカニズムの設定などが含まれます。
+                    </p>
+
+                    <p>
+                        ビギナーの方にとっては、Spring
+                        Securityのカスタマイズ設定が難しく感じられるかもしれませんが、理解の第一歩として覚えておくべき重要なキーワードが「UserDetails」と「UserDetailsService」です。多くの設定項目がありますが、まずはこれらのキーワードを意識してください。
+                    </p>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>用語</th>
+                                    <th>説明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>UserDetails</strong></td>
+                                    <td>認証されるユーザーの情報を表すインターフェース</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>UserDetailsService</strong></td>
+                                    <td>UserDetailsを認証するためのサービス</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p>
+                        本書では、カスタマイズ設定を「ToDoアプリ」に導入する内容をページの都合で説明できませんが、本書を最後まで読んでいただけたら上記の問題を解決していますので、最後まで読んでくれたら幸いです。
+                    </p>
+                </div>
+
+                <!-- コラム：Spring Securityの重要性 -->
+                <div class="column-box">
+                    <div class="column-header">
+                        <span class="column-badge">Column</span>
+                        <span class="column-title">Spring Securityの重要性</span>
+                    </div>
+
+                    <p>Spring Securityの重要性を以下に示します。</p>
+
+                    <ul class="column-list">
+                        <li>
+                            <div class="column-item-title">認証と認可</div>
+                            <p>
+                                Spring
+                                Securityは、ユーザーが誰であるかを確認する認証プロセスと、ユーザーがアクセスを許可されたリソースのみにアクセスできるようにする認可プロセスを提供します。
+                            </p>
+                        </li>
+                        <li>
+                            <div class="column-item-title">セキュアなパスワード</div>
+                            <p>パスワードを安全に保存するためのハッシュ化を提供し、セキュリティを強化します。</p>
+                        </li>
+                        <li>
+                            <div class="column-item-title">セッション管理</div>
+                            <p>
+                                ユーザーセッションを管理し、セッションハイジャック<sup>※1</sup>などを防ぐ機能を提供します。
+                            </p>
+                        </li>
+                        <li>
+                            <div class="column-item-title">カスタマイズと拡張性</div>
+                            <p>
+                                設定や実装をカスタマイズして、特定のセキュリティ要件に合わせることができます。これにより、アプリケーションに最適なセキュリティ対策を施すことが可能です。
+                            </p>
+                        </li>
+                        <li>
+                            <div class="column-item-title">CSRF（クロスサイトリクエストフォージェリ）保護</div>
+                            <p>
+                                不正なサイトからの意図しないリクエストを防ぐための保護機能を提供し、アプリケーションをより安全にします。
+                            </p>
+                        </li>
+                    </ul>
+
+                    <p style="margin-top: 20px; font-size: 13px; color: #64748b">
+                        ※1
+                        セッションハイジャックとは、不正なユーザーが他のユーザーのセッションIDを盗み取り、そのユーザーとしてWebアプリケーションにアクセスする攻撃のことです。
+                    </p>
+                </div>
+            </section>
+
+            <!-- セクション15-3 -->
+            <section class="section" id="section3">
+                <div class="section-header">
+                    <span class="section-number">15-3</span>
+                    <h2 class="section-title">認可について知ろう</h2>
+                </div>
+
+                <div class="intro-box">
+                    <p>
+                        認可処理とは何でしょうか？認可（Authorization）は、ユーザーやシステムが特定のリソースへのアクセスや操作を許可するプロセスのことを指します。つまり「権限」です。Spring
+                        Securityには「認可処理」を簡易に実装できる機能があります。
+                    </p>
+                </div>
+
+                <!-- Spring Securityの認可 -->
+                <div class="subsection">
+                    <h3 class="subsection-title">Spring Securityの認可</h3>
+
+                    <p>
+                        Spring
+                        Securityにおける認可は、アプリケーションの安全性と利便性を高めるための重要な機能です。適切に設定された認可ルールにより、ユーザーに必要な権限のみが付与され、アプリケーションのセキュリティが強化されます。下記にSpring
+                        Securityによる認可の種類を示します。
+                    </p>
+
+                    <ul class="point-list">
+                        <li>
+                            <strong>アクセスコントロール</strong
+                            ><br />認可は、ユーザーが特定のアクション（ボタン押下など）を実行する権限を持っているかどうかをチェックします。
+                        </li>
+                        <li>
+                            <strong>権限ベースのアクセスコントロール</strong
+                            ><br />ユーザーには異なる「権限」（管理者、一般ユーザーなど）が割り当てられ、これらの権限に基づいてアクセス権が決定されます。
+                        </li>
+                        <li>
+                            <strong>アノテーションによる認可</strong><br />Spring
+                            Securityは、プログラムのメソッドレベルでの認可をサポートしています。@PreAuthorize、@PostAuthorize、@Securedなどのアノテーションを使用して、特定のロールを持つユーザーのみがメソッドを実行できるように制限できます。
+                        </li>
+                    </ul>
+
+                    <p>本書では、「アノテーションによる認可」については説明しません。</p>
+                </div>
+
+                <!-- 認証と認可の違い -->
+                <div class="subsection">
+                    <h3 class="subsection-title">認証と認可の違い</h3>
+
+                    <p>
+                        認証（Authentication）は、ユーザーが本人であることを確認するプロセス（簡単に言うとログイン）、認可（Authorization）は、ユーザーが特定のリソースや機能にアクセスする権限があるかを決定するプロセス（簡単に言うと権限）です。認証と認可のイメージを図15.12に示します。
+                    </p>
+
+                    <div class="diagram-container">
+                        <div class="diagram-title">図15.12 認証と認可のイメージ</div>
+                        <svg viewBox="0 0 680 340" style="max-width: 680px; width: 100%">
+                            <defs>
+                                <marker id="arrow1512" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
+                                </marker>
+                                <marker id="arrow1512g" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#22c55e" />
+                                </marker>
+                                <marker id="arrow1512r" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#ef4444" />
+                                </marker>
+                            </defs>
+
+                            <!-- ===== 認証エリア ===== -->
+                            <rect x="10" y="10" width="320" height="150" rx="16" fill="#dbeafe" stroke="#3b82f6" stroke-width="2" />
+                            <text x="170" y="38" text-anchor="middle" fill="#1e40af" font-size="16" font-weight="bold">認証（Authentication）</text>
+
+                            <!-- ユーザーアイコン（頭と胴体で人型を表現） -->
+                            <circle cx="60" cy="70" r="14" fill="#3b82f6" />
+                            <rect x="45" y="88" width="30" height="35" rx="6" fill="#3b82f6" />
+
+                            <!-- 矢印 -->
+                            <line x1="95" y1="90" x2="135" y2="90" stroke="#64748b" stroke-width="2" marker-end="url(#arrow1512)" />
+
+                            <!-- ログインフォーム -->
+                            <rect x="145" y="55" width="110" height="70" rx="8" fill="white" stroke="#94a3b8" stroke-width="2" />
+                            <rect x="157" y="67" width="86" height="14" rx="3" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1" />
+                            <rect x="157" y="87" width="86" height="14" rx="3" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1" />
+                            <rect x="177" y="107" width="46" height="12" rx="3" fill="#3b82f6" />
+                            <text x="200" y="143" text-anchor="middle" fill="#475569" font-size="11">ログイン</text>
+
+                            <text x="170" y="155" text-anchor="middle" fill="#1e40af" font-size="11">「あなたは誰？」を確認</text>
+
+                            <!-- ===== 認可エリア ===== -->
+                            <rect x="350" y="10" width="320" height="150" rx="16" fill="#f3e8ff" stroke="#a855f7" stroke-width="2" />
+                            <text x="510" y="38" text-anchor="middle" fill="#7e22ce" font-size="16" font-weight="bold">認可（Authorization）</text>
+
+                            <!-- 認証済みチェックマーク -->
+                            <circle cx="400" cy="85" r="22" fill="white" stroke="#22c55e" stroke-width="3" />
+                            <path d="M388 85 L396 93 L412 77" stroke="#22c55e" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+                            <text x="400" y="122" text-anchor="middle" fill="#166534" font-size="10">認証済み</text>
+
+                            <!-- 矢印 -->
+                            <line x1="427" y1="85" x2="463" y2="85" stroke="#64748b" stroke-width="2" marker-end="url(#arrow1512)" />
+
+                            <!-- 権限チェックボックス -->
+                            <rect x="470" y="65" width="70" height="40" rx="6" fill="white" stroke="#a855f7" stroke-width="2" />
+                            <text x="505" y="82" text-anchor="middle" fill="#7e22ce" font-size="11" font-weight="bold">権限</text>
+                            <text x="505" y="96" text-anchor="middle" fill="#7e22ce" font-size="11" font-weight="bold">チェック</text>
+
+                            <!-- OK（右上に配置） -->
+                            <line x1="545" y1="75" x2="580" y2="55" stroke="#22c55e" stroke-width="2" marker-end="url(#arrow1512g)" />
+                            <circle cx="600" cy="45" r="18" fill="#22c55e" />
+                            <text x="600" y="51" text-anchor="middle" fill="white" font-size="13" font-weight="bold">OK</text>
+
+                            <!-- NG（右下に配置 - 十分な間隔） -->
+                            <line x1="545" y1="95" x2="580" y2="115" stroke="#ef4444" stroke-width="2" marker-end="url(#arrow1512r)" />
+                            <circle cx="600" cy="135" r="18" fill="#ef4444" />
+                            <text x="600" y="141" text-anchor="middle" fill="white" font-size="13" font-weight="bold">NG</text>
+
+                            <text x="510" y="155" text-anchor="middle" fill="#7e22ce" font-size="11">「何ができる？」を判定</text>
+
+                            <!-- ===== 処理フロー ===== -->
+                            <rect x="10" y="175" width="660" height="155" rx="16" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2" />
+                            <text x="340" y="200" text-anchor="middle" fill="#334155" font-size="15" font-weight="bold">認証・認可の処理フロー</text>
+
+                            <!-- ユーザー -->
+                            <circle cx="60" cy="270" r="26" fill="#e2e8f0" stroke="#64748b" stroke-width="2" />
+                            <circle cx="60" cy="260" r="9" fill="#64748b" />
+                            <path d="M44 282 Q60 295 76 282" stroke="#64748b" stroke-width="4" fill="none" stroke-linecap="round" />
+                            <text x="60" y="310" text-anchor="middle" fill="#475569" font-size="11" font-weight="bold">ユーザー</text>
+
+                            <!-- 矢印1 -->
+                            <line x1="92" y1="270" x2="132" y2="270" stroke="#64748b" stroke-width="2" marker-end="url(#arrow1512)" />
+                            <text x="112" y="260" text-anchor="middle" fill="#64748b" font-size="10" font-weight="bold">①</text>
+
+                            <!-- 認証ボックス -->
+                            <rect x="140" y="242" width="110" height="56" rx="10" fill="#3b82f6" />
+                            <text x="195" y="266" text-anchor="middle" fill="white" font-size="14" font-weight="bold">認証</text>
+                            <text x="195" y="284" text-anchor="middle" fill="#bfdbfe" font-size="11">本人確認</text>
+
+                            <!-- 矢印2 -->
+                            <line x1="255" y1="270" x2="295" y2="270" stroke="#22c55e" stroke-width="2" marker-end="url(#arrow1512g)" />
+                            <text x="275" y="260" text-anchor="middle" fill="#22c55e" font-size="10" font-weight="bold">②成功</text>
+
+                            <!-- 認可ボックス -->
+                            <rect x="303" y="242" width="110" height="56" rx="10" fill="#a855f7" />
+                            <text x="358" y="266" text-anchor="middle" fill="white" font-size="14" font-weight="bold">認可</text>
+                            <text x="358" y="284" text-anchor="middle" fill="#e9d5ff" font-size="11">権限確認</text>
+
+                            <!-- 分岐：権限あり（上） -->
+                            <line x1="418" y1="255" x2="468" y2="235" stroke="#22c55e" stroke-width="2" marker-end="url(#arrow1512g)" />
+                            <text x="443" y="232" text-anchor="middle" fill="#22c55e" font-size="10" font-weight="bold">③権限あり</text>
+
+                            <!-- 分岐：権限なし（下） -->
+                            <line x1="418" y1="285" x2="468" y2="305" stroke="#ef4444" stroke-width="2" marker-end="url(#arrow1512r)" />
+                            <text x="443" y="320" text-anchor="middle" fill="#ef4444" font-size="10" font-weight="bold">③権限なし</text>
+
+                            <!-- アクセス許可 -->
+                            <rect x="475" y="215" width="105" height="40" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="2" />
+                            <text x="527" y="240" text-anchor="middle" fill="#166534" font-size="12" font-weight="bold">✓ アクセス許可</text>
+
+                            <!-- アクセス拒否 -->
+                            <rect x="475" y="285" width="105" height="40" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="2" />
+                            <text x="527" y="310" text-anchor="middle" fill="#dc2626" font-size="12" font-weight="bold">✗ アクセス拒否</text>
+
+                            <!-- リソースへ -->
+                            <line x1="585" y1="235" x2="615" y2="235" stroke="#22c55e" stroke-width="2" marker-end="url(#arrow1512g)" />
+                            <rect x="622" y="212" width="55" height="48" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2" />
+                            <text x="649" y="235" text-anchor="middle" fill="#f59e0b" font-size="20">📄</text>
+                            <text x="649" y="253" text-anchor="middle" fill="#92400e" font-size="10" font-weight="bold">リソース</text>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- 依存関係の追加 -->
+                <div class="subsection">
+                    <h3 class="subsection-title">依存関係の追加</h3>
+
+                    <p>
+                        認可の基本が理解できたので、「認可」処理をアプリケーションに取り入れましょう。今回はテンプレートエンジンに「Thymeleaf」を使用しています。まず初めに、「Spring
+                        Security」と「Thymeleaf」を連携させるために必要な依存関係を「pom.xml」ファイルに追加します。
+                    </p>
+
+                    <p>
+                        VSCodeのwebappプロジェクト内「pom.xml」ファイルの「&lt;dependencies&gt;」ブロックに以下の依存関係を追加します。
+                    </p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>📄</span>
+                            <span class="filename" style="color: white;">リスト15.5 pom.xml（追加する依存関係）</span>
+                        </div>
+                        <div class="code-content">
+                            <pre><span class="tag">&lt;dependency&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>org.thymeleaf.extras<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>thymeleaf-extras-springsecurity6<span class="tag">&lt;/artifactId&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span></pre>
+                        </div>
+                    </div>
+
+                    <p>
+                        「thymeleaf-extras-springsecurity6」は、ThymeleafテンプレートエンジンとSpring
+                        Security
+                        6を統合するためのライブラリです。このライブラリを使用することで、Thymeleafテンプレート内で直接、Spring
+                        Securityの認証情報や認可ルールを利用することができます。
+                    </p>
+
+                    <p>
+                        記述を貼り付けた後は、VSCodeでMavenプロジェクトを更新して設定を反映します。VSCodeの左側サイドバーにある「JAVA PROJECTS」パネルでプロジェクトを右クリックし、「Update Project」を選択します。
+                    </p>
+
+                    <p>
+                        または、コマンドパレット（Ctrl+Shift+P / Cmd+Shift+P）から「Java: Update Project Configuration」を実行し、設定内容を更新することで、プロジェクト内のThymeleafテンプレートで直接、Spring
+                        Securityの機能が使用できるようになります。
+                    </p>
+                </div>
+
+                <!-- 使用してみる -->
+                <div class="subsection">
+                    <h3 class="subsection-title">使用してみる</h3>
+
+                    <p>
+                        認証が成功した後に表示される「メニュー画面」を修正することで、Thymeleafテンプレートで直接、Spring
+                        Securityの機能を使用できるようになったことを確認しましょう。
+                    </p>
+
+                    <div class="config-table">
+                        <h4>◎ 修正内容</h4>
+                        <div class="config-row">
+                            <span class="config-label">親フォルダーを入力または選択</span>
+                            <span class="config-value">webapp/src/main/resources/templates</span>
+                        </div>
+                        <div class="config-row">
+                            <span class="config-label">ファイル名</span>
+                            <span class="config-value">menu.html</span>
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>📄</span>
+                            <span class="filename" style="color: white;">リスト15.6 menu.html</span>
+                        </div>
+                        <div class="code-content">
+                            <pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attribute">xmlns:th</span>=<span class="value">"http://www.thymeleaf.org"</span>
+      <span class="attribute">xmlns:sec</span>=<span class="value">"http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;title&gt;</span>メニュー<span class="tag">&lt;/title&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+    <span class="tag">&lt;h2&gt;</span>メニュー画面<span class="tag">&lt;/h2&gt;</span>
+    <span class="tag">&lt;hr&gt;</span>
+    <span class="tag">&lt;a</span> <span class="attribute">th:href</span>=<span class="value">"@{/todos}"</span><span class="tag">&gt;</span>ToDo一覧へ<span class="tag">&lt;/a&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attribute">sec:authentication</span>=<span class="value">"name"</span><span class="tag">&gt;</span>
+        ログイン情報のname値に書き換わる
+    <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attribute">sec:authorize</span>=<span class="value">"isAuthenticated()"</span><span class="tag">&gt;</span>
+        認証された場合のみ表示
+    <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;br&gt;</span>
+    <span class="code-comment">&lt;!-- ログアウト --&gt;</span>
+    <span class="tag">&lt;form</span> <span class="attribute">th:action</span>=<span class="value">"@{/logout}"</span> <span class="attribute">method</span>=<span class="value">"post"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="value">"submit"</span> <span class="attribute">value</span>=<span class="value">"ログアウト"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;/form&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+                        </div>
+                    </div>
+
+                    <p>
+                        3行目「xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"」は、HTMLドキュメント内でsecという名前空間を使用することを宣言しています。secはThymeleafのテンプレートでSpring
+                        Securityに関連する機能を利用する際に使います。このプレフィックスを定義することで、Thymeleafテンプレート内でsec:を使った属性を使用できるようになります。
+                    </p>
+
+                    <p>
+                        11行目「sec:authentication="name"」は、現在ログインしているユーザーの名前（username）を表示するためのものです。Spring
+                        Securityによって認証されたユーザーの名前を取得し、その値でHTML内のテキストを動的に置き換えます。つまり、このdiv要素の中身は、ユーザーがログインしている場合にはそのユーザーの名前に書き換わります。
+                    </p>
+
+                    <p>
+                        14行目「sec:authorize="isAuthenticated()"」は、ユーザーが認証（ログイン）されている場合にのみ表示されるコンテンツを制御するためのものです。ユーザーが認証されているかどうかをチェックし、認証されている場合に限り、このdiv要素内のコンテンツを表示することができます。
+                    </p>
+
+                    <p>
+                        「sec名前空間」を使用することで、Spring
+                        Securityの認証情報に基づいてWebページの表示内容を動的に変更することができます。これにより、ユーザーのログイン状態に応じたカスタマイズされたUX（ユーザーエクスペリエンス）を提供することが可能になります<sup>（注1）</sup>。
+                    </p>
+
+                    <p style="font-size: 13px; color: #64748b; margin-top: 20px">
+                        （注1）UX（ユーザーエクスペリエンス）とは、製品やサービスを使ったときのユーザーの全体的な体験です。これには、使いやすさ、満足感、そして良い印象など、ユーザーが感じるすべてのことが含まれます。
+                    </p>
+                </div>
+            </section>
+
+            <!-- セクション15-4 -->
+            <section class="section" id="section4">
+                <div class="section-header">
+                    <span class="section-number">15-4</span>
+                    <h2 class="section-title">カスタムエラーページとは？</h2>
+                </div>
+
+                <div class="intro-box">
+                    <p>
+                        Webアプリケーション作成時、ユーザーが間違ったページにアクセスしたり、予期せぬエラーが発生したりすることがあります。そんな時に、わかりやすい「エラーページ」を表示することで、ユーザーの混乱を防ぎます。Springでは、このようなカスタムエラーページを簡単に設定できる機能があります（この機能はSpring
+                        Securityの機能ではありません）。
+                    </p>
+                </div>
+
+                <!-- カスタムエラーページの作成 -->
+                <div class="subsection">
+                    <h3 class="subsection-title">カスタムエラーページの作成</h3>
+
+                    <p>
+                        ユーザーが遭遇する可能性のある一般的なエラー（例えば、404：ページが見つからない）に対して、より分かり易いエラーページを提供することで、UX（ユーザーエクスペリエンス）を向上させるのに役立ちます。ここでは、簡単な手順でこれらのカスタムエラーページを作成する方法を説明します。
+                    </p>
+
+                    <h4 style="font-size: 16px; font-weight: 700; margin: 24px 0 16px; color: var(--text-dark)">
+                        ■ 作成方法
+                    </h4>
+
+                    <p>
+                        Spring
+                        Bootでは、アプリケーションでエラーが発生した際に表示されるエラーページを簡単に作成することが可能です。
+                    </p>
+
+                    <p>
+                        作成方法は、「src/main/resources/templates」ディレクトリ配下に「error」フォルダを作成し、そのフォルダ内に「エラーコード.html」ファイルを配置します。たとえば、404.htmlはHTTP
+                        404エラー（ページが見つからない）に対応し、500.htmlはHTTP
+                        500エラー（サーバー内部エラー）に対応します。
+                    </p>
+
+                    <h4 style="font-size: 16px; font-weight: 700; margin: 24px 0 16px; color: var(--text-dark)">
+                        ■ カスタムエラーページの作成（404：ページが見つからない）
+                    </h4>
+
+                    <p>ステータスコード：404に対応するカスタムエラーページを作成します。</p>
+
+                    <div class="config-table">
+                        <h4>◎ 設定内容</h4>
+                        <div class="config-row">
+                            <span class="config-label">親フォルダーを入力または選択</span>
+                            <span class="config-value">webapp/src/main/resources/templates/error</span>
+                        </div>
+                        <div class="config-row">
+                            <span class="config-label">ファイル名</span>
+                            <span class="config-value">404.html</span>
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>📄</span>
+                            <span class="filename" style="color: white;">リスト15.7 404.html</span>
+                        </div>
+                        <div class="code-content">
+                            <pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attribute">xmlns:th</span>=<span class="value">"http://www.thymeleaf.org"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;title&gt;</span>404<span class="tag">&lt;/title&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+    <span class="tag">&lt;h2&gt;</span>404 - ページが見つからない<span class="tag">&lt;/h2&gt;</span>
+    <span class="tag">&lt;div&gt;</span>
+        対応するページが存在しません。
+    <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;a</span> <span class="attribute">th:href</span>=<span class="value">"@{/}"</span><span class="tag">&gt;</span>メニューへ<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+                        </div>
+                    </div>
+
+                    <p>
+                        「ステータスコード：404」に対応する、ページが存在しないことがわかるようなレイアウトにしています。
+                    </p>
+                </div>
+
+                <!-- ここまでの動作確認 -->
+                <div class="subsection">
+                    <h3 class="subsection-title">ここまでの動作確認</h3>
+
+                    <p>
+                        VSCodeの「SPRING BOOT DASHBOARD」パネルで「webapp」を選択し、プロジェクトを起動します。ブラウザを立ち上げURL「http://localhost:8080/login」を指定し表示された「デフォルトのログイン画面」にて「username」に「user」、「password」にターミナルに表示されたランダムな文字列を入力して、「Sign
+                        in」ボタンをクリックしログイン（認証）を成功させます。
+                    </p>
+
+                    <p>
+                        ブラウザのアドレスバーにURL「http://localhost:8080/unknown」を指定します。指定したURLに対するページが見つからない旨のカスタムエラーページが表示されます。
+                    </p>
+
+                    <div class="screenshot">
+                        <div class="screenshot-header">
+                            <span class="screenshot-dot red"></span>
+                            <span class="screenshot-dot yellow"></span>
+                            <span class="screenshot-dot green"></span>
+                        </div>
+                        <div class="screenshot-content">
+                            <h3 style="margin-bottom: 16px; font-size: 20px">404 - ページが見つからない</h3>
+                            <p style="margin-bottom: 16px; color: #64748b">対応するページが存在しません。</p>
+                            <a href="#" style="color: var(--primary)">メニューへ</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 終わりに -->
+                <div class="subsection">
+                    <h3 class="subsection-title">終わりに</h3>
+
+                    <p>
+                        Spring
+                        Securityは、初心者にとってかなり高度な内容を含んでいます。そのため、本一冊分にも相当するほど、多岐にわたる設定オプションが存在します。「作成したToDoアプリ」へのSpring
+                        Securityを使用した「カスタムログイン設定」、「認可機能」の導入については、本書の書籍ページ数を大幅に超えてしまうことから、本文中に詳細に記載することができませんでした。
+                    </p>
+
+                    <p>
+                        しかし、私はビギナーの方にもSpring
+                        Securityの基本を理解し、学んでいただきたいと考えています。そこで、ボーナストラックとして「作成したToDoアプリ」へのSpring
+                        Securityを使用した「カスタムログイン設定」、「認可機能」の導入について解説した約50ページの追加テキストをPDF形式で用意しました。このテキストは、技術評論社の指定のURLからダウンロード可能です。
+                    </p>
+
+                    <div class="hint-box">
+                        <div class="hint-box-title">
+                            <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <polyline points="7 10 12 15 17 10" />
+                                <line x1="12" y1="15" x2="12" y2="3" />
+                            </svg>
+                            ダウンロード方法
+                        </div>
+                        <p>技術評論社の指定のURLから、PDFをダウンロードしてください。</p>
+                        <p style="margin-top: 12px">
+                            <a
+                                href="https://gihyo.jp/book/2024/978-4-297-14049-6/support"
+                                style="color: var(--primary); word-break: break-all"
+                                >https://gihyo.jp/book/2024/978-4-297-14049-6/support</a
+                            >
+                        </p>
+                    </div>
+                </div>
+
+                <!-- コラム：一般的なエラーページ -->
+                <div class="column-box">
+                    <div class="column-header">
+                        <span class="column-badge">Column</span>
+                        <span class="column-title">一般的なエラーページ</span>
+                    </div>
+
+                    <p>
+                        Spring
+                        MVCで一般的に用意するカスタムエラーページには、以下のようなものがあります。これらのエラーページを用意することで、エラーが発生した際に、ユーザーがより良いエクスペリエンスを得られるように役立ちます。
+                    </p>
+
+                    <ul class="column-list">
+                        <li>
+                            <div class="column-item-title">404 Not Found</div>
+                            <p><strong>ファイル名：</strong>404.html</p>
+                            <p><strong>概要：</strong>ユーザーが存在しないページにアクセスしたときに表示されます。</p>
+                            <p>
+                                <strong>使い方：</strong
+                                >「お探しのページは見つかりませんでした」といったメッセージと共に、ホームページへのリンクやサイトマップへのリンクを提供することが一般的です。
+                            </p>
+                        </li>
+                        <li>
+                            <div class="column-item-title">403 Forbidden</div>
+                            <p><strong>ファイル名：</strong>403.html</p>
+                            <p>
+                                <strong>概要：</strong
+                                >ユーザーがアクセス権限のないリソースにアクセスしようとしたときに表示されます。
+                            </p>
+                            <p>
+                                <strong>使い方：</strong
+                                >アクセス権限がないことを通知し、必要に応じてログインページへのリンクを提供することがあります。
+                            </p>
+                        </li>
+                        <li>
+                            <div class="column-item-title">500 Internal Server Error</div>
+                            <p><strong>ファイル名：</strong>500.html</p>
+                            <p><strong>概要：</strong>サーバー内部でエラーが発生したときに表示されます。</p>
+                            <p>
+                                <strong>使い方：</strong
+                                >「サーバー内部でエラーが発生しました。問題を解決しています」といったメッセージを表示し、ユーザーに対してサイト管理者への連絡方法や、後で再度試してみるよう案内することがあります。
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- フッター -->
+            <footer class="chapter-footer">
+                <div class="chapter-footer-title">お疲れさまでした！</div>
+                <p style="color: var(--text-muted); margin-bottom: 24px">
+                    第15章「ログイン認証を実装しよう」の学習が完了しました。<br />Spring
+                    Securityを使ったセキュリティ機能の基本を理解できましたね！
+                </p>
+
+                <div style="background: #f8fafc; padding: 24px; border-radius: 12px; margin-top: 24px">
+                    <h4 style="margin-bottom: 16px; color: var(--text-dark)">この章で学んだこと</h4>
+                    <div style="display: grid; gap: 12px; text-align: left">
+                        <div style="display: flex; align-items: center; gap: 12px">
+                            <span style="color: var(--accent-green); font-size: 20px">✓</span>
+                            <span>Spring Securityの基本概念（認証と認可）</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px">
+                            <span style="color: var(--accent-green); font-size: 20px">✓</span>
+                            <span>Spring Securityの導入方法と依存関係の設定</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px">
+                            <span style="color: var(--accent-green); font-size: 20px">✓</span>
+                            <span>デフォルトのログイン・ログアウト機能</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px">
+                            <span style="color: var(--accent-green); font-size: 20px">✓</span>
+                            <span>Thymeleafとの連携（sec名前空間）</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px">
+                            <span style="color: var(--accent-green); font-size: 20px">✓</span>
+                            <span>カスタムエラーページの作成</span>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+        <footer class="footer">
+            <p>Spring Framework 入門チュートリアル</p>
+        </footer>
+
+        <div class="page-nav">
+            <a href="14_validation.html" class="page-nav-btn prev">
+                <span>←</span>
+                <div>
+                    <div class="page-nav-label">前の章</div>
+                    <div class="page-nav-title">第14章</div>
+                </div>
+            </a>
+        </div>
+
+        <script>
+            function toggleMenu() {
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+                toggle.classList.toggle("active");
+                menu.classList.toggle("active");
+            }
+
+            document.addEventListener("click", function (e) {
+                const nav = document.querySelector(".global-nav");
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+
+                if (!nav.contains(e.target) && menu.classList.contains("active")) {
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+
+            window.addEventListener("resize", function () {
+                if (window.innerWidth >= 1024) {
+                    const toggle = document.querySelector(".nav-toggle");
+                    const menu = document.querySelector(".nav-menu");
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+        </script>
+    </body>
+</html>

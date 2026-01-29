@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>オブジェクト指向をレトルト料理で例える</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", "Hiragino Kaku Gothic ProN",
+                   "Yu Gothic", "Meiryo", sans-serif;
+      line-height: 1.7;
+      margin: 0;
+      padding: 24px;
+      max-width: 920px;
+    }
+    header { margin-bottom: 18px; }
+    h1 { font-size: 1.6rem; margin: 0 0 8px; }
+    h2 { font-size: 1.2rem; margin-top: 26px; }
+    p { margin: 10px 0; }
+    ul { margin: 10px 0 10px 1.2em; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+    pre {
+      padding: 14px;
+      border-radius: 10px;
+      overflow: auto;
+      border: 1px solid rgba(127,127,127,.35);
+      background: rgba(127,127,127,.08);
+    }
+    .note {
+      padding: 12px 14px;
+      border-left: 4px solid rgba(127,127,127,.6);
+      background: rgba(127,127,127,.06);
+      border-radius: 6px;
+      margin: 14px 0;
+    }
+    .grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 760px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+    .card {
+      border: 1px solid rgba(127,127,127,.35);
+      border-radius: 12px;
+      padding: 14px 16px;
+      background: rgba(127,127,127,.04);
+    }
+    .kbd {
+      display: inline-block;
+      padding: 0 .4em;
+      border: 1px solid rgba(127,127,127,.45);
+      border-bottom-width: 2px;
+      border-radius: 6px;
+      background: rgba(127,127,127,.08);
+      font-family: ui-monospace, monospace;
+      font-size: .95em;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>オブジェクト指向を「料理のレトルト」で例える</h1>
+    <p>オブジェクト指向、難しく聞こえるけど、レトルトで考えると胃袋にも頭にも優しい。</p>
+  </header>
+
+  <main>
+    <section>
+      <h2>クラスとオブジェクト</h2>
+      <div class="grid">
+        <div class="card">
+          <p><strong>クラス（Class）＝レトルトの「設計図」</strong></p>
+          <p>例：<em>ビーフカレー（中辛）という商品仕様</em>。具、辛さ、内容量、加熱方法などを決めた“型”。</p>
+        </div>
+        <div class="card">
+          <p><strong>オブジェクト（Object）＝実際のレトルトパウチ1個</strong></p>
+          <p>スーパーで買った<strong>この1袋</strong>。同じ設計図から実体がいくつも作れる。</p>
+        </div>
+      </div>
+      <p>例：</p>
+      <ul>
+        <li>クラス：<code>レトルトカレー</code></li>
+        <li>オブジェクト：<code>昨日買ったパウチA</code>、<code>今日買ったパウチB</code></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>プロパティ（属性）とメソッド（振る舞い）</h2>
+      <div class="grid">
+        <div class="card">
+          <p><strong>属性（プロパティ）＝持っている情報</strong></p>
+          <ul>
+            <li>辛さ：<code>spice_level = 3</code></li>
+            <li>内容量：<code>grams = 180</code></li>
+            <li>賞味期限：<code>best_before = 2026-05-01</code></li>
+            <li>原材料：<code>ingredients = [...]</code></li>
+          </ul>
+        </div>
+        <div class="card">
+          <p><strong>メソッド（メンバ関数）＝できること</strong></p>
+          <ul>
+            <li><code>heat()</code>：温める</li>
+            <li><code>open()</code>：開ける</li>
+            <li><code>serve()</code>：盛り付ける</li>
+            <li><code>eat()</code>：食べる（※これはあなたのメソッド）</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>カプセル化（Encapsulation）</h2>
+      <p><strong>「中身の製造工程は気にするな」</strong>がカプセル化。</p>
+      <p>レトルトは工場の工程を知らなくても食える。同様に、内部データや処理を隠して、外部からは決まった操作だけできるようにする。</p>
+      <div class="note">
+        <p>あなたは <span class="kbd">温める</span> と <span class="kbd">開ける</span> を呼べばOK。<br />
+        工場の工程を直接いじり始めたら、それはもう料理じゃなくて事故。</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>継承（Inheritance）</h2>
+      <p><strong>「レトルト食品」という親カテゴリ</strong>を作って共通部分をまとめるイメージ。</p>
+      <ul>
+        <li>親クラス：<code>RetortMeal</code>（共通：<code>heat()</code>, <code>open()</code>, <code>serve()</code> など）</li>
+        <li>子クラス：<code>Curry</code>, <code>Gyudon</code>, <code>MapoTofu</code>（違いだけ追加・変更）</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>ポリモーフィズム（Polymorphism）</h2>
+      <p><strong>「とにかく <code>heat()</code> すれば正しく温まる」</strong>が最大の旨味。</p>
+      <p>カレーでも牛丼でも麻婆でも、同じ命令（<code>heat()</code>）で、それぞれの流儀で動く。</p>
+      <ul>
+        <li>カレー：湯せん5分</li>
+        <li>牛丼：レンジ2分</li>
+        <li>麻婆：湯せん推奨…など</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>コンポジション（Composition）</h2>
+      <p><strong>セット商品＝部品の組み合わせ</strong>。</p>
+      <p>「カレーライスセット」は <code>カレーパウチ</code> + <code>ご飯パック</code> + <code>福神漬け</code> みたいに、オブジェクトを部品として組み合わせて別のオブジェクトを作る発想。</p>
+      <div class="note">
+        <p>継承で全部表そうとすると、食品が哲学になります（おいしくない）。</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>ざっくりコード（Python風）</h2>
+      <pre><code>from abc import ABC, abstractmethod
+
+class RetortMeal(ABC):
+    def __init__(self, name, grams):
+        self.name = name
+        self.grams = grams
+
+    @abstractmethod
+    def heat(self):
+        pass
+
+    def open(self):
+        return f"{self.name} を開封した"
+
+class Curry(RetortMeal):
+    def heat(self):
+        return f"{self.name} は湯せん5分で温める"
+
+class Gyudon(RetortMeal):
+    def heat(self):
+        return f"{self.name} はレンジ2分で温める"
+
+meals = [Curry("ビーフカレー", 180), Gyudon("牛丼の具", 160)]
+
+for m in meals:
+    print(m.heat())   # 同じ heat() でも結果が違う（ポリモーフィズム）</code></pre>
+    </section>
+
+    <section>
+      <h2>まとめ（レトルトで覚える一言）</h2>
+      <ul>
+        <li><strong>クラス</strong>＝商品設計</li>
+        <li><strong>オブジェクト</strong>＝実際の1袋</li>
+        <li><strong>カプセル化</strong>＝中身は触るな、温めろ</li>
+        <li><strong>継承</strong>＝レトルト食品という親子関係</li>
+        <li><strong>ポリモーフィズム</strong>＝同じ「温める」で各自勝手に正しく動く</li>
+        <li><strong>コンポジション</strong>＝セットは部品の組み合わせ</li>
+      </ul>
+      <p>オブジェクト指向を誤用すると「インスタント味噌汁に設計書200ページ」みたいな地獄が始まるので、レトルト同様“必要な分だけ”がちょうどいい。</p>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,1047 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>図書館 貸出・返却・予約システム Mini 設計書（オブジェクト指向解説付き・完全版）</title>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --fg:#111;
+      --muted:#555;
+      --line:#e5e7eb;
+      --panel:#f7f7f8;
+      --note:#eef6ff;
+      --warn:#fff7ed;
+      --good:#ecfdf5;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP", "Yu Gothic UI", "Yu Gothic", Meiryo, sans-serif;
+    }
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--fg);
+      font-family:var(--sans);
+      line-height:1.65;
+    }
+    header{
+      padding:28px 18px;
+      border-bottom:1px solid var(--line);
+      background:linear-gradient(180deg, #fafafa 0%, #fff 100%);
+    }
+    .container{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+    h1{
+      font-size: 1.65rem;
+      margin: 0 0 8px 0;
+      letter-spacing: .01em;
+    }
+    .subtitle{
+      margin:0;
+      color:var(--muted);
+      font-size: .98rem;
+    }
+    nav.toc{
+      margin: 18px 0 0 0;
+      padding: 14px 14px;
+      background: var(--panel);
+      border:1px solid var(--line);
+      border-radius: 10px;
+    }
+    nav.toc h2{
+      margin:0 0 8px 0;
+      font-size: 1.05rem;
+    }
+    nav.toc ol{
+      margin:0;
+      padding-left: 18px;
+      columns: 2;
+      column-gap: 30px;
+    }
+    nav.toc li{
+      margin: 4px 0;
+      break-inside: avoid;
+    }
+    nav.toc a{
+      color:#1f2937;
+      text-decoration: none;
+      border-bottom:1px dotted #9ca3af;
+    }
+    main{
+      padding: 22px 0 42px 0;
+    }
+    section{
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    section:last-child{ border-bottom:none; }
+    h2{
+      margin: 0 0 10px 0;
+      font-size: 1.35rem;
+    }
+    h3{
+      margin: 16px 0 8px 0;
+      font-size: 1.15rem;
+    }
+    h4{
+      margin: 14px 0 6px 0;
+      font-size: 1.02rem;
+    }
+    p{ margin: 8px 0; }
+    ul,ol{ margin: 8px 0 8px 1.2rem; }
+    li{ margin: 3px 0; }
+    .meta{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .card{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+    .badge{
+      display:inline-block;
+      font-size:.82rem;
+      padding: 2px 8px;
+      border:1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--muted);
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    .note, .warn, .good{
+      border-radius: 10px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      margin: 10px 0;
+    }
+    .note{ background: var(--note); }
+    .warn{ background: var(--warn); }
+    .good{ background: var(--good); }
+    .note strong, .warn strong, .good strong{ display:block; margin-bottom: 4px; }
+    table{
+      width:100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+      font-size: .96rem;
+    }
+    th,td{
+      border: 1px solid var(--line);
+      padding: 8px 10px;
+      text-align:left;
+      vertical-align: top;
+    }
+    th{
+      background: var(--panel);
+      font-weight: 600;
+    }
+    pre{
+      background: #0b1020;
+      color: #e5e7eb;
+      padding: 12px 14px;
+      border-radius: 10px;
+      overflow:auto;
+      border: 1px solid #0b1020;
+      margin: 10px 0;
+    }
+    code{
+      font-family: var(--mono);
+      font-size: .92rem;
+    }
+    .inline-code{
+      font-family: var(--mono);
+      background: var(--panel);
+      padding: 1px 6px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: .92rem;
+    }
+    .grid-2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 860px){
+      nav.toc ol{ columns: 1; }
+      .grid-2{ grid-template-columns: 1fr; }
+    }
+    footer{
+      padding: 18px 0 36px 0;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+    a.anchor{
+      color:inherit;
+      text-decoration:none;
+    }
+    .small{
+      color: var(--muted);
+      font-size: .92rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>図書館 貸出・返却・予約システム Mini 設計書（オブジェクト指向解説付き・完全版）</h1>
+      <p class="subtitle">
+        「概念」ではなく「設計書」を根拠に、オブジェクト指向（責務分割・状態・ルールの置き場）を説明するための教材一式
+      </p>
+
+      <nav class="toc" aria-label="目次">
+        <h2>目次</h2>
+        <ol>
+          <li><a href="#sec0">0. 文書情報</a></li>
+          <li><a href="#sec1">1. システム概要</a></li>
+          <li><a href="#sec2">2. 用語</a></li>
+          <li><a href="#sec3">3. スコープ</a></li>
+          <li><a href="#sec4">4. ユーザー種別と権限</a></li>
+          <li><a href="#sec5">5. 機能要件</a></li>
+          <li><a href="#sec6">6. 主要業務ルール</a></li>
+          <li><a href="#sec7">7. ユースケース設計</a></li>
+          <li><a href="#sec8">8. アーキテクチャ設計</a></li>
+          <li><a href="#sec9">9. ドメインモデル設計</a></li>
+          <li><a href="#sec10">10. クラス設計</a></li>
+          <li><a href="#sec11">11. シーケンス設計</a></li>
+          <li><a href="#sec12">12. データ設計</a></li>
+          <li><a href="#sec13">13. 画面・API設計</a></li>
+          <li><a href="#sec14">14. 例外・エラー設計</a></li>
+          <li><a href="#sec15">15. テスト観点</a></li>
+          <li><a href="#sec16">16. OOの狙いをこのシステムで言い換える</a></li>
+          <li><a href="#sec17">17. オブジェクト＝状態＋ふるまい</a></li>
+          <li><a href="#sec18">18. カプセル化（不変条件を守る）</a></li>
+          <li><a href="#sec19">19. 抽象化（ルールを差し替え部品へ）</a></li>
+          <li><a href="#sec20">20. 多態性（呼び出しは同じ、挙動が変わる）</a></li>
+          <li><a href="#sec21">21. 継承よりコンポジション</a></li>
+          <li><a href="#sec22">22. 責務分割（設計書からOOを説明する核）</a></li>
+          <li><a href="#sec23">23. “サービスにifが増える”問題の防ぎ方</a></li>
+          <li><a href="#sec24">24. 状態遷移（BookCopyを状態マシンとして）</a></li>
+          <li><a href="#sec25">25. SOLIDをこの設計で説明する</a></li>
+          <li><a href="#sec26">26. 授業進行例（設計→OO説明の順番）</a></li>
+          <li><a href="#sec27">27. 追加課題（学習効果の高い拡張）</a></li>
+        </ol>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="sec0">
+      <h2><a class="anchor" href="#sec0">0. 文書情報</a></h2>
+      <div class="meta">
+        <div class="card">
+          <ul>
+            <li>文書名：図書館 貸出・返却・予約システム Mini 設計書（OO解説付き）</li>
+            <li>版：1.0</li>
+            <li>想定規模：個人〜小チーム開発（学習用）</li>
+            <li>目的：オブジェクト指向設計（責務分割・状態・ルールの置き場）を「設計書」から学ぶ</li>
+            <li>前提：技術（言語/DB/フレームワーク）は未固定。設計は技術非依存。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec1">
+      <h2><a class="anchor" href="#sec1">1. システム概要</a></h2>
+      <p>図書館の基本業務を扱うミニシステム。</p>
+      <ul>
+        <li>蔵書（実物の本）を管理し、利用者に貸し出す</li>
+        <li>返却・延長を扱う</li>
+        <li>書籍単位で予約（順番待ち）を扱う</li>
+        <li>返却時に予約者への「取り置き」へ繰り上げる</li>
+        <li>（拡張）延滞金計算、通知</li>
+      </ul>
+
+      <div class="note">
+        <strong>授業での一言</strong>
+        <p>「この題材は“状態（貸出中/取り置き中）”と“ルール（延長不可など）”が自然に出るので、設計書からOOを説明しやすい」</p>
+      </div>
+    </section>
+
+    <section id="sec2">
+      <h2><a class="anchor" href="#sec2">2. 用語</a></h2>
+      <table>
+        <thead>
+          <tr><th>用語</th><th>説明</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>書籍（Book）</td>
+            <td>ISBN・タイトルなど「作品」情報（同じタイトルでも実物は複数存在し得る）</td>
+          </tr>
+          <tr>
+            <td>蔵書（BookCopy）</td>
+            <td>バーコードで識別される「実物」。状態（在庫/貸出中/取り置き中）を持つ</td>
+          </tr>
+          <tr>
+            <td>貸出（Loan）</td>
+            <td>蔵書を利用者に一定期間貸す記録。期限・延長・返却日を持つ</td>
+          </tr>
+          <tr>
+            <td>予約（Reservation）</td>
+            <td>書籍単位の順番待ち要求（キュー）</td>
+          </tr>
+          <tr>
+            <td>取り置き（Hold）</td>
+            <td>予約が回ってきた利用者のために蔵書を確保した状態（期限つき）</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="sec3">
+      <h2><a class="anchor" href="#sec3">3. スコープ</a></h2>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>対象（やる）</h3>
+          <ul>
+            <li>書籍登録（ISBN、タイトル、著者、カテゴリ）</li>
+            <li>蔵書登録（バーコード、書籍との紐付け）</li>
+            <li>利用者登録（会員番号、氏名）</li>
+            <li>貸出（Checkout）</li>
+            <li>返却（Return）</li>
+            <li>延長（Renew）</li>
+            <li>予約（Reserve）とキャンセル</li>
+            <li>予約の繰り上げ（返却時に先頭予約者へ取り置き）</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>対象外（拡張課題に回す）</h3>
+          <ul>
+            <li>複数館連携、館間配送</li>
+            <li>決済（延滞金の支払い処理）</li>
+            <li>高度な検索エンジン</li>
+            <li>破損・紛失の弁償管理</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec4">
+      <h2><a class="anchor" href="#sec4">4. ユーザー種別と権限</a></h2>
+      <ul>
+        <li><strong>司書（Librarian）</strong>：書籍/蔵書/利用者の登録、貸出・返却操作</li>
+        <li><strong>利用者（Member）</strong>：検索、予約、予約キャンセル（※貸出操作は窓口想定でもOK）</li>
+      </ul>
+    </section>
+
+    <section id="sec5">
+      <h2><a class="anchor" href="#sec5">5. 機能要件（一覧）</a></h2>
+      <ol>
+        <li>書籍登録（ISBN、タイトル、著者、カテゴリ）</li>
+        <li>蔵書登録（バーコード、書籍との紐付け）</li>
+        <li>利用者登録（会員番号、氏名）</li>
+        <li>貸出（利用者＋蔵書バーコード）</li>
+        <li>返却（蔵書バーコード）</li>
+        <li>延長（貸出ID）</li>
+        <li>予約（利用者＋書籍ISBN）</li>
+        <li>予約キャンセル</li>
+        <li>（オプション）延滞金計算、通知</li>
+      </ol>
+    </section>
+
+    <section id="sec6">
+      <h2><a class="anchor" href="#sec6">6. 主要業務ルール（ドメインルール）</a></h2>
+
+      <h3>6.1 貸出ルール</h3>
+      <ul>
+        <li>1人が同時に借りられる上限：<strong>5冊</strong></li>
+        <li>貸出期間：<strong>14日</strong></li>
+        <li>予約が入っている書籍は：<strong>延長不可</strong>（次の人へ回すため）</li>
+      </ul>
+
+      <h3>6.2 返却ルール</h3>
+      <ul>
+        <li>返却された蔵書の書籍に予約がある場合：
+          <ul>
+            <li>予約キュー先頭の利用者のために「取り置き」状態にする</li>
+            <li>取り置き期限：<strong>3日</strong></li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>6.3 予約ルール</h3>
+      <ul>
+        <li>予約は「書籍単位」</li>
+        <li>同じ利用者が同じ書籍を重複予約できない</li>
+        <li>予約キューは先着順</li>
+      </ul>
+
+      <h3>6.4 延滞金（オプション）</h3>
+      <ul>
+        <li>1日あたり 10円（例）</li>
+        <li>最大 500円（例）</li>
+      </ul>
+
+      <div class="note">
+        <strong>授業での一言</strong>
+        <p>「この“ルール一覧”が、OOで言う“ifの発生源”。ifをどこに置くかが設計の中心になる」</p>
+      </div>
+    </section>
+
+    <section id="sec7">
+      <h2><a class="anchor" href="#sec7">7. ユースケース設計</a></h2>
+
+      <h3>7.1 ユースケース一覧</h3>
+      <ul>
+        <li>UC-01 書籍登録</li>
+        <li>UC-02 蔵書登録</li>
+        <li>UC-03 利用者登録</li>
+        <li>UC-04 貸出（Checkout）</li>
+        <li>UC-05 返却（Return）</li>
+        <li>UC-06 延長（Renew）</li>
+        <li>UC-07 予約（Reserve）</li>
+        <li>UC-08 予約キャンセル</li>
+      </ul>
+
+      <h3>UC-04 貸出（Checkout） <span class="badge">コア</span></h3>
+      <p><strong>アクター</strong>：司書</p>
+      <p><strong>事前条件</strong>：利用者が存在する、蔵書が存在する</p>
+      <p><strong>成功条件</strong>：貸出が作成され、蔵書が「貸出中」になる</p>
+
+      <h4>基本フロー</h4>
+      <ol>
+        <li>司書が会員番号と蔵書バーコードを入力</li>
+        <li>システムは利用者を取得</li>
+        <li>システムは蔵書を取得</li>
+        <li>蔵書が貸出可能か判定（状態・取り置き等）</li>
+        <li>利用者が貸出上限超過していないか判定</li>
+        <li>貸出を作成（期限=今日+14日）</li>
+        <li>蔵書状態を「貸出中」に更新</li>
+        <li>完了メッセージ表示</li>
+      </ol>
+
+      <h4>代替フロー（例）</h4>
+      <ul>
+        <li>A1：蔵書が「貸出中」→ エラー「貸出できません」</li>
+        <li>A2：蔵書が「取り置き中」かつ取り置き先が別人 → エラー</li>
+        <li>A3：上限超過 → エラー</li>
+      </ul>
+
+      <h3>UC-05 返却（Return） <span class="badge">コア</span></h3>
+      <p><strong>アクター</strong>：司書</p>
+      <p><strong>成功条件</strong>：貸出が完了し、蔵書が「在庫」or「取り置き」に遷移</p>
+
+      <h4>基本フロー</h4>
+      <ol>
+        <li>司書が蔵書バーコード入力</li>
+        <li>システムは該当する貸出（未返却）を特定</li>
+        <li>貸出を返却完了にする（返却日=今日）</li>
+        <li>その書籍に予約があるか確認</li>
+        <li>予約があれば先頭予約者に「取り置き」を作成し、蔵書状態を「取り置き中」へ</li>
+        <li>予約がなければ蔵書状態を「在庫」へ</li>
+      </ol>
+
+      <div class="warn">
+        <strong>授業での観点（設計→OO）</strong>
+        <p>UC-04/05は「判定（ルール）」「状態遷移（蔵書）」「記録（貸出）」がセットで出るので、責務分割の議論が作りやすい。</p>
+      </div>
+    </section>
+
+    <section id="sec8">
+      <h2><a class="anchor" href="#sec8">8. アーキテクチャ設計（学習に向く形）</a></h2>
+
+      <h3>推奨：レイヤード + ドメイン中心</h3>
+      <ul>
+        <li><strong>Presentation</strong>：画面/CLI/API</li>
+        <li><strong>Application</strong>：ユースケースの手順（トランザクション単位）</li>
+        <li><strong>Domain</strong>：業務ルールと状態を持つオブジェクト群（主役）</li>
+        <li><strong>Infrastructure</strong>：DB/通知/外部I/O</li>
+      </ul>
+
+      <p><strong>依存関係</strong>：外 → 内（Presentation → Application → Domain）</p>
+      <p>DomainはInfrastructureに依存しない（テストしやすい）。</p>
+
+      <div class="note">
+        <strong>授業での一言</strong>
+        <p>「段取り（Application）とルール（Domain）を分けると、“サービスにifが増える問題”の説明が一気にしやすくなる」</p>
+      </div>
+    </section>
+
+    <section id="sec9">
+      <h2><a class="anchor" href="#sec9">9. ドメインモデル設計（OOの核）</a></h2>
+
+      <h3>9.1 エンティティ / 値オブジェクト</h3>
+      <div class="grid-2">
+        <div class="card">
+          <h4>Entity（同一性を持つ）</h4>
+          <ul>
+            <li>Member（会員）</li>
+            <li>Book（書籍）</li>
+            <li>BookCopy（蔵書）</li>
+            <li>Loan（貸出）</li>
+            <li>Reservation（予約）</li>
+            <li>Hold（取り置き：状態としてBookCopyに持たせてもOK）</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>Value Object（値として扱い、不変が基本）</h4>
+          <ul>
+            <li>ISBN</li>
+            <li>MemberId / MemberNo</li>
+            <li>Barcode</li>
+            <li>DateRange（貸出期間）</li>
+            <li>Money（延滞金）</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>9.2 集約（説明用の推奨）</h3>
+      <p class="small">※授業では「どこを一まとまりとして整合性を守るか」を話せると強いです。</p>
+      <ul>
+        <li><strong>Book（書籍）</strong>：ReservationQueue（予約キュー）を抱える集約にしやすい</li>
+        <li><strong>BookCopy（蔵書）</strong>：状態遷移の整合性（取り置き情報の必須/不要）を守る</li>
+        <li><strong>Loan（貸出）</strong>：期限・延長・返却の整合性を守る</li>
+      </ul>
+    </section>
+
+    <section id="sec10">
+      <h2><a class="anchor" href="#sec10">10. クラス設計（責務が見える設計書）</a></h2>
+
+      <h3>10.1 代表クラスの責務（CRC風）</h3>
+      <table>
+        <thead>
+          <tr><th>クラス</th><th>責務</th><th>協力</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Member</td>
+            <td>貸出可能数チェック、会員状態管理</td>
+            <td>Loan, LoanPolicy</td>
+          </tr>
+          <tr>
+            <td>Book</td>
+            <td>書籍情報、予約キューの窓口（集約）</td>
+            <td>ReservationQueue</td>
+          </tr>
+          <tr>
+            <td>BookCopy</td>
+            <td>蔵書の状態（在庫/貸出中/取り置き中/廃棄）と状態遷移の整合性</td>
+            <td>Loan, Hold</td>
+          </tr>
+          <tr>
+            <td>Loan</td>
+            <td>貸出期限、延長可否、返却処理、延滞日数算出</td>
+            <td>FinePolicy, Clock</td>
+          </tr>
+          <tr>
+            <td>ReservationQueue</td>
+            <td>先着順キュー、重複予約防止、先頭取得</td>
+            <td>Reservation</td>
+          </tr>
+          <tr>
+            <td>CheckoutService（Application）</td>
+            <td>ユースケースの段取り（取得→検証→生成→保存）</td>
+            <td>Repository群, Domainオブジェクト</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>10.2 クラス定義（主要属性・操作）</h3>
+
+      <h4>enum CopyStatus</h4>
+      <ul>
+        <li>AVAILABLE（在庫）</li>
+        <li>ON_LOAN（貸出中）</li>
+        <li>ON_HOLD（取り置き中）</li>
+        <li>DISCARDED（廃棄）</li>
+      </ul>
+
+      <h4>class BookCopy</h4>
+      <ul>
+        <li><strong>属性</strong>
+          <ul>
+            <li>barcode: Barcode</li>
+            <li>bookId: BookId</li>
+            <li>status: CopyStatus</li>
+            <li>holdForMemberId: MemberId?（ON_HOLDのときのみ）</li>
+            <li>holdUntil: LocalDate?（ON_HOLDのときのみ）</li>
+          </ul>
+        </li>
+        <li><strong>操作</strong>
+          <ul>
+            <li>canCheckoutBy(memberId, today): boolean</li>
+            <li>markOnLoan(): void</li>
+            <li>markAvailable(): void</li>
+            <li>putOnHold(memberId, untilDate): void</li>
+          </ul>
+        </li>
+      </ul>
+
+      <div class="good">
+        <strong>不変条件（カプセル化の説明材料）</strong>
+        <ul>
+          <li>status=ON_HOLD のとき holdForMemberId と holdUntil は必須</li>
+          <li>status!=ON_HOLD のとき holdForMemberId と holdUntil はnull</li>
+        </ul>
+      </div>
+
+      <h4>class Loan</h4>
+      <ul>
+        <li><strong>属性</strong>
+          <ul>
+            <li>loanId: LoanId</li>
+            <li>memberId: MemberId</li>
+            <li>barcode: Barcode</li>
+            <li>checkoutDate: LocalDate</li>
+            <li>dueDate: LocalDate</li>
+            <li>returnedDate: LocalDate?（未返却はnull）</li>
+            <li>renewCount: int</li>
+          </ul>
+        </li>
+        <li><strong>操作</strong>
+          <ul>
+            <li>isOverdue(today): boolean</li>
+            <li>overdueDays(today): int</li>
+            <li>canRenew(hasReservation: boolean): boolean</li>
+            <li>renew(today, loanPolicy): void</li>
+            <li>returnOn(today): void</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h4>interface LoanPolicy（Strategy）</h4>
+      <ul>
+        <li>maxLoansPerMember(): int（例：5）</li>
+        <li>loanPeriodDays(): int（例：14）</li>
+        <li>maxRenewCount(): int（例：1）</li>
+      </ul>
+
+      <h4>interface FinePolicy（Strategy / Optional）</h4>
+      <ul>
+        <li>calculateFine(overdueDays: int): Money</li>
+      </ul>
+
+      <h4>class ReservationQueue</h4>
+      <ul>
+        <li><strong>属性</strong>
+          <ul>
+            <li>bookId: BookId</li>
+            <li>reservations: List&lt;Reservation&gt;（永続化はテーブルでもOK）</li>
+          </ul>
+        </li>
+        <li><strong>操作</strong>
+          <ul>
+            <li>add(memberId, today): void（重複チェック含む）</li>
+            <li>popNext(): Reservation?</li>
+            <li>hasAny(): boolean</li>
+            <li>isReservedBy(memberId): boolean</li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <section id="sec11">
+      <h2><a class="anchor" href="#sec11">11. シーケンス設計（授業で説明しやすい形）</a></h2>
+
+      <h3>11.1 貸出（Checkout）の処理シーケンス（概略）</h3>
+      <ol>
+        <li>CheckoutService（Application）が Member / BookCopy / ReservationQueue / Loan を取得</li>
+        <li>Memberが「上限OK？」を判断（LoanPolicyと協力）</li>
+        <li>BookCopyが「この人に貸せる？」を判断（状態・取り置き）</li>
+        <li>Loanを生成して保存</li>
+        <li>BookCopyの状態をON_LOANへ更新して保存</li>
+      </ol>
+
+      <div class="note">
+        <strong>授業での一言</strong>
+        <p>「サービスは段取り係。ルールの判断は当事者（Member/BookCopy/Loan）へ寄せると、設計がOOらしくなる」</p>
+      </div>
+
+      <h3>11.2 返却（Return）の処理シーケンス（概略）</h3>
+      <ol>
+        <li>ReturnServiceが未返却Loanを特定</li>
+        <li>Loan.returnOn(today) を実行して返却完了</li>
+        <li>Book（またはReservationQueue）に予約があるか確認</li>
+        <li>予約があれば BookCopy.putOnHold(nextMember, today+3)（取り置きへ遷移）</li>
+        <li>予約がなければ BookCopy.markAvailable()</li>
+      </ol>
+    </section>
+
+    <section id="sec12">
+      <h2><a class="anchor" href="#sec12">12. データ設計（RDB想定）</a></h2>
+
+      <h3>12.1 テーブル一覧</h3>
+      <table>
+        <thead>
+          <tr><th>テーブル</th><th>主なカラム</th><th>概要</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>books</td>
+            <td>id(PK), isbn(UNIQUE), title, author, category</td>
+            <td>書籍（作品）情報</td>
+          </tr>
+          <tr>
+            <td>book_copies</td>
+            <td>barcode(PK), book_id(FK), status, hold_for_member_id(NULL可), hold_until(NULL可)</td>
+            <td>蔵書（実物）情報と状態</td>
+          </tr>
+          <tr>
+            <td>members</td>
+            <td>id(PK), member_no(UNIQUE), name, is_active</td>
+            <td>利用者情報</td>
+          </tr>
+          <tr>
+            <td>loans</td>
+            <td>id(PK), member_id(FK), barcode(FK), checkout_date, due_date, returned_date(NULL可), renew_count</td>
+            <td>貸出記録</td>
+          </tr>
+          <tr>
+            <td>reservations</td>
+            <td>id(PK), book_id(FK), member_id(FK), reserved_at, status(ACTIVE/CANCELLED/FULFILLED…)</td>
+            <td>予約記録（キュー）</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>12.2 代表インデックス</h3>
+      <ul>
+        <li>loans(barcode, returned_date) ：未返却Loanの特定を高速化</li>
+        <li>reservations(book_id, status, reserved_at) ：キュー先頭取得を高速化</li>
+      </ul>
+    </section>
+
+    <section id="sec13">
+      <h2><a class="anchor" href="#sec13">13. 画面・API設計（最小）</a></h2>
+
+      <h3>13.1 画面案（学習用ミニ）</h3>
+      <ul>
+        <li>書籍検索画面（ISBN/タイトル）</li>
+        <li>利用者検索画面（会員番号）</li>
+        <li>貸出画面（会員番号＋バーコード）</li>
+        <li>返却画面（バーコード）</li>
+        <li>予約画面（会員番号＋ISBN）</li>
+      </ul>
+
+      <h3>13.2 API例（REST）</h3>
+      <ul>
+        <li>POST /checkouts（memberNo, barcode）</li>
+        <li>POST /returns（barcode）</li>
+        <li>POST /loans/{loanId}/renew</li>
+        <li>POST /reservations（memberNo, isbn）</li>
+        <li>DELETE /reservations/{reservationId}</li>
+      </ul>
+
+      <div class="note">
+        <strong>授業での一言</strong>
+        <p>「APIは“段取り係（Application）に入る入口”として見せ、ルールはDomainにあることを徹底する」</p>
+      </div>
+    </section>
+
+    <section id="sec14">
+      <h2><a class="anchor" href="#sec14">14. 例外・エラー設計（ドメイン例外）</a></h2>
+      <ul>
+        <li>LoanLimitExceeded（上限超過）</li>
+        <li>CopyNotAvailable（貸出不可：貸出中/廃棄など）</li>
+        <li>HoldByAnotherMember（取り置き中：別会員のため確保）</li>
+        <li>DuplicateReservation（重複予約）</li>
+        <li>RenewNotAllowed（延長不可：予約あり/回数超過など）</li>
+      </ul>
+    </section>
+
+    <section id="sec15">
+      <h2><a class="anchor" href="#sec15">15. テスト観点（設計書からテストへ落とす）</a></h2>
+      <ul>
+        <li>Member：5冊借りたら6冊目は不可</li>
+        <li>BookCopy：ON_HOLDで別会員は貸出不可</li>
+        <li>Loan：予約があると延長不可</li>
+        <li>Return：予約があるとON_HOLDになる（期限3日）</li>
+        <li>ReservationQueue：先着順、重複予約不可</li>
+      </ul>
+
+      <div class="good">
+        <strong>授業での一言</strong>
+        <p>「テスト観点は“責務分割の答え合わせ”。どのクラスのテストになるか考えるとOOが身につく」</p>
+      </div>
+    </section>
+
+    <!-- OO Explanation -->
+    <section id="sec16">
+      <h2><a class="anchor" href="#sec16">16. オブジェクト指向の狙いを、このシステムで言い換える</a></h2>
+      <p>この図書館システムでのオブジェクト指向は、次を実現するための設計思想です。</p>
+      <ul>
+        <li><strong>データ（状態）と処理（ふるまい）をセットで持つ</strong>：BookCopyが状態（在庫/貸出/取り置き）を持ち、貸せるか判断する</li>
+        <li><strong>ルール（業務知識）を“ふさわしい場所”に置く</strong>：上限はMember、状態制約はBookCopy、延長可否はLoan…のように分担する</li>
+        <li><strong>変更に強くする</strong>：延滞金や会員種別ルール追加などの変更に耐える</li>
+      </ul>
+
+      <div class="note">
+        <strong>授業での一言</strong>
+        <p>「オブジェクト指向＝現実の“もの”に責務を割り当て、ルールの置き場を整理して、変更に強くするための設計」</p>
+      </div>
+    </section>
+
+    <section id="sec17">
+      <h2><a class="anchor" href="#sec17">17. オブジェクト＝状態＋ふるまい（この設計でどう満たすか）</a></h2>
+
+      <h3>17.1 BookCopy（蔵書）の例</h3>
+      <ul>
+        <li><strong>状態</strong>：status / holdForMemberId / holdUntil</li>
+        <li><strong>ふるまい</strong>：canCheckoutBy() / putOnHold() / markOnLoan() / markAvailable()</li>
+      </ul>
+
+      <div class="warn">
+        <strong>よくある失敗</strong>
+        <p>「statusだけ持って、判断は全部Service側のifでやる」だと、BookCopyがただの入れ物（DTO）になり、OOらしさが消える。</p>
+      </div>
+
+      <div class="note">
+        <strong>授業での一言</strong>
+        <p>「蔵書が自分の状態を知っていて、自分で『貸していい？』を答えられる。これが“オブジェクトっぽさ”。」</p>
+      </div>
+    </section>
+
+    <section id="sec18">
+      <h2><a class="anchor" href="#sec18">18. カプセル化：状態の整合性を“クラスが守る”</a></h2>
+      <p>カプセル化は「privateにする」だけではなく、授業では次の意味として扱うと実務に直結します。</p>
+      <ul>
+        <li><strong>クラスは自分の状態を壊れないように守る（不変条件を守る）</strong></li>
+        <li>外部から勝手に状態を書き換えさせず、正しい変更手段だけ提供する</li>
+      </ul>
+
+      <h3>18.1 不変条件（設計書より）</h3>
+      <ul>
+        <li>status=ON_HOLD のとき holdForMemberId と holdUntil は必須</li>
+        <li>status!=ON_HOLD のとき holdForMemberId と holdUntil はnull</li>
+      </ul>
+
+      <h3>18.2 変更の入口を制限する</h3>
+      <ul>
+        <li>NG：外部が直接 status を書き換える</li>
+        <li>OK：BookCopy.putOnHold(memberId, untilDate) のような“正しい変更メソッド”を通す</li>
+      </ul>
+
+      <div class="note">
+        <strong>授業での一言</strong>
+        <p>「壊れないように“正しい変更方法だけ”を提供するのがカプセル化」</p>
+      </div>
+    </section>
+
+    <section id="sec19">
+      <h2><a class="anchor" href="#sec19">19. 抽象化：ルールを「差し替え可能な部品」にする</a></h2>
+      <p>この設計では <span class="inline-code">LoanPolicy</span> や（拡張で）<span class="inline-code">FinePolicy</span> を抽象（interface）として定義します。</p>
+
+      <h3>19.1 抽象化が効くポイント</h3>
+      <ul>
+        <li>仕様が変わりそうなものは <strong>ポリシーとして外だし</strong>する</li>
+        <li>Domain（Member/Loan）が抽象（Policy）に依存すれば、変更時の修正が最小になる</li>
+      </ul>
+
+      <h3>19.2 例：会員種別で貸出ルールを変える</h3>
+      <ul>
+        <li>一般会員：上限5冊、14日、延長1回</li>
+        <li>児童会員：上限3冊、7日、延長0回</li>
+        <li>研究者会員：上限10冊、30日、延長2回</li>
+      </ul>
+
+      <div class="note">
+        <strong>授業での一言</strong>
+        <p>「変わる可能性が高いものを“差し替えパーツ”にするのが抽象化」</p>
+      </div>
+    </section>
+
+    <section id="sec20">
+      <h2><a class="anchor" href="#sec20">20. 多態性：同じ呼び出しで、ルールだけ変えられる</a></h2>
+      <p>多態性は「継承」よりも、<strong>同じメソッド呼び出しで挙動が変わる</strong>点に注目すると理解が早いです。</p>
+
+      <h3>20.1 例：LoanPolicy.maxLoansPerMember()</h3>
+      <ul>
+        <li>一般会員ポリシー：5</li>
+        <li>研究者ポリシー：10</li>
+      </ul>
+
+      <p>呼ぶ側（CheckoutService / Member）は「5か10か」を知らなくて良い（抽象に依存している）</p>
+
+      <div class="note">
+        <strong>授業での一言</strong>
+        <p>「同じメッセージを送ってるのに、相手の種類で挙動が変わる。これが多態性」</p>
+      </div>
+    </section>
+
+    <section id="sec21">
+      <h2><a class="anchor" href="#sec21">21. 継承よりコンポジション：この設計が“継承地獄”を避ける点</a></h2>
+      <p>よくある失敗は、会員種別をクラス継承で増殖させることです。</p>
+      <ul>
+        <li>Member → AdultMember / ChildMember / ResearcherMember …</li>
+        <li>さらにLoanも種別ごとに分岐…など</li>
+      </ul>
+
+      <p>この設計は、会員種別の違いを <strong>継承で表現せず</strong>、</p>
+      <ul>
+        <li>Member（会員）は基本の責務を担う</li>
+        <li>違いは LoanPolicy（ポリシー）で吸収する</li>
+      </ul>
+      <p>という <strong>コンポジション（委譲）</strong> を選びます。</p>
+
+      <div class="note">
+        <strong>授業での一言</strong>
+        <p>「継承は“種類の追加”で壊れやすい。変わるルールはポリシーに委譲するのが安全」</p>
+      </div>
+    </section>
+
+    <section id="sec22">
+      <h2><a class="anchor" href="#sec22">22. 責務分割：オブジェクト指向の授業で一番おいしいポイント</a></h2>
+
+      <h3>22.1 この設計の責務の置き方（例）</h3>
+      <ul>
+        <li><strong>Member</strong>：上限チェック（借りすぎ防止）</li>
+        <li><strong>BookCopy</strong>：状態と状態遷移（貸せるか・取り置き）</li>
+        <li><strong>Loan</strong>：期限・延長・延滞（貸出のライフサイクル）</li>
+        <li><strong>ReservationQueue</strong>：予約の順番待ち・重複禁止</li>
+        <li><strong>CheckoutService（Application）</strong>：手順のオーケストレーション（順番に呼ぶだけ）</li>
+      </ul>
+
+      <div class="warn">
+        <strong>授業の核になる問い</strong>
+        <p>「このルールは誰が知っているべき？」</p>
+        <ul>
+          <li>延長不可（予約があると） → Loan？ Book？ ReservationQueue？ Service？</li>
+          <li>取り置きは本人だけ貸出OK → BookCopy？ Service？</li>
+        </ul>
+        <p>この問いに答える練習が、「概念でなく設計で学ぶOO」になります。</p>
+      </div>
+    </section>
+
+    <section id="sec23">
+      <h2><a class="anchor" href="#sec23">23. “サービスにifが増える”問題を、この設計でどう防ぐか</a></h2>
+      <p>設計の意図は次のとおりです。</p>
+      <ul>
+        <li>Service（Application）は <strong>業務手順（ユースケース）</strong> だけを書く</li>
+        <li>ルールの判断は <strong>ドメインオブジェクト</strong> に寄せる</li>
+      </ul>
+
+      <h3>23.1 悪い例（手続き型っぽい）</h3>
+      <pre><code>if copy.status == ON_LOAN then error
+if copy.status == ON_HOLD and copy.holdFor != member then error
+if member.currentLoans &gt;= 5 then error
+create loan
+copy.status = ON_LOAN</code></pre>
+
+      <h3>23.2 良い例（オブジェクトに聞く）</h3>
+      <pre><code>if !member.canBorrow(policy) then error
+if !copy.canCheckoutBy(member.id, today) then error
+loan = Loan.create(member.id, copy.barcode, today, policy)
+copy.markOnLoan()</code></pre>
+
+      <div class="note">
+        <strong>授業での一言</strong>
+        <p>「サービスは“段取り係”。ルールは“当事者（オブジェクト）”が知っている。」</p>
+      </div>
+    </section>
+
+    <section id="sec24">
+      <h2><a class="anchor" href="#sec24">24. 状態遷移：BookCopyは“状態マシン”として説明できる</a></h2>
+
+      <h3>24.1 状態と許される操作</h3>
+      <table>
+        <thead>
+          <tr><th>状態</th><th>checkout</th><th>return</th><th>hold</th><th>説明</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>AVAILABLE</td>
+            <td>OK</td>
+            <td>NG（対象Loanなし）</td>
+            <td>OK（返却繰り上げ等）</td>
+            <td>在庫</td>
+          </tr>
+          <tr>
+            <td>ON_LOAN</td>
+            <td>NG</td>
+            <td>OK</td>
+            <td>NG</td>
+            <td>貸出中</td>
+          </tr>
+          <tr>
+            <td>ON_HOLD</td>
+            <td>本人のみOK</td>
+            <td>NG/OK（運用次第）</td>
+            <td>OK（更新/解除）</td>
+            <td>取り置き中（期限つき）</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        <strong>授業の見せ方</strong>
+        <p>「状態があるとifが必要になる。だから“ifの置き場（責務）”が設計の中心になる」</p>
+      </div>
+    </section>
+
+    <section id="sec25">
+      <h2><a class="anchor" href="#sec25">25. SOLIDをこの設計で説明する（設計書ベース）</a></h2>
+
+      <h3>SRP（単一責任の原則）</h3>
+      <ul>
+        <li>ReservationQueueは「予約順管理」だけ</li>
+        <li>Loanは「貸出のライフサイクル」だけ</li>
+        <li>BookCopyは「蔵書状態と整合性」だけ</li>
+      </ul>
+      <p>→ 変更理由が分離され、修正箇所が局所化する</p>
+
+      <h3>OCP（開閉原則）</h3>
+      <ul>
+        <li>延滞金ルール変更 → FinePolicyの追加/差し替えで対応（既存修正が少ない）</li>
+        <li>会員種別ルール追加 → LoanPolicyの追加で対応</li>
+      </ul>
+
+      <h3>DIP（依存関係逆転の原則）</h3>
+      <ul>
+        <li>Domainは FinePolicy / LoanPolicy という「抽象」に依存し、DBや通知などの「具象」に依存しない</li>
+        <li>→ Domainのテストが容易になる</li>
+      </ul>
+
+      <div class="note">
+        <strong>授業での一言</strong>
+        <p>「SOLIDは暗記ではなく、設計書の“変更点”を想像すると自然に腹落ちする」</p>
+      </div>
+    </section>
+
+    <section id="sec26">
+      <h2><a class="anchor" href="#sec26">26. 授業進行例（設計からOO説明へ）</a></h2>
+      <ol>
+        <li><strong>ユースケース（貸出/返却）</strong>を読ませる（UC-04/05）</li>
+        <li>名詞（BookCopy/Loan/Member…）＝クラス候補、動詞（renew/return…）＝メソッド候補を抽出</li>
+        <li>BookCopyで<strong>状態＋ふるまい</strong>を説明（なぜDTOではダメか）</li>
+        <li>不変条件を示し<strong>カプセル化</strong>（正しい変更入口だけを提供）</li>
+        <li>LoanPolicyを示し<strong>抽象化・多態性</strong>（ルール差し替え）</li>
+        <li>「ifをどこに置く？」ディスカッション（責務分割）</li>
+        <li>最後にCheckoutServiceを“段取り係”として整理し<strong>レイヤ分離</strong>へ</li>
+      </ol>
+
+      <div class="good">
+        <strong>狙い</strong>
+        <p>「概念を先に教える」のではなく、設計書の各章（ルール/ユースケース/クラス）を根拠にしてOOを説明する。</p>
+      </div>
+    </section>
+
+    <section id="sec27">
+      <h2><a class="anchor" href="#sec27">27. 追加課題（学習効果が高い拡張）</a></h2>
+      <ul>
+        <li><strong>会員種別を追加</strong>してLoanPolicyを差し替える（「if禁止」縛りで演習）</li>
+        <li><strong>延滞金をFinePolicyで差し替える</strong>（上限、休日、無料期間など）</li>
+        <li><strong>通知機能</strong>（メール/LINE等）をNotificationServiceにしてドメインから切り離す</li>
+        <li><strong>状態拡張</strong>（紛失/修理中など）を追加し、状態遷移と不変条件を更新</li>
+      </ul>
+
+      <div class="note">
+        <strong>授業での一言</strong>
+        <p>「拡張課題は“設計の変更耐性”を体験させる。ここでOOの価値が伝わる」</p>
+      </div>
+    </section>
+
+    <footer>
+      <p>このHTMLは授業配布資料・スライド原稿の土台として利用可能です。章立てをそのままスライド化すると、設計→OO説明の流れが作りやすくなります。</p>
+      <p class="small">※必要なら「穴あき版（演習用）」や「スライド構成案（90分×N回）」にも変換できます。</p>
+    </footer>
+  </main>
+</body>
+</html>

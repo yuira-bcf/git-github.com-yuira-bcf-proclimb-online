@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>上級17 AOPでログ出力</title>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="../style.css" />
+        <style>
+            .download-btn { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-left: auto; }
+            .code-header { display: flex; align-items: center; justify-content: space-between; }
+            .level-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; background: #fee2e2; color: #991b1b; margin-right: 8px; }
+        </style>
+    </head>
+    <body>
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="../1spring-framework-tutorial.html" class="nav-logo"><span class="nav-logo-icon">🌱</span><span>Spring入門</span></a>
+                <button class="nav-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 上級レベル</div>
+                    <ul class="nav-list">
+                        <li class="nav-item"><a href="12_login.html" class="nav-link"><span class="nav-chapter-num">12</span><span>ログイン認証</span></a></li>
+                        <li class="nav-item"><a href="13_user_todo.html" class="nav-link"><span class="nav-chapter-num">13</span><span>ユーザー別ToDo管理</span></a></li>
+                        <li class="nav-item"><a href="14_role.html" class="nav-link"><span class="nav-chapter-num">14</span><span>ロール別権限制御</span></a></li>
+                        <li class="nav-item"><a href="15_rest_api.html" class="nav-link"><span class="nav-chapter-num">15</span><span>REST API化</span></a></li>
+                        <li class="nav-item"><a href="16_exception.html" class="nav-link"><span class="nav-chapter-num">16</span><span>例外ハンドリング</span></a></li>
+                        <li class="nav-item"><a href="17_aop.html" class="nav-link active"><span class="nav-chapter-num">17</span><span>AOPでログ出力</span></a></li>
+                        <li class="nav-item"><a href="18_transaction.html" class="nav-link"><span class="nav-chapter-num">18</span><span>トランザクション管理</span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <header class="chapter-header">
+                <div class="chapter-badge"><span class="level-badge">上級</span>📕 Advanced</div>
+                <div class="chapter-number">17</div>
+                <h1 class="chapter-title">AOPでログ出力</h1>
+            </header>
+
+            <nav class="toc">
+                <h2 class="toc-title">📑 この章の内容</h2>
+                <ul class="toc-list">
+                    <li class="toc-item"><span class="toc-number">17-1</span><span>AOPの基本概念</span></li>
+                    <li class="toc-item"><span class="toc-number">17-2</span><span>ログ出力アスペクトの実装</span></li>
+                    <li class="toc-item"><span class="toc-number">17-3</span><span>実行時間計測</span></li>
+                </ul>
+            </nav>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 17-1</span>
+                    <h2 class="section-title">AOPの基本概念</h2>
+                </div>
+                <div class="intro-text">
+                    <p><strong>AOP（アスペクト指向プログラミング）</strong>で、横断的な関心事を分離します。</p>
+                </div>
+
+                <div class="module-list">
+                    <div class="module-item"><div class="module-icon">🎯</div><div class="module-content"><h4>@Aspect</h4><p>アスペクト（横断的関心事）を定義するクラス</p></div></div>
+                    <div class="module-item"><div class="module-icon">📍</div><div class="module-content"><h4>Pointcut</h4><p>どのメソッドにアスペクトを適用するかを定義</p></div></div>
+                    <div class="module-item"><div class="module-icon">⚡</div><div class="module-content"><h4>Advice</h4><p>実際に実行される処理（Before, After, Around）</p></div></div>
+                </div>
+
+                <div class="code-block" id="pom-aop">
+                    <div class="code-header">
+                        <span class="code-title">pom.xml（依存関係）</span>
+                        <button class="download-btn" onclick="downloadCode('pom-aop', 'pom_aop.xml')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-aop&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+                    </div>
+                </div>
+
+                <h3>AOPの用語</h3>
+                <table class="data-table">
+                    <thead><tr><th>用語</th><th>説明</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>@Before</code></td><td>メソッド実行前に処理</td></tr>
+                        <tr><td><code>@After</code></td><td>メソッド実行後に処理（成功/失敗に関わらず）</td></tr>
+                        <tr><td><code>@AfterReturning</code></td><td>メソッドが正常に終了した後に処理</td></tr>
+                        <tr><td><code>@AfterThrowing</code></td><td>例外が発生した場合に処理</td></tr>
+                        <tr><td><code>@Around</code></td><td>メソッドの前後を完全に制御</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 17-2</span>
+                    <h2 class="section-title">ログ出力アスペクトの実装</h2>
+                </div>
+
+                <div class="code-block" id="logging-aspect">
+                    <div class="code-header">
+                        <span class="code-title">LoggingAspect.java</span>
+                        <button class="download-btn" onclick="downloadCode('logging-aspect', 'LoggingAspect.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import java.util.Arrays;
+
+@Aspect
+@Component
+public class LoggingAspect {
+
+    private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
+
+    /**
+     * Serviceクラスの全メソッドを対象
+     */
+    @Pointcut("execution(* com.example.service.*.*(..))")
+    public void serviceLayer() {}
+
+    /**
+     * メソッド実行前にログ出力
+     */
+    @Before("serviceLayer()")
+    public void logBefore(JoinPoint joinPoint) {
+        String methodName = joinPoint.getSignature().getName();
+        Object[] args = joinPoint.getArgs();
+        logger.info("【開始】{} 引数: {}", methodName, Arrays.toString(args));
+    }
+
+    /**
+     * メソッド正常終了後にログ出力
+     */
+    @AfterReturning(pointcut = "serviceLayer()", returning = "result")
+    public void logAfterReturning(JoinPoint joinPoint, Object result) {
+        String methodName = joinPoint.getSignature().getName();
+        logger.info("【終了】{} 戻り値: {}", methodName, result);
+    }
+
+    /**
+     * 例外発生時にログ出力
+     */
+    @AfterThrowing(pointcut = "serviceLayer()", throwing = "ex")
+    public void logAfterThrowing(JoinPoint joinPoint, Exception ex) {
+        String methodName = joinPoint.getSignature().getName();
+        logger.error("【例外】{} エラー: {}", methodName, ex.getMessage());
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <h3>Pointcut式の例</h3>
+                <table class="data-table">
+                    <thead><tr><th>式</th><th>対象</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>execution(* com.example.service.*.*(..))</code></td><td>serviceパッケージの全メソッド</td></tr>
+                        <tr><td><code>execution(* *..TodoService.*(..))</code></td><td>TodoServiceの全メソッド</td></tr>
+                        <tr><td><code>execution(public * *(..))</code></td><td>全publicメソッド</td></tr>
+                        <tr><td><code>@annotation(org.springframework.transaction.annotation.Transactional)</code></td><td>@Transactional付きメソッド</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 17-3</span>
+                    <h2 class="section-title">実行時間計測</h2>
+                </div>
+
+                <div class="code-block" id="performance-aspect">
+                    <div class="code-header">
+                        <span class="code-title">PerformanceAspect.java</span>
+                        <button class="download-btn" onclick="downloadCode('performance-aspect', 'PerformanceAspect.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+@Aspect
+@Component
+public class PerformanceAspect {
+
+    private static final Logger logger = LoggerFactory.getLogger(PerformanceAspect.class);
+
+    /**
+     * @Around で実行時間を計測
+     */
+    @Around("execution(* com.example.service.*.*(..))")
+    public Object measureExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
+
+        long startTime = System.currentTimeMillis();
+
+        try {
+            // 実際のメソッドを実行
+            Object result = joinPoint.proceed();
+
+            long endTime = System.currentTimeMillis();
+            logger.info("{}() 実行時間: {}ms",
+                joinPoint.getSignature().getName(),
+                endTime - startTime);
+
+            return result;
+
+        } catch (Throwable ex) {
+            long endTime = System.currentTimeMillis();
+            logger.error("{}() 実行時間: {}ms (例外発生)",
+                joinPoint.getSignature().getName(),
+                endTime - startTime);
+            throw ex;
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="log-output">
+                    <div class="code-header">
+                        <span class="code-title">ログ出力例</span>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>INFO  LoggingAspect - 【開始】findAll 引数: []
+INFO  PerformanceAspect - findAll() 実行時間: 15ms
+INFO  LoggingAspect - 【終了】findAll 戻り値: [Todo{id=1...}, Todo{id=2...}]
+
+INFO  LoggingAspect - 【開始】save 引数: [Todo{title='買い物'}]
+INFO  PerformanceAspect - save() 実行時間: 23ms
+INFO  LoggingAspect - 【終了】save 戻り値: Todo{id=3, title='買い物'}</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-header"><span class="info-box-icon">💡</span><span class="info-box-title">AOPの活用例</span></div>
+                    <ul>
+                        <li>ログ出力（今回の例）</li>
+                        <li>トランザクション管理（@Transactional）</li>
+                        <li>セキュリティチェック</li>
+                        <li>キャッシュ制御</li>
+                        <li>リトライ処理</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-box-header"><span class="warning-box-icon">⚠️</span><span class="warning-box-title">注意点</span></div>
+                    <p>AOPはプロキシベースで動作するため、同一クラス内でのメソッド呼び出しには適用されません。<br><code>this.method()</code>ではなく、Springから注入されたBeanを経由する必要があります。</p>
+                </div>
+            </section>
+        </div>
+
+        <footer class="footer"><p>Spring Framework 入門チュートリアル - 上級レベル</p></footer>
+
+        <div class="page-nav">
+            <a href="16_exception.html" class="page-nav-btn prev"><span>←</span><div><div class="page-nav-label">前の機能</div><div class="page-nav-title">例外ハンドリング</div></div></a>
+            <a href="18_transaction.html" class="page-nav-btn next"><div><div class="page-nav-label">次の機能</div><div class="page-nav-title">トランザクション管理</div></div><span>→</span></a>
+        </div>
+
+        <script>
+            function toggleMenu() { document.querySelector(".nav-toggle").classList.toggle("active"); document.querySelector(".nav-menu").classList.toggle("active"); }
+            function downloadCode(id, filename) { const el = document.getElementById(id); const code = el.querySelector('code') || el.querySelector('pre'); const blob = new Blob([code.textContent], {type:'text/plain;charset=utf-8'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url); }
+        </script>
+    </body>
+</html>

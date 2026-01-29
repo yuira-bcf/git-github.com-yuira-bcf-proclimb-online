@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>教材：じゃんけん（Mainクラスのみ／配列なし／中小メソッドなし）</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --panel: #f8fafc;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --border: #e5e7eb;
+      --codebg: #f3f4f6;
+      --good: #059669;
+      --warn: #d97706;
+    }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", sans-serif;
+      background: linear-gradient(180deg, var(--bg), #f3f4f6);
+      color: var(--text);
+      line-height: 1.65;
+    }
+    header {
+      padding: 28px 18px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(6px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    header h1 {
+      font-size: 18px;
+      margin: 0 0 6px 0;
+      letter-spacing: 0.02em;
+    }
+    header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 20px 18px 60px;
+    }
+    nav {
+      margin: 16px 0 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: #ffffff;
+      font-size: 13px;
+    }
+    nav a:hover {
+      border-color: rgba(96,165,250,0.7);
+      box-shadow: 0 0 0 3px rgba(96,165,250,0.15);
+    }
+    section {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 16px;
+      margin: 14px 0;
+    }
+    section h2 {
+      margin: 0 0 10px 0;
+      font-size: 16px;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 12px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    ul { margin: 10px 0 0 18px; }
+    li { margin: 6px 0; }
+    .callout {
+      border-left: 4px solid var(--accent);
+      padding: 10px 12px;
+      background: #eff6ff;
+      border-radius: 10px;
+      color: var(--text);
+      margin: 12px 0;
+    }
+    .callout small { color: var(--muted); }
+    pre {
+      margin: 12px 0 0;
+      padding: 12px 12px;
+      border-radius: 12px;
+      overflow: auto;
+      background: var(--codebg);
+      border: 1px solid var(--border);
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12.5px;
+      color: #111827;
+    }
+    .meta {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .ok { color: var(--good); font-weight: 700; }
+    .warn { color: var(--warn); font-weight: 700; }
+    footer {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 18px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>教材：じゃんけん（Mainクラスのみ）<span class="badge">配列なし</span><span class="badge">中小メソッドなし</span></h1>
+    <p>生徒用「穴埋め（コメント指示）」＋ 先生用「回答プログラム」＋ 解説を1ページにまとめた版</p>
+  </header>
+
+  <main>
+    <nav>
+      <a href="#overview">アプリ概要</a>
+      <a href="#howto">コーディングの進め方</a>
+      <a href="#impl">実装用ソース</a>
+      <a href="#answer">回答プログラム</a>
+      <a href="#explain">プログラム解説</a>
+    </nav>
+
+    <section id="overview">
+      <h2>アプリ概要 <span class="badge">コンソールアプリ</span></h2>
+      <p>
+        標準入力で <strong>G/C/P/Q</strong> を受け取り、CPUとじゃんけんを行うシンプルなアプリです。
+        実装はあえて「Mainクラスのみ」「配列なし」「中小メソッドなし」に寄せ、処理の流れが全部見える教材にしています。
+      </p>
+
+      <ul>
+        <li><strong>入力</strong>：G=グー / C=チョキ / P=パー / Q=終了</li>
+        <li><strong>CPU</strong>：0〜2の乱数で手を決定</li>
+        <li><strong>勝敗</strong>：勝ち / 負け / 引き分け を表示</li>
+      </ul>
+
+      <div class="callout">
+        <div><span class="ok">狙い：</span>「プログラムの基本（入力→変換→判定→出力→繰り返し）」を一気通貫で体験する。</div>
+        <small>※この段階では “美しい設計” は目標にしません。まず動かす。次の段階で設計改善する。</small>
+      </div>
+
+      <p class="meta">
+        制約（教材ルール）：
+        <strong>配列は使わない</strong>／<strong>中小メソッドを作らない</strong>（mainのみ）／<strong>Mainクラスのみ</strong><br />
+        「手」は <strong>int</strong>（0=グー,1=チョキ,2=パー）で管理し、表示は <strong>String</strong> に変換して出します。
+      </p>
+    </section>
+
+    <section id="howto">
+      <h2>コーディングの進め方</h2>
+
+      <ol>
+        <li><strong>Main.java</strong> を作成し、下の「実装用ソース（穴埋め版）」を貼り付ける。</li>
+        <li>上から順に <strong>TODO</strong> を実装する。迷ったら「とりあえず表示して確認」。</li>
+        <li>TODOを2〜3個埋めたら <span class="warn">毎回コンパイル</span>（エラーの位置＝現在地）。</li>
+        <li>動いたら、入力パターンを必ず試す：<br />
+          <strong>空入力</strong>、<strong>不正入力</strong>、<strong>小文字入力（g/c/p）</strong>、<strong>Q終了</strong>
+        </li>
+        <li>最終的に「回答プログラム」と出力が一致するか確認する。</li>
+      </ol>
+
+      <div class="callout">
+        <div><strong>よくある事故（授業でよく燃えるポイント）</strong></div>
+        <ul>
+          <li><strong>String比較で == を使う</strong> → equals() を使う（今回は equals() を使う構成）</li>
+          <li>入力が空のときに substring(0,1) をやって落ちる → <strong>lengthチェックが先</strong></li>
+          <li>勝ち条件を1個書き忘れる → 「グーが勝つ相手」「チョキが勝つ相手」「パーが勝つ相手」の3つを固定で書く</li>
+        </ul>
+        <small>なお、CPUが空気読まずにパーを連打しても、それは仕様です。恨むなら乱数を恨んでください。</small>
+      </div>
+
+      <p class="meta">
+        コンパイル＆実行（例）：
+        <br />Windows / macOS / Linux 共通
+        <br /><code>javac Main.java</code>
+        <br /><code>java Main</code>
+      </p>
+    </section>
+
+    <section id="impl">
+      <h2>実装用ソース（生徒用：穴埋め版）</h2>
+      <p class="meta">
+        ここは <strong>回答コードを載せない</strong> 版です。コメントを読んで実装してください。<br />
+        ※未完成なので、このままでは動きません。
+      </p>
+
+      <pre><code>// Main.java（穴埋め版）
+import java.util.Random;
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        // 【目的】
+        // じゃんけんゲームを作成します。
+        //
+        // 【制約】
+        // ・Mainクラスのみ
+        // ・配列は使用しない
+        // ・中小メソッドは作らない（mainのみ）
+        //
+        // 【手の表現ルール】
+        // ・0=グー / 1=チョキ / 2=パー（intで管理）
+        // ・表示は String に変換して出力する
+
+        // =========================================================
+        // 1. 入力と乱数の準備
+        // =========================================================
+        // TODO: Scanner を作成（標準入力）
+        // 例）Scanner scanner = new Scanner(System.in);
+        //
+        // TODO: Random を作成（CPUの手を決める）
+        // 例）Random random = new Random();
+
+
+        // =========================================================
+        // 2. 画面の案内表示
+        // =========================================================
+        // TODO: タイトルを表示（例：=== じゃんけんゲーム ===）
+        // TODO: 入力方法を表示（G=グー / C=チョキ / P=パー / Q=終了）
+        // TODO: 空行を1行表示
+
+
+        // =========================================================
+        // 3. メインループ（終了するまで繰り返す）
+        // =========================================================
+        // TODO: while(true) を開始
+        //
+        //   3-1. ユーザー入力を受け取る
+        //   ---------------------------------------------------------
+        //   TODO: 「あなたの手を入力してください：」を表示（print推奨）
+        //   TODO: scanner で 1行入力を受け取り、String input に入れる
+        //
+        //   TODO: input が null または length==0 の場合
+        //         「入力がありません。」と表示して continue
+        //
+        //   TODO: 入力の先頭1文字を取り出して String cmdStr にする
+        //         例）String cmdStr = input.substring(0, 1);
+        //   TODO: cmdStr を大文字にする
+        //         例）cmdStr = cmdStr.toUpperCase();
+        //
+        //   TODO: cmdStr が "Q" の場合
+        //         「ゲームを終了します。」と表示して break
+        //
+        //   3-2. プレイヤーの手を int に変換する
+        //   ---------------------------------------------------------
+        //   TODO: int you を宣言し、初期値 -1
+        //
+        //   TODO: cmdStr が "G" の場合 you=0
+        //   TODO: cmdStr が "C" の場合 you=1
+        //   TODO: cmdStr が "P" の場合 you=2
+        //
+        //   TODO: それ以外は
+        //         「不正な入力です。G/C/P/Q のいずれかを入力してください。」と表示して continue
+        //
+        //   3-3. CPU の手を決める
+        //   ---------------------------------------------------------
+        //   TODO: int cpu = random.nextInt(3);
+        //
+        //   3-4. 表示用の手を String に変換する（配列なし）
+        //   ---------------------------------------------------------
+        //   TODO: String youHand を宣言し "" で初期化
+        //   TODO: you が 0/1/2 のときに "グー/チョキ/パー" を代入
+        //
+        //   TODO: String cpuHand を宣言し "" で初期化
+        //   TODO: cpu が 0/1/2 のときに "グー/チョキ/パー" を代入
+        //
+        //   TODO: 「あなた：」と「CPU  ：」を表示
+        //
+        //   3-5. 勝敗判定
+        //   ---------------------------------------------------------
+        //   TODO: you==cpu なら「結果：引き分け」
+        //   TODO: 次の3条件なら「結果：勝ち」
+        //         (you==0 &amp;&amp; cpu==1) または
+        //         (you==1 &amp;&amp; cpu==2) または
+        //         (you==2 &amp;&amp; cpu==0)
+        //   TODO: 上記以外は「結果：負け」
+        //
+        //   TODO: 空行を1行表示
+        //
+        // TODO: while(true) を閉じる
+
+
+        // =========================================================
+        // 4. 後片付け
+        // =========================================================
+        // TODO: scanner.close()
+
+    }
+}</code></pre>
+    </section>
+
+    <section id="answer">
+      <h2>回答プログラム（完成版）</h2>
+      <p class="meta">
+        答え合わせに使ってください。
+      </p>
+
+      <pre><code>// Main.java（完成版）
+import java.util.Random;
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
+
+        System.out.println("=== じゃんけんゲーム ===");
+        System.out.println("入力：G=グー / C=チョキ / P=パー / Q=終了");
+        System.out.println();
+
+        while (true) {
+
+            System.out.print("あなたの手を入力してください：");
+            String input = scanner.nextLine();
+
+            if (input == null || input.length() == 0) {
+                System.out.println("入力がありません。");
+                continue;
+            }
+
+            String cmdStr = input.substring(0, 1);
+            cmdStr = cmdStr.toUpperCase();
+
+            if (cmdStr.equals("Q")) {
+                System.out.println("ゲームを終了します。");
+                break;
+            }
+
+            // 0=グー / 1=チョキ / 2=パー
+            int you = -1;
+
+            if (cmdStr.equals("G")) {
+                you = 0;
+            } else if (cmdStr.equals("C")) {
+                you = 1;
+            } else if (cmdStr.equals("P")) {
+                you = 2;
+            } else {
+                System.out.println("不正な入力です。G/C/P/Q のいずれかを入力してください。");
+                continue;
+            }
+
+            int cpu = random.nextInt(3);
+
+            String youHand = "";
+            if (you == 0) youHand = "グー";
+            if (you == 1) youHand = "チョキ";
+            if (you == 2) youHand = "パー";
+
+            String cpuHand = "";
+            if (cpu == 0) cpuHand = "グー";
+            if (cpu == 1) cpuHand = "チョキ";
+            if (cpu == 2) cpuHand = "パー";
+
+            System.out.println("あなた： " + youHand);
+            System.out.println("CPU  ： " + cpuHand);
+
+            if (you == cpu) {
+                System.out.println("結果：引き分け");
+            } else if (
+                    (you == 0 &amp;&amp; cpu == 1) ||
+                    (you == 1 &amp;&amp; cpu == 2) ||
+                    (you == 2 &amp;&amp; cpu == 0)
+            ) {
+                System.out.println("結果：勝ち");
+            } else {
+                System.out.println("結果：負け");
+            }
+
+            System.out.println();
+        }
+
+        scanner.close();
+    }
+}</code></pre>
+    </section>
+
+    <section id="explain">
+      <h2>プログラム解説</h2>
+
+      <h3>1) 手の表現（intで統一）</h3>
+      <p>
+        じゃんけんの手は <strong>int</strong> で管理します。
+        <br />0=グー、1=チョキ、2=パー
+      </p>
+      <div class="callout">
+        <div><span class="ok">メリット：</span>比較が簡単（you==cpu 等）</div>
+        <div><span class="warn">デメリット：</span>「0って何だっけ？」が起きやすい（次のステップで enum に改善しやすいポイント）</div>
+      </div>
+
+      <h3>2) 入力の扱い（Stringで読む→先頭1文字だけ使う）</h3>
+      <p>
+        入力は <code>scanner.nextLine()</code> で <strong>String</strong> として受け取ります。
+        空入力の可能性があるので、まず <code>length()==0</code> をチェックしてから
+        <code>substring(0,1)</code> を行います。
+      </p>
+
+      <h3>3) 小文字対策（大文字化）</h3>
+      <p>
+        <code>toUpperCase()</code> を使って <code>g/c/p</code> でも動くようにしています。
+        学生が小文字で入力しても授業が止まらない。地味に大事。
+      </p>
+
+      <h3>4) CPUの手（乱数）</h3>
+      <p>
+        <code>random.nextInt(3)</code> で 0〜2 を作ります。これをそのまま手として使います。
+        「CPUが何を出したか」は、表示用の <strong>String</strong>（youHand/cpuHand）に変換して出力します。
+      </p>
+
+      <h3>5) 勝ち条件は3つだけ（固定）</h3>
+      <p>
+        勝つパターンは次の3つだけです：
+      </p>
+      <ul>
+        <li>グー(0) は チョキ(1) に勝つ</li>
+        <li>チョキ(1) は パー(2) に勝つ</li>
+        <li>パー(2) は グー(0) に勝つ</li>
+      </ul>
+      <p>
+        引き分け（you==cpu）を先に処理し、残りは「勝ち」か「負け」になります。
+      </p>
+
+      <div class="callout">
+        <div><strong>次のステップ（発展課題の例）</strong></div>
+        <ul>
+          <li>勝ち/負け/引き分け回数をカウント（intを追加するだけでできる）</li>
+          <li>3本勝負（どちらかが2勝で終了）</li>
+          <li>このコードの「0/1/2」を enum に置き換えて読みやすくする（設計改善）</li>
+        </ul>
+        <small>ここまでやれば、「main 1個で全部やると苦しい」という学びが自然に出ます。狙い通りです。</small>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>© 教材用テンプレート（じゃんけん）</div>
+    <div>※本ページは授業用に「分かりやすさ優先」で作っています。プロダクションコードの作法とは別物です。</div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,1408 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>第14章 入力チェックを実装しよう - Spring Boot入門</title>
+
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&family=M+PLUS+Rounded+1c:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <!-- グローバルナビゲーション -->
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="1spring-framework-tutorial.html" class="nav-logo">
+                    <span class="nav-logo-icon">🌱</span>
+                    <span>Spring入門</span>
+                </a>
+                <button class="nav-toggle" onclick="toggleMenu()" aria-label="メニュー">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 章を選択</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="0promptprograming.html" class="nav-link">
+                                <span class="nav-chapter-num">0</span>
+                                <span>プロンプトプログラミング</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="1spring-framework-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">1</span>
+                                <span>Spring Frameworkについて知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="2java_basics.html" class="nav-link">
+                                <span class="nav-chapter-num">2</span>
+                                <span>基礎知識を身に付けよう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="3di-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">3</span>
+                                <span>DIを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="4aop-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">4</span>
+                                <span>AOPを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="5mvc-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">5</span>
+                                <span>MVCを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="6thymeleaf-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">6</span>
+                                <span>Thymeleafを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="7ServerDataSubmission.html" class="nav-link">
+                                <span class="nav-chapter-num">7</span>
+                                <span>サーバーへのデータ送信</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="8Validation_Textbook_Rewrite.html" class="nav-link">
+                                <span class="nav-chapter-num">8</span>
+                                <span>バリデーション</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="9_MyBatis_Tutorial__2_.html" class="nav-link">
+                                <span class="nav-chapter-num">9</span>
+                                <span>MyBatisチュートリアル</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="10app-preparation-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">10</span>
+                                <span>アプリケーション作成準備</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="11-database-operations.html" class="nav-link">
+                                <span class="nav-chapter-num">11</span>
+                                <span>データベース操作</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="12service-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">12</span>
+                                <span>サービス層</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="13_application_layer.html" class="nav-link">
+                                <span class="nav-chapter-num">13</span>
+                                <span>アプリケーション層</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="14_validation.html" class="nav-link active">
+                                <span class="nav-chapter-num">14</span>
+                                <span>バリデーション（応用）</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="15-spring-security-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">15</span>
+                                <span>Spring Security</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <!-- ヘッダー -->
+            <header class="chapter-header">
+                <div class="chapter-badge">📘 Chapter</div>
+                <div class="chapter-number">14</div>
+                <h1 class="chapter-title">入力チェックを<br />実装しよう</h1>
+            </header>
+
+            <nav class="toc">
+                <h2 class="toc-title">📑 この章の内容</h2>
+                <ul class="toc-list">
+                    <li class="toc-item">
+                        <span class="toc-number">14-1</span>
+                        <span>バリデーションの準備をしよう</span>
+                    </li>
+                    <li class="toc-item">
+                        <span class="toc-number">14-2</span>
+                        <span>バリデーションを実装しよう</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- イントロダクション -->
+            <div class="content-card">
+                <div class="intro-box">
+                    <h3>🛡️ この章で学ぶこと</h3>
+                    <p>
+                        現在の「ToDoアプリ」はCRUD処理を無事に完成させていますが、<strong>入力チェック</strong>がまだ実装されていません。そのため、不正な入力が行われると、アプリケーションは予期しない動作をする可能性があります。
+                    </p>
+                    <p>
+                        この問題を解決するために、<strong>バリデーションチェック</strong>を実装することが重要です。入力チェックは、あなたのアプリケーションを守る「盾」のような存在です。
+                    </p>
+                </div>
+
+                <!-- バリデーションの重要性を示すSVG -->
+                <div class="svg-container">
+                    <svg width="720" height="380" viewBox="0 0 720 380">
+                        <defs>
+                            <filter id="shadow1" x="-20%" y="-20%" width="140%" height="140%">
+                                <feDropShadow dx="2" dy="3" stdDeviation="3" flood-opacity="0.2"/>
+                            </filter>
+                        </defs>
+
+                        <!-- 背景 -->
+                        <rect x="0" y="0" width="720" height="380" fill="#fafbfc" rx="8"/>
+
+                        <!-- タイトル -->
+                        <text x="360" y="30" text-anchor="middle" fill="#2c3e50" font-size="16" font-weight="bold">
+                            バリデーションによる入力データの保護フロー
+                        </text>
+
+                        <!-- ユーザー入力 -->
+                        <g transform="translate(40, 90)" filter="url(#shadow1)">
+                            <rect x="0" y="0" width="130" height="120" rx="12" fill="#3498db" />
+                            <!-- ユーザーアイコン -->
+                            <circle cx="65" cy="35" r="18" fill="white"/>
+                            <circle cx="65" cy="30" r="7" fill="#3498db"/>
+                            <path d="M52,42 Q65,52 78,42" stroke="#3498db" stroke-width="3" fill="none"/>
+                            <text x="65" y="75" text-anchor="middle" fill="white" font-size="13" font-weight="bold">ユーザー入力</text>
+                            <text x="65" y="95" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-size="10">フォームデータ</text>
+                            <text x="65" y="110" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="9">ToDo / 詳細</text>
+                        </g>
+
+                        <!-- 矢印1 -->
+                        <g transform="translate(180, 145)">
+                            <line x1="0" y1="0" x2="55" y2="0" stroke="#888" stroke-width="3" stroke-linecap="round"/>
+                            <polygon points="60,0 48,-7 48,7" fill="#888" />
+                            <text x="30" y="-10" text-anchor="middle" fill="#666" font-size="10">送信</text>
+                        </g>
+
+                        <!-- バリデーション（盾） -->
+                        <g transform="translate(260, 55)" filter="url(#shadow1)">
+                            <!-- 盾本体 -->
+                            <path
+                                d="M70,0 L140,25 L140,110 C140,160 70,195 70,195 C70,195 0,160 0,110 L0,25 Z"
+                                fill="#e74c3c"
+                                stroke="#c0392b"
+                                stroke-width="2"
+                            />
+                            <!-- 盾の内側装飾 -->
+                            <path
+                                d="M70,12 L125,32 L125,105 C125,145 70,175 70,175 C70,175 15,145 15,105 L15,32 Z"
+                                fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"
+                            />
+                            <!-- テキスト -->
+                            <text x="70" y="55" text-anchor="middle" fill="white" font-size="10" opacity="0.9">Validation</text>
+                            <text x="70" y="85" text-anchor="middle" fill="white" font-size="15" font-weight="bold">バリデーション</text>
+                            <text x="70" y="105" text-anchor="middle" fill="white" font-size="11">入力チェック</text>
+                            <!-- チェックアイコン -->
+                            <circle cx="70" cy="140" r="18" fill="white" />
+                            <path d="M58,140 L66,148 L84,128" stroke="#27ae60" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        </g>
+
+                        <!-- チェック項目ボックス -->
+                        <g transform="translate(255, 265)">
+                            <rect x="0" y="0" width="150" height="45" rx="8" fill="white" stroke="#e74c3c" stroke-width="2"/>
+                            <text x="75" y="18" text-anchor="middle" fill="#c0392b" font-size="10" font-weight="bold">チェック項目</text>
+                            <text x="75" y="35" text-anchor="middle" fill="#666" font-size="9">@NotBlank / @Size</text>
+                        </g>
+
+                        <!-- OK経路 -->
+                        <g transform="translate(415, 100)">
+                            <path d="M0,50 Q25,20 70,20" stroke="#27ae60" stroke-width="3" fill="none" stroke-linecap="round"/>
+                            <polygon points="75,20 62,13 62,27" fill="#27ae60" />
+                            <rect x="25" y="0" width="35" height="20" rx="10" fill="#27ae60"/>
+                            <text x="42" y="14" text-anchor="middle" fill="white" font-size="10" font-weight="bold">OK</text>
+                        </g>
+
+                        <!-- データベース（成功） -->
+                        <g transform="translate(500, 60)" filter="url(#shadow1)">
+                            <ellipse cx="65" cy="18" rx="55" ry="16" fill="#27ae60" />
+                            <rect x="10" y="18" width="110" height="55" fill="#27ae60" />
+                            <ellipse cx="65" cy="73" rx="55" ry="16" fill="#1e8449" />
+                            <ellipse cx="65" cy="38" rx="55" ry="16" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+                            <ellipse cx="65" cy="55" rx="55" ry="16" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+                            <text x="65" y="52" text-anchor="middle" fill="white" font-size="12" font-weight="bold">データベース</text>
+                        </g>
+                        <!-- 成功メッセージ -->
+                        <g transform="translate(510, 150)">
+                            <rect x="0" y="0" width="100" height="30" rx="6" fill="#e8f8f5" stroke="#27ae60" stroke-width="1.5"/>
+                            <text x="50" y="20" text-anchor="middle" fill="#27ae60" font-size="11" font-weight="bold">✓ 正常に保存</text>
+                        </g>
+
+                        <!-- NG経路 -->
+                        <g transform="translate(415, 160)">
+                            <path d="M0,30 Q25,70 70,85" stroke="#e74c3c" stroke-width="3" fill="none" stroke-linecap="round"/>
+                            <polygon points="75,87 60,82 65,95" fill="#e74c3c" />
+                            <rect x="25" y="55" width="35" height="20" rx="10" fill="#e74c3c"/>
+                            <text x="42" y="69" text-anchor="middle" fill="white" font-size="10" font-weight="bold">NG</text>
+                        </g>
+
+                        <!-- エラー表示 -->
+                        <g transform="translate(500, 230)" filter="url(#shadow1)">
+                            <rect x="0" y="0" width="170" height="95" rx="12" fill="#e74c3c" />
+                            <!-- 警告アイコン -->
+                            <circle cx="85" cy="25" r="14" fill="white"/>
+                            <text x="85" y="31" text-anchor="middle" fill="#e74c3c" font-size="16" font-weight="bold">!</text>
+                            <text x="85" y="55" text-anchor="middle" fill="white" font-size="12" font-weight="bold">エラーメッセージ</text>
+                            <rect x="12" y="65" width="146" height="22" rx="5" fill="white"/>
+                            <text x="85" y="80" text-anchor="middle" fill="#e74c3c" font-size="10" font-weight="bold">「ToDoは必須です。」</text>
+                        </g>
+
+                        <!-- 戻る矢印 -->
+                        <g transform="translate(430, 290)">
+                            <path d="M60,15 Q30,15 15,35 Q0,55 15,80" stroke="#e74c3c" stroke-width="2" fill="none" stroke-dasharray="4,3" stroke-linecap="round"/>
+                            <polygon points="15,85 8,72 22,72" fill="#e74c3c"/>
+                            <text x="5" y="100" fill="#e74c3c" font-size="9">入力画面に戻る</text>
+                        </g>
+
+                        <!-- 説明ラベル -->
+                        <g transform="translate(360, 355)">
+                            <rect x="-220" y="-12" width="440" height="28" rx="14" fill="#f0f0f0"/>
+                            <text x="0" y="5" text-anchor="middle" fill="#555" font-size="13" font-weight="bold">
+                                バリデーションは不正な入力からアプリケーションを守る「盾」
+                            </text>
+                        </g>
+                    </svg>
+                </div>
+
+            </div>
+
+            <!-- Section 14-1 -->
+            <div class="content-card">
+                <h2 class="section-title">
+                    <span class="section-badge">14-1</span>
+                    「入力チェック」の準備をしよう
+                </h2>
+
+                <h3 class="subsection-title">14-1-0 プロジェクトの作成（Spring Initializr）</h3>
+                <p>
+                    この章で使用するSpring Bootプロジェクトの作成方法を説明します。新規でプロジェクトを作成する場合は、以下の手順に従ってください。
+                </p>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">1</div>
+                        <div class="step-title">Spring Initializrにアクセス</div>
+                    </div>
+                    <p>
+                        ブラウザで「<code>https://start.spring.io/</code>」にアクセスします。
+                    </p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">2</div>
+                        <div class="step-title">プロジェクト設定</div>
+                    </div>
+                    <p>以下の設定を行います。</p>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>項目</th>
+                                <th>設定値</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Project</td>
+                                <td><strong>Maven</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Language</td>
+                                <td>Java</td>
+                            </tr>
+                            <tr>
+                                <td>Spring Boot</td>
+                                <td>3.x.x（最新安定版）</td>
+                            </tr>
+                            <tr>
+                                <td>Group</td>
+                                <td>com.example</td>
+                            </tr>
+                            <tr>
+                                <td>Artifact</td>
+                                <td>webapp</td>
+                            </tr>
+                            <tr>
+                                <td>Packaging</td>
+                                <td>Jar</td>
+                            </tr>
+                            <tr>
+                                <td>Java</td>
+                                <td>17 または 21</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">3</div>
+                        <div class="step-title">依存関係の追加</div>
+                    </div>
+                    <p>「ADD DEPENDENCIES」をクリックし、以下の依存関係を追加します。</p>
+                    <ul class="toc-list">
+                        <li><strong>Spring Web</strong> - Webアプリケーション開発用</li>
+                        <li><strong>Thymeleaf</strong> - テンプレートエンジン</li>
+                        <li><strong>Validation</strong> - 入力チェック機能（本章で使用）</li>
+                        <li><strong>Spring Boot DevTools</strong> - 開発時の自動リロード</li>
+                        <li><strong>Lombok</strong> - ボイラープレートコードの削減</li>
+                        <li><strong>MyBatis Framework</strong> - データベースアクセス</li>
+                        <li><strong>MySQL Driver</strong> - MySQLデータベース接続</li>
+                    </ul>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">4</div>
+                        <div class="step-title">プロジェクトのダウンロードと展開</div>
+                    </div>
+                    <p>
+                        「GENERATE」ボタンをクリックしてZIPファイルをダウンロードし、任意のフォルダに展開します。
+                    </p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">5</div>
+                        <div class="step-title">VSCodeでプロジェクトを開く</div>
+                    </div>
+                    <p>
+                        VSCodeを起動し、「ファイル」→「フォルダーを開く」から展開したプロジェクトフォルダを選択します。初回起動時は、Java拡張機能によりプロジェクトの読み込みが自動的に行われます。
+                    </p>
+                </div>
+
+                <!-- フォルダ構成の図解 -->
+                <h4>プロジェクトのフォルダ構成</h4>
+                <p>作成されるMavenプロジェクトのフォルダ構成は以下のようになります。</p>
+
+                <div class="svg-container">
+                    <svg width="700" height="620" viewBox="0 0 700 620">
+                        <defs>
+                            <filter id="folderShadow" x="-10%" y="-10%" width="120%" height="120%">
+                                <feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.1"/>
+                            </filter>
+                        </defs>
+
+                        <!-- 背景 -->
+                        <rect x="0" y="0" width="700" height="620" fill="#fafbfc" rx="8"/>
+
+                        <!-- タイトル -->
+                        <text x="350" y="28" text-anchor="middle" fill="#2c3e50" font-size="15" font-weight="bold">
+                            Mavenプロジェクトのフォルダ構成
+                        </text>
+
+                        <!-- フォルダツリー -->
+                        <g transform="translate(50, 50)" font-family="JetBrains Mono, monospace" font-size="13">
+                            <!-- webapp (root) -->
+                            <g filter="url(#folderShadow)">
+                                <rect x="0" y="0" width="600" height="28" rx="4" fill="#3498db"/>
+                                <text x="12" y="19" fill="white" font-weight="bold">webapp/</text>
+                                <text x="120" y="19" fill="rgba(255,255,255,0.8)" font-size="11">← プロジェクトルート</text>
+                            </g>
+
+                            <!-- pom.xml -->
+                            <g transform="translate(20, 36)">
+                                <text x="0" y="14" fill="#666">├─</text>
+                                <rect x="25" y="0" width="120" height="22" rx="3" fill="#e74c3c"/>
+                                <text x="35" y="15" fill="white" font-size="12">pom.xml</text>
+                                <text x="160" y="15" fill="#888" font-size="11">← Maven設定ファイル</text>
+                            </g>
+
+                            <!-- mvnw -->
+                            <g transform="translate(20, 62)">
+                                <text x="0" y="14" fill="#666">├─</text>
+                                <rect x="25" y="0" width="80" height="22" rx="3" fill="#95a5a6"/>
+                                <text x="35" y="15" fill="white" font-size="12">mvnw</text>
+                                <text x="120" y="15" fill="#888" font-size="11">← Maven Wrapper（Mac/Linux）</text>
+                            </g>
+
+                            <!-- mvnw.cmd -->
+                            <g transform="translate(20, 88)">
+                                <text x="0" y="14" fill="#666">├─</text>
+                                <rect x="25" y="0" width="100" height="22" rx="3" fill="#95a5a6"/>
+                                <text x="35" y="15" fill="white" font-size="12">mvnw.cmd</text>
+                                <text x="140" y="15" fill="#888" font-size="11">← Maven Wrapper（Windows）</text>
+                            </g>
+
+                            <!-- src -->
+                            <g transform="translate(20, 118)">
+                                <text x="0" y="14" fill="#666">└─</text>
+                                <rect x="25" y="0" width="60" height="22" rx="3" fill="#f39c12"/>
+                                <text x="35" y="15" fill="white" font-size="12">src/</text>
+                            </g>
+
+                            <!-- src/main -->
+                            <g transform="translate(50, 148)">
+                                <text x="0" y="14" fill="#666">├─</text>
+                                <rect x="25" y="0" width="70" height="22" rx="3" fill="#f39c12"/>
+                                <text x="35" y="15" fill="white" font-size="12">main/</text>
+                            </g>
+
+                            <!-- src/main/java -->
+                            <g transform="translate(80, 178)">
+                                <text x="0" y="14" fill="#666">├─</text>
+                                <rect x="25" y="0" width="65" height="22" rx="3" fill="#27ae60"/>
+                                <text x="35" y="15" fill="white" font-size="12">java/</text>
+                                <text x="105" y="15" fill="#888" font-size="11">← Javaソースコード</text>
+                            </g>
+
+                            <!-- com.example.webapp パッケージ -->
+                            <g transform="translate(110, 208)">
+                                <text x="0" y="14" fill="#666">└─</text>
+                                <rect x="25" y="0" width="180" height="22" rx="3" fill="#27ae60" fill-opacity="0.7"/>
+                                <text x="35" y="15" fill="white" font-size="11">com/example/webapp/</text>
+                            </g>
+
+                            <!-- controller -->
+                            <g transform="translate(140, 238)">
+                                <text x="0" y="14" fill="#666">├─</text>
+                                <rect x="25" y="0" width="100" height="22" rx="3" fill="#2ecc71"/>
+                                <text x="35" y="15" fill="white" font-size="11">controller/</text>
+                                <text x="140" y="15" fill="#888" font-size="11">← コントローラ</text>
+                            </g>
+
+                            <!-- service -->
+                            <g transform="translate(140, 264)">
+                                <text x="0" y="14" fill="#666">├─</text>
+                                <rect x="25" y="0" width="85" height="22" rx="3" fill="#2ecc71"/>
+                                <text x="35" y="15" fill="white" font-size="11">service/</text>
+                                <text x="125" y="15" fill="#888" font-size="11">← サービス層</text>
+                            </g>
+
+                            <!-- repository -->
+                            <g transform="translate(140, 290)">
+                                <text x="0" y="14" fill="#666">├─</text>
+                                <rect x="25" y="0" width="100" height="22" rx="3" fill="#2ecc71"/>
+                                <text x="35" y="15" fill="white" font-size="11">repository/</text>
+                                <text x="140" y="15" fill="#888" font-size="11">← データアクセス</text>
+                            </g>
+
+                            <!-- entity -->
+                            <g transform="translate(140, 316)">
+                                <text x="0" y="14" fill="#666">├─</text>
+                                <rect x="25" y="0" width="75" height="22" rx="3" fill="#2ecc71"/>
+                                <text x="35" y="15" fill="white" font-size="11">entity/</text>
+                                <text x="115" y="15" fill="#888" font-size="11">← エンティティ</text>
+                            </g>
+
+                            <!-- form -->
+                            <g transform="translate(140, 342)">
+                                <text x="0" y="14" fill="#666">├─</text>
+                                <rect x="25" y="0" width="65" height="22" rx="3" fill="#9b59b6"/>
+                                <text x="35" y="15" fill="white" font-size="11">form/</text>
+                                <text x="105" y="15" fill="#888" font-size="11">← Formクラス（バリデーション）</text>
+                            </g>
+
+                            <!-- helper -->
+                            <g transform="translate(140, 368)">
+                                <text x="0" y="14" fill="#666">└─</text>
+                                <rect x="25" y="0" width="75" height="22" rx="3" fill="#2ecc71"/>
+                                <text x="35" y="15" fill="white" font-size="11">helper/</text>
+                                <text x="115" y="15" fill="#888" font-size="11">← ヘルパークラス</text>
+                            </g>
+
+                            <!-- src/main/resources -->
+                            <g transform="translate(80, 398)">
+                                <text x="0" y="14" fill="#666">└─</text>
+                                <rect x="25" y="0" width="105" height="22" rx="3" fill="#3498db"/>
+                                <text x="35" y="15" fill="white" font-size="12">resources/</text>
+                                <text x="145" y="15" fill="#888" font-size="11">← リソースファイル</text>
+                            </g>
+
+                            <!-- templates -->
+                            <g transform="translate(110, 428)">
+                                <text x="0" y="14" fill="#666">├─</text>
+                                <rect x="25" y="0" width="105" height="22" rx="3" fill="#3498db" fill-opacity="0.7"/>
+                                <text x="35" y="15" fill="white" font-size="11">templates/</text>
+                                <text x="145" y="15" fill="#888" font-size="11">← Thymeleafテンプレート</text>
+                            </g>
+
+                            <!-- templates/todo -->
+                            <g transform="translate(140, 458)">
+                                <text x="0" y="14" fill="#666">└─</text>
+                                <rect x="25" y="0" width="65" height="22" rx="3" fill="#3498db" fill-opacity="0.5"/>
+                                <text x="35" y="15" fill="white" font-size="11">todo/</text>
+                                <text x="105" y="15" fill="#888" font-size="11">← ToDo画面用HTML</text>
+                            </g>
+
+                            <!-- static -->
+                            <g transform="translate(110, 488)">
+                                <text x="0" y="14" fill="#666">├─</text>
+                                <rect x="25" y="0" width="75" height="22" rx="3" fill="#3498db" fill-opacity="0.7"/>
+                                <text x="35" y="15" fill="white" font-size="11">static/</text>
+                                <text x="115" y="15" fill="#888" font-size="11">← CSS/JS/画像</text>
+                            </g>
+
+                            <!-- application.properties -->
+                            <g transform="translate(110, 518)">
+                                <text x="0" y="14" fill="#666">└─</text>
+                                <rect x="25" y="0" width="175" height="22" rx="3" fill="#e74c3c" fill-opacity="0.8"/>
+                                <text x="35" y="15" fill="white" font-size="11">application.properties</text>
+                                <text x="220" y="15" fill="#888" font-size="11">← 設定ファイル</text>
+                            </g>
+                        </g>
+
+                        <!-- 凡例 -->
+                        <g transform="translate(50, 580)">
+                            <rect x="0" y="0" width="600" height="30" rx="4" fill="#f0f0f0"/>
+                            <text x="15" y="20" fill="#666" font-size="11">凡例：</text>
+                            <rect x="60" y="8" width="14" height="14" rx="2" fill="#f39c12"/>
+                            <text x="80" y="19" fill="#666" font-size="10">フォルダ</text>
+                            <rect x="140" y="8" width="14" height="14" rx="2" fill="#27ae60"/>
+                            <text x="160" y="19" fill="#666" font-size="10">Javaパッケージ</text>
+                            <rect x="250" y="8" width="14" height="14" rx="2" fill="#9b59b6"/>
+                            <text x="270" y="19" fill="#666" font-size="10">Form（本章）</text>
+                            <rect x="350" y="8" width="14" height="14" rx="2" fill="#3498db"/>
+                            <text x="370" y="19" fill="#666" font-size="10">リソース</text>
+                            <rect x="440" y="8" width="14" height="14" rx="2" fill="#e74c3c"/>
+                            <text x="460" y="19" fill="#666" font-size="10">設定ファイル</text>
+                        </g>
+                    </svg>
+                </div>
+
+                <div class="point-box">
+                    <h4>VSCode必須拡張機能</h4>
+                    <p>VSCodeでSpring Boot開発を行うには、以下の拡張機能をインストールしてください。</p>
+                    <ul class="toc-list">
+                        <li><strong>Extension Pack for Java</strong> - Java開発の基本機能</li>
+                        <li><strong>Spring Boot Extension Pack</strong> - Spring Boot開発サポート</li>
+                        <li><strong>Lombok Annotations Support</strong> - Lombokサポート</li>
+                    </ul>
+                </div>
+
+                <h3 class="subsection-title">14-1-1 「バリデーション」を考える</h3>
+                <p>
+                    「ToDoアプリ」に設定するバリデーションを以下の表に示します。それぞれのフィールドに対して、どのようなチェックを行い、どのようなエラーメッセージを表示するかを決めておきましょう。
+                </p>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>列</th>
+                            <th>バリデーション</th>
+                            <th>エラーメッセージ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>ToDo</code></td>
+                            <td>未入力チェック</td>
+                            <td>ToDoは必須です。</td>
+                        </tr>
+                        <tr>
+                            <td><code>詳細</code></td>
+                            <td>範囲チェック</td>
+                            <td>詳細は{min}～{max}文字以内で入力してください</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- バリデーションルールの図解 -->
+                <div class="svg-container">
+                    <svg width="700" height="320" viewBox="0 0 700 320">
+                        <defs>
+                            <filter id="fieldShadow" x="-10%" y="-10%" width="120%" height="120%">
+                                <feDropShadow dx="2" dy="3" stdDeviation="3" flood-opacity="0.15"/>
+                            </filter>
+                        </defs>
+
+                        <!-- 背景 -->
+                        <rect x="0" y="0" width="700" height="320" fill="#fafbfc" rx="8"/>
+
+                        <!-- タイトル -->
+                        <text x="350" y="28" text-anchor="middle" fill="#2c3e50" font-size="15" font-weight="bold">
+                            フィールド別バリデーションルール
+                        </text>
+
+                        <!-- ToDoフィールド -->
+                        <g transform="translate(25, 50)" filter="url(#fieldShadow)">
+                            <rect x="0" y="0" width="310" height="110" rx="12" fill="white" stroke="#3498db" stroke-width="2"/>
+                            <!-- ヘッダー -->
+                            <rect x="0" y="0" width="310" height="38" rx="12" fill="#3498db"/>
+                            <rect x="0" y="26" width="310" height="12" fill="#3498db"/>
+                            <text x="155" y="26" text-anchor="middle" fill="white" font-size="14" font-weight="bold">ToDo フィールド</text>
+                            <!-- アノテーションバッジ -->
+                            <rect x="20" y="52" width="95" height="28" rx="14" fill="#3498db"/>
+                            <text x="67" y="71" text-anchor="middle" fill="white" font-size="11" font-weight="bold">@NotBlank</text>
+                            <!-- 説明 -->
+                            <text x="130" y="71" fill="#555" font-size="12">→ 空白・null禁止</text>
+                            <!-- 入力例アイコン -->
+                            <rect x="20" y="88" width="16" height="14" rx="2" fill="#f0f0f0" stroke="#ddd"/>
+                            <text x="45" y="99" fill="#888" font-size="10">必須入力</text>
+                        </g>
+
+                        <!-- 詳細フィールド -->
+                        <g transform="translate(365, 50)" filter="url(#fieldShadow)">
+                            <rect x="0" y="0" width="310" height="110" rx="12" fill="white" stroke="#9b59b6" stroke-width="2"/>
+                            <!-- ヘッダー -->
+                            <rect x="0" y="0" width="310" height="38" rx="12" fill="#9b59b6"/>
+                            <rect x="0" y="26" width="310" height="12" fill="#9b59b6"/>
+                            <text x="155" y="26" text-anchor="middle" fill="white" font-size="14" font-weight="bold">詳細 フィールド</text>
+                            <!-- アノテーションバッジ -->
+                            <rect x="20" y="52" width="130" height="28" rx="14" fill="#9b59b6"/>
+                            <text x="85" y="71" text-anchor="middle" fill="white" font-size="11" font-weight="bold">@Size(1, 100)</text>
+                            <!-- 説明 -->
+                            <text x="165" y="71" fill="#555" font-size="12">→ 1〜100文字</text>
+                            <!-- 入力例アイコン -->
+                            <rect x="20" y="88" width="40" height="14" rx="2" fill="#f0f0f0" stroke="#ddd"/>
+                            <text x="70" y="99" fill="#888" font-size="10">文字数制限あり</text>
+                        </g>
+
+                        <!-- NGの例セクション -->
+                        <g transform="translate(25, 175)">
+                            <!-- ToDoのNGケース -->
+                            <g filter="url(#fieldShadow)">
+                                <rect x="0" y="0" width="310" height="120" rx="10" fill="white" stroke="#e74c3c" stroke-width="2"/>
+                                <!-- ヘッダー -->
+                                <rect x="0" y="0" width="310" height="32" rx="10" fill="#e74c3c"/>
+                                <rect x="0" y="20" width="310" height="12" fill="#e74c3c"/>
+                                <text x="155" y="22" text-anchor="middle" fill="white" font-size="12" font-weight="bold">NGの例（ToDo）</text>
+                                <!-- 入力フィールド -->
+                                <text x="20" y="55" fill="#666" font-size="11">入力値:</text>
+                                <rect x="70" y="42" width="160" height="24" rx="4" fill="#fff5f5" stroke="#e74c3c" stroke-width="1.5"/>
+                                <text x="150" y="58" text-anchor="middle" fill="#ccc" font-size="11" font-style="italic">（空白）</text>
+                                <!-- 矢印 -->
+                                <path d="M245,54 L265,54" stroke="#e74c3c" stroke-width="2" stroke-linecap="round"/>
+                                <polygon points="270,54 260,49 260,59" fill="#e74c3c"/>
+                                <!-- エラーメッセージ -->
+                                <rect x="20" y="78" width="270" height="30" rx="6" fill="#fff5f5" stroke="#e74c3c" stroke-width="1"/>
+                                <text x="155" y="98" text-anchor="middle" fill="#e74c3c" font-size="11" font-weight="bold">ToDoは必須です。</text>
+                            </g>
+                        </g>
+
+                        <g transform="translate(365, 175)">
+                            <!-- 詳細のNGケース -->
+                            <g filter="url(#fieldShadow)">
+                                <rect x="0" y="0" width="310" height="120" rx="10" fill="white" stroke="#e74c3c" stroke-width="2"/>
+                                <!-- ヘッダー -->
+                                <rect x="0" y="0" width="310" height="32" rx="10" fill="#e74c3c"/>
+                                <rect x="0" y="20" width="310" height="12" fill="#e74c3c"/>
+                                <text x="155" y="22" text-anchor="middle" fill="white" font-size="12" font-weight="bold">NGの例（詳細）</text>
+                                <!-- 入力フィールド -->
+                                <text x="20" y="55" fill="#666" font-size="11">入力値:</text>
+                                <rect x="70" y="42" width="160" height="24" rx="4" fill="#fff5f5" stroke="#e74c3c" stroke-width="1.5"/>
+                                <text x="150" y="58" text-anchor="middle" fill="#666" font-size="10">あああ...（101文字以上）</text>
+                                <!-- 矢印 -->
+                                <path d="M245,54 L265,54" stroke="#e74c3c" stroke-width="2" stroke-linecap="round"/>
+                                <polygon points="270,54 260,49 260,59" fill="#e74c3c"/>
+                                <!-- エラーメッセージ -->
+                                <rect x="20" y="78" width="270" height="30" rx="6" fill="#fff5f5" stroke="#e74c3c" stroke-width="1"/>
+                                <text x="155" y="98" text-anchor="middle" fill="#e74c3c" font-size="10" font-weight="bold">詳細は1～100文字以内で入力してください。</text>
+                            </g>
+                        </g>
+                    </svg>
+                </div>
+
+                <h3 class="subsection-title">14-1-2 「Spring Initializr」で依存関係を追加</h3>
+                <p>
+                    バリデーション機能を使用するには、プロジェクトに<strong>Validation</strong>の依存関係を追加する必要があります。Spring
+                    Initializrを使って必要な設定を確認しましょう。
+                </p>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">1</div>
+                        <div class="step-title">Spring Initializrにアクセス</div>
+                    </div>
+                    <p>
+                        URL「<code>https://start.spring.io/</code>」にアクセスして、「Spring Initializr」を表示します。
+                    </p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">2</div>
+                        <div class="step-title">Validationを検索</div>
+                    </div>
+                    <p>
+                        画面右にある「Dependencies」の横にある「ADD
+                        DEPENDENCIES」をクリックします。表示された画面に「validation」と入力して、表示された「<strong>Validation</strong>」をクリックします。
+                    </p>
+
+                    <div class="point-box">
+                        <h4>📦 Validationとは？</h4>
+                        <p>
+                            <strong>Bean Validation with Hibernate validator</strong
+                            >が提供される機能です。これにより、アノテーションを使った簡単な入力チェックが可能になります。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">3</div>
+                        <div class="step-title">依存関係をコピー</div>
+                    </div>
+                    <p>
+                        画面下にある「EXPLORE」をクリックし、表示された画面の「pom.xml」タブを選択して「dependencies」のブロックに注目し、以下の記述をコピーします。
+                    </p>
+
+                    <div class="code-block" data-label="Maven依存関係">
+                        <div class="code-content">
+                            <pre><span class="tag">&lt;dependency&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>org.springframework.boot<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>spring-boot-starter-validation<span class="tag">&lt;/artifactId&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">4</div>
+                        <div class="step-title">pom.xmlに追加</div>
+                    </div>
+                    <p>
+                        「Spring Initializr」はもう使用しないため画面を閉じ、VSCodeでwebappプロジェクト内「pom.xml」の「&lt;dependencies&gt;」ブロックにコピーした記述を貼り付けます。
+                    </p>
+
+                    <div class="code-block" data-label="pom.xml">
+                        <div class="code-content">
+                            <pre><span class="tag">&lt;dependencies&gt;</span>
+    <span class="tag">&lt;dependency&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>org.springframework.boot<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>spring-boot-starter-thymeleaf<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;/dependency&gt;</span>
+    <span class="tag">&lt;dependency&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>org.springframework.boot<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>spring-boot-starter-validation<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;/dependency&gt;</span>
+    <span class="tag">&lt;dependency&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>org.springframework.boot<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>spring-boot-starter-web<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;/dependency&gt;</span>
+    <span class="tag">&lt;dependency&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>org.mybatis.spring.boot<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>mybatis-spring-boot-starter<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;version&gt;</span>3.0.3<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;/dependency&gt;</span>
+    <span class="tag">&lt;dependency&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>org.projectlombok<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>lombok<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;optional&gt;</span>true<span class="tag">&lt;/optional&gt;</span>
+    <span class="tag">&lt;/dependency&gt;</span>
+    <span class="tag">&lt;dependency&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>org.springframework.boot<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>spring-boot-devtools<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;scope&gt;</span>runtime<span class="tag">&lt;/scope&gt;</span>
+        <span class="tag">&lt;optional&gt;</span>true<span class="tag">&lt;/optional&gt;</span>
+    <span class="tag">&lt;/dependency&gt;</span>
+    <span class="tag">&lt;dependency&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>com.mysql<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>mysql-connector-j<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;scope&gt;</span>runtime<span class="tag">&lt;/scope&gt;</span>
+    <span class="tag">&lt;/dependency&gt;</span>
+    <span class="tag">&lt;dependency&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>org.springframework.boot<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>spring-boot-starter-test<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+    <span class="tag">&lt;/dependency&gt;</span>
+    <span class="tag">&lt;dependency&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>org.mybatis.spring.boot<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>mybatis-spring-boot-starter-test<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;version&gt;</span>3.0.3<span class="tag">&lt;/version&gt;</span>
+        <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+    <span class="tag">&lt;/dependency&gt;</span>
+<span class="tag">&lt;/dependencies&gt;</span></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">5</div>
+                        <div class="step-title">Mavenプロジェクトを更新</div>
+                    </div>
+                    <p>
+                        記述を貼り付けた後は、VSCodeでMavenプロジェクトを更新して設定を反映します。VSCodeの左側サイドバーにある「JAVA PROJECTS」パネルでプロジェクトを右クリックし、「Update Project」を選択します。または、コマンドパレット（Ctrl+Shift+P / Cmd+Shift+P）から「Java: Update Project Configuration」を実行します。
+                    </p>
+                    <p>これで、プロジェクト内でバリデーション機能が使用できるようになります。</p>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ 注意</h4>
+                    <p>
+                        時期によって、「org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3」などに付与されるバージョン指定（後ろの番号）は変わっている可能性があります。
+                    </p>
+                </div>
+            </div>
+
+            <!-- Section 14-2 -->
+            <div class="content-card">
+                <h2 class="section-title">
+                    <span class="section-badge">14-2</span>
+                    「入力チェック」を実装しよう
+                </h2>
+
+                <p>
+                    「バリデーションチェック」作成の準備ができました。「<strong>form</strong>」→「<strong>controller</strong>」→「<strong>view</strong>」の順番で「入力チェック」を作成していきましょう。
+                </p>
+
+                <!-- 実装フロー図 -->
+                <div class="svg-container">
+                    <svg width="700" height="180" viewBox="0 0 700 180">
+                        <defs>
+                            <linearGradient id="stepGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color: #3498db" />
+                                <stop offset="100%" style="stop-color: #2980b9" />
+                            </linearGradient>
+                            <linearGradient id="stepGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color: #9b59b6" />
+                                <stop offset="100%" style="stop-color: #8e44ad" />
+                            </linearGradient>
+                            <linearGradient id="stepGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color: #27ae60" />
+                                <stop offset="100%" style="stop-color: #219a52" />
+                            </linearGradient>
+                        </defs>
+
+                        <!-- Step 1: Form -->
+                        <g transform="translate(80, 40)">
+                            <rect x="0" y="0" width="150" height="100" rx="15" fill="url(#stepGrad1)" />
+                            <text x="75" y="35" text-anchor="middle" fill="white" font-size="14" font-weight="bold">
+                                STEP 1
+                            </text>
+                            <text x="75" y="60" text-anchor="middle" fill="white" font-size="18" font-weight="bold">
+                                Form
+                            </text>
+                            <text x="75" y="82" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="12">
+                                バリデーション定義
+                            </text>
+                        </g>
+
+                        <!-- Arrow 1 -->
+                        <g transform="translate(240, 85)">
+                            <line x1="0" y1="0" x2="55" y2="0" stroke="#666" stroke-width="4" />
+                            <polygon points="55,0 42,-10 42,10" fill="#666" />
+                        </g>
+
+                        <!-- Step 2: Controller -->
+                        <g transform="translate(305, 40)">
+                            <rect x="0" y="0" width="150" height="100" rx="15" fill="url(#stepGrad2)" />
+                            <text x="75" y="35" text-anchor="middle" fill="white" font-size="14" font-weight="bold">
+                                STEP 2
+                            </text>
+                            <text x="75" y="60" text-anchor="middle" fill="white" font-size="18" font-weight="bold">
+                                Controller
+                            </text>
+                            <text x="75" y="82" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="12">
+                                チェック実行
+                            </text>
+                        </g>
+
+                        <!-- Arrow 2 -->
+                        <g transform="translate(465, 85)">
+                            <line x1="0" y1="0" x2="55" y2="0" stroke="#666" stroke-width="4" />
+                            <polygon points="55,0 42,-10 42,10" fill="#666" />
+                        </g>
+
+                        <!-- Step 3: View -->
+                        <g transform="translate(530, 40)">
+                            <rect x="0" y="0" width="150" height="100" rx="15" fill="url(#stepGrad3)" />
+                            <text x="75" y="35" text-anchor="middle" fill="white" font-size="14" font-weight="bold">
+                                STEP 3
+                            </text>
+                            <text x="75" y="60" text-anchor="middle" fill="white" font-size="18" font-weight="bold">
+                                View
+                            </text>
+                            <text x="75" y="82" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="12">
+                                エラー表示
+                            </text>
+                        </g>
+                    </svg>
+                </div>
+
+                <h3 class="subsection-title">14-2-1 Formクラスの修正</h3>
+                <p>バリデーションを追加するために、ToDo登録・更新用のFormクラスを修正します。</p>
+
+                <div class="file-info">
+                    <dt>パッケージ</dt>
+                    <dd>com.example.webapp.form</dd>
+                    <dt>名前</dt>
+                    <dd>ToDoForm</dd>
+                </div>
+
+                <p>「ToDoForm」クラスの内容は以下のようになります。</p>
+
+                <div class="code-block" data-label="ToDoForm.java">
+                    <div class="code-content">
+                        <pre><span class="code-keyword">package</span> com.example.webapp.form;
+
+<span class="code-keyword">import</span> jakarta.validation.constraints.<span class="code-class">NotBlank</span>;
+<span class="code-keyword">import</span> jakarta.validation.constraints.<span class="code-class">Size</span>;
+<span class="code-keyword">import</span> lombok.<span class="code-class">AllArgsConstructor</span>;
+<span class="code-keyword">import</span> lombok.<span class="code-class">Data</span>;
+<span class="code-keyword">import</span> lombok.<span class="code-class">NoArgsConstructor</span>;
+
+<span class="code-comment">/**
+ * すること：Form
+ */</span>
+<span class="code-annotation">@Data</span>
+<span class="code-annotation">@NoArgsConstructor</span>
+<span class="code-annotation">@AllArgsConstructor</span>
+<span class="code-keyword">public class</span> <span class="code-class">ToDoForm</span> {
+    <span class="code-comment">/** することID */</span>
+    <span class="code-keyword">private</span> <span class="code-class">Integer</span> id;
+
+    <span class="code-comment">/** すること */</span>
+    <span class="code-annotation">@NotBlank</span>(message = <span class="code-string">"ToDoは必須です。"</span>)
+    <span class="code-keyword">private</span> <span class="code-class">String</span> todo;
+
+    <span class="code-comment">/** すること詳細 */</span>
+    <span class="code-annotation">@Size</span>(min = <span class="number">1</span>, max = <span class="number">100</span>, message = <span class="code-string">"詳細は{min}～{max}文字以内で入力してください。"</span>)
+    <span class="code-keyword">private</span> <span class="code-class">String</span> detail;
+
+    <span class="code-comment">/** 新規判定 */</span>
+    <span class="code-keyword">private</span> <span class="code-class">Boolean</span> isNew;
+}</pre>
+                    </div>
+                </div>
+
+                <!-- アノテーション解説 -->
+                <div class="annotation-explain">
+                    <h5>📝 @NotBlank アノテーション</h5>
+                    <p>
+                        <code>@NotBlank</code
+                        >は、フィールドが<strong>空白であってはならない</strong>ことを指定しています。これは、ユーザーがこのフィールドに何らかの文字を入力する必要があることを意味します。何も入力されていない場合、「ToDoは必須です。」というエラーメッセージが表示されます。
+                    </p>
+                </div>
+
+                <div class="annotation-explain">
+                    <h5>📝 @Size アノテーション</h5>
+                    <p>
+                        <code>@Size(min = 1, max = 100)</code
+                        >は、フィールドの文字数が<strong>1文字以上100文字以下</strong>でなければならないことを指定しています。この範囲を超える文字数が入力された場合、「詳細は1～100文字以内で入力してください。」というエラーメッセージが表示されます。
+                    </p>
+                </div>
+
+                <!-- バリデーションアノテーション一覧 -->
+                <div class="point-box">
+                    <h4>🏷️ よく使うバリデーションアノテーション</h4>
+                    <ul class="toc-list">
+                        <li><code>@NotBlank</code> - 空白禁止（文字列用）</li>
+                        <li><code>@NotNull</code> - null禁止</li>
+                        <li><code>@NotEmpty</code> - 空禁止（コレクション用）</li>
+                        <li><code>@Size(min, max)</code> - 文字数/要素数の範囲指定</li>
+                        <li><code>@Min(value)</code> / <code>@Max(value)</code> - 数値の最小/最大値</li>
+                        <li><code>@Email</code> - メールアドレス形式チェック</li>
+                        <li><code>@Pattern(regexp)</code> - 正規表現パターンチェック</li>
+                    </ul>
+                </div>
+
+                <h3 class="subsection-title">14-2-2 コントローラの修正</h3>
+                <p>バリデーションを実施する処理を、ToDo用のコントローラクラスに追加します。</p>
+
+                <div class="file-info">
+                    <dt>パッケージ</dt>
+                    <dd>com.example.webapp.controller</dd>
+                    <dt>名前</dt>
+                    <dd>ToDoController</dd>
+                </div>
+
+                <p>「ToDoController」クラスの内容は以下のようになります。</p>
+
+                <div class="code-block" data-label="ToDoController.java - create メソッド">
+                    <div class="code-content">
+                        <pre><span class="code-comment">/**
+ * 新規登録を実行します。
+ */</span>
+<span class="code-annotation">@PostMapping</span>(<span class="code-string">"/save"</span>)
+<span class="code-keyword">public</span> <span class="code-class">String</span> <span class="code-method">create</span>(<span class="code-annotation">@Validated</span> <span class="code-class">ToDoForm</span> form,
+        <span class="code-class">BindingResult</span> bindingResult,
+        <span class="code-class">RedirectAttributes</span> attributes) {
+    <span class="code-comment">// === バリデーションチェック ===</span>
+    <span class="code-comment">// 入力チェックNG：入力画面を表示する</span>
+    <span class="code-keyword">if</span> (bindingResult.<span class="code-method">hasErrors</span>()) {
+        <span class="code-comment">// 新規登録画面の設定</span>
+        form.<span class="code-method">setIsNew</span>(<span class="code-keyword">true</span>);
+        <span class="code-keyword">return</span> <span class="code-string">"todo/form"</span>;
+    }
+    <span class="code-comment">// エンティティへの変換</span>
+    <span class="code-class">ToDo</span> ToDo = <span class="code-class">ToDoHelper</span>.<span class="code-method">convertToDo</span>(form);
+    <span class="code-comment">// 登録実行</span>
+    toDoService.<span class="code-method">insertToDo</span>(ToDo);
+    <span class="code-comment">// フラッシュメッセージ</span>
+    attributes.<span class="code-method">addFlashAttribute</span>(<span class="code-string">"message"</span>, <span class="code-string">"新しいToDoが作成されました!"</span>);
+    <span class="code-comment">// PRGパターン</span>
+    <span class="code-keyword">return</span> <span class="code-string">"redirect:/todos"</span>;
+}</pre>
+                    </div>
+                </div>
+
+                <div class="code-block" data-label="ToDoController.java - update メソッド">
+                    <div class="code-content">
+                        <pre><span class="code-comment">/**
+ * 「すること」を更新します。
+ */</span>
+<span class="code-annotation">@PostMapping</span>(<span class="code-string">"/update"</span>)
+<span class="code-keyword">public</span> <span class="code-class">String</span> <span class="code-method">update</span>(<span class="code-annotation">@Validated</span> <span class="code-class">ToDoForm</span> form,
+        <span class="code-class">BindingResult</span> bindingResult,
+        <span class="code-class">RedirectAttributes</span> attributes) {
+    <span class="code-comment">// === バリデーションチェック ===</span>
+    <span class="code-comment">// 入力チェックNG：入力画面を表示する</span>
+    <span class="code-keyword">if</span> (bindingResult.<span class="code-method">hasErrors</span>()) {
+        <span class="code-comment">// 更新画面の設定</span>
+        form.<span class="code-method">setIsNew</span>(<span class="code-keyword">false</span>);
+        <span class="code-keyword">return</span> <span class="code-string">"todo/form"</span>;
+    }
+    <span class="code-comment">// エンティティへの変換</span>
+    <span class="code-class">ToDo</span> ToDo = <span class="code-class">ToDoHelper</span>.<span class="code-method">convertToDo</span>(form);
+    <span class="code-comment">// 更新処理</span>
+    toDoService.<span class="code-method">updateToDo</span>(ToDo);
+    <span class="code-comment">// フラッシュメッセージ</span>
+    attributes.<span class="code-method">addFlashAttribute</span>(<span class="code-string">"message"</span>, <span class="code-string">"ToDoが更新されました!"</span>);
+    <span class="code-comment">// PRGパターン</span>
+    <span class="code-keyword">return</span> <span class="code-string">"redirect:/todos"</span>;
+}</pre>
+                    </div>
+                </div>
+
+                <!-- コントローラの処理フロー図 -->
+                <div class="svg-container">
+                    <svg width="700" height="350" viewBox="0 0 700 350">
+                        <defs>
+                            <linearGradient id="validGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color: #9b59b6" />
+                                <stop offset="100%" style="stop-color: #8e44ad" />
+                            </linearGradient>
+                        </defs>
+
+                        <!-- タイトル -->
+                        <text x="350" y="30" text-anchor="middle" fill="#2c3e50" font-size="18" font-weight="bold">
+                            コントローラでのバリデーション処理フロー
+                        </text>
+
+                        <!-- フォームデータ受信 -->
+                        <g transform="translate(50, 60)">
+                            <rect x="0" y="0" width="180" height="60" rx="10" fill="#3498db" />
+                            <text x="90" y="25" text-anchor="middle" fill="white" font-size="12" font-weight="bold">
+                                フォームデータ受信
+                            </text>
+                            <text x="90" y="45" text-anchor="middle" fill="white" font-size="11">
+                                @Validated ToDoForm
+                            </text>
+                        </g>
+
+                        <!-- 矢印 -->
+                        <line x1="140" y1="125" x2="140" y2="155" stroke="#666" stroke-width="2" />
+                        <polygon points="140,160 135,150 145,150" fill="#666" />
+
+                        <!-- バリデーション実行 -->
+                        <g transform="translate(50, 165)">
+                            <rect x="0" y="0" width="180" height="60" rx="10" fill="url(#validGrad)" />
+                            <text x="90" y="25" text-anchor="middle" fill="white" font-size="12" font-weight="bold">
+                                バリデーション実行
+                            </text>
+                            <text x="90" y="45" text-anchor="middle" fill="white" font-size="11">
+                                BindingResult取得
+                            </text>
+                        </g>
+
+                        <!-- 分岐 -->
+                        <g transform="translate(100, 245)">
+                            <polygon points="40,0 80,30 40,60 0,30" fill="#f39c12" stroke="#d68910" stroke-width="2" />
+                            <text x="40" y="35" text-anchor="middle" fill="white" font-size="11" font-weight="bold">
+                                エラー？
+                            </text>
+                        </g>
+
+                        <!-- エラーあり経路 -->
+                        <line x1="180" y1="275" x2="300" y2="275" stroke="#e74c3c" stroke-width="2" />
+                        <polygon points="305,275 295,270 295,280" fill="#e74c3c" />
+                        <text x="240" y="265" fill="#e74c3c" font-size="11" font-weight="bold">YES</text>
+
+                        <!-- フォーム画面に戻る -->
+                        <g transform="translate(310, 245)">
+                            <rect x="0" y="0" width="160" height="60" rx="10" fill="#e74c3c" />
+                            <text x="80" y="25" text-anchor="middle" fill="white" font-size="12" font-weight="bold">
+                                入力画面に戻る
+                            </text>
+                            <text x="80" y="45" text-anchor="middle" fill="white" font-size="11">
+                                return "todo/form"
+                            </text>
+                        </g>
+
+                        <!-- エラーなし経路 -->
+                        <line x1="140" y1="310" x2="140" y2="330" stroke="#27ae60" stroke-width="2" />
+                        <text x="160" y="325" fill="#27ae60" font-size="11" font-weight="bold">NO</text>
+                        <line x1="140" y1="335" x2="530" y2="335" stroke="#27ae60" stroke-width="2" />
+                        <line x1="530" y1="335" x2="530" y2="275" stroke="#27ae60" stroke-width="2" />
+                        <polygon points="530,270 525,280 535,280" fill="#27ae60" />
+
+                        <!-- 処理続行 -->
+                        <g transform="translate(480, 60)">
+                            <rect x="0" y="0" width="170" height="200" rx="10" fill="#27ae60" />
+                            <text x="85" y="30" text-anchor="middle" fill="white" font-size="13" font-weight="bold">
+                                処理続行
+                            </text>
+                            <line x1="20" y1="45" x2="150" y2="45" stroke="rgba(255,255,255,0.3)" stroke-width="1" />
+                            <text x="85" y="70" text-anchor="middle" fill="white" font-size="11">
+                                1. エンティティ変換
+                            </text>
+                            <text x="85" y="100" text-anchor="middle" fill="white" font-size="11">2. DB登録/更新</text>
+                            <text x="85" y="130" text-anchor="middle" fill="white" font-size="11">
+                                3. メッセージ設定
+                            </text>
+                            <text x="85" y="160" text-anchor="middle" fill="white" font-size="11">4. リダイレクト</text>
+                            <text x="85" y="185" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10">
+                                redirect:/todos
+                            </text>
+                        </g>
+                    </svg>
+                </div>
+
+                <!-- アノテーション解説 -->
+                <div class="annotation-explain">
+                    <h5>📝 @Validated アノテーション</h5>
+                    <p>
+                        <code>@Validated</code
+                        >は、送信されたフォームデータに対してバリデーション（入力チェック）を行うことを指示します。ToDoFormクラスに定義されたバリデーションのアノテーション（<code>@NotBlank</code>、<code>@Size</code>など）に基づいて、入力値が適切かどうかをチェックします。
+                    </p>
+                </div>
+
+                <div class="annotation-explain">
+                    <h5>📝 BindingResult オブジェクト</h5>
+                    <p>
+                        <code>BindingResult</code
+                        >は、バリデーションの結果を保持するオブジェクトです。<code>@Validated</code>によって行われたバリデーションの後、エラーがあるかどうかをこのオブジェクトを通じて確認できます。
+                    </p>
+                </div>
+
+                <div class="annotation-explain">
+                    <h5>📝 hasErrors() メソッド</h5>
+                    <p>
+                        <code>bindingResult.hasErrors()</code
+                        >を使って、バリデーションエラーがあるかどうかをチェックします。入力チェックがある場合は「true」を返し、エラーがなければ「false」を返します。
+                    </p>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ パラメータの順序に注意</h4>
+                    <p>
+                        <code>BindingResult</code
+                        >は、<strong>必ず@Validatedが付いたパラメータの直後に配置</strong>する必要があります。順序を間違えると正しく動作しません。
+                    </p>
+                </div>
+
+                <h3 class="subsection-title">14-2-3 ビューの修正</h3>
+                <p>バリデーションメッセージを表示する処理を、ToDo用の「登録・編集画面」に追加します。</p>
+
+                <div class="file-info">
+                    <dt>パッケージ</dt>
+                    <dd>webapp/src/main/resources/templates/todo</dd>
+                    <dt>ファイル名</dt>
+                    <dd>form.html</dd>
+                </div>
+
+                <p>「form.html」の内容は以下のようになります。</p>
+
+                <div class="code-block" data-label="form.html">
+                    <div class="code-content">
+                        <pre><span class="code-comment">&lt;!-- ...既存コード省略... --&gt;</span>
+<span class="tag">&lt;table&gt;</span>
+    <span class="tag">&lt;tr&gt;</span>
+        <span class="tag">&lt;th&gt;</span>ToDo<span class="tag">&lt;/th&gt;</span>
+        <span class="tag">&lt;td&gt;</span>
+            <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="attr-value">"text"</span> <span class="th-attr">th:field</span>=<span class="attr-value">"*{todo}"</span><span class="tag">&gt;</span>
+            <span class="code-comment">&lt;!-- todo用：バリデーションエラー表示 --&gt;</span>
+            <span class="tag">&lt;span</span> <span class="th-attr">th:if</span>=<span class="attr-value">"${#fields.hasErrors('todo')}"</span>
+                  <span class="th-attr">th:errors</span>=<span class="attr-value">"*{todo}"</span>
+                  <span class="attr">style</span>=<span class="attr-value">"color: red;"</span><span class="tag">&gt;</span>エラーがあれば表示<span class="tag">&lt;/span&gt;</span>
+        <span class="tag">&lt;/td&gt;</span>
+    <span class="tag">&lt;/tr&gt;</span>
+    <span class="tag">&lt;tr&gt;</span>
+        <span class="tag">&lt;th&gt;</span>詳細<span class="tag">&lt;/th&gt;</span>
+        <span class="tag">&lt;td&gt;</span>
+            <span class="tag">&lt;textarea</span> <span class="attr">rows</span>=<span class="attr-value">"5"</span> <span class="attr">cols</span>=<span class="attr-value">"30"</span> <span class="th-attr">th:field</span>=<span class="attr-value">"*{detail}"</span><span class="tag">&gt;&lt;/textarea&gt;</span>
+            <span class="code-comment">&lt;!-- 詳細用：バリデーションエラー表示 --&gt;</span>
+            <span class="tag">&lt;span</span> <span class="th-attr">th:if</span>=<span class="attr-value">"${#fields.hasErrors('detail')}"</span>
+                  <span class="th-attr">th:errors</span>=<span class="attr-value">"*{detail}"</span>
+                  <span class="attr">style</span>=<span class="attr-value">"color: red;"</span><span class="tag">&gt;</span>エラーがあれば表示<span class="tag">&lt;/span&gt;</span>
+        <span class="tag">&lt;/td&gt;</span>
+    <span class="tag">&lt;/tr&gt;</span>
+<span class="tag">&lt;/table&gt;</span></pre>
+                    </div>
+                </div>
+
+                <!-- Thymeleaf属性の解説 -->
+                <div class="annotation-explain">
+                    <h5>📝 th:if 属性</h5>
+                    <p>
+                        <code>th:if</code
+                        >属性は条件付きで要素を表示するために使われ、<code>${#fields.hasErrors('todo')}</code>でtodoフィールドにバリデーションエラーがあるかどうかをチェックします。エラーがある場合はtrue
+                        を返し、その場合&lt;span&gt;要素が表示されます。
+                    </p>
+                </div>
+
+                <div class="annotation-explain">
+                    <h5>📝 th:errors 属性</h5>
+                    <p>
+                        <code>th:errors</code
+                        >属性は、指定されたフィールドのバリデーションエラーメッセージを表示します。<code>*{todo}</code>は、ToDoFormのtodoプロパティに関連するエラーメッセージを表示することを示します。
+                    </p>
+                </div>
+
+                <div class="annotation-explain">
+                    <h5>📝 style="color: red;"</h5>
+                    <p><code>style="color: red;"</code>属性は、エラーメッセージのテキスト色を赤に設定します。</p>
+                </div>
+
+                <p>「form」→「controller」→「view」の作成が完了しました。</p>
+
+                <h3 class="subsection-title">14-2-4 動作確認</h3>
+                <p>
+                    「入力チェック」の実装が完了しました。これでToDoの登録および編集処理にバリデーションチェックが適用されています。Webアプリケーションを起動し、これらのチェックが正常に機能しているかを動作確認してみましょう。
+                </p>
+
+                <div class="demo-section">
+                    <h4>🎯 バリデーションチェック：登録画面</h4>
+                    <p>
+                        VSCodeの左側サイドバーにある「SPRING BOOT DASHBOARD」パネルで「webapp」を選択し、再生ボタンをクリックしてプロジェクトを起動します。または、ターミナルで<code>./mvnw spring-boot:run</code>（Windows: <code>mvnw spring-boot:run</code>）を実行します。ブラウザを立ち上げURL「<code>http://localhost:8080/todos</code>」を指定し、表示された「ToDo一覧画面」の「新規登録」リンクをクリックして「新規ToDo登録画面」を表示します。ToDo、詳細項目を未入力で登録ボタンをクリックして、バリデーションエラーメッセージが表示されることを確認します。
+                    </p>
+
+                    <div class="form-preview">
+                        <h5>新規ToDo登録</h5>
+                        <div class="form-group">
+                            <label>ToDo</label>
+                            <input type="text" placeholder="" value="" />
+                            <div class="error-message">ToDoは必須です。</div>
+                        </div>
+                        <div class="form-group">
+                            <label>詳細</label>
+                            <textarea rows="3" cols="30"></textarea>
+                            <div class="error-message">詳細は1～100文字以内で入力してください。</div>
+                        </div>
+                        <div class="btn-group">
+                            <button>登録</button>
+                            <button>戻る</button>
+                        </div>
+                    </div>
+
+                    <p>詳細項目に101文字を入力しても、バリデーションエラーメッセージが表示されることを確認します。</p>
+                </div>
+
+                <div class="demo-section">
+                    <h4>🎯 バリデーションチェック：更新画面</h4>
+                    <p>
+                        「ToDo一覧画面」の「ID：1」のレコードの「詳細」リンクをクリックして「ToDo詳細画面」を表示します。「編集」リンクをクリックして「ToDo編集画面」を表示します。ToDo、詳細項目を未入力に修正し、更新ボタンをクリックして、バリデーションエラーメッセージが表示されることを確認します。
+                    </p>
+
+                    <div class="form-preview">
+                        <h5>ToDo編集</h5>
+                        <div class="form-group">
+                            <label>ToDo</label>
+                            <input type="text" placeholder="" value="" />
+                            <div class="error-message">ToDoは必須です。</div>
+                        </div>
+                        <div class="form-group">
+                            <label>詳細</label>
+                            <textarea rows="3" cols="30"></textarea>
+                            <div class="error-message">詳細は1～100文字以内で入力してください。</div>
+                        </div>
+                        <div class="btn-group">
+                            <button>更新</button>
+                            <button>戻る</button>
+                        </div>
+                    </div>
+
+                    <p>詳細項目に101文字を入力しても、バリデーションエラーメッセージが表示されることを確認します。</p>
+                </div>
+            </div>
+
+            <!-- まとめ -->
+            <div class="summary-card">
+                <h3>🎉 第14章のまとめ</h3>
+                <ul>
+                    <li>バリデーションはアプリケーションを不正な入力から守る「盾」</li>
+                    <li>Spring Boot Validationの依存関係を追加して機能を有効化</li>
+                    <li>Formクラスに@NotBlank、@Sizeなどのアノテーションでルールを定義</li>
+                    <li>コントローラで@ValidatedとBindingResultを使ってチェックを実行</li>
+                    <li>ビューでth:if、th:errorsを使ってエラーメッセージを表示</li>
+                    <li>これで「ToDoアプリ」は「ノーガード」状態から「入力チェック」という盾を手に入れました！</li>
+                </ul>
+            </div>
+
+            <!-- 次の章への導線 -->
+            <div class="content-card" style="text-align: center; padding: 40px">
+                <h3 style="color: #2c3e50; margin-bottom: 20px">🚀 次のステップ</h3>
+                <p style="font-size: 1.1rem; color: #666">
+                    入力チェック機能を実装できました！<br />次の章では、さらに高度なアプリケーション開発について学びましょう。
+                </p>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>Spring Framework 入門チュートリアル</p>
+        </footer>
+
+        <div class="page-nav">
+            <a href="13_application_layer.html" class="page-nav-btn prev">
+                <span>←</span>
+                <div>
+                    <div class="page-nav-label">前の章</div>
+                    <div class="page-nav-title">第13章</div>
+                </div>
+            </a>
+
+            <a href="15-spring-security-tutorial.html" class="page-nav-btn next">
+                <div>
+                    <div class="page-nav-label">次の章</div>
+                    <div class="page-nav-title">第15章</div>
+                </div>
+                <span>→</span>
+            </a>
+        </div>
+
+        <script>
+            function toggleMenu() {
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+                toggle.classList.toggle("active");
+                menu.classList.toggle("active");
+            }
+
+            document.addEventListener("click", function (e) {
+                const nav = document.querySelector(".global-nav");
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+
+                if (!nav.contains(e.target) && menu.classList.contains("active")) {
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+
+            window.addEventListener("resize", function () {
+                if (window.innerWidth >= 1024) {
+                    const toggle = document.querySelector(".nav-toggle");
+                    const menu = document.querySelector(".nav-menu");
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+        </script>
+    </body>
+</html>

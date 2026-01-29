@@ -1,0 +1,1613 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>第0章 チャットベースのプロンプトプログラミング</title>
+
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&family=M+PLUS+Rounded+1c:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="style.css" />
+        <style>
+            .download-btn {
+                background: linear-gradient(135deg, #22c55e, #16a34a);
+                color: white;
+                border: none;
+                padding: 6px 14px;
+                border-radius: 6px;
+                font-size: 12px;
+                font-weight: 600;
+                cursor: pointer;
+                margin-left: auto;
+                transition: all 0.2s ease;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+            }
+            .download-btn:hover {
+                background: linear-gradient(135deg, #16a34a, #15803d);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+            }
+            .download-btn:active {
+                transform: translateY(0);
+            }
+            .code-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- グローバルナビゲーション -->
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="1spring-framework-tutorial.html" class="nav-logo">
+                    <span class="nav-logo-icon">🌱</span>
+                    <span>Spring入門</span>
+                </a>
+                <button class="nav-toggle" onclick="toggleMenu()" aria-label="メニュー">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 章を選択</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="0promptprograming.html" class="nav-link active">
+                                <span class="nav-chapter-num">0</span>
+                                <span>プロンプトプログラミング</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="1spring-framework-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">1</span>
+                                <span>Spring Frameworkについて知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="2java_basics.html" class="nav-link">
+                                <span class="nav-chapter-num">2</span>
+                                <span>基礎知識を身に付けよう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="3di-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">3</span>
+                                <span>DIを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="4aop-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">4</span>
+                                <span>AOPを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="5mvc-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">5</span>
+                                <span>MVCを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="6thymeleaf-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">6</span>
+                                <span>Thymeleafを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="7ServerDataSubmission.html" class="nav-link">
+                                <span class="nav-chapter-num">7</span>
+                                <span>サーバーへのデータ送信</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="8Validation_Textbook_Rewrite.html" class="nav-link">
+                                <span class="nav-chapter-num">8</span>
+                                <span>バリデーション</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="9_MyBatis_Tutorial__2_.html" class="nav-link">
+                                <span class="nav-chapter-num">9</span>
+                                <span>MyBatisチュートリアル</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="10app-preparation-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">10</span>
+                                <span>アプリケーション作成準備</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="11-database-operations.html" class="nav-link">
+                                <span class="nav-chapter-num">11</span>
+                                <span>データベース操作</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="12service-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">12</span>
+                                <span>サービス層</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="13_application_layer.html" class="nav-link">
+                                <span class="nav-chapter-num">13</span>
+                                <span>アプリケーション層</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="14_validation.html" class="nav-link">
+                                <span class="nav-chapter-num">14</span>
+                                <span>バリデーション（応用）</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="15-spring-security-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">15</span>
+                                <span>Spring Security</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <!-- ヘッダー -->
+            <header class="chapter-header">
+                <div class="chapter-badge">📘 Chapter</div>
+                <div class="chapter-number">0</div>
+                <h1 class="chapter-title">チャットベースのプロンプトプログラミング</h1>
+            </header>
+
+            <!-- 目次 -->
+            <nav class="toc">
+                <h2 class="toc-title">📑 この章の内容</h2>
+                <ul class="toc-list">
+                    <li class="toc-item">
+                        <span class="toc-number">0-1</span>
+                        <span>概要</span>
+                    </li>
+                    <li class="toc-item">
+                        <span class="toc-number">0-2</span>
+                        <span>仕様</span>
+                    </li>
+                    <li class="toc-item">
+                        <span class="toc-number">0-3</span>
+                        <span>アプリ仕様</span>
+                    </li>
+                    <li class="toc-item">
+                        <span class="toc-number">0-4</span>
+                        <span>プロンプトの生成</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- セクション 0-1 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 0-1</span>
+                    <h2 class="section-title">概要</h2>
+                </div>
+
+                <div class="intro-text">
+                    <p>
+                        この章では、<strong>AIを活用したプロンプトプログラミング</strong>の手法を学びます。
+                    </p>
+                    <p>
+                        題材として<strong>一覧、登録、確認、完了</strong>の4画面を持つToDoアプリを取り上げ、各画面ごとにプロンプトを作成していきます。
+                    </p>
+                </div>
+
+                <h3>この章で学ぶこと</h3>
+                <div class="module-list">
+                    <div class="module-item">
+                        <div class="module-icon">📝</div>
+                        <div class="module-content">
+                            <h4>プロンプトの書き方</h4>
+                            <p>AIに的確な指示を出すためのプロンプト作成技術</p>
+                        </div>
+                    </div>
+                    <div class="module-item">
+                        <div class="module-icon">🔄</div>
+                        <div class="module-content">
+                            <h4>対話的な開発</h4>
+                            <p>AIからの質問に答えながら仕様を詰めていく手法</p>
+                        </div>
+                    </div>
+                    <div class="module-item">
+                        <div class="module-icon">📋</div>
+                        <div class="module-content">
+                            <h4>仕様書・設計書の生成</h4>
+                            <p>プロンプトから仕様書・設計書を自動生成する方法</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>学習の流れ</h3>
+                <ol class="step-list">
+                    <li><strong>開発規約の作成</strong>：使用技術やディレクトリ構成を決める</li>
+                    <li><strong>画面遷移の設計</strong>：画面の流れとURL設計を行う</li>
+                    <li><strong>各画面のプロンプト作成</strong>：一覧・登録・確認・完了画面のプロンプトを作成</li>
+                    <li><strong>仕様書・設計書の出力</strong>：全体構成を確認し、ドキュメントを生成</li>
+                    <li><strong>プロンプトのダウンロード</strong>：作成したプロンプトを保存</li>
+                </ol>
+
+                <div class="warning-box">
+                    <div class="warning-box-header">
+                        <span class="warning-box-icon">⚠️</span>
+                        <span class="warning-box-title">重要：この章の目的</span>
+                    </div>
+                    <p>この章では<strong>プロンプトの作成方法</strong>を学びます。<br>
+                    <strong>実際のコーディングは行いません</strong>。作成したプロンプトをAIに送信してコードを生成してもらう形式です。</p>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title">学習のポイント</span>
+                    </div>
+                    <p>プロンプトプログラミングでは「何を作りたいか」を明確に伝えることが重要です。<br>
+                    技術的な詳細はAIが補完してくれるため、要件を整理する力を身につけましょう。</p>
+                </div>
+            </section>
+
+            <!-- セクション 0-2 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 0-2</span>
+                    <h2 class="section-title">仕様</h2>
+                </div>
+
+                <h3>技術スタック</h3>
+                <div class="module-list">
+                    <div class="module-item">
+                        <div class="module-icon">☕</div>
+                        <div class="module-content">
+                            <h4>言語</h4>
+                            <p>Java</p>
+                        </div>
+                    </div>
+                    <div class="module-item">
+                        <div class="module-icon">🌱</div>
+                        <div class="module-content">
+                            <h4>フレームワーク</h4>
+                            <p>Spring</p>
+                        </div>
+                    </div>
+                    <div class="module-item">
+                        <div class="module-icon">🔧</div>
+                        <div class="module-content">
+                            <h4>拡張機能</h4>
+                            <p>Spring MVC, Spring Boot, Thymeleaf</p>
+                        </div>
+                    </div>
+                    <div class="module-item">
+                        <div class="module-icon">💾</div>
+                        <div class="module-content">
+                            <h4>データベース</h4>
+                            <p>H2メモリ版</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>データベースカラム</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>カラム名</th>
+                            <th>型</th>
+                            <th>備考</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>No</td>
+                            <td>int</td>
+                            <td>自動採番</td>
+                        </tr>
+                        <tr>
+                            <td>登録者</td>
+                            <td>String</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>タイトル</td>
+                            <td>String</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>詳細</td>
+                            <td>String</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>更新日</td>
+                            <td>date</td>
+                            <td>自動設定</td>
+                        </tr>
+                        <tr>
+                            <td>作成日</td>
+                            <td>date</td>
+                            <td>自動設定</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- セクション 0-3 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 0-3</span>
+                    <h2 class="section-title">アプリ仕様</h2>
+                </div>
+
+                <div class="intro-text">
+                    <p>ToDoアプリの画面構成と各画面の仕様を説明します。</p>
+                </div>
+
+                <!-- 画面遷移図 -->
+                <h3>画面遷移図</h3>
+                <div class="screen-flow-diagram" style="display: flex; justify-content: center; margin: 2rem 0;">
+                    <svg viewBox="0 0 710 320" width="710" height="320">
+                        <!-- 背景 -->
+                        <rect width="710" height="320" fill="#f8fafc" rx="12" />
+
+                        <!-- 矢印マーカー定義 -->
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
+                            </marker>
+                            <marker id="arrowhead-gray" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#94a3b8" />
+                            </marker>
+                            <marker id="arrowhead-purple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#8b5cf6" />
+                            </marker>
+                        </defs>
+
+                        <!-- 一覧画面 -->
+                        <rect x="20" y="100" width="110" height="60" rx="8" fill="#3b82f6" />
+                        <text x="75" y="125" text-anchor="middle" font-size="11" font-weight="bold" fill="white">📋 一覧画面</text>
+                        <text x="75" y="145" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.9)">index.html</text>
+
+                        <!-- 登録画面 -->
+                        <rect x="195" y="100" width="110" height="60" rx="8" fill="#22c55e" />
+                        <text x="250" y="125" text-anchor="middle" font-size="11" font-weight="bold" fill="white">✏️ 登録画面</text>
+                        <text x="250" y="145" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.9)">edit.html</text>
+
+                        <!-- 確認画面 -->
+                        <rect x="370" y="100" width="110" height="60" rx="8" fill="#f59e0b" />
+                        <text x="425" y="125" text-anchor="middle" font-size="11" font-weight="bold" fill="white">🔍 確認画面</text>
+                        <text x="425" y="145" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.9)">confirm.html</text>
+
+                        <!-- 完了画面 -->
+                        <rect x="545" y="100" width="110" height="60" rx="8" fill="#8b5cf6" />
+                        <text x="600" y="125" text-anchor="middle" font-size="11" font-weight="bold" fill="white">✅ 完了画面</text>
+                        <text x="600" y="145" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.9)">complete.html</text>
+
+                        <!-- 順方向矢印（実線） -->
+                        <!-- 一覧→登録 -->
+                        <line x1="130" y1="130" x2="190" y2="130" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)" />
+                        <text x="160" y="120" text-anchor="middle" font-size="8" fill="#64748b">新規登録</text>
+
+                        <!-- 登録→確認 -->
+                        <line x1="305" y1="130" x2="365" y2="130" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)" />
+                        <text x="335" y="120" text-anchor="middle" font-size="8" fill="#64748b">確認</text>
+
+                        <!-- 確認→完了 -->
+                        <line x1="480" y1="130" x2="540" y2="130" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)" />
+                        <text x="510" y="120" text-anchor="middle" font-size="8" fill="#64748b">登録</text>
+
+                        <!-- 戻る矢印（折れ線） -->
+                        <!-- 登録→一覧（戻る）：y=190 -->
+                        <polyline points="200,130 180,130 180,190 75,190 75,165" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arrowhead-gray)" />
+                        <text x="127" y="205" text-anchor="middle" font-size="8" fill="#94a3b8">戻る</text>
+
+                        <!-- 確認→登録（修正）：y=220 -->
+                        <polyline points="375,130 355,130 355,220 250,220 250,165" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arrowhead-gray)" />
+                        <text x="302" y="235" text-anchor="middle" font-size="8" fill="#94a3b8">修正</text>
+
+                        <!-- 完了→一覧（一覧へ）：y=260 -->
+                        <polyline points="550,130 530,130 530,260 75,260 75,165" stroke="#8b5cf6" stroke-width="1.5" fill="none" marker-end="url(#arrowhead-purple)" />
+                        <text x="302" y="275" text-anchor="middle" font-size="8" fill="#8b5cf6">一覧へ</text>
+                    </svg>
+                </div>
+
+                <!-- 画面仕様 -->
+                <h3>画面仕様</h3>
+
+                <h4>1. 一覧画面（初期画面）</h4>
+                <div class="screen-spec">
+                    <table class="data-table">
+                        <tbody>
+                            <tr>
+                                <th>ファイル名</th>
+                                <td><code>index.html</code></td>
+                            </tr>
+                            <tr>
+                                <th>表示項目</th>
+                                <td>
+                                    <ul style="margin: 0; padding-left: 1.2rem;">
+                                        <li>No</li>
+                                        <li>タイトル</li>
+                                        <li>登録者</li>
+                                        <li>作成日</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>機能</th>
+                                <td>
+                                    <ul style="margin: 0; padding-left: 1.2rem;">
+                                        <li>ToDoの一覧をテーブルで表示</li>
+                                        <li>データがない場合は「データはありません」と表示</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>ボタン</th>
+                                <td>新規登録ボタン → <code>edit.html</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 一覧画面モックアップ -->
+                <div class="screen-mockup" style="background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin: 1rem auto; max-width: 600px;">
+                    <div style="background: #3b82f6; color: white; padding: 0.5rem 1rem; border-radius: 4px 4px 0 0; font-weight: bold; margin: -1rem -1rem 1rem -1rem;">
+                        📋 一覧画面イメージ
+                    </div>
+                    <div style="text-align: right; margin-bottom: 0.5rem;">
+                        <span style="background: #22c55e; color: white; padding: 0.3rem 0.8rem; border-radius: 4px; font-size: 0.85rem;">新規登録</span>
+                    </div>
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; color: #000;">
+                        <thead>
+                            <tr style="background: #e2e8f0;">
+                                <th style="border: 1px solid #cbd5e1; padding: 0.5rem; text-align: center;">No</th>
+                                <th style="border: 1px solid #cbd5e1; padding: 0.5rem; text-align: left;">タイトル</th>
+                                <th style="border: 1px solid #cbd5e1; padding: 0.5rem; text-align: left;">登録者</th>
+                                <th style="border: 1px solid #cbd5e1; padding: 0.5rem; text-align: center;">作成日</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid #cbd5e1; padding: 0.5rem; text-align: center;">1</td>
+                                <td style="border: 1px solid #cbd5e1; padding: 0.5rem;">買い物リスト作成</td>
+                                <td style="border: 1px solid #cbd5e1; padding: 0.5rem;">山田太郎</td>
+                                <td style="border: 1px solid #cbd5e1; padding: 0.5rem; text-align: center;">2024/01/15</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #cbd5e1; padding: 0.5rem; text-align: center;">2</td>
+                                <td style="border: 1px solid #cbd5e1; padding: 0.5rem;">会議資料準備</td>
+                                <td style="border: 1px solid #cbd5e1; padding: 0.5rem;">鈴木花子</td>
+                                <td style="border: 1px solid #cbd5e1; padding: 0.5rem; text-align: center;">2024/01/16</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4>2. 登録画面</h4>
+                <div class="screen-spec">
+                    <table class="data-table">
+                        <tbody>
+                            <tr>
+                                <th>ファイル名</th>
+                                <td><code>edit.html</code></td>
+                            </tr>
+                            <tr>
+                                <th>レイアウト</th>
+                                <td>テーブルタグで作成</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="margin-top: 1rem;"><strong>入力項目：</strong></p>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>項目</th>
+                                <th>入力形式</th>
+                                <th>備考</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>登録者</td>
+                                <td>text</td>
+                                <td>入力必須</td>
+                            </tr>
+                            <tr>
+                                <td>タイトル</td>
+                                <td>text</td>
+                                <td>入力必須</td>
+                            </tr>
+                            <tr>
+                                <td>詳細</td>
+                                <td>textarea</td>
+                                <td>任意</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="info-box" style="margin-top: 1rem;">
+                        <div class="info-box-header">
+                            <span class="info-box-icon">💡</span>
+                            <span class="info-box-title">自動設定項目</span>
+                        </div>
+                        <p style="margin: 0;">No、作成日、更新日はシステムが自動で設定するため、入力フォームには含めません。</p>
+                    </div>
+                    <p style="margin-top: 1rem;"><strong>ボタン：</strong></p>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ボタン名</th>
+                                <th>遷移先</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>確認</td>
+                                <td><code>confirm.html</code></td>
+                            </tr>
+                            <tr>
+                                <td>戻る</td>
+                                <td><code>index.html</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 登録画面モックアップ -->
+                <div class="screen-mockup" style="background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin: 1rem auto; max-width: 600px;">
+                    <div style="background: #22c55e; color: white; padding: 0.5rem 1rem; border-radius: 4px 4px 0 0; font-weight: bold; margin: -1rem -1rem 1rem -1rem;">
+                        ✏️ 登録画面イメージ
+                    </div>
+                    <table style="width: 100%; max-width: 500px; border-collapse: collapse; font-size: 0.9rem; color: #000;">
+                        <tbody>
+                            <tr>
+                                <th style="border: 1px solid #cbd5e1; padding: 0.5rem; background: #f1f5f9; width: 120px; text-align: left; color: #000;">登録者 <span style="color: #ef4444;">*</span></th>
+                                <td style="border: 1px solid #cbd5e1; padding: 0.5rem; color: #000;">
+                                    <input type="text" style="width: 100%; padding: 0.3rem; border: 1px solid #cbd5e1; border-radius: 4px;" placeholder="山田太郎" disabled>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="border: 1px solid #cbd5e1; padding: 0.5rem; background: #f1f5f9; text-align: left; color: #000;">タイトル <span style="color: #ef4444;">*</span></th>
+                                <td style="border: 1px solid #cbd5e1; padding: 0.5rem; color: #000;">
+                                    <input type="text" style="width: 100%; padding: 0.3rem; border: 1px solid #cbd5e1; border-radius: 4px;" placeholder="買い物リスト作成" disabled>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="border: 1px solid #cbd5e1; padding: 0.5rem; background: #f1f5f9; text-align: left; vertical-align: top; color: #000;">詳細</th>
+                                <td style="border: 1px solid #cbd5e1; padding: 0.5rem; color: #000;">
+                                    <textarea style="width: 100%; height: 60px; padding: 0.3rem; border: 1px solid #cbd5e1; border-radius: 4px; resize: none;" placeholder="詳細内容を入力..." disabled></textarea>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                        <span style="background: #3b82f6; color: white; padding: 0.3rem 1rem; border-radius: 4px; font-size: 0.85rem;">確認</span>
+                        <span style="background: #6b7280; color: white; padding: 0.3rem 1rem; border-radius: 4px; font-size: 0.85rem;">戻る</span>
+                    </div>
+                    <p style="margin: 0.5rem 0 0 0; font-size: 0.8rem; color: #64748b;"><span style="color: #ef4444;">*</span> は必須項目</p>
+                </div>
+
+                <h4>3. 確認画面</h4>
+                <div class="screen-spec">
+                    <table class="data-table">
+                        <tbody>
+                            <tr>
+                                <th>ファイル名</th>
+                                <td><code>confirm.html</code></td>
+                            </tr>
+                            <tr>
+                                <th>表示内容</th>
+                                <td>
+                                    <ul style="margin: 0; padding-left: 1.2rem;">
+                                        <li>登録者</li>
+                                        <li>タイトル</li>
+                                        <li>詳細</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>メッセージ</th>
+                                <td>「上記で登録して良いですか？」</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="margin-top: 1rem;"><strong>ボタン：</strong></p>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ボタン名</th>
+                                <th>遷移先</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>登録</td>
+                                <td><code>complete.html</code></td>
+                            </tr>
+                            <tr>
+                                <td>修正</td>
+                                <td><code>edit.html</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 確認画面モックアップ -->
+                <div class="screen-mockup" style="background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin: 1rem auto; max-width: 600px;">
+                    <div style="background: #f59e0b; color: white; padding: 0.5rem 1rem; border-radius: 4px 4px 0 0; font-weight: bold; margin: -1rem -1rem 1rem -1rem;">
+                        🔍 確認画面イメージ
+                    </div>
+                    <table style="width: 100%; max-width: 500px; border-collapse: collapse; font-size: 0.9rem; color: #000;">
+                        <tbody>
+                            <tr>
+                                <th style="border: 1px solid #cbd5e1; padding: 0.5rem; background: #f1f5f9; width: 120px; text-align: left; color: #000;">登録者</th>
+                                <td style="border: 1px solid #cbd5e1; padding: 0.5rem; color: #000;">山田太郎</td>
+                            </tr>
+                            <tr>
+                                <th style="border: 1px solid #cbd5e1; padding: 0.5rem; background: #f1f5f9; text-align: left; color: #000;">タイトル</th>
+                                <td style="border: 1px solid #cbd5e1; padding: 0.5rem; color: #000;">買い物リスト作成</td>
+                            </tr>
+                            <tr>
+                                <th style="border: 1px solid #cbd5e1; padding: 0.5rem; background: #f1f5f9; text-align: left; vertical-align: top; color: #000;">詳細</th>
+                                <td style="border: 1px solid #cbd5e1; padding: 0.5rem; color: #000;">牛乳、パン、卵を買う</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="margin: 1rem 0; padding: 0.8rem; background: #fef3c7; border-radius: 4px; text-align: center; font-weight: bold; color: #92400e;">
+                        上記で登録して良いですか？
+                    </p>
+                    <div style="display: flex; gap: 0.5rem; justify-content: center;">
+                        <span style="background: #22c55e; color: white; padding: 0.3rem 1rem; border-radius: 4px; font-size: 0.85rem;">登録</span>
+                        <span style="background: #6b7280; color: white; padding: 0.3rem 1rem; border-radius: 4px; font-size: 0.85rem;">修正</span>
+                    </div>
+                </div>
+
+                <h4>4. 登録完了画面</h4>
+                <div class="screen-spec">
+                    <table class="data-table">
+                        <tbody>
+                            <tr>
+                                <th>ファイル名</th>
+                                <td><code>complete.html</code></td>
+                            </tr>
+                            <tr>
+                                <th>表示内容</th>
+                                <td>
+                                    <ul style="margin: 0; padding-left: 1.2rem;">
+                                        <li>登録者</li>
+                                        <li>タイトル</li>
+                                        <li>詳細</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>メッセージ</th>
+                                <td>「上記で登録しました。」</td>
+                            </tr>
+                            <tr>
+                                <th>リンク</th>
+                                <td>一覧 → <code>index.html</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 完了画面モックアップ -->
+                <div class="screen-mockup" style="background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin: 1rem auto; max-width: 600px;">
+                    <div style="background: #8b5cf6; color: white; padding: 0.5rem 1rem; border-radius: 4px 4px 0 0; font-weight: bold; margin: -1rem -1rem 1rem -1rem;">
+                        ✅ 完了画面イメージ
+                    </div>
+                    <div style="text-align: center; padding: 1rem; background: #dcfce7; border-radius: 8px; margin-bottom: 1rem;">
+                        <span style="font-size: 2rem;">✅</span>
+                        <p style="margin: 0.5rem 0 0 0; font-weight: bold; color: #166534;">登録が完了しました</p>
+                    </div>
+                    <table style="width: 100%; max-width: 500px; border-collapse: collapse; font-size: 0.9rem; margin: 0 auto; color: #000;">
+                        <tbody>
+                            <tr>
+                                <th style="border: 1px solid #cbd5e1; padding: 0.5rem; background: #f1f5f9; width: 120px; text-align: left; color: #000;">登録者</th>
+                                <td style="border: 1px solid #cbd5e1; padding: 0.5rem; color: #000;">山田太郎</td>
+                            </tr>
+                            <tr>
+                                <th style="border: 1px solid #cbd5e1; padding: 0.5rem; background: #f1f5f9; text-align: left; color: #000;">タイトル</th>
+                                <td style="border: 1px solid #cbd5e1; padding: 0.5rem; color: #000;">買い物リスト作成</td>
+                            </tr>
+                            <tr>
+                                <th style="border: 1px solid #cbd5e1; padding: 0.5rem; background: #f1f5f9; text-align: left; vertical-align: top; color: #000;">詳細</th>
+                                <td style="border: 1px solid #cbd5e1; padding: 0.5rem; color: #000;">牛乳、パン、卵を買う</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="margin-top: 1rem; text-align: center;">
+                        <a href="#" style="color: #3b82f6; text-decoration: underline;">← 一覧へ戻る</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- セクション 0-4 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 0-4</span>
+                    <h2 class="section-title">プロンプトの生成</h2>
+                </div>
+
+                <div class="intro-text">
+                    <p>
+                        各工程ごとにプロンプトを作成するために必要な項目と、具体的なプロンプト例を紹介します。
+                    </p>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-box-header">
+                        <span class="warning-box-icon">⚠️</span>
+                        <span class="warning-box-title">この章の目的</span>
+                    </div>
+                    <p>この章では<strong>プロンプトの作成方法</strong>を学びます。<br>
+                    各工程ではプロンプトの生成を行い、<strong>実際の実装は行いません</strong>。<br>
+                    作成したプロンプトをAIに送信して、コードを生成してもらいましょう。</p>
+                </div>
+
+                <!-- 1. 開発規約の作成 -->
+                <h3>1. 開発規約の作成</h3>
+
+                <h4>整理すべき項目</h4>
+                <div class="screen-spec">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>項目</th>
+                                <th>内容</th>
+                                <th>サンプル</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>言語</td>
+                                <td>使用するプログラミング言語</td>
+                                <td>Java</td>
+                            </tr>
+                            <tr>
+                                <td>フレームワーク</td>
+                                <td>使用するフレームワーク</td>
+                                <td>Spring Boot</td>
+                            </tr>
+                            <tr>
+                                <td>データベース</td>
+                                <td>使用するデータベース</td>
+                                <td>H2メモリベース</td>
+                            </tr>
+                            <tr>
+                                <td>その他</td>
+                                <td>追加で必要な情報</td>
+                                <td>CRUD開発に必要な依存関係を教えて</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title">初学者向けポイント</span>
+                    </div>
+                    <p>ディレクトリ構成や命名規則など、詳細な設計はAIに任せてOKです。<br>
+                    最低限「何を使って」「何を作りたいか」を伝えれば、AIが適切な構成を提案してくれます。</p>
+                </div>
+
+                <div class="code-block" id="prompt-1">
+                    <div class="code-header">
+                        <span class="code-title">プロンプト例</span>
+                        <button class="download-btn" onclick="downloadPrompt('prompt-1', '01_開発規約.txt')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre>あなたはJavaプログラマーです。
+
+ToDoアプリを作成したいです。
+
+【使用技術】
+- 言語：Java
+- フレームワーク：Spring Boot
+- データベース：H2メモリベース
+- 新規で最小構成のSpring Bootプロジェクトを作成する
+
+【提案要求】
+- CRUD開発に必要な依存関係
+- 推奨されるディレクトリ構成
+- クラス名やメソッド名の命名規則
+
+プロンプト生成において不明箇所があれば教えてください。
+なければプロンプトを生成しテキストファイルでダウンロードできる形式で出力してください。</pre>
+                    </div>
+                </div>
+
+                <h4>AIからの質問例</h4>
+                <div class="screen-spec" style="background: #fef3c7; border-left: 4px solid #f59e0b;">
+                    <p style="margin: 0 0 1rem 0; font-weight: bold; color: #92400e;">🤖 AIからこのような質問が来ることがあります</p>
+                    <ul style="margin: 0; padding-left: 1.5rem; line-height: 1.8;">
+                        <li><strong>画面構成</strong>：想定する画面は何ですか？（例：一覧・新規作成・編集・詳細・削除確認 など）</li>
+                        <li><strong>プロンプト形式</strong>：todo_*_prompt.txt はプレーンテキストでOK？それともMarkdown形式にしますか？</li>
+                        <li><strong>プロジェクト構成</strong>：Maven/Gradleのどちらで最小Spring Bootプロジェクトを作成しますか？</li>
+                        <li><strong>アプリ種別</strong>：MVC（画面あり）/REST API（画面なし）のどちらを想定しますか？</li>
+                        <li><strong>ToDoの項目</strong>：最低限のフィールドは何にしますか？（例：id, title, description, dueDate, status など）</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title">質問への回答のコツ</span>
+                    </div>
+                    <p>AIからの質問には、できるだけ具体的に回答しましょう。<br>
+                    回答内容がプロンプトに反映され、より適切なコードが生成されます。</p>
+                </div>
+
+                <!-- 2. 画面遷移 -->
+                <h3>2. 画面遷移</h3>
+
+                <h4>整理すべき項目</h4>
+                <div class="screen-spec">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>項目</th>
+                                <th>内容</th>
+                                <th>サンプル</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>画面の数</td>
+                                <td>いくつの画面が必要か</td>
+                                <td>4画面</td>
+                            </tr>
+                            <tr>
+                                <td>画面の流れ</td>
+                                <td>どの順番で画面を移動するか</td>
+                                <td>一覧→登録→確認→完了</td>
+                            </tr>
+                            <tr>
+                                <td>戻る操作</td>
+                                <td>前の画面に戻れるか</td>
+                                <td>登録→一覧、確認→登録</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title">初学者向けポイント</span>
+                    </div>
+                    <p>URLやファイル名はAIが適切に決めてくれます。<br>
+                    「どんな画面があって、どう移動するか」を伝えれば十分です。</p>
+                </div>
+
+                <div class="code-block" id="prompt-2">
+                    <div class="code-header">
+                        <span class="code-title">プロンプト例</span>
+                        <button class="download-btn" onclick="downloadPrompt('prompt-2', '02_画面遷移.txt')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre>あなたはJavaプログラマーです。
+
+ToDoアプリの画面遷移を設計してください。
+
+【必要な画面】
+1. 一覧画面（最初に表示）
+2. 登録画面
+3. 確認画面
+4. 完了画面
+
+【画面の流れ】
+一覧 → 登録 → 確認 → 完了 → 一覧に戻る
+
+【戻る操作】
+- 登録画面から一覧に戻れる
+- 確認画面から登録画面に戻れる
+
+プロンプト生成において不明箇所があれば教えてください。
+なければプロンプトを生成しテキストファイルでダウンロードできる形式で出力してください。</pre>
+                    </div>
+                </div>
+
+                <!-- 3. 一覧画面の作成 -->
+                <h3>3. 一覧画面の作成</h3>
+
+                <h4>整理すべき項目</h4>
+                <div class="screen-spec">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>項目</th>
+                                <th>内容</th>
+                                <th>サンプル</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>表示したい項目</td>
+                                <td>一覧に表示するデータ</td>
+                                <td>No、タイトル、登録者、作成日</td>
+                            </tr>
+                            <tr>
+                                <td>ボタン</td>
+                                <td>画面に配置するボタン</td>
+                                <td>新規登録ボタン</td>
+                            </tr>
+                            <tr>
+                                <td>データがない時</td>
+                                <td>何を表示するか</td>
+                                <td>「データはありません」</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title">初学者向けポイント</span>
+                    </div>
+                    <p>Controller、Service、Repositoryなどの構成はAIが作成してくれます。<br>
+                    「何を表示したいか」を伝えることに集中しましょう。</p>
+                </div>
+
+                <div class="code-block" id="prompt-3">
+                    <div class="code-header">
+                        <span class="code-title">プロンプト例</span>
+                        <button class="download-btn" onclick="downloadPrompt('prompt-3', '03_一覧画面.txt')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre>あなたはJavaプログラマーです。
+
+ToDoアプリの一覧画面を作成するためのプロンプトを生成してください。
+
+【表示したい項目】
+- No（自動で番号をつける）
+- タイトル
+- 登録者
+- 作成日
+
+【機能】
+- ToDoの一覧をテーブルで表示
+- データがなければ「データはありません」と表示
+- 新規登録ボタンで登録画面へ移動
+
+プロンプト生成において不明箇所があれば教えてください。
+なければプロンプトを生成しテキストファイルでダウンロードできる形式で出力してください。</pre>
+                    </div>
+                </div>
+
+                <h4>AIからの質問例</h4>
+                <div class="screen-spec" style="background: #fef3c7; border-left: 4px solid #f59e0b;">
+                    <p style="margin: 0 0 1rem 0; font-weight: bold; color: #92400e;">🤖 AIからこのような質問が来ることがあります</p>
+                    <ul style="margin: 0; padding-left: 1.5rem; line-height: 1.8;">
+                        <li><strong>ソート機能</strong>：一覧のソート機能は必要ですか？（作成日順、タイトル順など）</li>
+                        <li><strong>ページネーション</strong>：データが多い場合のページング機能は必要ですか？</li>
+                        <li><strong>検索機能</strong>：タイトルや登録者で絞り込む検索機能は必要ですか？</li>
+                        <li><strong>詳細表示</strong>：一覧から詳細画面への遷移は必要ですか？</li>
+                    </ul>
+                </div>
+
+                <!-- 4. 登録画面の作成 -->
+                <h3>4. 登録画面の作成</h3>
+
+                <h4>整理すべき項目</h4>
+                <div class="screen-spec">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>項目</th>
+                                <th>内容</th>
+                                <th>サンプル</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>入力項目</td>
+                                <td>何を入力させるか</td>
+                                <td>登録者、タイトル、詳細</td>
+                            </tr>
+                            <tr>
+                                <td>必須項目</td>
+                                <td>どの項目を必須にするか</td>
+                                <td>登録者、タイトル</td>
+                            </tr>
+                            <tr>
+                                <td>ボタン</td>
+                                <td>画面に配置するボタン</td>
+                                <td>確認ボタン、戻るボタン</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title">初学者向けポイント</span>
+                    </div>
+                    <p>バリデーションの詳細（文字数制限など）やForm、Controllerの構成はAIが作成してくれます。<br>
+                    「何を入力させたいか」を伝えれば十分です。</p>
+                </div>
+
+                <div class="code-block" id="prompt-4">
+                    <div class="code-header">
+                        <span class="code-title">プロンプト例</span>
+                        <button class="download-btn" onclick="downloadPrompt('prompt-4', '04_登録画面.txt')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre>あなたはJavaプログラマーです。
+
+ToDoアプリの登録画面を作成するためのプロンプトを生成してください。
+
+【入力項目】
+- 登録者（必須）
+- タイトル（必須）
+- 詳細（任意）
+
+【ボタン】
+- 確認ボタン → 確認画面へ
+- 戻るボタン → 一覧画面へ
+
+【お願い】
+- 入力チェック（バリデーション）をつけてください
+- テーブルレイアウトで作成してください
+
+プロンプト生成において不明箇所があれば教えてください。
+なければプロンプトを生成しテキストファイルでダウンロードできる形式で出力してください。</pre>
+                    </div>
+                </div>
+
+                <h4>AIからの質問例</h4>
+                <div class="screen-spec" style="background: #fef3c7; border-left: 4px solid #f59e0b;">
+                    <p style="margin: 0 0 1rem 0; font-weight: bold; color: #92400e;">🤖 AIからこのような質問が来ることがあります</p>
+                    <ul style="margin: 0; padding-left: 1.5rem; line-height: 1.8;">
+                        <li><strong>バリデーション詳細</strong>：文字数制限は必要ですか？（タイトル50文字以内など）</li>
+                        <li><strong>エラー表示</strong>：バリデーションエラー時のメッセージ表示位置は？（項目の横/上部にまとめて）</li>
+                        <li><strong>入力補助</strong>：プレースホルダーやツールチップは必要ですか？</li>
+                        <li><strong>確認ダイアログ</strong>：戻るボタン押下時に確認ダイアログを表示しますか？</li>
+                    </ul>
+                </div>
+
+                <!-- 5. 確認画面の作成 -->
+                <h3>5. 確認画面の作成</h3>
+
+                <h4>整理すべき項目</h4>
+                <div class="screen-spec">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>項目</th>
+                                <th>内容</th>
+                                <th>サンプル</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>表示項目</td>
+                                <td>入力した内容を表示</td>
+                                <td>登録者、タイトル、詳細</td>
+                            </tr>
+                            <tr>
+                                <td>確認メッセージ</td>
+                                <td>ユーザーへの確認文</td>
+                                <td>「上記で登録して良いですか？」</td>
+                            </tr>
+                            <tr>
+                                <td>ボタン</td>
+                                <td>画面に配置するボタン</td>
+                                <td>登録ボタン、修正ボタン</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title">初学者向けポイント</span>
+                    </div>
+                    <p>データの保持方法（hidden項目など）はAIが適切に実装してくれます。<br>
+                    「何を表示して、どのボタンがあるか」を伝えれば十分です。</p>
+                </div>
+
+                <div class="code-block" id="prompt-5">
+                    <div class="code-header">
+                        <span class="code-title">プロンプト例</span>
+                        <button class="download-btn" onclick="downloadPrompt('prompt-5', '05_確認画面.txt')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre>あなたはJavaプログラマーです。
+
+ToDoアプリの確認画面を作成するためのプロンプトを生成してください。
+
+【表示項目】
+- 登録者
+- タイトル
+- 詳細
+
+【メッセージ】
+「上記で登録して良いですか？」と表示
+
+【ボタン】
+- 登録ボタン → データベースに保存して完了画面へ
+- 修正ボタン → 登録画面に戻る（入力内容を保持）
+
+プロンプト生成において不明箇所があれば教えてください。
+なければプロンプトを生成しテキストファイルでダウンロードできる形式で出力してください。</pre>
+                    </div>
+                </div>
+
+                <h4>AIからの質問例</h4>
+                <div class="screen-spec" style="background: #fef3c7; border-left: 4px solid #f59e0b;">
+                    <p style="margin: 0 0 1rem 0; font-weight: bold; color: #92400e;">🤖 AIからこのような質問が来ることがあります</p>
+                    <ul style="margin: 0; padding-left: 1.5rem; line-height: 1.8;">
+                        <li><strong>データ保持方法</strong>：入力内容の保持はセッション/hiddenフィールドのどちらですか？</li>
+                        <li><strong>表示レイアウト</strong>：確認画面のレイアウトは登録画面と同じ形式にしますか？</li>
+                        <li><strong>キャンセル機能</strong>：修正ではなく最初からやり直すキャンセルボタンは必要ですか？</li>
+                        <li><strong>確認項目</strong>：自動設定される項目（No、作成日など）も確認画面に表示しますか？</li>
+                    </ul>
+                </div>
+
+                <!-- 6. 完了画面の作成 -->
+                <h3>6. 完了画面の作成</h3>
+
+                <h4>整理すべき項目</h4>
+                <div class="screen-spec">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>項目</th>
+                                <th>内容</th>
+                                <th>サンプル</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>表示項目</td>
+                                <td>登録した内容を表示</td>
+                                <td>登録者、タイトル、詳細</td>
+                            </tr>
+                            <tr>
+                                <td>完了メッセージ</td>
+                                <td>完了を伝えるメッセージ</td>
+                                <td>「上記で登録しました。」</td>
+                            </tr>
+                            <tr>
+                                <td>リンク</td>
+                                <td>次の画面への導線</td>
+                                <td>一覧画面へ戻るリンク</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title">初学者向けポイント</span>
+                    </div>
+                    <p>二重送信防止などの技術的な対策はAIが適切に実装してくれます。<br>
+                    「何を表示して、どこに戻るか」を伝えれば十分です。</p>
+                </div>
+
+                <div class="code-block" id="prompt-6">
+                    <div class="code-header">
+                        <span class="code-title">プロンプト例</span>
+                        <button class="download-btn" onclick="downloadPrompt('prompt-6', '06_完了画面.txt')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre>あなたはJavaプログラマーです。
+
+ToDoアプリの完了画面を作成するためのプロンプトを生成してください。
+
+【表示項目】
+- 登録者
+- タイトル
+- 詳細
+
+【メッセージ】
+「上記で登録しました。」と表示
+
+【リンク】
+- 一覧へ → 一覧画面に戻る
+
+【お願い】
+- ブラウザの更新ボタンで二重登録されないようにしてください
+
+プロンプト生成において不明箇所があれば教えてください。
+なければプロンプトを生成しテキストファイルでダウンロードできる形式で出力してください。</pre>
+                    </div>
+                </div>
+
+                <h4>AIからの質問例</h4>
+                <div class="screen-spec" style="background: #fef3c7; border-left: 4px solid #f59e0b;">
+                    <p style="margin: 0 0 1rem 0; font-weight: bold; color: #92400e;">🤖 AIからこのような質問が来ることがあります</p>
+                    <ul style="margin: 0; padding-left: 1.5rem; line-height: 1.8;">
+                        <li><strong>二重送信防止</strong>：PRG（Post-Redirect-Get）パターンで実装しますか？</li>
+                        <li><strong>完了メッセージ</strong>：登録番号（No）も完了メッセージに含めますか？</li>
+                        <li><strong>続けて登録</strong>：「続けて登録する」ボタンは必要ですか？</li>
+                        <li><strong>自動遷移</strong>：数秒後に自動で一覧画面に遷移する機能は必要ですか？</li>
+                    </ul>
+                </div>
+
+                <!-- コラム -->
+                <div class="column">
+                    <div class="column-header">
+                        <span class="column-badge">Column</span>
+                        <span class="column-title">効果的なプロンプトのコツ</span>
+                    </div>
+                    <p>プロンプトを作成する際のポイントを紹介します。</p>
+                    <ol class="step-list">
+                        <li><strong>具体的に書く</strong>：曖昧な表現を避け、具体的な仕様を明記する</li>
+                        <li><strong>箇条書きを活用</strong>：項目ごとに整理して見やすくする</li>
+                        <li><strong>出力形式を指定</strong>：必要なファイル名やクラス名を明示する</li>
+                        <li><strong>技術スタックを明記</strong>：使用する言語やフレームワークを最初に伝える</li>
+                        <li><strong>段階的に依頼</strong>：一度に全部ではなく、画面ごとに分けて依頼する</li>
+                    </ol>
+                </div>
+
+                <!-- 7. 仕様書・設計書の出力 -->
+                <h3>7. 仕様書・設計書の出力</h3>
+
+                <div class="intro-text">
+                    <p>
+                        全ての画面のプロンプトが完成したら、<strong>全体構成を確認するための仕様書・設計書</strong>を出力してもらいましょう。
+                    </p>
+                </div>
+
+                <h4>出力の流れ</h4>
+                <ol class="step-list">
+                    <li><strong>全画面のプロンプト完成</strong>：一覧・登録・確認・完了画面のプロンプトを作成</li>
+                    <li><strong>仕様書・設計書の依頼</strong>：下記のプロンプトを送る</li>
+                    <li><strong>出力内容の確認</strong>：全体構成に問題がないか確認</li>
+                    <li><strong>必要に応じて修正</strong>：不足や修正点があれば伝える</li>
+                </ol>
+
+                <div class="info-box">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title">なぜ仕様書・設計書が必要？</span>
+                    </div>
+                    <p>各画面を個別に作成した後、全体の整合性を確認することが重要です。<br>
+                    仕様書・設計書があれば、開発の全体像を把握でき、実装時の手戻りを防げます。</p>
+                </div>
+
+                <div class="code-block" id="prompt-7">
+                    <div class="code-header">
+                        <span class="code-title">仕様書・設計書出力プロンプト例</span>
+                        <button class="download-btn" onclick="downloadPrompt('prompt-7', '07_仕様書設計書.txt')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre>これまで作成した全てのプロンプトをもとに、ToDoアプリの仕様書・設計書を出力してください。
+
+【出力してほしい内容】
+1. システム概要
+   - アプリケーション名
+   - 目的・概要
+   - 使用技術
+
+2. 画面一覧
+   - 画面名、URL、概要の一覧表
+
+3. 画面遷移図
+   - テキストベースの画面遷移図
+
+4. データベース設計
+   - テーブル定義（カラム名、型、制約）
+
+5. 機能一覧
+   - 各画面の機能詳細
+
+ダウンロードできる形式で出力してください。</pre>
+                    </div>
+                </div>
+
+                <h4>出力例</h4>
+                <div class="screen-spec" style="background: #f0fdf4; border-left: 4px solid #22c55e;">
+                    <p style="margin: 0 0 1rem 0; font-weight: bold; color: #166534;">✅ AIからの出力イメージ</p>
+                    <p style="margin: 0; line-height: 1.8;">
+                        <strong>【システム概要】</strong><br>
+                        アプリケーション名：ToDoアプリ<br>
+                        使用技術：Java / Spring Boot / Thymeleaf / H2<br><br>
+                        <strong>【画面一覧】</strong><br>
+                        - 一覧画面（index.html）<br>
+                        - 登録画面（edit.html）<br>
+                        - 確認画面（confirm.html）<br>
+                        - 完了画面（complete.html）<br><br>
+                        <strong>【データベース設計】</strong><br>
+                        テーブル名：todo<br>
+                        カラム：id, author, title, detail, created_at, updated_at
+                    </p>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-box-header">
+                        <span class="warning-box-icon">⚠️</span>
+                        <span class="warning-box-title">確認ポイント</span>
+                    </div>
+                    <p>出力された仕様書・設計書を確認する際のポイント：</p>
+                    <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                        <li>全ての画面が含まれているか</li>
+                        <li>画面遷移に漏れがないか</li>
+                        <li>データベースのカラムが要件を満たしているか</li>
+                    </ul>
+                </div>
+
+                <!-- 8. 各工程のプロンプトをファイルごとにダウンロードする -->
+                <h3>8. 各工程のプロンプトをファイルごとにダウンロードする</h3>
+
+                <div class="intro-text">
+                    <p>
+                        各工程で作成したプロンプトは、<strong>ファイルごとにダウンロード</strong>して保存しておきましょう。
+                    </p>
+                </div>
+
+                <h4>ダウンロードファイル一覧</h4>
+                <div class="screen-spec">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>ファイル名</th>
+                                <th>内容</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><code>01_開発規約.txt</code></td>
+                                <td>使用技術、ディレクトリ構成、命名規則</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><code>02_画面遷移.txt</code></td>
+                                <td>画面遷移図、URL設計</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td><code>03_一覧画面.txt</code></td>
+                                <td>一覧画面のプロンプト</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td><code>04_登録画面.txt</code></td>
+                                <td>登録画面のプロンプト</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td><code>05_確認画面.txt</code></td>
+                                <td>確認画面のプロンプト</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td><code>06_完了画面.txt</code></td>
+                                <td>完了画面のプロンプト</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td><code>07_仕様書設計書.txt</code></td>
+                                <td>仕様書・設計書出力用プロンプト</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title">ダウンロードのポイント</span>
+                    </div>
+                    <p>各プロンプト例の右上にある<strong>「📥 ダウンロード」ボタン</strong>をクリックすると、テキストファイルとして保存できます。<br>
+                    ダウンロードしたファイルは、AIにそのまま送信して使用できます。</p>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-box-header">
+                        <span class="warning-box-icon">⚠️</span>
+                        <span class="warning-box-title">ファイル管理のコツ</span>
+                    </div>
+                    <p>ダウンロードしたプロンプトファイルは、プロジェクトごとにフォルダを作成して管理しましょう。<br>
+                    後から見返したり、別のプロジェクトで再利用する際に便利です。</p>
+                </div>
+
+                <!-- 9. 実装用プロンプトの生成 -->
+                <h3>9. 実装用プロンプトの生成</h3>
+
+                <div class="intro-text">
+                    <p>
+                        全てのプロンプトファイルが揃ったら、<strong>実装用のプロンプト</strong>を生成してAIに実際のコードを作成してもらいます。
+                    </p>
+                </div>
+
+                <h4>手順</h4>
+                <ol class="step-list">
+                    <li><strong>プロンプトファイルの準備</strong>：ダウンロードした全てのプロンプトファイル（01〜07）を用意</li>
+                    <li><strong>ファイルのアップロード</strong>：AIチャットに全てのプロンプトファイルをアップロード</li>
+                    <li><strong>実装指示の送信</strong>：下記の実装用プロンプトを送信</li>
+                    <li><strong>コードの確認</strong>：生成されたコードを確認し、必要に応じて修正を依頼</li>
+                </ol>
+
+                <div class="info-box">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title">アップロードするファイル一覧</span>
+                    </div>
+                    <ul style="margin: 0.5rem 0 0 0; padding-left: 1.5rem; line-height: 1.8;">
+                        <li><code>01_開発規約.txt</code></li>
+                        <li><code>02_画面遷移.txt</code></li>
+                        <li><code>03_一覧画面.txt</code></li>
+                        <li><code>04_登録画面.txt</code></li>
+                        <li><code>05_確認画面.txt</code></li>
+                        <li><code>06_完了画面.txt</code></li>
+                        <li><code>07_仕様書設計書.txt</code></li>
+                    </ul>
+                </div>
+
+                <div class="code-block" id="prompt-8">
+                    <div class="code-header">
+                        <span class="code-title">実装用プロンプト</span>
+                        <button class="download-btn" onclick="downloadPrompt('prompt-8', '08_実装指示.txt')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre>ファイル群をもとに、ToDoアプリケーションを実装してください。
+
+# 実装指示ファイル一覧
+これらの内容に基づいてファイル群をもとに、実装してください。
+
+1. todo_spec_design.txt             - 仕様書・設計書（アプリ概要、データベース設計、API設計）
+2. todo_screen_flow_prompt.txt      - 画面遷移仕様
+3. todo_list_screen_prompt.txt      - 一覧画面仕様
+4. todo_create_screen_prompt.txt    - 登録画面仕様
+5. todo_confirm_screen_prompt.txt   - 確認画面仕様
+6. todo_complete_screen_prompt.txt  - 完了画面仕様
+
+# 実装指示
+このリポジトリに実ファイルを作成して実装してください。
+
+## 技術スタック
+- Java 17以上
+- Spring Boot 3.x
+- Spring Web MVC
+- Spring Data JPA
+- H2 Database（インメモリ）
+- Thymeleaf テンプレートエンジン
+
+## 実装する機能
+1. ToDo一覧表示（検索・ソート機能付き）
+2. ToDo新規登録
+3. ToDo編集・更新
+4. ToDo削除
+5. 画面遷移（一覧→登録→確認→完了→一覧）
+
+## 作成するファイル構成
+```
+src/main/java/com/example/todo/
+├── TodoApplication.java
+├── controller/TodoController.java
+├── entity/Todo.java
+├── repository/TodoRepository.java
+└── service/TodoService.java
+
+src/main/resources/
+├── application.properties
+└── templates/
+    ├── index.html（一覧画面）
+    ├── create.html（登録画面）
+    ├── confirm.html（確認画面）
+    └── complete.html（完了画面）
+```
+
+# 期待する成果物
+1. 完全に動作するSpring Bootアプリケーション
+2. 上記ファイル構成に従ったソースコード
+3. H2コンソールでデータ確認可能な設定
+
+# 報告形式
+作業完了後、以下の形式で報告してください。
+- 作成・変更したファイル一覧
+- 各ファイルの役割と実装内容の概要
+- アプリケーションの起動方法
+- 動作確認手順</pre>
+                    </div>
+                </div>
+
+                <h4>AIからの出力例</h4>
+                <div class="screen-spec" style="background: #f0fdf4; border-left: 4px solid #22c55e;">
+                    <p style="margin: 0 0 1rem 0; font-weight: bold; color: #166534;">✅ AIからの報告イメージ</p>
+                    <p style="margin: 0; line-height: 1.8;">
+                        <strong>【変更ファイル一覧】</strong><br>
+                        - src/main/java/.../TodoApplication.java（新規）<br>
+                        - src/main/java/.../controller/TodoController.java（新規）<br>
+                        - src/main/java/.../entity/Todo.java（新規）<br>
+                        - src/main/resources/templates/index.html（新規）<br>
+                        - src/main/resources/templates/edit.html（新規）<br>
+                        - ...<br><br>
+                        <strong>【実装概要】</strong><br>
+                        ToDoアプリの基本機能を実装しました。一覧画面から新規登録、確認、完了までの画面遷移が可能です。
+                    </p>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-box-header">
+                        <span class="warning-box-icon">⚠️</span>
+                        <span class="warning-box-title">実装時の注意点</span>
+                    </div>
+                    <p>AIが生成したコードは必ず動作確認を行いましょう。<br>
+                    エラーが発生した場合は、エラーメッセージをAIに伝えて修正を依頼してください。</p>
+                </div>
+            </section>
+        </div>
+
+        <footer class="footer">
+            <p>Spring Framework 入門チュートリアル</p>
+        </footer>
+
+        <div class="page-nav">
+            <a href="1spring-framework-tutorial.html" class="page-nav-btn next">
+                <div>
+                    <div class="page-nav-label">次の章</div>
+                    <div class="page-nav-title">第1章</div>
+                </div>
+                <span>→</span>
+            </a>
+        </div>
+
+        <script>
+            function toggleMenu() {
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+                toggle.classList.toggle("active");
+                menu.classList.toggle("active");
+            }
+
+            document.addEventListener("click", function (e) {
+                const nav = document.querySelector(".global-nav");
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+
+                if (!nav.contains(e.target) && menu.classList.contains("active")) {
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+
+            window.addEventListener("resize", function () {
+                if (window.innerWidth >= 1024) {
+                    const toggle = document.querySelector(".nav-toggle");
+                    const menu = document.querySelector(".nav-menu");
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+
+            // プロンプトダウンロード機能
+            function downloadPrompt(elementId, filename) {
+                const element = document.getElementById(elementId);
+                const preElement = element.querySelector('pre');
+                const text = preElement.textContent;
+
+                const blob = new Blob([text], { type: 'text/plain; charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,2551 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>第8章 バリデーション機能について知ろう</title>
+
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&family=M+PLUS+Rounded+1c:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <!-- グローバルナビゲーション -->
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="1spring-framework-tutorial.html" class="nav-logo">
+                    <span class="nav-logo-icon">🌱</span>
+                    <span>Spring入門</span>
+                </a>
+                <button class="nav-toggle" onclick="toggleMenu()" aria-label="メニュー">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 章を選択</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="0promptprograming.html" class="nav-link">
+                                <span class="nav-chapter-num">0</span>
+                                <span>プロンプトプログラミング</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="1spring-framework-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">1</span>
+                                <span>Spring Frameworkについて知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="2java_basics.html" class="nav-link">
+                                <span class="nav-chapter-num">2</span>
+                                <span>基礎知識を身に付けよう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="3di-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">3</span>
+                                <span>DIを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="4aop-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">4</span>
+                                <span>AOPを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="5mvc-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">5</span>
+                                <span>MVCを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="6thymeleaf-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">6</span>
+                                <span>Thymeleafを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="7ServerDataSubmission.html" class="nav-link">
+                                <span class="nav-chapter-num">7</span>
+                                <span>サーバーへのデータ送信</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="8Validation_Textbook_Rewrite.html" class="nav-link active">
+                                <span class="nav-chapter-num">8</span>
+                                <span>バリデーション</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="9_MyBatis_Tutorial__2_.html" class="nav-link">
+                                <span class="nav-chapter-num">9</span>
+                                <span>MyBatisチュートリアル</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="10app-preparation-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">10</span>
+                                <span>アプリケーション作成準備</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="11-database-operations.html" class="nav-link">
+                                <span class="nav-chapter-num">11</span>
+                                <span>データベース操作</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="12service-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">12</span>
+                                <span>サービス層</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="13_application_layer.html" class="nav-link">
+                                <span class="nav-chapter-num">13</span>
+                                <span>アプリケーション層</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="14_validation.html" class="nav-link">
+                                <span class="nav-chapter-num">14</span>
+                                <span>バリデーション（応用）</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="15-spring-security-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">15</span>
+                                <span>Spring Security</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <!-- ヘッダー -->
+            <header class="chapter-header">
+                <div class="chapter-badge">📘 Chapter</div>
+                <div class="chapter-number">8</div>
+                <h1 class="chapter-title">バリデーション機能について知ろう</h1>
+                <p>ユーザー入力を正しく検証し、安全なアプリケーションを構築するための重要な技術を学びます</p>
+            </header>
+
+            <!-- 目次 -->
+            <nav class="toc">
+                <h2>📚 この章で学ぶこと</h2>
+                <ul class="toc-list">
+                    <li>
+                        <a href="#section-8-1"><span class="toc-number">8-1</span>入力チェックについて知ろう</a>
+                    </li>
+                    <li class="sub">
+                        <a href="#section-8-1-1"
+                            ><span class="toc-number">8-1-1</span>バリデーションとバリデータとは？</a
+                        >
+                    </li>
+                    <li class="sub">
+                        <a href="#section-8-1-2"><span class="toc-number">8-1-2</span>単項目チェックとは？</a>
+                    </li>
+                    <li class="sub">
+                        <a href="#section-8-1-3"><span class="toc-number">8-1-3</span>相関項目チェックとは？</a>
+                    </li>
+                    <li class="sub">
+                        <a href="#section-8-1-4"><span class="toc-number">8-1-4</span>まとめ</a>
+                    </li>
+                    <li>
+                        <a href="#section-8-2"
+                            ><span class="toc-number">8-2</span>単項目チェックを使用したプログラムを作成しよう</a
+                        >
+                    </li>
+                    <li class="sub">
+                        <a href="#section-8-2-1"><span class="toc-number">8-2-1</span>プロジェクトの作成</a>
+                    </li>
+                    <li class="sub">
+                        <a href="#section-8-2-2"><span class="toc-number">8-2-2</span>アプリケーション層の作成</a>
+                    </li>
+                    <li class="sub">
+                        <a href="#section-8-2-3"><span class="toc-number">8-2-3</span>@ModelAttributeとは？</a>
+                    </li>
+                    <li>
+                        <a href="#section-8-3"
+                            ><span class="toc-number">8-3</span>相関項目チェックを使用したプログラムを作成しよう</a
+                        >
+                    </li>
+                    <li class="sub">
+                        <a href="#section-8-3-1"><span class="toc-number">8-3-1</span>プロジェクトの作成</a>
+                    </li>
+                    <li class="sub">
+                        <a href="#section-8-3-2"><span class="toc-number">8-3-2</span>@AssertTrueを利用する方法</a>
+                    </li>
+                    <li class="sub">
+                        <a href="#section-8-3-3"
+                            ><span class="toc-number">8-3-3</span>Validatorインターフェースを実装する方法</a
+                        >
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- セクション 8-1 -->
+            <section class="section" id="section-8-1">
+                <div class="section-header">
+                    <span class="section-number">8-1</span>
+                    <h2 class="section-title">入力チェックについて知ろう</h2>
+                </div>
+
+                <p>
+                    前章「サーバーにデータを送信する方法を学ぼう」では、ビューからコントローラへデータを送信する方法を学びました。しかし、ユーザーが入力したデータが常に正しいとは限りません。数値を入力してほしいのに文字列が入力されたり、必須項目が空だったりすることがあります。
+                </p>
+
+                <p>
+                    この章では、ユーザーが入力した値に対して「入力チェック」を行う<strong>「バリデーション」機能</strong>について詳しく学んでいきましょう。
+                </p>
+
+                <!-- 8-1-1 -->
+                <div class="subsection" id="section-8-1-1">
+                    <div class="subsection-header">
+                        <span class="subsection-number">8-1-1</span>
+                        <h3 class="subsection-title">バリデーションとバリデータとは？</h3>
+                    </div>
+
+                    <h4 style="margin-top: 20px; color: var(--primary-blue)">■ バリデーションとは</h4>
+                    <p>
+                        <strong>「バリデーション」</strong
+                        >とは、ユーザーが入力したデータ（例：名前、メールアドレス、パスワードなど）が「適切な形式」であるかどうかを確認する方法です。
+                    </p>
+
+                    <p>
+                        現実世界で例えると「空港のセキュリティチェック」のようなものです。空港では、乗客が飛行機に乗る前に、持ち物が安全かどうかを確認します。バリデーションも同様に、データがアプリケーションに入る前に、そのデータが正しい形式かどうかを検査します。
+                    </p>
+
+                    <!-- バリデーションの概念図 -->
+                    <div class="illustration">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 350">
+                            <defs>
+                                <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color: #f0f9ff" />
+                                    <stop offset="100%" style="stop-color: #e0f2fe" />
+                                </linearGradient>
+                                <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                                    <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.15" />
+                                </filter>
+                            </defs>
+
+                            <rect width="800" height="350" fill="url(#bgGrad)" />
+
+                            <text
+                                x="400"
+                                y="30"
+                                text-anchor="middle"
+                                font-family="Arial, sans-serif"
+                                font-size="18"
+                                font-weight="bold"
+                                fill="#0369a1"
+                            >
+                                バリデーションとバリデータのイメージ
+                            </text>
+
+                            <!-- 入力データ（乗客） -->
+                            <g transform="translate(50, 60)">
+                                <rect
+                                    x="0"
+                                    y="0"
+                                    width="160"
+                                    height="240"
+                                    rx="10"
+                                    fill="white"
+                                    stroke="#0ea5e9"
+                                    stroke-width="2"
+                                    filter="url(#shadow)"
+                                />
+                                <rect x="0" y="0" width="160" height="40" rx="10" fill="#0ea5e9" />
+                                <rect x="0" y="30" width="160" height="15" fill="#0ea5e9" />
+                                <text
+                                    x="80"
+                                    y="27"
+                                    text-anchor="middle"
+                                    font-family="Arial, sans-serif"
+                                    font-size="13"
+                                    font-weight="bold"
+                                    fill="white"
+                                >
+                                    入力データ（乗客）
+                                </text>
+
+                                <g transform="translate(25, 60)">
+                                    <circle cx="25" cy="18" r="16" fill="#fef3c7" stroke="#f59e0b" stroke-width="2" />
+                                    <text x="25" y="23" text-anchor="middle" font-size="14">👤</text>
+                                    <text
+                                        x="25"
+                                        y="50"
+                                        text-anchor="middle"
+                                        font-family="Arial, sans-serif"
+                                        font-size="11"
+                                        fill="#92400e"
+                                    >
+                                        名前
+                                    </text>
+                                </g>
+                                <g transform="translate(85, 60)">
+                                    <circle cx="25" cy="18" r="16" fill="#fef3c7" stroke="#f59e0b" stroke-width="2" />
+                                    <text x="25" y="23" text-anchor="middle" font-size="14">📧</text>
+                                    <text
+                                        x="25"
+                                        y="50"
+                                        text-anchor="middle"
+                                        font-family="Arial, sans-serif"
+                                        font-size="11"
+                                        fill="#92400e"
+                                    >
+                                        メール
+                                    </text>
+                                </g>
+                                <g transform="translate(25, 130)">
+                                    <circle cx="25" cy="18" r="16" fill="#fef3c7" stroke="#f59e0b" stroke-width="2" />
+                                    <text x="25" y="23" text-anchor="middle" font-size="14">🔑</text>
+                                    <text
+                                        x="25"
+                                        y="50"
+                                        text-anchor="middle"
+                                        font-family="Arial, sans-serif"
+                                        font-size="11"
+                                        fill="#92400e"
+                                    >
+                                        パスワード
+                                    </text>
+                                </g>
+                                <g transform="translate(85, 130)">
+                                    <circle cx="25" cy="18" r="16" fill="#fef3c7" stroke="#f59e0b" stroke-width="2" />
+                                    <text x="25" y="23" text-anchor="middle" font-size="14">🔢</text>
+                                    <text
+                                        x="25"
+                                        y="50"
+                                        text-anchor="middle"
+                                        font-family="Arial, sans-serif"
+                                        font-size="11"
+                                        fill="#92400e"
+                                    >
+                                        年齢
+                                    </text>
+                                </g>
+                            </g>
+
+                            <!-- 矢印1 -->
+                            <polygon points="220,180 250,195 220,210" fill="#0ea5e9" />
+
+                            <!-- バリデータ（セキュリティチェック） -->
+                            <g transform="translate(270, 60)">
+                                <rect
+                                    x="0"
+                                    y="0"
+                                    width="200"
+                                    height="240"
+                                    rx="10"
+                                    fill="white"
+                                    stroke="#059669"
+                                    stroke-width="3"
+                                    filter="url(#shadow)"
+                                />
+                                <rect x="0" y="0" width="200" height="40" rx="10" fill="#059669" />
+                                <rect x="0" y="30" width="200" height="15" fill="#059669" />
+                                <text
+                                    x="100"
+                                    y="27"
+                                    text-anchor="middle"
+                                    font-family="Arial, sans-serif"
+                                    font-size="13"
+                                    font-weight="bold"
+                                    fill="white"
+                                >
+                                    バリデータ（検査機）
+                                </text>
+
+                                <rect
+                                    x="20"
+                                    y="55"
+                                    width="160"
+                                    height="60"
+                                    rx="6"
+                                    fill="#d1fae5"
+                                    stroke="#059669"
+                                    stroke-width="2"
+                                />
+                                <text
+                                    x="100"
+                                    y="80"
+                                    text-anchor="middle"
+                                    font-family="Arial, sans-serif"
+                                    font-size="12"
+                                    fill="#047857"
+                                >
+                                    入力チェック機能
+                                </text>
+                                <text x="100" y="100" text-anchor="middle" font-size="20">🔍</text>
+
+                                <g transform="translate(20, 130)">
+                                    <rect width="160" height="22" rx="4" fill="#ecfdf5" />
+                                    <text x="8" y="15" font-family="Arial, sans-serif" font-size="11" fill="#047857">
+                                        ✓ 空でないか？
+                                    </text>
+                                </g>
+                                <g transform="translate(20, 158)">
+                                    <rect width="160" height="22" rx="4" fill="#ecfdf5" />
+                                    <text x="8" y="15" font-family="Arial, sans-serif" font-size="11" fill="#047857">
+                                        ✓ 形式は正しいか？
+                                    </text>
+                                </g>
+                                <g transform="translate(20, 186)">
+                                    <rect width="160" height="22" rx="4" fill="#ecfdf5" />
+                                    <text x="8" y="15" font-family="Arial, sans-serif" font-size="11" fill="#047857">
+                                        ✓ 範囲内か？
+                                    </text>
+                                </g>
+                                <g transform="translate(20, 214)">
+                                    <rect width="160" height="22" rx="4" fill="#ecfdf5" />
+                                    <text x="8" y="15" font-family="Arial, sans-serif" font-size="11" fill="#047857">
+                                        ✓ 整合性はあるか？
+                                    </text>
+                                </g>
+                            </g>
+
+                            <!-- 分岐矢印 -->
+                            <g transform="translate(480, 120)">
+                                <line x1="0" y1="60" x2="35" y2="30" stroke="#22c55e" stroke-width="3" />
+                                <polygon points="40,26 33,38 27,30" fill="#22c55e" />
+                                <line x1="0" y1="60" x2="35" y2="90" stroke="#ef4444" stroke-width="3" />
+                                <polygon points="40,94 27,90 33,82" fill="#ef4444" />
+                            </g>
+
+                            <!-- OK結果 -->
+                            <g transform="translate(540, 60)">
+                                <rect
+                                    x="0"
+                                    y="0"
+                                    width="150"
+                                    height="90"
+                                    rx="10"
+                                    fill="#dcfce7"
+                                    stroke="#22c55e"
+                                    stroke-width="2"
+                                    filter="url(#shadow)"
+                                />
+                                <text x="75" y="30" text-anchor="middle" font-size="24">✅</text>
+                                <text
+                                    x="75"
+                                    y="55"
+                                    text-anchor="middle"
+                                    font-family="Arial, sans-serif"
+                                    font-size="14"
+                                    font-weight="bold"
+                                    fill="#16a34a"
+                                >
+                                    OK：通過
+                                </text>
+                                <text
+                                    x="75"
+                                    y="75"
+                                    text-anchor="middle"
+                                    font-family="Arial, sans-serif"
+                                    font-size="11"
+                                    fill="#15803d"
+                                >
+                                    ビジネスロジックへ
+                                </text>
+                            </g>
+
+                            <!-- NG結果 -->
+                            <g transform="translate(540, 170)">
+                                <rect
+                                    x="0"
+                                    y="0"
+                                    width="150"
+                                    height="90"
+                                    rx="10"
+                                    fill="#fee2e2"
+                                    stroke="#ef4444"
+                                    stroke-width="2"
+                                    filter="url(#shadow)"
+                                />
+                                <text x="75" y="30" text-anchor="middle" font-size="24">❌</text>
+                                <text
+                                    x="75"
+                                    y="55"
+                                    text-anchor="middle"
+                                    font-family="Arial, sans-serif"
+                                    font-size="14"
+                                    font-weight="bold"
+                                    fill="#dc2626"
+                                >
+                                    NG：エラー
+                                </text>
+                                <text
+                                    x="75"
+                                    y="75"
+                                    text-anchor="middle"
+                                    font-family="Arial, sans-serif"
+                                    font-size="11"
+                                    fill="#b91c1c"
+                                >
+                                    入力画面に戻る
+                                </text>
+                            </g>
+
+                            <text
+                                x="400"
+                                y="335"
+                                text-anchor="middle"
+                                font-family="Arial, sans-serif"
+                                font-size="12"
+                                fill="#64748b"
+                            >
+                                バリデーション = 空港のセキュリティチェックのようなもの
+                            </text>
+                        </svg>
+                        <p class="illustration-caption">図8.1 バリデーションとバリデータのイメージ</p>
+                    </div>
+
+                    <h4 style="margin-top: 30px; color: var(--primary-blue)">■ バリデータとは</h4>
+                    <p>
+                        <strong>「バリデータ」</strong
+                        >とは、プログラム内でデータが正しい形式になっているかをチェックする機能やコードのことを指します。つまり、バリデーションを実行する機能やプログラムのことです。
+                    </p>
+
+                    <p>
+                        空港のセキュリティチェックで例えると、「スタッフや検査機械」のようなものです。バリデータは、入力されたデータを一つ一つ検査し、問題があればエラーを返します。
+                    </p>
+
+                    <h4 style="margin-top: 30px; color: var(--primary-blue)">■ バリデーションの種類</h4>
+                    <p>バリデーションは大きく分けると以下の2つに分かれます。</p>
+
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>🔹 単項目チェック</h4>
+                            <p>1つの入力項目に対して行うチェック。</p>
+                            <p style="font-size: 14px; color: #64748b">
+                                例：「メールアドレスの形式が正しいか」「数値が範囲内か」など
+                            </p>
+                        </div>
+                        <div class="comparison-card green">
+                            <h4>🔹 相関項目チェック（相関チェック）</h4>
+                            <p>複数の入力項目を組み合わせて行うチェック。</p>
+                            <p style="font-size: 14px; color: #64748b">
+                                例：「パスワードと確認用パスワードが一致するか」など
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8-1-2 -->
+                <div class="subsection" id="section-8-1-2">
+                    <div class="subsection-header">
+                        <span class="subsection-number">8-1-2</span>
+                        <h3 class="subsection-title">単項目チェックとは？</h3>
+                    </div>
+
+                    <p>
+                        <strong>「単項目チェック」</strong
+                        >とは、入力項目1つ1つに対して設定する「入力チェック」機能です。使用方法はFormクラスなどのフィールドに「アノテーション」を付与します。
+                    </p>
+
+                    <p>
+                        「入力チェック」にはいくつかの種類の「アノテーション」があります。主にJava EEの「Bean
+                        Validation」やHibernateフレームワークの「Hibernate
+                        Validator」がよく使用されます。これらのアノテーションを使用すると、例えば「テキストボックスに数値しか入力できない」ように制限したり、「メールアドレスが正しい形式であるかどうか」をチェックしたりできます。
+                    </p>
+
+                    <h4 style="margin-top: 25px; color: var(--primary-blue)">■ Bean Validation アノテーション一覧</h4>
+                    <p>
+                        以下の表に「Bean
+                        Validation」に定義されている検証アノテーションの一覧を示します。これらのアノテーションは、<code>jakarta.validation.constraints</code>パッケージに定義されています。
+                    </p>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>アノテーション</th>
+                                    <th>説明</th>
+                                    <th>使用例</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>@NotNull</code></td>
+                                    <td>値がnullでないことを確認します</td>
+                                    <td><code>@NotNull private String name;</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>@NotEmpty</code></td>
+                                    <td>文字列が空でないこと、またはコレクションが空でないことを確認します</td>
+                                    <td><code>@NotEmpty private String name;</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>@NotBlank</code></td>
+                                    <td>文字列が空白でないことを確認します</td>
+                                    <td><code>@NotBlank private String name;</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Min</code></td>
+                                    <td>数値が指定した最小値以上であることを確認します</td>
+                                    <td><code>@Min(18) private int age;</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Max</code></td>
+                                    <td>数値が指定した最大値以下であることを確認します</td>
+                                    <td><code>@Max(100) private int age;</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Size</code></td>
+                                    <td>
+                                        文字列、配列、またはコレクションのサイズが指定した範囲内であることを確認します
+                                    </td>
+                                    <td><code>@Size(min=1, max=10) private String name;</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Pattern</code></td>
+                                    <td>文字列が指定した正規表現に一致することを確認します</td>
+                                    <td><code>@Pattern(regexp="^[a-zA-Z]+$") private String name;</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Email</code></td>
+                                    <td>文字列が有効なメールアドレス形式であることを確認します</td>
+                                    <td><code>@Email private String email;</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4 style="margin-top: 30px; color: var(--primary-blue)">
+                        ■ Hibernate Validator 独自アノテーション
+                    </h4>
+                    <p>
+                        Hibernate Validatorには、Bean Validationに加えて、独自の検証アノテーションも定義されています。
+                    </p>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>アノテーション</th>
+                                    <th>説明</th>
+                                    <th>使用例</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>@Length</code></td>
+                                    <td>文字列の長さが指定した範囲内であることを確認します</td>
+                                    <td><code>@Length(min=5, max=20) private String username;</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>@Range</code></td>
+                                    <td>数値が指定した範囲内であることを確認します</td>
+                                    <td><code>@Range(min=1, max=100) private int score;</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>@CreditCardNumber</code></td>
+                                    <td>文字列が有効なクレジットカード番号であることを確認します</td>
+                                    <td><code>@CreditCardNumber private String creditCard;</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4 style="margin-top: 30px; color: var(--primary-blue)">
+                        ■ nullチェックを行うアノテーションの違い
+                    </h4>
+                    <p>
+                        <code>@NotNull</code
+                        >、<code>@NotEmpty</code>、<code>@NotBlank</code>はすべて未入力チェックの機能を提供しますが、それぞれ異なる特性を持っているため、理解して使い分ける必要があります。
+                    </p>
+
+                    <!-- nullチェック比較図 -->
+                    <div class="illustration">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 280">
+                            <defs>
+                                <linearGradient id="headerBlue" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color: #0ea5e9" />
+                                    <stop offset="100%" style="stop-color: #0284c7" />
+                                </linearGradient>
+                            </defs>
+
+                            <rect width="800" height="280" fill="#f8fafc" rx="12" />
+
+                            <text
+                                x="400"
+                                y="30"
+                                text-anchor="middle"
+                                font-family="Arial, sans-serif"
+                                font-size="16"
+                                font-weight="bold"
+                                fill="#1e293b"
+                            >
+                                @NotNull vs @NotEmpty vs @NotBlank の違い
+                            </text>
+
+                            <!-- ヘッダー行 -->
+                            <rect x="30" y="50" width="150" height="40" fill="url(#headerBlue)" rx="6" />
+                            <text
+                                x="105"
+                                y="75"
+                                text-anchor="middle"
+                                font-family="Arial, sans-serif"
+                                font-size="13"
+                                font-weight="bold"
+                                fill="white"
+                            >
+                                アノテーション
+                            </text>
+
+                            <rect x="190" y="50" width="100" height="40" fill="url(#headerBlue)" rx="6" />
+                            <text
+                                x="240"
+                                y="75"
+                                text-anchor="middle"
+                                font-family="Arial, sans-serif"
+                                font-size="13"
+                                font-weight="bold"
+                                fill="white"
+                            >
+                                null
+                            </text>
+
+                            <rect x="300" y="50" width="100" height="40" fill="url(#headerBlue)" rx="6" />
+                            <text
+                                x="350"
+                                y="75"
+                                text-anchor="middle"
+                                font-family="Arial, sans-serif"
+                                font-size="13"
+                                font-weight="bold"
+                                fill="white"
+                            >
+                                ""（空文字）
+                            </text>
+
+                            <rect x="410" y="50" width="100" height="40" fill="url(#headerBlue)" rx="6" />
+                            <text
+                                x="460"
+                                y="75"
+                                text-anchor="middle"
+                                font-family="Arial, sans-serif"
+                                font-size="13"
+                                font-weight="bold"
+                                fill="white"
+                            >
+                                " "（空白）
+                            </text>
+
+                            <rect x="520" y="50" width="250" height="40" fill="url(#headerBlue)" rx="6" />
+                            <text
+                                x="645"
+                                y="75"
+                                text-anchor="middle"
+                                font-family="Arial, sans-serif"
+                                font-size="13"
+                                font-weight="bold"
+                                fill="white"
+                            >
+                                主な用途
+                            </text>
+
+                            <!-- @NotNull行 -->
+                            <rect x="30" y="100" width="150" height="45" fill="white" stroke="#e2e8f0" rx="4" />
+                            <text
+                                x="105"
+                                y="127"
+                                text-anchor="middle"
+                                font-family="Consolas, monospace"
+                                font-size="12"
+                                fill="#dc2626"
+                            >
+                                @NotNull
+                            </text>
+
+                            <rect x="190" y="100" width="100" height="45" fill="#fee2e2" stroke="#e2e8f0" rx="4" />
+                            <text x="240" y="127" text-anchor="middle" font-size="18">❌</text>
+
+                            <rect x="300" y="100" width="100" height="45" fill="#dcfce7" stroke="#e2e8f0" rx="4" />
+                            <text x="350" y="127" text-anchor="middle" font-size="18">✅</text>
+
+                            <rect x="410" y="100" width="100" height="45" fill="#dcfce7" stroke="#e2e8f0" rx="4" />
+                            <text x="460" y="127" text-anchor="middle" font-size="18">✅</text>
+
+                            <rect x="520" y="100" width="250" height="45" fill="#f0f9ff" stroke="#e2e8f0" rx="4" />
+                            <text
+                                x="645"
+                                y="127"
+                                text-anchor="middle"
+                                font-family="Arial, sans-serif"
+                                font-size="11"
+                                fill="#1e293b"
+                            >
+                                数値型（Integer等）に使用
+                            </text>
+
+                            <!-- @NotEmpty行 -->
+                            <rect x="30" y="155" width="150" height="45" fill="white" stroke="#e2e8f0" rx="4" />
+                            <text
+                                x="105"
+                                y="182"
+                                text-anchor="middle"
+                                font-family="Consolas, monospace"
+                                font-size="12"
+                                fill="#dc2626"
+                            >
+                                @NotEmpty
+                            </text>
+
+                            <rect x="190" y="155" width="100" height="45" fill="#fee2e2" stroke="#e2e8f0" rx="4" />
+                            <text x="240" y="182" text-anchor="middle" font-size="18">❌</text>
+
+                            <rect x="300" y="155" width="100" height="45" fill="#fee2e2" stroke="#e2e8f0" rx="4" />
+                            <text x="350" y="182" text-anchor="middle" font-size="18">❌</text>
+
+                            <rect x="410" y="155" width="100" height="45" fill="#dcfce7" stroke="#e2e8f0" rx="4" />
+                            <text x="460" y="182" text-anchor="middle" font-size="18">✅</text>
+
+                            <rect x="520" y="155" width="250" height="45" fill="#f0f9ff" stroke="#e2e8f0" rx="4" />
+                            <text
+                                x="645"
+                                y="182"
+                                text-anchor="middle"
+                                font-family="Arial, sans-serif"
+                                font-size="11"
+                                fill="#1e293b"
+                            >
+                                コレクションに使用
+                            </text>
+
+                            <!-- @NotBlank行 -->
+                            <rect x="30" y="210" width="150" height="45" fill="white" stroke="#e2e8f0" rx="4" />
+                            <text
+                                x="105"
+                                y="237"
+                                text-anchor="middle"
+                                font-family="Consolas, monospace"
+                                font-size="12"
+                                fill="#dc2626"
+                            >
+                                @NotBlank
+                            </text>
+
+                            <rect x="190" y="210" width="100" height="45" fill="#fee2e2" stroke="#e2e8f0" rx="4" />
+                            <text x="240" y="237" text-anchor="middle" font-size="18">❌</text>
+
+                            <rect x="300" y="210" width="100" height="45" fill="#fee2e2" stroke="#e2e8f0" rx="4" />
+                            <text x="350" y="237" text-anchor="middle" font-size="18">❌</text>
+
+                            <rect x="410" y="210" width="100" height="45" fill="#fee2e2" stroke="#e2e8f0" rx="4" />
+                            <text x="460" y="237" text-anchor="middle" font-size="18">❌</text>
+
+                            <rect x="520" y="210" width="250" height="45" fill="#f0f9ff" stroke="#e2e8f0" rx="4" />
+                            <text
+                                x="645"
+                                y="237"
+                                text-anchor="middle"
+                                font-family="Arial, sans-serif"
+                                font-size="11"
+                                fill="#1e293b"
+                            >
+                                文字列に使用（最も厳格）
+                            </text>
+
+                            <!-- 凡例 -->
+                            <g transform="translate(30, 265)">
+                                <text x="0" y="0" font-family="Arial, sans-serif" font-size="11" fill="#64748b">
+                                    ❌ = エラーになる　✅ = 許可される
+                                </text>
+                            </g>
+                        </svg>
+                        <p class="illustration-caption">図8.2 nullチェックアノテーションの比較</p>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>注意点</h4>
+                        <p>
+                            全角スペースのみの場合はチェックされないので注意が必要です。また、<code>@NotEmpty</code>と<code>@NotBlank</code>はコレクション、文字列、配列に対して使用するもので、整数型（Integer）には適用できません。整数型には<code>@NotNull</code>を使用しましょう。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 8-1-3 -->
+                <div class="subsection" id="section-8-1-3">
+                    <div class="subsection-header">
+                        <span class="subsection-number">8-1-3</span>
+                        <h3 class="subsection-title">相関項目チェックとは？</h3>
+                    </div>
+
+                    <p>
+                        <strong>「相関項目チェック」</strong
+                        >とは、単一のフィールドではなく、複数のフィールドを組み合わせてチェックを行うことを指します。このようなチェックには主に3つの方法があります。
+                    </p>
+
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h4>1️⃣ @AssertTrueを利用する方法</h4>
+                            <p>
+                                比較的シンプルな相関チェックに適しています。Formクラス内にチェックメソッドを定義します。
+                            </p>
+                        </div>
+                        <div class="comparison-card green">
+                            <h4>2️⃣ Bean Validationを利用する方法</h4>
+                            <p>
+                                独自のアノテーションを作成する必要があり、専門的な知識が必要です。難易度が高いため本書では扱いません。
+                            </p>
+                        </div>
+                        <div class="comparison-card purple">
+                            <h4>3️⃣ Validatorインターフェースを実装する方法</h4>
+                            <p>
+                                Spring
+                                Frameworkの「Validator」インターフェースを実装します。複雑なチェックや再利用性が求められる場合に適しています。
+                            </p>
+                        </div>
+                    </div>
+
+                    <p>
+                        本書では、比較的簡単な「<strong>@AssertTrueを利用する方法</strong>」と「<strong>Validatorインターフェースを実装する方法</strong>」に焦点を当てて説明します。
+                    </p>
+                </div>
+
+                <!-- 8-1-4 -->
+                <div class="subsection" id="section-8-1-4">
+                    <div class="subsection-header">
+                        <span class="subsection-number">8-1-4</span>
+                        <h3 class="subsection-title">まとめ</h3>
+                    </div>
+
+                    <p>最後に入力チェックの必要性をイメージしたいと思います。</p>
+
+                    <p>
+                        入力チェックは、ユーザーからのデータがアプリケーションにとって安全かつ正確であることを確認する非常に重要なステップです。
+                    </p>
+
+                    <p>
+                        例えば、数値が必要な場所に文字列が入力されたり、日付の範囲が不正確であったりすると、プログラムは予期せぬエラーを出力する可能性があります。さらに、フロントエンド（ビュー側）での制限だけでは不十分で、ブラウザの開発ツールを使って値を書き換えることができてしまいます。これはセキュリティリスクも高まるため、<strong>バックエンド側での入力チェックが不可欠</strong>です。
+                    </p>
+
+                    <!-- 入力チェックの重要性図 -->
+                    <div class="illustration">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 250">
+                            <rect width="800" height="250" fill="#f8fafc" rx="12" />
+
+                            <text
+                                x="400"
+                                y="30"
+                                text-anchor="middle"
+                                font-family="Arial, sans-serif"
+                                font-size="16"
+                                font-weight="bold"
+                                fill="#1e293b"
+                            >
+                                フロントエンドとバックエンドの入力チェック
+                            </text>
+
+                            <!-- ユーザー -->
+                            <g transform="translate(50, 80)">
+                                <rect
+                                    x="0"
+                                    y="0"
+                                    width="100"
+                                    height="100"
+                                    rx="10"
+                                    fill="#e0f2fe"
+                                    stroke="#0ea5e9"
+                                    stroke-width="2"
+                                />
+                                <text x="50" y="40" text-anchor="middle" font-size="30">👤</text>
+                                <text
+                                    x="50"
+                                    y="70"
+                                    text-anchor="middle"
+                                    font-family="Arial, sans-serif"
+                                    font-size="12"
+                                    fill="#0369a1"
+                                >
+                                    ユーザー
+                                </text>
+                                <text
+                                    x="50"
+                                    y="85"
+                                    text-anchor="middle"
+                                    font-family="Arial, sans-serif"
+                                    font-size="10"
+                                    fill="#64748b"
+                                >
+                                    入力データ
+                                </text>
+                            </g>
+
+                            <!-- 矢印1 -->
+                            <polygon points="160,130 185,120 185,140" fill="#0ea5e9" />
+
+                            <!-- フロントエンド -->
+                            <g transform="translate(200, 60)">
+                                <rect
+                                    x="0"
+                                    y="0"
+                                    width="160"
+                                    height="140"
+                                    rx="10"
+                                    fill="white"
+                                    stroke="#f59e0b"
+                                    stroke-width="2"
+                                />
+                                <rect x="0" y="0" width="160" height="35" rx="10" fill="#fef3c7" />
+                                <rect x="0" y="25" width="160" height="15" fill="#fef3c7" />
+                                <text
+                                    x="80"
+                                    y="25"
+                                    text-anchor="middle"
+                                    font-family="Arial, sans-serif"
+                                    font-size="13"
+                                    font-weight="bold"
+                                    fill="#92400e"
+                                >
+                                    フロントエンド
+                                </text>
+                                <text x="80" y="65" text-anchor="middle" font-size="24">🌐</text>
+                                <text
+                                    x="80"
+                                    y="90"
+                                    text-anchor="middle"
+                                    font-family="Arial, sans-serif"
+                                    font-size="11"
+                                    fill="#92400e"
+                                >
+                                    入力チェック
+                                </text>
+                                <rect x="20" y="100" width="120" height="25" rx="4" fill="#fef3c7" />
+                                <text
+                                    x="80"
+                                    y="117"
+                                    text-anchor="middle"
+                                    font-family="Arial, sans-serif"
+                                    font-size="10"
+                                    fill="#b45309"
+                                >
+                                    ⚠️ 回避可能
+                                </text>
+                            </g>
+
+                            <!-- 矢印2 -->
+                            <polygon points="370,130 395,120 395,140" fill="#f59e0b" />
+
+                            <!-- バックエンド -->
+                            <g transform="translate(410, 60)">
+                                <rect
+                                    x="0"
+                                    y="0"
+                                    width="160"
+                                    height="140"
+                                    rx="10"
+                                    fill="white"
+                                    stroke="#059669"
+                                    stroke-width="3"
+                                />
+                                <rect x="0" y="0" width="160" height="35" rx="10" fill="#dcfce7" />
+                                <rect x="0" y="25" width="160" height="15" fill="#dcfce7" />
+                                <text
+                                    x="80"
+                                    y="25"
+                                    text-anchor="middle"
+                                    font-family="Arial, sans-serif"
+                                    font-size="13"
+                                    font-weight="bold"
+                                    fill="#166534"
+                                >
+                                    バックエンド
+                                </text>
+                                <text x="80" y="65" text-anchor="middle" font-size="24">🛡️</text>
+                                <text
+                                    x="80"
+                                    y="90"
+                                    text-anchor="middle"
+                                    font-family="Arial, sans-serif"
+                                    font-size="11"
+                                    fill="#166534"
+                                >
+                                    入力チェック
+                                </text>
+                                <rect x="20" y="100" width="120" height="25" rx="4" fill="#dcfce7" />
+                                <text
+                                    x="80"
+                                    y="117"
+                                    text-anchor="middle"
+                                    font-family="Arial, sans-serif"
+                                    font-size="10"
+                                    fill="#047857"
+                                >
+                                    ✅ 必須！
+                                </text>
+                            </g>
+
+                            <!-- 矢印3 -->
+                            <polygon points="580,130 605,120 605,140" fill="#059669" />
+
+                            <!-- ビジネスロジック -->
+                            <g transform="translate(620, 80)">
+                                <rect
+                                    x="0"
+                                    y="0"
+                                    width="130"
+                                    height="100"
+                                    rx="10"
+                                    fill="#ede9fe"
+                                    stroke="#8b5cf6"
+                                    stroke-width="2"
+                                />
+                                <text x="65" y="40" text-anchor="middle" font-size="24">⚙️</text>
+                                <text
+                                    x="65"
+                                    y="65"
+                                    text-anchor="middle"
+                                    font-family="Arial, sans-serif"
+                                    font-size="11"
+                                    fill="#5b21b6"
+                                >
+                                    ビジネス
+                                </text>
+                                <text
+                                    x="65"
+                                    y="80"
+                                    text-anchor="middle"
+                                    font-family="Arial, sans-serif"
+                                    font-size="11"
+                                    fill="#5b21b6"
+                                >
+                                    ロジック
+                                </text>
+                            </g>
+
+                            <text
+                                x="400"
+                                y="235"
+                                text-anchor="middle"
+                                font-family="Arial, sans-serif"
+                                font-size="12"
+                                fill="#64748b"
+                            >
+                                セキュリティを高めるには、バックエンド側での入力チェックが不可欠です
+                            </text>
+                        </svg>
+                        <p class="illustration-caption">図8.3 入力チェックのイメージ</p>
+                    </div>
+
+                    <div class="tip-box">
+                        <h4>ポイント</h4>
+                        <p>
+                            このように、入力チェック（バリデーション機能）はデータの整合性を保ち、アプリケーションの信頼性とセキュリティを高めるために必要な機能です。
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- セクション 8-2 -->
+            <section class="section" id="section-8-2">
+                <div class="section-header">
+                    <span class="section-number">8-2</span>
+                    <h2 class="section-title">単項目チェックを使用したプログラムを作成しよう</h2>
+                </div>
+
+                <p>
+                    「単項目チェック」を使用して「ビュー」で入力した値に対して「バリデーション」を行うプログラムを作成しましょう。作成する内容は、入力画面で数値を入力し加算結果を表示する簡易なプログラムですが、「バリデーション」を作成しチェックされた場合は、入力画面に「エラーメッセージ」を表示します。
+                </p>
+
+                <!-- 8-2-1 -->
+                <div class="subsection" id="section-8-2-1">
+                    <div class="subsection-header">
+                        <span class="subsection-number">8-2-1</span>
+                        <h3 class="subsection-title">プロジェクトの作成</h3>
+                    </div>
+
+                    <p>
+                        Spring Initializrを使用してプロジェクトを作成します。ブラウザで <a href="https://start.spring.io" target="_blank" style="color: #3b82f6; font-weight: bold;">https://start.spring.io</a> にアクセスしてください。
+                    </p>
+
+                    <!-- サンプルプログラムダウンロード -->
+                    <div style="margin-top: 25px; padding: 25px; background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%); border-radius: 12px; border: 2px solid #c084fc;">
+                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                            <span style="font-size: 32px;">📥</span>
+                            <div>
+                                <h4 style="color: #7c3aed; margin: 0;">サンプルプログラムのダウンロード</h4>
+                                <p style="margin: 5px 0 0; color: #6b21a8; font-size: 14px;">完成版のプロジェクトをダウンロードできます</p>
+                            </div>
+                        </div>
+
+                        <p style="color: #581c87; font-size: 14px; margin-bottom: 20px;">
+                            Spring Initializrでの作成が難しい場合や、完成版を確認したい場合は、以下からサンプルプログラムをダウンロードしてください。
+                        </p>
+
+                        <div style="display: flex; flex-wrap: wrap; gap: 15px; align-items: center;">
+                            <a href="downloads/ValidationSample.zip" download
+                               style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; text-decoration: none; border-radius: 10px; font-weight: bold; font-size: 15px; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); transition: transform 0.2s, box-shadow 0.2s;"
+                               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(139, 92, 246, 0.4)';"
+                               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(139, 92, 246, 0.3)';">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                ValidationSample.zip
+                            </a>
+                            <span style="color: #7c3aed; font-size: 13px;">（完成版プロジェクト）</span>
+                        </div>
+
+                        <div style="margin-top: 20px; padding: 12px 15px; background: rgba(255,255,255,0.7); border-radius: 8px; border-left: 4px solid #a855f7;">
+                            <p style="margin: 0; color: #6b21a8; font-size: 13px;">
+                                <strong>使い方：</strong>ダウンロード後、ZIPを解凍してVSCodeで「フォルダーを開く」から開いてください。
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 設定値テーブル -->
+                    <div class="table-wrapper" style="margin-top: 25px;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 30%;">設定項目</th>
+                                    <th>値</th>
+                                    <th style="width: 35%;">説明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Project</strong></td>
+                                    <td><code style="background:#dcfce7; padding:2px 8px; border-radius:4px; color:#166534;">Maven</code></td>
+                                    <td>ビルドツール</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Language</strong></td>
+                                    <td><code style="background:#dcfce7; padding:2px 8px; border-radius:4px; color:#166534;">Java</code></td>
+                                    <td>プログラミング言語</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Spring Boot</strong></td>
+                                    <td><code style="background:#dcfce7; padding:2px 8px; border-radius:4px; color:#166534;">3.4.x</code></td>
+                                    <td>最新の安定版を選択</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Artifact</strong></td>
+                                    <td><code style="background:#fef3c7; padding:2px 8px; border-radius:4px; color:#92400e;">ValidationSample</code></td>
+                                    <td>プロジェクト名</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Packaging</strong></td>
+                                    <td><code style="background:#dcfce7; padding:2px 8px; border-radius:4px; color:#166534;">Jar</code></td>
+                                    <td>パッケージ形式</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Java</strong></td>
+                                    <td><code style="background:#dcfce7; padding:2px 8px; border-radius:4px; color:#166534;">21</code></td>
+                                    <td>Javaバージョン</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p style="margin-top: 20px;">
+                        「Validation」を依存関係として選択することでバリデーション機能である「Bean Validation」や「Hibernate Validator」を使用できるようになります。
+                    </p>
+
+                    <!-- Dependencies -->
+                    <div style="margin-top: 20px; padding: 20px; background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border-radius: 10px; border: 1px solid #6ee7b7;">
+                        <h5 style="color: #065f46; margin-bottom: 15px;">追加する Dependencies（依存関係）</h5>
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                            <span style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: white; border-radius: 20px; border: 2px solid #10b981; color: #065f46; font-weight: 500;">
+                                <span style="color: #10b981;">✓</span> Spring Web
+                            </span>
+                            <span style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: white; border-radius: 20px; border: 2px solid #10b981; color: #065f46; font-weight: 500;">
+                                <span style="color: #10b981;">✓</span> Thymeleaf
+                            </span>
+                            <span style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: white; border-radius: 20px; border: 2px solid #10b981; color: #065f46; font-weight: 500;">
+                                <span style="color: #10b981;">✓</span> Validation
+                            </span>
+                            <span style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: white; border-radius: 20px; border: 2px solid #10b981; color: #065f46; font-weight: 500;">
+                                <span style="color: #10b981;">✓</span> Lombok
+                            </span>
+                            <span style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: white; border-radius: 20px; border: 2px solid #10b981; color: #065f46; font-weight: 500;">
+                                <span style="color: #10b981;">✓</span> Spring Boot DevTools
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- フォルダ構成 -->
+                    <div class="highlight-box" style="margin: 25px 0;">
+                        <p style="margin-bottom: 12px;">
+                            <strong>📂 プロジェクト構成</strong>
+                        </p>
+<pre style="background: #f8fafc; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 13px; margin: 0; line-height: 1.6;">
+ValidationSample/
+├── pom.xml                                    <span style="color: #64748b;">← Maven設定ファイル</span>
+└── src/
+    └── main/
+        ├── java/com/example/demo/
+        │   ├── <span style="color: #0ea5e9; font-weight: bold;">DemoApplication.java</span>           <span style="color: #64748b;">← 起動クラス</span>
+        │   │
+        │   ├── form/                          <span style="color: #64748b;">← フォームクラス格納</span>
+        │   │   └── <span style="color: #10b981; font-weight: bold;">CalcForm.java</span>              <span style="color: #64748b;">← 入力値とバリデーション定義</span>
+        │   │
+        │   └── controller/                    <span style="color: #64748b;">← コントローラ格納</span>
+        │       └── <span style="color: #3b82f6; font-weight: bold;">ValidationController.java</span>  <span style="color: #64748b;">← リクエスト処理</span>
+        │
+        └── resources/
+            └── templates/                     <span style="color: #64748b;">← Thymeleafテンプレート</span>
+                ├── <span style="color: #f59e0b; font-weight: bold;">entry.html</span>                 <span style="color: #64748b;">← 入力画面</span>
+                └── <span style="color: #f59e0b; font-weight: bold;">confirm.html</span>               <span style="color: #64748b;">← 確認画面</span>
+</pre>
+                    </div>
+
+                    <div class="config-table" style="margin: 16px 0;">
+                        <div style="font-weight: 600; margin-bottom: 12px; color: var(--primary)">📋 ファイルの役割</div>
+                        <div class="config-row">
+                            <span class="config-label">form/</span>
+                            <span class="config-value"><strong>Formクラス</strong>：入力フォームの値を保持し、バリデーションルールを定義</span>
+                        </div>
+                        <div class="config-row">
+                            <span class="config-label">controller/</span>
+                            <span class="config-value"><strong>コントローラ</strong>：リクエストを受け取り、バリデーション結果に応じて画面遷移を制御</span>
+                        </div>
+                        <div class="config-row">
+                            <span class="config-label">templates/</span>
+                            <span class="config-value"><strong>ビュー</strong>：ユーザーに表示するHTML画面（Thymeleaf使用）</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8-2-2 -->
+                <div class="subsection" id="section-8-2-2">
+                    <div class="subsection-header">
+                        <span class="subsection-number">8-2-2</span>
+                        <h3 class="subsection-title">アプリケーション層の作成</h3>
+                    </div>
+
+                    <h4 style="margin-top: 20px; color: var(--primary-blue)">01 Formクラスの作成</h4>
+                    <p>
+                        「Formクラス」という「ビュー」のフォームを表現するクラスを作成します。「src/main/java」→「com.example.demo」フォルダを選択し、マウスを右クリックし、「新規」→「クラス」を選択します。
+                    </p>
+                    <p>パッケージを「com.example.demo.form」名前を「CalcForm」としてクラスを作成します。</p>
+
+                    <div class="code-filename">CalcForm.java</div>
+                    <div class="code-block">
+                        <div class="code-content">
+                            <pre><span class="code-keyword">package</span> com.example.demo.form;
+
+<span class="code-keyword">import</span> org.hibernate.validator.constraints.Range;
+
+<span class="code-keyword">import</span> jakarta.validation.constraints.NotNull;
+<span class="code-keyword">import</span> lombok.Data;
+
+<span class="code-annotation">@Data</span>
+<span class="code-keyword">public class</span> <span class="code-class">CalcForm</span> {
+    <span class="code-annotation">@NotNull</span>(message = <span class="code-string">"左：数値が未入力です。"</span>)
+    <span class="code-annotation">@Range</span>(min = 1, max = 10, message = <span class="code-string">"左：{min}〜{max}の数値を入力して下さい。"</span>)
+    <span class="code-keyword">private</span> Integer leftNum;
+
+    <span class="code-annotation">@NotNull</span>(message = <span class="code-string">"右：数値が未入力です。"</span>)
+    <span class="code-annotation">@Range</span>(min = 1, max = 10, message = <span class="code-string">"右：{min}〜{max}の数値を入力して下さい。"</span>)
+    <span class="code-keyword">private</span> Integer rightNum;
+}</pre>
+                        </div>
+                    </div>
+
+                    <div class="important-box">
+                        <h4>コードの解説</h4>
+                        <p>
+                            <code>@NotNull</code
+                            >は、値がnull（未入力）でないことを確認します。もし値がnullだった場合、「左（右）：数値が未入力です。」というエラーメッセージが表示されます。
+                        </p>
+                        <p>
+                            <code>@Range</code
+                            >は、値が1から10の範囲内にあることを確認します。もし値がこの範囲外だった場合、「左（右）：1〜10の数値を入力して下さい。」というエラーメッセージ表示されます。
+                        </p>
+                        <p>
+                            <code>{min}</code
+                            >と<code>{max}</code>は、設定した最小値（1）と最大値（10）に自動的に置き換えられます。つまり単項目チェック用のアノテーションに「message属性」を追加して、メッセージを設定することで、バリデーション（入力チェック）に引っかかった場合、設定したエラーメッセージを表示します。
+                        </p>
+                    </div>
+
+                    <h4 style="margin-top: 30px; color: var(--primary-blue)">02 コントローラの作成</h4>
+                    <p>
+                        「コントローラ」を作成します。「src/main/java」→「com.example.demo」フォルダを選択し、マウスを右クリックし、「新規」→「クラス」を選択します。
+                    </p>
+                    <p>
+                        パッケージを「com.example.demo.controller」、名前を「ValidationController」としてクラスを作成します。
+                    </p>
+
+                    <div class="code-filename">ValidationController.java</div>
+                    <div class="code-block">
+                        <div class="code-content">
+                            <pre><span class="code-keyword">package</span> com.example.demo.controller;
+
+<span class="code-keyword">import</span> org.springframework.stereotype.Controller;
+<span class="code-keyword">import</span> org.springframework.ui.Model;
+<span class="code-keyword">import</span> org.springframework.validation.BindingResult;
+<span class="code-keyword">import</span> org.springframework.validation.annotation.Validated;
+<span class="code-keyword">import</span> org.springframework.web.bind.annotation.GetMapping;
+<span class="code-keyword">import</span> org.springframework.web.bind.annotation.ModelAttribute;
+<span class="code-keyword">import</span> org.springframework.web.bind.annotation.PostMapping;
+
+<span class="code-keyword">import</span> com.example.demo.form.CalcForm;
+
+<span class="code-annotation">@Controller</span>
+<span class="code-keyword">public class</span> <span class="code-class">ValidationController</span> {
+    <span class="code-comment">/** 「form-backing bean」の初期化 */</span>
+    <span class="code-annotation">@ModelAttribute</span>
+    <span class="code-keyword">public</span> CalcForm setUpForm() {
+        <span class="code-keyword">return new</span> CalcForm();
+    }
+
+    <span class="code-comment">/** 入力画面を表示する */</span>
+    <span class="code-annotation">@GetMapping</span>(<span class="code-string">"show"</span>)
+    <span class="code-keyword">public</span> String showView() {
+        <span class="code-comment">// 戻り値は「ビュー名」を返す</span>
+        <span class="code-keyword">return</span> <span class="code-string">"entry"</span>;
+    }
+
+    <span class="code-comment">/** 確認画面を表示する：Formクラス使用 */</span>
+    <span class="code-annotation">@PostMapping</span>(<span class="code-string">"calc"</span>)
+    <span class="code-keyword">public</span> String confirmView(<span class="code-annotation">@Validated</span> CalcForm form,
+            BindingResult bindingResult, Model model) {
+        <span class="code-comment">// 入力チェック</span>
+        <span class="code-keyword">if</span> (bindingResult.hasErrors()) {
+            <span class="code-comment">// 入力チェックNG</span>
+            <span class="code-comment">// 入力画面へ</span>
+            <span class="code-keyword">return</span> <span class="code-string">"entry"</span>;
+        }
+        <span class="code-comment">// 入力チェックOK</span>
+        <span class="code-comment">// 加算実行</span>
+        Integer calcResult = form.getLeftNum() + form.getRightNum();
+        <span class="code-comment">// Modelに格納する</span>
+        model.addAttribute(<span class="code-string">"result"</span>, calcResult);
+        <span class="code-comment">// 確認画面へ</span>
+        <span class="code-keyword">return</span> <span class="code-string">"confirm"</span>;
+    }
+}</pre>
+                        </div>
+                    </div>
+
+                    <div class="important-box">
+                        <h4>コードの解説</h4>
+                        <p>
+                            <code>@Validated</code
+                            >アノテーションを「単項目チェック」アノテーションを設定している「Formクラス」に付与することで、「バリデーション」を実行します。実行した結果（エラー情報）が「BindingResult」インターフェースに保持されます。
+                        </p>
+                        <p>
+                            <code>bindingResult.hasErrors()</code
+                            >メソッドの戻り値で「エラー」の有無（true:エラー有/false:エラー無）を確認することができます。エラー有の場合は入力画面に遷移します。
+                        </p>
+                        <p>
+                            なお、「バリデーション」実行時、<code>@Validated</code>アノテーションを付与したクラスと「BindingResult」インターフェースはセットで引数に使用し、順番も必ず「<code>@Validated</code>」→「BindingResult」の順番で使用する必要があります。
+                        </p>
+                    </div>
+
+                    <h4 style="margin-top: 30px; color: var(--primary-blue)">03 ビューの作成（入力画面）</h4>
+                    <p>
+                        「showView」メソッドの戻り値「ビュー名：entry」に対する「entry.html」を作成し、「resources/templates」フォルダに配置します。
+                    </p>
+
+                    <div class="code-filename">entry.html</div>
+                    <div class="code-block">
+                        <div class="code-content">
+                            <pre><span class="code-keyword">&lt;!DOCTYPE html&gt;</span>
+<span class="code-keyword">&lt;html</span> xmlns:th=<span class="code-string">"http://www.thymeleaf.org"</span><span class="code-keyword">&gt;</span>
+<span class="code-keyword">&lt;head&gt;</span>
+    <span class="code-keyword">&lt;meta</span> charset=<span class="code-string">"UTF-8"</span><span class="code-keyword">&gt;</span>
+    <span class="code-keyword">&lt;title&gt;</span>入力画面<span class="code-keyword">&lt;/title&gt;</span>
+<span class="code-keyword">&lt;/head&gt;</span>
+<span class="code-keyword">&lt;body&gt;</span>
+    <span class="code-keyword">&lt;form</span> th:action=<span class="code-string">"@{/calc}"</span> method=<span class="code-string">"post"</span> th:object=<span class="code-string">"${calcForm}"</span><span class="code-keyword">&gt;</span>
+        <span class="code-keyword">&lt;div&gt;</span>
+            <span class="code-keyword">&lt;input</span> type=<span class="code-string">"text"</span> th:field=<span class="code-string">"*{leftNum}"</span><span class="code-keyword">&gt;</span>
+            +
+            <span class="code-keyword">&lt;input</span> type=<span class="code-string">"text"</span> th:field=<span class="code-string">"*{rightNum}"</span><span class="code-keyword">&gt;</span>
+        <span class="code-keyword">&lt;/div&gt;</span>
+        <span class="code-keyword">&lt;input</span> type=<span class="code-string">"submit"</span> value=<span class="code-string">"計算"</span><span class="code-keyword">&gt;</span>
+    <span class="code-keyword">&lt;/form&gt;</span>
+    <span class="code-comment">&lt;!-- エラーを表示する --&gt;</span>
+    <span class="code-keyword">&lt;ul</span> th:if=<span class="code-string">"${#fields.hasErrors('*')}"</span><span class="code-keyword">&gt;</span>
+        <span class="code-keyword">&lt;li</span> th:each=<span class="code-string">"err:${#fields.errors('*')}"</span> th:text=<span class="code-string">"${err}"</span><span class="code-keyword">&gt;&lt;/li&gt;</span>
+    <span class="code-keyword">&lt;/ul&gt;</span>
+<span class="code-keyword">&lt;/body&gt;</span>
+<span class="code-keyword">&lt;/html&gt;</span></pre>
+                        </div>
+                    </div>
+
+                    <div class="important-box">
+                        <h4>コードの解説</h4>
+                        <p>
+                            <code>th:object</code
+                            >属性を設定し、値に「Model」に格納された「Formクラス」の「ローワーキャメルケース」を指定します。「<code>th:field</code>属性」に「*{フィールド名}」を指定します。「<code>th:field</code>属性」を使用することで、HTMLで表示された時に「id属性、name属性、value属性」が自動で生成されます。
+                        </p>
+                        <p>
+                            <code>#fields.hasErrors('*')</code
+                            >メソッドでエラーが存在するかの判定を行います。<code>#fields.errors('*')</code>メソッドでエラーメッセージを配列で返すため、「th:each属性」を利用して表示を行います。すべてのフィールドのエラーを取得する場合は「<code>#fields.errors</code>」メソッドの引数に「*」を渡しますが、個別のエラーを取得したい場合は、引数に「フィールド名」を渡します。
+                        </p>
+                    </div>
+
+                    <h4 style="margin-top: 30px; color: var(--primary-blue)">04 ビューの作成（確認画面）</h4>
+                    <p>
+                        「confirmView」メソッドの戻り値「ビュー名：confirm」に対する「confirm.html」を作成し、「resources/templates」フォルダに配置します。
+                    </p>
+
+                    <div class="code-filename">confirm.html</div>
+                    <div class="code-block">
+                        <div class="code-content">
+                            <pre><span class="code-keyword">&lt;!DOCTYPE html&gt;</span>
+<span class="code-keyword">&lt;html</span> xmlns:th=<span class="code-string">"http://www.thymeleaf.org"</span><span class="code-keyword">&gt;</span>
+<span class="code-keyword">&lt;head&gt;</span>
+    <span class="code-keyword">&lt;meta</span> charset=<span class="code-string">"UTF-8"</span><span class="code-keyword">&gt;</span>
+    <span class="code-keyword">&lt;title&gt;</span>確認画面<span class="code-keyword">&lt;/title&gt;</span>
+<span class="code-keyword">&lt;/head&gt;</span>
+<span class="code-keyword">&lt;body&gt;</span>
+    <span class="code-keyword">&lt;h2&gt;</span>計算結果<span class="code-keyword">&lt;/h2&gt;</span>
+    <span class="code-keyword">&lt;h3&gt;</span>[[${calcForm.leftNum}]]+[[${calcForm.rightNum}]]=[[${result}]]<span class="code-keyword">&lt;/h3&gt;</span>
+<span class="code-keyword">&lt;/body&gt;</span>
+<span class="code-keyword">&lt;/html&gt;</span></pre>
+                        </div>
+                    </div>
+
+                    <h4 style="margin-top: 30px; color: var(--primary-blue)">05 確認</h4>
+                    <p>
+                        「Bootダッシュボード」にて、「ValidationSample」が表示されていることを確認し、「ValidationSample」を選択後、「起動」ボタンを押します。
+                    </p>
+                    <p>
+                        ブラウザを立ち上げアドレスバーに「http://localhost:8080/show」と入力すると、「入力画面」が表示されます。
+                    </p>
+                    <p>
+                        入力画面で未入力や範囲外の「入力チェック」される値を入力後、「送信」ボタンを押すと「入力画面」でエラーメッセージが表示されます。「入力チェック」されない場合は、加算結果が「確認画面」に表示されます。
+                    </p>
+                </div>
+
+                <!-- 8-2-3 -->
+                <div class="subsection" id="section-8-2-3">
+                    <div class="subsection-header">
+                        <span class="subsection-number">8-2-3</span>
+                        <h3 class="subsection-title">@ModelAttributeとは？</h3>
+                    </div>
+
+                    <p>
+                        「<code>@ModelAttribute</code>」について深堀しましょう。Spring
+                        MVCでよく使用されるアノテーションで、主に2つの方法で使用されます。
+                    </p>
+
+                    <!-- @ModelAttributeの図解 -->
+                    <div class="illustration">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+                            <defs>
+                                <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#0ea5e9" />
+                                </marker>
+                                <filter id="shadow2" x="-20%" y="-20%" width="140%" height="140%">
+                                    <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.15" />
+                                </filter>
+                            </defs>
+
+                            <rect width="800" height="400" fill="#f8fafc" />
+
+                            <text
+                                x="400"
+                                y="28"
+                                text-anchor="middle"
+                                font-family="Arial, sans-serif"
+                                font-size="16"
+                                font-weight="bold"
+                                fill="#1e293b"
+                            >
+                                @ModelAttribute の2つの使い方
+                            </text>
+
+                            <!-- 方法1: メソッドに付与 -->
+                            <g transform="translate(30, 45)">
+                                <rect
+                                    width="350"
+                                    height="320"
+                                    rx="12"
+                                    fill="white"
+                                    stroke="#3b82f6"
+                                    stroke-width="3"
+                                    filter="url(#shadow2)"
+                                />
+                                <rect x="0" y="0" width="350" height="40" rx="12" fill="#3b82f6" />
+                                <rect x="0" y="30" width="350" height="15" fill="#3b82f6" />
+                                <text
+                                    x="175"
+                                    y="28"
+                                    text-anchor="middle"
+                                    font-family="Arial, sans-serif"
+                                    font-size="14"
+                                    font-weight="bold"
+                                    fill="white"
+                                >
+                                    方法1：メソッドに付与
+                                </text>
+
+                                <!-- コード例 -->
+                                <rect x="15" y="55" width="320" height="90" rx="5" fill="#1e293b" />
+                                <text x="25" y="78" font-family="Consolas, monospace" font-size="10" fill="#93c5fd">
+                                    @ModelAttribute
+                                </text>
+                                <text x="25" y="93" font-family="Consolas, monospace" font-size="10" fill="#93c5fd">
+                                    public CalcForm setUpForm() {
+                                </text>
+                                <text x="35" y="108" font-family="Consolas, monospace" font-size="10" fill="#fde68a">
+                                    return new CalcForm();
+                                </text>
+                                <text x="25" y="123" font-family="Consolas, monospace" font-size="10" fill="#93c5fd">
+                                    }
+                                </text>
+
+                                <!-- 説明 -->
+                                <text
+                                    x="175"
+                                    y="165"
+                                    text-anchor="middle"
+                                    font-family="Arial, sans-serif"
+                                    font-size="12"
+                                    fill="#1e40af"
+                                >
+                                    リクエスト前に自動実行される
+                                </text>
+
+                                <!-- 図解 -->
+                                <g transform="translate(30, 180)">
+                                    <rect width="70" height="35" rx="5" fill="#dbeafe" stroke="#3b82f6" />
+                                    <text
+                                        x="35"
+                                        y="22"
+                                        text-anchor="middle"
+                                        font-family="Arial, sans-serif"
+                                        font-size="10"
+                                        fill="#1e40af"
+                                    >
+                                        リクエスト
+                                    </text>
+                                </g>
+
+                                <line
+                                    x1="105"
+                                    y1="197"
+                                    x2="135"
+                                    y2="197"
+                                    stroke="#0ea5e9"
+                                    stroke-width="2"
+                                    marker-end="url(#arrow)"
+                                />
+
+                                <g transform="translate(140, 175)">
+                                    <rect width="80" height="45" rx="5" fill="#fef3c7" stroke="#f59e0b" />
+                                    <text
+                                        x="40"
+                                        y="18"
+                                        text-anchor="middle"
+                                        font-family="Arial, sans-serif"
+                                        font-size="9"
+                                        fill="#92400e"
+                                    >
+                                        @Model
+                                    </text>
+                                    <text
+                                        x="40"
+                                        y="30"
+                                        text-anchor="middle"
+                                        font-family="Arial, sans-serif"
+                                        font-size="9"
+                                        fill="#92400e"
+                                    >
+                                        Attribute
+                                    </text>
+                                    <text
+                                        x="40"
+                                        y="42"
+                                        text-anchor="middle"
+                                        font-family="Arial, sans-serif"
+                                        font-size="8"
+                                        fill="#b45309"
+                                    >
+                                        先に実行
+                                    </text>
+                                </g>
+
+                                <line
+                                    x1="225"
+                                    y1="197"
+                                    x2="255"
+                                    y2="197"
+                                    stroke="#0ea5e9"
+                                    stroke-width="2"
+                                    marker-end="url(#arrow)"
+                                />
+
+                                <g transform="translate(260, 180)">
+                                    <rect width="60" height="35" rx="5" fill="#dcfce7" stroke="#22c55e" />
+                                    <text
+                                        x="30"
+                                        y="22"
+                                        text-anchor="middle"
+                                        font-family="Arial, sans-serif"
+                                        font-size="10"
+                                        fill="#166534"
+                                    >
+                                        Handler
+                                    </text>
+                                </g>
+
+                                <!-- ポイント -->
+                                <rect x="15" y="240" width="320" height="65" rx="5" fill="#eff6ff" />
+                                <text
+                                    x="175"
+                                    y="262"
+                                    text-anchor="middle"
+                                    font-family="Arial, sans-serif"
+                                    font-size="11"
+                                    fill="#1d4ed8"
+                                >
+                                    💡 Formクラスの初期化に使用
+                                </text>
+                                <text
+                                    x="175"
+                                    y="285"
+                                    text-anchor="middle"
+                                    font-family="Arial, sans-serif"
+                                    font-size="10"
+                                    fill="#3b82f6"
+                                >
+                                    戻り値は自動的にModelに格納される
+                                </text>
+                            </g>
+
+                            <!-- 方法2: 引数に付与 -->
+                            <g transform="translate(420, 45)">
+                                <rect
+                                    width="350"
+                                    height="320"
+                                    rx="12"
+                                    fill="white"
+                                    stroke="#8b5cf6"
+                                    stroke-width="3"
+                                    filter="url(#shadow2)"
+                                />
+                                <rect x="0" y="0" width="350" height="40" rx="12" fill="#8b5cf6" />
+                                <rect x="0" y="30" width="350" height="15" fill="#8b5cf6" />
+                                <text
+                                    x="175"
+                                    y="28"
+                                    text-anchor="middle"
+                                    font-family="Arial, sans-serif"
+                                    font-size="14"
+                                    font-weight="bold"
+                                    fill="white"
+                                >
+                                    方法2：引数に付与
+                                </text>
+
+                                <!-- コード例 -->
+                                <rect x="15" y="55" width="320" height="90" rx="5" fill="#1e293b" />
+                                <text x="25" y="75" font-family="Consolas, monospace" font-size="10" fill="#c4b5fd">
+                                    @PostMapping
+                                </text>
+                                <text x="25" y="90" font-family="Consolas, monospace" font-size="10" fill="#c4b5fd">
+                                    public String submit(
+                                </text>
+                                <text x="35" y="105" font-family="Consolas, monospace" font-size="10" fill="#fde68a">
+                                    @ModelAttribute UserForm form
+                                </text>
+                                <text x="25" y="120" font-family="Consolas, monospace" font-size="10" fill="#c4b5fd">
+                                    ) { ... }
+                                </text>
+
+                                <!-- 説明 -->
+                                <text
+                                    x="175"
+                                    y="165"
+                                    text-anchor="middle"
+                                    font-family="Arial, sans-serif"
+                                    font-size="12"
+                                    fill="#5b21b6"
+                                >
+                                    リクエストパラメータを自動バインド
+                                </text>
+
+                                <!-- 図解 -->
+                                <g transform="translate(20, 180)">
+                                    <rect width="90" height="45" rx="5" fill="#ede9fe" stroke="#8b5cf6" />
+                                    <text
+                                        x="45"
+                                        y="16"
+                                        text-anchor="middle"
+                                        font-family="Arial, sans-serif"
+                                        font-size="9"
+                                        fill="#5b21b6"
+                                    >
+                                        リクエスト
+                                    </text>
+                                    <text
+                                        x="45"
+                                        y="28"
+                                        text-anchor="middle"
+                                        font-family="Arial, sans-serif"
+                                        font-size="8"
+                                        fill="#7c3aed"
+                                    >
+                                        name=田中
+                                    </text>
+                                    <text
+                                        x="45"
+                                        y="40"
+                                        text-anchor="middle"
+                                        font-family="Arial, sans-serif"
+                                        font-size="8"
+                                        fill="#7c3aed"
+                                    >
+                                        age=25
+                                    </text>
+                                </g>
+
+                                <line
+                                    x1="115"
+                                    y1="202"
+                                    x2="145"
+                                    y2="202"
+                                    stroke="#8b5cf6"
+                                    stroke-width="2"
+                                    marker-end="url(#arrow)"
+                                />
+
+                                <g transform="translate(150, 180)">
+                                    <rect width="90" height="45" rx="5" fill="#fef3c7" stroke="#f59e0b" />
+                                    <text
+                                        x="45"
+                                        y="16"
+                                        text-anchor="middle"
+                                        font-family="Arial, sans-serif"
+                                        font-size="9"
+                                        fill="#92400e"
+                                    >
+                                        自動バインド
+                                    </text>
+                                    <text
+                                        x="45"
+                                        y="28"
+                                        text-anchor="middle"
+                                        font-family="Arial, sans-serif"
+                                        font-size="8"
+                                        fill="#b45309"
+                                    >
+                                        form.name=田中
+                                    </text>
+                                    <text
+                                        x="45"
+                                        y="40"
+                                        text-anchor="middle"
+                                        font-family="Arial, sans-serif"
+                                        font-size="8"
+                                        fill="#b45309"
+                                    >
+                                        form.age=25
+                                    </text>
+                                </g>
+
+                                <line
+                                    x1="245"
+                                    y1="202"
+                                    x2="275"
+                                    y2="202"
+                                    stroke="#8b5cf6"
+                                    stroke-width="2"
+                                    marker-end="url(#arrow)"
+                                />
+
+                                <g transform="translate(280, 182)">
+                                    <rect width="50" height="40" rx="5" fill="#dcfce7" stroke="#22c55e" />
+                                    <text
+                                        x="25"
+                                        y="16"
+                                        text-anchor="middle"
+                                        font-family="Arial, sans-serif"
+                                        font-size="9"
+                                        fill="#166534"
+                                    >
+                                        処理で
+                                    </text>
+                                    <text
+                                        x="25"
+                                        y="30"
+                                        text-anchor="middle"
+                                        font-family="Arial, sans-serif"
+                                        font-size="9"
+                                        fill="#166534"
+                                    >
+                                        利用
+                                    </text>
+                                </g>
+
+                                <!-- ポイント -->
+                                <rect x="15" y="240" width="320" height="65" rx="5" fill="#f5f3ff" />
+                                <text
+                                    x="175"
+                                    y="262"
+                                    text-anchor="middle"
+                                    font-family="Arial, sans-serif"
+                                    font-size="11"
+                                    fill="#6d28d9"
+                                >
+                                    💡 フォームデータの受け取りに使用
+                                </text>
+                                <text
+                                    x="175"
+                                    y="285"
+                                    text-anchor="middle"
+                                    font-family="Arial, sans-serif"
+                                    font-size="10"
+                                    fill="#8b5cf6"
+                                >
+                                    引数名を省略すると、クラス名の先頭小文字で格納
+                                </text>
+                            </g>
+                        </svg>
+                        <p class="illustration-caption">図8.4 @ModelAttributeの2つの使い方</p>
+                    </div>
+
+                    <div class="important-box">
+                        <h4>Form-Backing Bean（フォームバッキングビーン）とは？</h4>
+                        <p>
+                            <strong>Form-Backing Bean</strong
+                            >は、Webアプリケーションでよく使われる概念です。このビーン（Javaのクラスのインスタンス）は、HTMLフォームのデータを一時的に格納する役割を担います。
+                        </p>
+                        <p>
+                            簡単に言うと、ユーザーがWebページのフォームに入力したデータ（例：名前、メールアドレス、パスワードなど）は、サーバーに送信される前にこの「Form-Backing
+                            Bean」に一時的に保存されます。そして、このビーンがサーバー側で処理され、ビジネスロジックに渡されます。
+                        </p>
+                        <p><strong>Form-Backing Beanの利点：</strong></p>
+                        <p>
+                            ・<strong>バリデーション（入力チェック）</strong>：ビーンに設定されたアノテーションやメソッドを使って、入力データが正しいかどうかを簡単にチェックできます。
+                        </p>
+                        <p>
+                            ・<strong>コードの整理</strong>：フォームから送られてくる複数のデータを一つのビーンで管理することで、コードが整理され、可読性が向上します。
+                        </p>
+                        <p>
+                            ・<strong>再利用性</strong>：同じデータ構造を持つ異なるフォームで、同じ「Form-Backing
+                            Bean」を再利用できます。
+                        </p>
+                    </div>
+
+                    <h4 style="margin-top: 25px; color: var(--primary-blue)">
+                        ■ メソッドに@ModelAttributeを使用する場合
+                    </h4>
+                    <p>
+                        先ほど作成したプロジェクトで使用していた方法です。<code>@ModelAttribute</code>が付与されたメソッドは、このクラスのリクエストハンドラメソッドが呼ばれる前に、「リクエストスコープ」で「Model」に格納されます。「Model」に格納される時、明示的に「名前」を付けなければ格納する「Formクラス」名の「ローワーキャメルケース」で「Model」に格納されます。
+                    </p>
+
+                    <h4 style="margin-top: 25px; color: var(--primary-blue)">
+                        ■ メソッド引数に@ModelAttributeを使用する場合
+                    </h4>
+                    <p>
+                        <code>@ModelAttribute</code
+                        >が付与された引数は、リクエストパラメータから自動的にバインドされたオブジェクトを受け取ります。これは主にフォームのデータを受け取る際に使用されます。
+                    </p>
+                    <p>
+                        「<code>@ModelAttribute</code>」は省略可能です。Spring
+                        MVCは、@Controllerクラスのリクエストハンドラメソッドの引数にカスタムのデータ型（この場合はUserクラス）がある場合、自動的にその型の新しいインスタンスを生成し、リクエストパラメータをそのオブジェクトにバインドします。
+                    </p>
+                </div>
+            </section>
+
+            <!-- セクション 8-3 -->
+            <section class="section" id="section-8-3">
+                <div class="section-header">
+                    <span class="section-number">8-3</span>
+                    <h2 class="section-title">相関項目チェックを使用したプログラムを作成しよう</h2>
+                </div>
+
+                <p>
+                    ここでは「相関項目チェック」を使用して「ビュー」で入力した値に対して「バリデーション」を行うプログラムを作成しましょう。本書では、比較的簡単な「<code>@AssertTrue</code>を利用する方法」と「Validator」インターフェースを実装する方法」に焦点を当てて説明します。
+                </p>
+
+                <!-- 8-3-1 -->
+                <div class="subsection" id="section-8-3-1">
+                    <div class="subsection-header">
+                        <span class="subsection-number">8-3-1</span>
+                        <h3 class="subsection-title">プロジェクトの作成</h3>
+                    </div>
+
+                    <p>
+                        Spring Initializrを使用してプロジェクトを作成します。ブラウザで <a href="https://start.spring.io" target="_blank" style="color: #3b82f6; font-weight: bold;">https://start.spring.io</a> にアクセスしてください。
+                    </p>
+
+                    <!-- サンプルプログラムダウンロード -->
+                    <div style="margin-top: 25px; padding: 25px; background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%); border-radius: 12px; border: 2px solid #c084fc;">
+                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                            <span style="font-size: 32px;">📥</span>
+                            <div>
+                                <h4 style="color: #7c3aed; margin: 0;">サンプルプログラムのダウンロード</h4>
+                                <p style="margin: 5px 0 0; color: #6b21a8; font-size: 14px;">完成版のプロジェクトをダウンロードできます</p>
+                            </div>
+                        </div>
+
+                        <p style="color: #581c87; font-size: 14px; margin-bottom: 20px;">
+                            Spring Initializrでの作成が難しい場合や、完成版を確認したい場合は、以下からサンプルプログラムをダウンロードしてください。
+                        </p>
+
+                        <div style="display: flex; flex-wrap: wrap; gap: 15px; align-items: center;">
+                            <a href="downloads/CorrelationValidationSample.zip" download
+                               style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; text-decoration: none; border-radius: 10px; font-weight: bold; font-size: 15px; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); transition: transform 0.2s, box-shadow 0.2s;"
+                               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(139, 92, 246, 0.4)';"
+                               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(139, 92, 246, 0.3)';">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                CorrelationValidationSample.zip
+                            </a>
+                            <span style="color: #7c3aed; font-size: 13px;">（完成版プロジェクト）</span>
+                        </div>
+
+                        <div style="margin-top: 20px; padding: 12px 15px; background: rgba(255,255,255,0.7); border-radius: 8px; border-left: 4px solid #a855f7;">
+                            <p style="margin: 0; color: #6b21a8; font-size: 13px;">
+                                <strong>使い方：</strong>ダウンロード後、ZIPを解凍してVSCodeで「フォルダーを開く」から開いてください。
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 設定値テーブル -->
+                    <div class="table-wrapper" style="margin-top: 25px;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 30%;">設定項目</th>
+                                    <th>値</th>
+                                    <th style="width: 35%;">説明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Project</strong></td>
+                                    <td><code style="background:#dcfce7; padding:2px 8px; border-radius:4px; color:#166534;">Maven</code></td>
+                                    <td>ビルドツール</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Language</strong></td>
+                                    <td><code style="background:#dcfce7; padding:2px 8px; border-radius:4px; color:#166534;">Java</code></td>
+                                    <td>プログラミング言語</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Spring Boot</strong></td>
+                                    <td><code style="background:#dcfce7; padding:2px 8px; border-radius:4px; color:#166534;">3.4.x</code></td>
+                                    <td>最新の安定版を選択</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Artifact</strong></td>
+                                    <td><code style="background:#fef3c7; padding:2px 8px; border-radius:4px; color:#92400e;">CorrelationValidationSample</code></td>
+                                    <td>プロジェクト名</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Packaging</strong></td>
+                                    <td><code style="background:#dcfce7; padding:2px 8px; border-radius:4px; color:#166534;">Jar</code></td>
+                                    <td>パッケージ形式</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Java</strong></td>
+                                    <td><code style="background:#dcfce7; padding:2px 8px; border-radius:4px; color:#166534;">21</code></td>
+                                    <td>Javaバージョン</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p style="margin-top: 20px;">依存関係は「8-2-1」と同様に以下を選択してください。</p>
+
+                    <!-- Dependencies -->
+                    <div style="margin-top: 20px; padding: 20px; background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border-radius: 10px; border: 1px solid #6ee7b7;">
+                        <h5 style="color: #065f46; margin-bottom: 15px;">追加する Dependencies（依存関係）</h5>
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                            <span style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: white; border-radius: 20px; border: 2px solid #10b981; color: #065f46; font-weight: 500;">
+                                <span style="color: #10b981;">✓</span> Spring Web
+                            </span>
+                            <span style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: white; border-radius: 20px; border: 2px solid #10b981; color: #065f46; font-weight: 500;">
+                                <span style="color: #10b981;">✓</span> Thymeleaf
+                            </span>
+                            <span style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: white; border-radius: 20px; border: 2px solid #10b981; color: #065f46; font-weight: 500;">
+                                <span style="color: #10b981;">✓</span> Validation
+                            </span>
+                            <span style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: white; border-radius: 20px; border: 2px solid #10b981; color: #065f46; font-weight: 500;">
+                                <span style="color: #10b981;">✓</span> Lombok
+                            </span>
+                            <span style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: white; border-radius: 20px; border: 2px solid #10b981; color: #065f46; font-weight: 500;">
+                                <span style="color: #10b981;">✓</span> Spring Boot DevTools
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- フォルダ構成 -->
+                    <div class="highlight-box" style="margin: 25px 0;">
+                        <p style="margin-bottom: 12px;">
+                            <strong>📂 プロジェクト構成</strong>
+                        </p>
+<pre style="background: #f8fafc; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 13px; margin: 0; line-height: 1.6;">
+CorrelationValidationSample/
+├── pom.xml                                    <span style="color: #64748b;">← Maven設定ファイル</span>
+└── src/
+    └── main/
+        ├── java/com/example/demo/
+        │   ├── <span style="color: #0ea5e9; font-weight: bold;">DemoApplication.java</span>           <span style="color: #64748b;">← 起動クラス</span>
+        │   │
+        │   ├── form/                          <span style="color: #64748b;">← フォームクラス格納</span>
+        │   │   └── <span style="color: #10b981; font-weight: bold;">SampleForm.java</span>            <span style="color: #64748b;">← 相関チェック定義</span>
+        │   │
+        │   ├── controller/                    <span style="color: #64748b;">← コントローラ格納</span>
+        │   │   └── <span style="color: #3b82f6; font-weight: bold;">SampleController.java</span>      <span style="color: #64748b;">← リクエスト処理</span>
+        │   │
+        │   └── validator/                     <span style="color: #64748b;">← カスタムバリデータ（8-3-3で使用）</span>
+        │       └── <span style="color: #8b5cf6; font-weight: bold;">SampleFormValidator.java</span>   <span style="color: #64748b;">← Validatorインターフェース実装</span>
+        │
+        └── resources/
+            └── templates/                     <span style="color: #64748b;">← Thymeleafテンプレート</span>
+                ├── <span style="color: #f59e0b; font-weight: bold;">entry.html</span>                 <span style="color: #64748b;">← 入力画面</span>
+                └── <span style="color: #f59e0b; font-weight: bold;">result.html</span>                <span style="color: #64748b;">← 結果画面</span>
+</pre>
+                    </div>
+
+                    <div class="config-table" style="margin: 16px 0;">
+                        <div style="font-weight: 600; margin-bottom: 12px; color: var(--primary)">📋 ファイルの役割</div>
+                        <div class="config-row">
+                            <span class="config-label">form/</span>
+                            <span class="config-value"><strong>Formクラス</strong>：@AssertTrueを使った相関項目チェックを定義</span>
+                        </div>
+                        <div class="config-row">
+                            <span class="config-label">validator/</span>
+                            <span class="config-value"><strong>バリデータ</strong>：Validatorインターフェースを実装したカスタムバリデーション</span>
+                        </div>
+                        <div class="config-row">
+                            <span class="config-label">controller/</span>
+                            <span class="config-value"><strong>コントローラ</strong>：バリデーション結果に応じて画面遷移を制御</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8-3-2 -->
+                <div class="subsection" id="section-8-3-2">
+                    <div class="subsection-header">
+                        <span class="subsection-number">8-3-2</span>
+                        <h3 class="subsection-title">「@AssertTrue」を利用する方法</h3>
+                    </div>
+
+                    <h4 style="margin-top: 20px; color: var(--primary-blue)">01 Formクラスの作成</h4>
+                    <p>
+                        「Formクラス」という「ビュー」のフォームを表現するクラスを作成します。パッケージを「com.example.demo.form」名前を「SampleForm」としてクラスを作成します。
+                    </p>
+
+                    <div class="code-filename">SampleForm.java</div>
+                    <div class="code-block">
+                        <div class="code-content">
+                            <pre><span class="code-keyword">package</span> com.example.demo.form;
+
+<span class="code-keyword">import</span> java.util.Objects;
+
+<span class="code-keyword">import</span> jakarta.validation.constraints.AssertTrue;
+<span class="code-keyword">import</span> lombok.Data;
+
+<span class="code-annotation">@Data</span>
+<span class="code-keyword">public class</span> <span class="code-class">SampleForm</span> {
+    <span class="code-comment">/** パスワード */</span>
+    <span class="code-keyword">private</span> String password;
+    <span class="code-comment">/** 確認用パスワード */</span>
+    <span class="code-keyword">private</span> String confirmPassword;
+
+    <span class="code-comment">// パスワードと確認用パスワードが一致するかチェック</span>
+    <span class="code-annotation">@AssertTrue</span>(message = <span class="code-string">"パスワードが一致しません"</span>)
+    <span class="code-keyword">public boolean</span> isSamePassword() {
+        <span class="code-keyword">return</span> Objects.equals(password, confirmPassword);
+    }
+}</pre>
+                        </div>
+                    </div>
+
+                    <div class="important-box">
+                        <h4>コードの解説</h4>
+                        <p>
+                            <code>@AssertTrue</code
+                            >アノテーションが付与された<code>isSamePassword()</code>メソッドが相関項目チェックになります。フォームクラス内に、パスワードと確認用パスワードの2つのフィールドが同じ値かどうか比較し、その判定結果のbooleanを返すメソッドを作成します。作成したメソッドに、「<code>@AssertTrue</code>」を付与します。<strong>メソッド名は、「is」で始める必要があります</strong>。
+                        </p>
+                        <p>
+                            <code>Objects.equals()</code
+                            >メソッドは、Javaで2つのオブジェクトが等しいかどうかを確認するための便利なメソッドです。等しい場合は「true」、それ以外は「false」を返します。このメソッドの特徴は、「null」を安全に扱えることです。
+                        </p>
+                    </div>
+
+                    <h4 style="margin-top: 30px; color: var(--primary-blue)">02 コントローラの作成</h4>
+                    <p>
+                        「コントローラ」を作成します。パッケージを「com.example.demo.controller」、名前を「CheckController」としてクラスを作成します。
+                    </p>
+
+                    <div class="code-filename">CheckController.java</div>
+                    <div class="code-block">
+                        <div class="code-content">
+                            <pre><span class="code-keyword">package</span> com.example.demo.controller;
+
+<span class="code-keyword">import</span> org.springframework.stereotype.Controller;
+<span class="code-keyword">import</span> org.springframework.ui.Model;
+<span class="code-keyword">import</span> org.springframework.validation.BindingResult;
+<span class="code-keyword">import</span> org.springframework.validation.annotation.Validated;
+<span class="code-keyword">import</span> org.springframework.web.bind.annotation.GetMapping;
+<span class="code-keyword">import</span> org.springframework.web.bind.annotation.PostMapping;
+
+<span class="code-keyword">import</span> com.example.demo.form.SampleForm;
+
+<span class="code-annotation">@Controller</span>
+<span class="code-keyword">public class</span> <span class="code-class">CheckController</span> {
+    <span class="code-comment">// 入力画面の表示</span>
+    <span class="code-annotation">@GetMapping</span>
+    <span class="code-keyword">public</span> String showForm(SampleForm form) {
+        <span class="code-keyword">return</span> <span class="code-string">"entry"</span>;
+    }
+
+    <span class="code-comment">// 相関項目チェックの実行</span>
+    <span class="code-annotation">@PostMapping</span>
+    <span class="code-keyword">public</span> String check(<span class="code-annotation">@Validated</span> SampleForm form,
+            BindingResult bindingResult, Model model) {
+        <span class="code-comment">// バリデーションの実施</span>
+        <span class="code-keyword">if</span> (bindingResult.hasErrors()) {
+            <span class="code-keyword">return</span> <span class="code-string">"entry"</span>;
+        }
+        model.addAttribute(<span class="code-string">"message"</span>, <span class="code-string">"入力に問題ありません"</span>);
+        <span class="code-keyword">return</span> <span class="code-string">"result"</span>;
+    }
+}</pre>
+                        </div>
+                    </div>
+
+                    <h4 style="margin-top: 30px; color: var(--primary-blue)">03 ビューの作成</h4>
+                    <p>
+                        「showForm」メソッドの戻り値「ビュー名：entry」に対する「entry.html」を作成し、「resources/templates」フォルダに配置します。
+                    </p>
+
+                    <div class="code-filename">entry.html</div>
+                    <div class="code-block">
+                        <div class="code-content">
+                            <pre><span class="code-keyword">&lt;!DOCTYPE html&gt;</span>
+<span class="code-keyword">&lt;html</span> xmlns:th=<span class="code-string">"http://www.thymeleaf.org"</span><span class="code-keyword">&gt;</span>
+<span class="code-keyword">&lt;head&gt;</span>
+    <span class="code-keyword">&lt;title&gt;</span>相関項目チェック<span class="code-keyword">&lt;/title&gt;</span>
+<span class="code-keyword">&lt;/head&gt;</span>
+<span class="code-keyword">&lt;body&gt;</span>
+    <span class="code-keyword">&lt;h1&gt;</span>@AssertTrueの利用<span class="code-keyword">&lt;/h1&gt;</span>
+    <span class="code-keyword">&lt;form</span> th:action=<span class="code-string">"@{/}"</span> th:object=<span class="code-string">"${sampleForm}"</span> method=<span class="code-string">"post"</span><span class="code-keyword">&gt;</span>
+        <span class="code-keyword">&lt;p&gt;</span>パスワード<span class="code-keyword">&lt;input</span> type=<span class="code-string">"password"</span> th:field=<span class="code-string">"*{password}"</span> <span class="code-keyword">/&gt;&lt;/p&gt;</span>
+        <span class="code-keyword">&lt;p&gt;</span>確認用パスワード<span class="code-keyword">&lt;input</span> type=<span class="code-string">"password"</span> th:field=<span class="code-string">"*{confirmPassword}"</span> <span class="code-keyword">/&gt;&lt;/p&gt;</span>
+        <span class="code-comment">&lt;!-- 相関項目チェックのエラーメッセージ --&gt;</span>
+        <span class="code-keyword">&lt;p</span> th:if=<span class="code-string">"${#fields.hasErrors('samePassword')}"</span>
+           th:errors=<span class="code-string">"*{samePassword}"</span> style=<span class="code-string">"color: red;"</span><span class="code-keyword">&gt;</span>
+            相関項目チェックのエラー
+        <span class="code-keyword">&lt;/p&gt;</span>
+        <span class="code-keyword">&lt;p&gt;&lt;input</span> type=<span class="code-string">"submit"</span> value=<span class="code-string">"チェック"</span> <span class="code-keyword">/&gt;&lt;/p&gt;</span>
+    <span class="code-keyword">&lt;/form&gt;</span>
+<span class="code-keyword">&lt;/body&gt;</span>
+<span class="code-keyword">&lt;/html&gt;</span></pre>
+                        </div>
+                    </div>
+
+                    <div class="important-box">
+                        <h4>コードの解説</h4>
+                        <p>
+                            <code>th:errors="*{samePassword}"</code
+                            >の部分が「SampleForm」クラスの<code>isSamePassword()</code>メソッドを「*{samePassword}」として参照しています。
+                        </p>
+                        <p>
+                            注意点は、ビュー側での参照方法は、「フィールド」を直接参照しないことです。<code>isSamePassword()</code>メソッド（ゲッター）の「is」を省略し、先頭文字を小文字にして「samePassword」として参照しています。※戻り値がbooleanの場合、ゲッター名は「get」ではなく「is」ではじめます。
+                        </p>
+                    </div>
+
+                    <p>また、「check」メソッドの戻り値「ビュー名：result」に対する「result.html」を作成します。</p>
+
+                    <div class="code-filename">result.html</div>
+                    <div class="code-block">
+                        <div class="code-content">
+                            <pre><span class="code-keyword">&lt;!DOCTYPE html&gt;</span>
+<span class="code-keyword">&lt;html</span> xmlns:th=<span class="code-string">"http://www.thymeleaf.org"</span><span class="code-keyword">&gt;</span>
+<span class="code-keyword">&lt;head&gt;</span>
+    <span class="code-keyword">&lt;title&gt;</span>相関項目チェック<span class="code-keyword">&lt;/title&gt;</span>
+<span class="code-keyword">&lt;/head&gt;</span>
+<span class="code-keyword">&lt;body&gt;</span>
+    <span class="code-keyword">&lt;h1</span> th:text=<span class="code-string">"${message}"</span><span class="code-keyword">&gt;</span>メッセージ<span class="code-keyword">&lt;/h1&gt;</span>
+<span class="code-keyword">&lt;/body&gt;</span>
+<span class="code-keyword">&lt;/html&gt;</span></pre>
+                        </div>
+                    </div>
+
+                    <h4 style="margin-top: 30px; color: var(--primary-blue)">04 確認</h4>
+                    <p>
+                        「Bootダッシュボード」にて、「CorrelationValidationSample」が表示されていることを確認し、「CorrelationValidationSample」を選択後、「起動」ボタンを押します。
+                    </p>
+                    <p>
+                        ブラウザを立ち上げアドレスバーに「http://localhost:8080/」と入力すると、「入力画面」が表示されます。「パスワード」に「aaa」と入力し、「確認用パスワード」に「bbb」と入力後、「チェック」ボタンをクリックします。Formクラスに設定した<code>@AssertTrue</code>の相関項目チェックに引っかかり、メッセージが表示されます。
+                    </p>
+                    <p>
+                        「パスワード」と「確認用パスワード」に同値を入力後、「チェック」ボタンをクリックすると相関項目チェックを無事通り、result.htmlが表示されます。
+                    </p>
+                </div>
+
+                <!-- 8-3-3 -->
+                <div class="subsection" id="section-8-3-3">
+                    <div class="subsection-header">
+                        <span class="subsection-number">8-3-3</span>
+                        <h3 class="subsection-title">「Validator」インターフェースを実装する方法</h3>
+                    </div>
+
+                    <h4 style="margin-top: 20px; color: var(--primary-blue)">■ 相関項目チェックの内容</h4>
+                    <p>
+                        「8-2
+                        単項目チェックを使用したプログラムを作成しよう」で作成したプログラム「ValidationSample」に対して、Spring
+                        Frameworkが提供する「Validator」インターフェースを実装し「相関項目チェック」を作成します。作成する「相関項目チェック」の内容は、左側の入力項目が「奇数」かつ右側の入力項目が「偶数」でないとエラーになるチェックとします（チェック自体に意味はありません）。
+                    </p>
+
+                    <h4 style="margin-top: 25px; color: var(--primary-blue)">
+                        ■ 「Validator」インターフェースの作成手順
+                    </h4>
+                    <p>
+                        Validatorインターフェースを実装する「相関項目チェック」の作成手順は、大きく分けて以下の2手順になります。
+                    </p>
+
+                    <ol class="step-list">
+                        <li>
+                            Spring
+                            Frameworkが提供する「Validator」インターフェースの実装クラスに「相関項目チェック」を自分で作成する
+                        </li>
+                        <li>
+                            「コントローラ」に作成した「相関チェック」をインジェクションし、「WebDataBinder」インターフェースの「addValidators」メソッドで「相関チェック」を登録することで「SpringMVC」から利用できるようにする
+                        </li>
+                    </ol>
+
+                    <h4 style="margin-top: 30px; color: var(--primary-blue)">01 「Validator」実装クラスの作成</h4>
+                    <p>
+                        「src/main/java」→「com.example.demo」フォルダを選択し、マウスを右クリックし、「新規」→「クラス」を選択します。
+                    </p>
+                    <p>
+                        パッケージを「com.example.demo.validator」、名前を「CalcValidator」、インターフェースに「org.springframework.validation.Validator」を追加してクラスを作成します。
+                    </p>
+
+                    <div class="code-filename">CalcValidator.java</div>
+                    <div class="code-block">
+                        <div class="code-content">
+                            <pre><span class="code-keyword">package</span> com.example.demo.validator;
+
+<span class="code-keyword">import</span> org.springframework.stereotype.Component;
+<span class="code-keyword">import</span> org.springframework.validation.Errors;
+<span class="code-keyword">import</span> org.springframework.validation.Validator;
+
+<span class="code-keyword">import</span> com.example.demo.form.CalcForm;
+
+<span class="code-annotation">@Component</span>
+<span class="code-keyword">public class</span> <span class="code-class">CalcValidator</span> <span class="code-keyword">implements</span> Validator {
+    <span class="code-annotation">@Override</span>
+    <span class="code-keyword">public boolean</span> supports(Class&lt;?&gt; clazz) {
+        <span class="code-comment">// 引数で渡されたFormが入力チェックの対象かを論理値で返します</span>
+        <span class="code-keyword">return</span> CalcForm.<span class="code-keyword">class</span>.isAssignableFrom(clazz);
+    }
+
+    <span class="code-annotation">@Override</span>
+    <span class="code-keyword">public void</span> validate(Object target, Errors errors) {
+        <span class="code-comment">// 対象のFormを取得する</span>
+        CalcForm form = (CalcForm) target;
+        <span class="code-comment">// 値が入っているかの判定</span>
+        <span class="code-keyword">if</span> (form.getLeftNum() != <span class="code-keyword">null</span> && form.getRightNum() != <span class="code-keyword">null</span>) {
+            <span class="code-comment">// (左側の入力項目が「奇数」かつ右側の入力項目が「偶数」)でない</span>
+            <span class="code-keyword">if</span> (!((form.getLeftNum() % 2 == 1) && (form.getRightNum() % 2 == 0))) {
+                <span class="code-comment">// エラーの場合は、直接エラーメッセージを指定する</span>
+                errors.rejectValue(<span class="code-string">"leftNum"</span>, <span class="code-keyword">null</span>,
+                    <span class="code-string">"左側の数値は奇数、右側の数値は偶数でなければなりません。"</span>);
+            }
+        }
+    }
+}</pre>
+                        </div>
+                    </div>
+
+                    <div class="important-box">
+                        <h4>コードの解説</h4>
+                        <p><code>@Component</code>アノテーションをクラスに付与して「インスタンス生成対象」とします。</p>
+                        <p>
+                            <code>supports()</code
+                            >メソッドで、引数で渡されたFormが入力チェックの対象かを論理値で返します。ここでは、「CalcForm」クラスがチェック対象です。
+                        </p>
+                        <p>
+                            <code>validate()</code>メソッドで、引数で渡される「Object
+                            target」を「CalcForm」クラスに変換して相関項目チェックを記述します。エラーの場合は引数「Errors
+                            errors」の「rejectValue」メソッドに「エラーメッセージ」を格納します。
+                        </p>
+                        <p><code>errors.rejectValue()</code>メソッドの引数について：</p>
+                        <p>
+                            ・<strong>フィールド名（"leftNum"）</strong>：この引数は、エラーメッセージが適用されるべきフィールドを指定します。今回は、leftNumというフィールドにエラーメッセージを適用します。
+                        </p>
+                        <p>
+                            ・<strong>エラーコード（null）</strong>：この引数は通常、エラーコードやエラーメッセージのキーを指定します。今回はエラーコードを使用しないため、nullを指定しています。
+                        </p>
+                        <p>
+                            ・<strong>デフォルトメッセージ</strong>：この引数には、表示されるエラーメッセージのテキストを直接指定しています。
+                        </p>
+                    </div>
+
+                    <h4 style="margin-top: 30px; color: var(--primary-blue)">02 コントローラへの追記</h4>
+                    <p>「コントローラ：ValidationController」を以下のように修正します。</p>
+
+                    <div class="code-filename">ValidationController.java（追記部分）</div>
+                    <div class="code-block">
+                        <div class="code-content">
+                            <pre><span class="code-annotation">@Controller</span>
+<span class="code-annotation">@RequiredArgsConstructor</span>
+<span class="code-keyword">public class</span> <span class="code-class">ValidationController</span> {
+
+    <span class="code-comment">/** インジェクション */</span>
+    <span class="code-keyword">private final</span> CalcValidator calcValidator;
+
+    <span class="code-comment">/** 相関チェック登録 */</span>
+    <span class="code-annotation">@InitBinder</span>(<span class="code-string">"calcForm"</span>)
+    <span class="code-keyword">public void</span> initBinder(WebDataBinder webDataBinder){
+        webDataBinder.addValidators(calcValidator);
+    }
+
+    <span class="code-comment">// ▼▼▼ この下は既存コード ▼▼▼</span>
+    ...
+}</pre>
+                        </div>
+                    </div>
+
+                    <div class="important-box">
+                        <h4>コードの解説</h4>
+                        <p>
+                            <code>@RequiredArgsConstructor</code
+                            >（Lombok）とfinalを利用して、先ほど作成した相関項目チェック「CalcValidator」をインジェクションします。
+                        </p>
+                        <p>
+                            <code>@InitBinder</code
+                            >アノテーションを付与したメソッドで相関項目チェックを登録します。「<code>@InitBinder</code>」アノテーションには「チェック対象Formクラス」の「Model」での「識別名」を指定します。今回は「calcForm」になります。識別名を指定しない場合、「Model」に格納されているすべての「オブジェクト」に対して相関項目チェックが適用され、相関項目チェックの内容に一致しない場合、例外が発生します。
+                        </p>
+                        <p>
+                            「WebDataBinder」インターフェースの「addValidators」メソッドで相関項目チェックを登録することで「CalcValidator」がこのフォームオブジェクトに対するバリデータとして追加されます。
+                        </p>
+                    </div>
+
+                    <h4 style="margin-top: 30px; color: var(--primary-blue)">03 確認</h4>
+                    <p>
+                        「Bootダッシュボード」にて、「ValidationSample」が表示されていることを確認し、「ValidationSample」を選択後、「起動」ボタンを押します。ブラウザを立ち上げアドレスバーに「http://localhost:8080/show」と入力すると、「入力画面」が表示されます。
+                    </p>
+                    <p>
+                        「入力画面」で「相関チェック」される内容を入力後、「送信」ボタンを押すと「入力画面」でエラーメッセージが表示されます。
+                    </p>
+                </div>
+            </section>
+
+            <!-- まとめコラム -->
+            <section class="section">
+                <div class="section-header" style="border-bottom-color: var(--primary-purple)">
+                    <span class="section-number" style="background: var(--primary-purple)">📝</span>
+                    <h2 class="section-title">Column：バリデーションの実行順序</h2>
+                </div>
+
+                <p>
+                    1つのフィールドに対して複数の「バリデーション」アノテーションを設定した場合、すべての「バリデーション」が行われエラーメッセージが複数表示される場合があります。
+                </p>
+
+                <div class="code-block">
+                    <div class="code-content">
+                        <pre><span class="code-annotation">@NotBlank</span>(message = <span class="code-string">"未入力は許可しません!"</span>)
+<span class="code-annotation">@Length</span>(min = 1, message = <span class="code-string">"1文字以上入力してください!"</span>)
+<span class="code-keyword">private</span> String name;</pre>
+                    </div>
+                </div>
+
+                <p>
+                    ビューにて未入力が実行された場合、「@NotBlank」と「@Length(min =
+                    1)」の両チェックに引っかかり、以下のエラーメッセージ表示されます。
+                </p>
+
+                <ul class="toc-list">
+                    <li>1文字以上入力してください!</li>
+                    <li>未入力は許可しません!</li>
+                </ul>
+
+                <p>
+                    チェックされる順番は「@NotBlank」→「@Length(min =
+                    1)」と設定された「バリデーション」アノテーションの順番で実行されるわけではありません。<strong>ランダムでチェックされます</strong>。そのため、エラーメッセージ表示順も、
+                </p>
+
+                <ul>
+                    <li>1文字以上入力してください!</li>
+                    <li>未入力は許可しません!</li>
+                </ul>
+
+                <p>とランダム表示になります。</p>
+
+                <p>
+                    ランダム表示に対する処理は「バリデーション」をグループ化し、実行順序を設定する方法を用います。その方法は、インターフェースに「<code>@GroupSequence</code>」アノテーションを設定します。
+                </p>
+
+                <p>
+                    本書では「<code>@GroupSequence</code>」アノテーションの作成方法は説明しませんが、興味のある方はインターネットで「<code>@GroupSequence</code>」をキーワードに検索してみてください。
+                </p>
+            </section>
+
+            <footer>
+                <p>Spring Boot バリデーション機能 教材 | © 2025</p>
+            </footer>
+        </div>
+
+        <footer class="footer">
+            <p>Spring Framework 入門チュートリアル</p>
+        </footer>
+
+        <div class="page-nav">
+            <a href="7ServerDataSubmission.html" class="page-nav-btn prev">
+                <span>←</span>
+                <div>
+                    <div class="page-nav-label">前の章</div>
+                    <div class="page-nav-title">第7章</div>
+                </div>
+            </a>
+
+            <a href="9_MyBatis_Tutorial__2_.html" class="page-nav-btn next">
+                <div>
+                    <div class="page-nav-label">次の章</div>
+                    <div class="page-nav-title">第9章</div>
+                </div>
+                <span>→</span>
+            </a>
+        </div>
+
+        <script>
+            function toggleMenu() {
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+                toggle.classList.toggle("active");
+                menu.classList.toggle("active");
+            }
+
+            document.addEventListener("click", function (e) {
+                const nav = document.querySelector(".global-nav");
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+
+                if (!nav.contains(e.target) && menu.classList.contains("active")) {
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+
+            window.addEventListener("resize", function () {
+                if (window.innerWidth >= 1024) {
+                    const toggle = document.querySelector(".nav-toggle");
+                    const menu = document.querySelector(".nav-menu");
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+        </script>
+    </body>
+</html>

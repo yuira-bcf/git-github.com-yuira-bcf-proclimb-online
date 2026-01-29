@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>オブジェクト指向とは何か（他のプログラミング指向との比較：設計ベース）</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body{
+      font-family: system-ui, -apple-system, "Segoe UI",
+                   "Hiragino Kaku Gothic ProN","Yu Gothic", sans-serif;
+      line-height: 1.9;
+      margin: 24px;
+    }
+    h1{ font-size: 1.7rem; margin-bottom: 10px; }
+    h2{
+      font-size: 1.25rem;
+      margin-top: 38px;
+      border-left: 6px solid #ccc;
+      padding-left: 10px;
+    }
+    h3{
+      font-size: 1.1rem;
+      margin-top: 24px;
+      border-left: 4px solid #ddd;
+      padding-left: 10px;
+    }
+    p{ margin: 12px 0; }
+    ul,ol{ margin-left: 24px; }
+    pre{
+      background: #fafafa;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 12px;
+      overflow-x: auto;
+      white-space: pre;
+    }
+    code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco,
+                   Consolas, "Noto Sans Mono", monospace;
+    }
+    table{
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 1100px;
+      margin: 12px 0;
+    }
+    th,td{
+      border: 1px solid #e0e0e0;
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th{ background:#fafafa; }
+    .key{
+      background: #eef5ff;
+      border-left: 6px solid #7fb3ff;
+      border-radius: 8px;
+      padding: 14px;
+      margin: 18px 0;
+      font-weight: bold;
+    }
+    .box{
+      background: #fcfcfc;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 14px;
+      margin: 18px 0;
+    }
+    .note{
+      background: #fff7e6;
+      border-left: 6px solid #f0c36d;
+      border-radius: 8px;
+      padding: 14px;
+      margin: 18px 0;
+    }
+    .summary{
+      background: #effaf3;
+      border-left: 6px solid #7ad39a;
+      border-radius: 8px;
+      padding: 14px;
+      margin: 24px 0;
+      font-weight: bold;
+    }
+    hr{ border: none; border-top: 1px solid #e6e6e6; margin: 28px 0; }
+  </style>
+</head>
+<body>
+
+<h1>オブジェクト指向とは何か<br>― 他のプログラミング指向と比較して理解する（設計ベース） ―</h1>
+
+<section>
+  <h2>1. この教材の前提とゴール</h2>
+  <p>
+    本教材は、学習者がすでに <strong>クラス</strong>、<strong>インターフェース</strong>、
+    <strong>継承</strong>、<strong>ポリモーフィズム</strong>といった言葉や文法を知っていることを前提とします。
+  </p>
+  <p>
+    そのうえで、「オブジェクト指向とは何か」を
+    <strong>実際の設計（責務分担・変更耐性・依存関係）</strong>の観点から説明します。
+  </p>
+
+  <div class="key">
+    ここで言う「オブジェクト指向」とは、<br>
+    クラスを書く技術ではなく「変更に強い設計を作るための考え方」です。
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2>2. オブジェクト指向の本質（設計としての定義）</h2>
+  <p>
+    オブジェクト指向は、しばしば「現実世界をモデル化する」と説明されますが、
+    実務で本当に効いてくるのは次の点です。
+  </p>
+
+  <div class="key">
+    オブジェクト指向の本質：<br>
+    変更が起きても壊れにくいように、責務（責任）を分割し、<br>
+    依存関係を制御しながら、オブジェクト同士の協調でシステムを構成すること
+  </div>
+
+  <div class="box">
+    <p><strong>設計として見たときのキーワード：</strong></p>
+    <ul>
+      <li><strong>責務（Responsibility）</strong>：そのクラスが「何を担当するか」</li>
+      <li><strong>凝集度</strong>：1つのクラスが「1つのまとまった目的」を持っているか</li>
+      <li><strong>結合度</strong>：他のクラスに「どれだけ強く依存しているか」</li>
+      <li><strong>依存逆転</strong>：具体ではなく抽象に依存することで、差し替え可能にする</li>
+      <li><strong>ポリモーフィズム</strong>：同じ依頼（メッセージ）で振る舞いを切り替える</li>
+    </ul>
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2>3. 他のプログラミング指向と比較する</h2>
+
+  <h3>3-1. 比較表（設計の観点）</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>指向</th>
+        <th>中心となる考え方</th>
+        <th>設計での焦点</th>
+        <th>強い領域</th>
+        <th>弱点（実務での落とし穴）</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>手続き型（Procedural）</strong></td>
+        <td>処理（手順）の流れを中心に組み立てる</td>
+        <td>関数とデータ構造をどう並べるか</td>
+        <td>小規模・単純な処理、低レイヤ</td>
+        <td>規模が大きくなると「変更の影響範囲」が広がりやすい</td>
+      </tr>
+      <tr>
+        <td><strong>関数型（Functional）</strong></td>
+        <td>副作用を減らし、値変換として組み立てる</td>
+        <td>不変性、合成、参照透過性</td>
+        <td>並行処理、データ変換、テスト容易性</td>
+        <td>状態管理やI/Oが複雑になると設計が難しくなることがある</td>
+      </tr>
+      <tr>
+        <td><strong>データ指向（Data-Oriented）</strong></td>
+        <td>データ配置とアクセス効率を中心に最適化</td>
+        <td>キャッシュ効率、メモリレイアウト</td>
+        <td>ゲーム、数値計算、超高性能領域</td>
+        <td>抽象化より性能優先で、変更容易性より速度を優先しがち</td>
+      </tr>
+      <tr>
+        <td><strong>オブジェクト指向（OOP）</strong></td>
+        <td>責務分割したオブジェクトの協調で構築</td>
+        <td>依存関係の制御、差し替え、境界設計</td>
+        <td>業務アプリ、保守前提の大規模開発</td>
+        <td>設計を誤ると「クラスが増えただけ」になる（複雑化）</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    <p>
+      実務では「どれか1つだけ」ではなく、混ぜて使います。<br>
+      例えば OOP の構造の中で、集計処理は関数型寄りに書く、などは普通にあります。
+    </p>
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2>4. 具体例で比較する（同じ要求を違う指向で設計する）</h2>
+  <p>
+    次の要求を例にします。
+  </p>
+
+  <div class="box">
+    <p><strong>要求：</strong></p>
+    <ul>
+      <li>注文（Order）に対して支払い（Payment）を行う</li>
+      <li>支払い方法は「クレジットカード」「銀行振込」「将来的に追加」があり得る</li>
+      <li>ログ出力・テストがしやすい構造にしたい</li>
+    </ul>
+  </div>
+
+  <h3>4-1. 手続き型でありがちな設計（分岐が肥大化する）</h3>
+  <pre><code>// 手続き型寄り：支払い処理の中心が1か所に集まり、分岐が増えやすい
+void pay(Order order, String method) {
+    if ("CARD".equals(method)) {
+        // カード決済
+    } else if ("BANK".equals(method)) {
+        // 銀行振込
+    } else {
+        throw new IllegalArgumentException("unknown");
+    }
+}</code></pre>
+
+  <div class="note">
+    <p><strong>問題点（設計上）：</strong></p>
+    <ul>
+      <li>支払い方法が増えるたびに if/else が増える（変更箇所が集中）</li>
+      <li>テストで分岐ごとの準備が面倒になりやすい</li>
+      <li>「支払い方法の追加」が「既存コードの修正」になりやすい</li>
+    </ul>
+  </div>
+
+  <h3>4-2. オブジェクト指向での設計（責務分割＋差し替え）</h3>
+  <p>
+    OOP では、<strong>変化点（支払い方法）</strong>をクラス境界として切り出し、
+    抽象（インターフェース）に依存させます。
+  </p>
+
+  <pre><code>public interface PaymentMethod {
+    void pay(Order order);
+}
+
+public class CardPayment implements PaymentMethod {
+    public void pay(Order order) {
+        // カード決済
+    }
+}
+
+public class BankTransferPayment implements PaymentMethod {
+    public void pay(Order order) {
+        // 銀行振込
+    }
+}
+
+public class PaymentService {
+    private final PaymentMethod method;
+
+    public PaymentService(PaymentMethod method) {
+        this.method = method;
+    }
+
+    public void pay(Order order) {
+        method.pay(order);
+    }
+}</code></pre>
+
+  <div class="box">
+    <p><strong>設計上の効果：</strong></p>
+    <ul>
+      <li>支払い方法の追加はクラス追加で済む（既存修正が減る）</li>
+      <li>PaymentService は抽象に依存し、差し替えやすい</li>
+      <li>テストでダミー実装を差し込める（モックしやすい）</li>
+    </ul>
+  </div>
+
+  <div class="key">
+    OOP の強みは「ポリモーフィズムで if/else を設計に吸収する」点にあります。
+  </div>
+
+  <h3>4-3. 関数型寄りの設計（副作用の境界を押さえる）</h3>
+  <p>
+    関数型の思想では、決済のロジックを「値変換」として扱い、
+    I/O（実際の決済）を境界に押し出す設計が好まれます。
+  </p>
+
+  <pre><code>// ロジック（純粋関数寄り）
+PaymentCommand buildPaymentCommand(Order order, Method method) {
+    // 入力から決済コマンド（値）を組み立てる
+}
+
+// I/O（副作用）
+void execute(PaymentCommand cmd) {
+    // 外部API呼び出しなど
+}</code></pre>
+
+  <div class="note">
+    <p>
+      実務では OOP の構造の中で、計算や判定ロジックだけ関数型寄りに書く、という混ぜ方が多いです。
+    </p>
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2>5. オブジェクト指向設計で開発者がやるべきこと</h2>
+
+  <h3>5-1. 「クラスを作る」より先にやること</h3>
+  <div class="key">
+    まずやるべきは「境界」と「変化点」の特定です。<br>
+    クラス図を描く前に、変更が起きる場所を見抜くことが設計の勝負です。
+  </div>
+
+  <div class="box">
+    <p><strong>実務での典型的な判断：</strong></p>
+    <ul>
+      <li>変更されやすいのはどこか？（決済方式、税率、割引ルール、外部APIなど）</li>
+      <li>変更されにくいのはどこか？（注文の基本構造、合計計算の前提など）</li>
+      <li>外部との境界はどこか？（DB、外部API、UI、ファイル）</li>
+      <li>境界はインターフェースで隔離できるか？</li>
+    </ul>
+  </div>
+
+  <h3>5-2. よくある失敗（「OOP風」になって終わる）</h3>
+  <div class="note">
+    <p><strong>失敗例：</strong>クラスが増えただけで、変更が楽になっていない</p>
+    <ul>
+      <li>データだけ持つクラス（DTO）だらけで、ロジックが Main/Service に集中</li>
+      <li>何でもかんでも継承で表現してしまい、変更時に破壊的になる</li>
+      <li>抽象化が早すぎて、読みにくいだけの設計になる</li>
+    </ul>
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2>6. オブジェクト指向のメリット（設計成果として）</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>メリット</th>
+        <th>設計で何が起きるか</th>
+        <th>現場での効き方</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>変更容易性</td>
+        <td>変化点を隔離し、差し替え可能にする</td>
+        <td>仕様追加が「既存修正」から「追加」に寄る</td>
+      </tr>
+      <tr>
+        <td>テスト容易性</td>
+        <td>外部依存を抽象に閉じ込め、モック可能にする</td>
+        <td>自動テストが書ける／壊れにくい</td>
+      </tr>
+      <tr>
+        <td>理解容易性</td>
+        <td>責務が分かれ、読むべき場所が限定される</td>
+        <td>引き継ぎが楽になる（属人性が下がる）</td>
+      </tr>
+      <tr>
+        <td>分業しやすさ</td>
+        <td>境界ごとに作業を切れる</td>
+        <td>チーム開発の衝突が減る</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="key">
+    結局のところ、OOP は「長く保守するシステム」を現実的に作るための技術です。
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2>まとめ</h2>
+  <div class="summary">
+    ・オブジェクト指向の本質は「クラスを書くこと」ではなく「責務分割と依存関係の制御」である。<br>
+    ・手続き型は分岐集中になりやすく、関数型は副作用境界の設計に強い。データ指向は性能最適化に強い。<br>
+    ・OOP は変化点を抽象化し、ポリモーフィズムで if/else を設計に吸収し、変更に強い構造を作る。<br>
+    ・実務の設計では「境界」と「変化点」を特定し、抽象（インターフェース）で隔離することが重要である。
+  </div>
+</section>
+
+</body>
+</html>

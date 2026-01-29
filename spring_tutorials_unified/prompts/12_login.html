@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>上級12 ログイン認証</title>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="../style.css" />
+        <style>
+            .download-btn { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-left: auto; }
+            .code-header { display: flex; align-items: center; justify-content: space-between; }
+            .level-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; background: #fee2e2; color: #991b1b; margin-right: 8px; }
+        </style>
+    </head>
+    <body>
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="../1spring-framework-tutorial.html" class="nav-logo"><span class="nav-logo-icon">🌱</span><span>Spring入門</span></a>
+                <button class="nav-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 上級レベル</div>
+                    <ul class="nav-list">
+                        <li class="nav-item"><a href="12_login.html" class="nav-link active"><span class="nav-chapter-num">12</span><span>ログイン認証</span></a></li>
+                        <li class="nav-item"><a href="13_user_todo.html" class="nav-link"><span class="nav-chapter-num">13</span><span>ユーザー別ToDo管理</span></a></li>
+                        <li class="nav-item"><a href="14_role.html" class="nav-link"><span class="nav-chapter-num">14</span><span>ロール別権限制御</span></a></li>
+                        <li class="nav-item"><a href="15_rest_api.html" class="nav-link"><span class="nav-chapter-num">15</span><span>REST API化</span></a></li>
+                        <li class="nav-item"><a href="16_exception.html" class="nav-link"><span class="nav-chapter-num">16</span><span>例外ハンドリング</span></a></li>
+                        <li class="nav-item"><a href="17_aop.html" class="nav-link"><span class="nav-chapter-num">17</span><span>AOPでログ出力</span></a></li>
+                        <li class="nav-item"><a href="18_transaction.html" class="nav-link"><span class="nav-chapter-num">18</span><span>トランザクション管理</span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <header class="chapter-header">
+                <div class="chapter-badge"><span class="level-badge">上級</span>📕 Advanced</div>
+                <div class="chapter-number">12</div>
+                <h1 class="chapter-title">ログイン認証</h1>
+            </header>
+
+            <nav class="toc">
+                <h2 class="toc-title">📑 この章の内容</h2>
+                <ul class="toc-list">
+                    <li class="toc-item"><span class="toc-number">12-1</span><span>Spring Securityの導入</span></li>
+                    <li class="toc-item"><span class="toc-number">12-2</span><span>ログインフォームの作成</span></li>
+                    <li class="toc-item"><span class="toc-number">12-3</span><span>セッション管理</span></li>
+                </ul>
+            </nav>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 12-1</span>
+                    <h2 class="section-title">Spring Securityの導入</h2>
+                </div>
+                <div class="intro-text">
+                    <p><strong>Spring Security</strong>を使って、ToDoアプリにログイン機能を追加します。</p>
+                </div>
+
+                <div class="module-list">
+                    <div class="module-item"><div class="module-icon">🔒</div><div class="module-content"><h4>Spring Security</h4><p>認証・認可を提供するSpringのセキュリティフレームワーク</p></div></div>
+                    <div class="module-item"><div class="module-icon">👤</div><div class="module-content"><h4>UserDetailsService</h4><p>ユーザー情報をロードするインターフェース</p></div></div>
+                </div>
+
+                <div class="code-block" id="pom-security">
+                    <div class="code-header">
+                        <span class="code-title">pom.xml（依存関係追加）</span>
+                        <button class="download-btn" onclick="downloadCode('pom-security', 'pom_security.xml')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-security&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.thymeleaf.extras&lt;/groupId&gt;
+    &lt;artifactId&gt;thymeleaf-extras-springsecurity6&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="security-config">
+                    <div class="code-header">
+                        <span class="code-title">SecurityConfig.java</span>
+                        <button class="download-btn" onclick="downloadCode('security-config', 'SecurityConfig.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+                .requestMatchers("/login", "/register").permitAll()
+                .anyRequest().authenticated()
+            )
+            .formLogin(form -> form
+                .loginPage("/login")
+                .loginProcessingUrl("/login")
+                .defaultSuccessUrl("/todo", true)
+                .failureUrl("/login?error=true")
+                .permitAll()
+            )
+            .logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout=true")
+                .permitAll()
+            );
+
+        return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 12-2</span>
+                    <h2 class="section-title">ログインフォームの作成</h2>
+                </div>
+
+                <div class="code-block" id="login-html">
+                    <div class="code-header">
+                        <span class="code-title">login.html</span>
+                        <button class="download-btn" onclick="downloadCode('login-html', 'login.html')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"&gt;
+&lt;head&gt;
+    &lt;title&gt;ログイン&lt;/title&gt;
+    &lt;link rel="stylesheet" th:href="@{/css/style.css}"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="login-container"&gt;
+        &lt;h1&gt;ログイン&lt;/h1&gt;
+
+        &lt;!-- エラーメッセージ --&gt;
+        &lt;div th:if="${param.error}" class="alert alert-danger"&gt;
+            ユーザー名またはパスワードが正しくありません
+        &lt;/div&gt;
+
+        &lt;!-- ログアウトメッセージ --&gt;
+        &lt;div th:if="${param.logout}" class="alert alert-success"&gt;
+            ログアウトしました
+        &lt;/div&gt;
+
+        &lt;form th:action="@{/login}" method="post"&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label for="username"&gt;ユーザー名&lt;/label&gt;
+                &lt;input type="text" id="username" name="username"
+                       required autofocus&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label for="password"&gt;パスワード&lt;/label&gt;
+                &lt;input type="password" id="password" name="password"
+                       required&gt;
+            &lt;/div&gt;
+            &lt;button type="submit" class="btn btn-primary"&gt;ログイン&lt;/button&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="user-details">
+                    <div class="code-header">
+                        <span class="code-title">CustomUserDetailsService.java</span>
+                        <button class="download-btn" onclick="downloadCode('user-details', 'CustomUserDetailsService.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.springframework.security.core.userdetails.*;
+import org.springframework.stereotype.Service;
+import java.util.Collections;
+
+@Service
+public class CustomUserDetailsService implements UserDetailsService {
+
+    private final UserMapper userMapper;
+
+    public CustomUserDetailsService(UserMapper userMapper) {
+        this.userMapper = userMapper;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username)
+            throws UsernameNotFoundException {
+
+        User user = userMapper.findByUsername(username);
+
+        if (user == null) {
+            throw new UsernameNotFoundException("ユーザーが見つかりません: " + username);
+        }
+
+        return new org.springframework.security.core.userdetails.User(
+            user.getUsername(),
+            user.getPassword(),
+            Collections.singletonList(
+                new SimpleGrantedAuthority("ROLE_" + user.getRole())
+            )
+        );
+    }
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 12-3</span>
+                    <h2 class="section-title">セッション管理</h2>
+                </div>
+
+                <div class="code-block" id="user-entity">
+                    <div class="code-header">
+                        <span class="code-title">User.java（ユーザーエンティティ）</span>
+                        <button class="download-btn" onclick="downloadCode('user-entity', 'User.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>public class User {
+    private Integer id;
+    private String username;
+    private String password;
+    private String role;  // USER or ADMIN
+
+    // getter/setter
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="user-schema">
+                    <div class="code-header">
+                        <span class="code-title">schema.sql（ユーザーテーブル）</span>
+                        <button class="download-btn" onclick="downloadCode('user-schema', 'schema_user.sql')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(20) DEFAULT 'USER',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);</code></pre>
+                    </div>
+                </div>
+
+                <h3>Spring Security用語</h3>
+                <table class="data-table">
+                    <thead><tr><th>用語</th><th>説明</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>Authentication</code></td><td>認証（本人確認）</td></tr>
+                        <tr><td><code>Authorization</code></td><td>認可（権限確認）</td></tr>
+                        <tr><td><code>Principal</code></td><td>認証されたユーザー情報</td></tr>
+                        <tr><td><code>GrantedAuthority</code></td><td>付与された権限</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="warning-box">
+                    <div class="warning-box-header"><span class="warning-box-icon">⚠️</span><span class="warning-box-title">パスワードの保存</span></div>
+                    <p>パスワードは必ず<code>BCryptPasswordEncoder</code>でハッシュ化して保存してください。<br>平文での保存は絶対に避けましょう。</p>
+                </div>
+            </section>
+        </div>
+
+        <footer class="footer"><p>Spring Framework 入門チュートリアル - 上級レベル</p></footer>
+
+        <div class="page-nav">
+            <a href="11_csv_export.html" class="page-nav-btn prev"><span>←</span><div><div class="page-nav-label">中級レベル</div><div class="page-nav-title">CSVエクスポート</div></div></a>
+            <a href="13_user_todo.html" class="page-nav-btn next"><div><div class="page-nav-label">次の機能</div><div class="page-nav-title">ユーザー別ToDo管理</div></div><span>→</span></a>
+        </div>
+
+        <script>
+            function toggleMenu() { document.querySelector(".nav-toggle").classList.toggle("active"); document.querySelector(".nav-menu").classList.toggle("active"); }
+            function downloadCode(id, filename) { const el = document.getElementById(id); const code = el.querySelector('code') || el.querySelector('pre'); const blob = new Blob([code.textContent], {type:'text/plain;charset=utf-8'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url); }
+        </script>
+    </body>
+</html>

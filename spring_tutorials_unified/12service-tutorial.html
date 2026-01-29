@@ -1,0 +1,1239 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>第12章 アプリを作成しよう（サービス処理）</title>
+
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&family=M+PLUS+Rounded+1c:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <!-- グローバルナビゲーション -->
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="1spring-framework-tutorial.html" class="nav-logo">
+                    <span class="nav-logo-icon">🌱</span>
+                    <span>Spring入門</span>
+                </a>
+                <button class="nav-toggle" onclick="toggleMenu()" aria-label="メニュー">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 章を選択</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="0promptprograming.html" class="nav-link">
+                                <span class="nav-chapter-num">0</span>
+                                <span>プロンプトプログラミング</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="1spring-framework-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">1</span>
+                                <span>Spring Frameworkについて知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="2java_basics.html" class="nav-link">
+                                <span class="nav-chapter-num">2</span>
+                                <span>基礎知識を身に付けよう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="3di-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">3</span>
+                                <span>DIを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="4aop-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">4</span>
+                                <span>AOPを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="5mvc-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">5</span>
+                                <span>MVCを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="6thymeleaf-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">6</span>
+                                <span>Thymeleafを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="7ServerDataSubmission.html" class="nav-link">
+                                <span class="nav-chapter-num">7</span>
+                                <span>サーバーへのデータ送信</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="8Validation_Textbook_Rewrite.html" class="nav-link">
+                                <span class="nav-chapter-num">8</span>
+                                <span>バリデーション</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="9_MyBatis_Tutorial__2_.html" class="nav-link">
+                                <span class="nav-chapter-num">9</span>
+                                <span>MyBatisチュートリアル</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="10app-preparation-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">10</span>
+                                <span>アプリケーション作成準備</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="11-database-operations.html" class="nav-link">
+                                <span class="nav-chapter-num">11</span>
+                                <span>データベース操作</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="12service-tutorial.html" class="nav-link active">
+                                <span class="nav-chapter-num">12</span>
+                                <span>サービス層</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="13_application_layer.html" class="nav-link">
+                                <span class="nav-chapter-num">13</span>
+                                <span>アプリケーション層</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="14_validation.html" class="nav-link">
+                                <span class="nav-chapter-num">14</span>
+                                <span>バリデーション（応用）</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="15-spring-security-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">15</span>
+                                <span>Spring Security</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <!-- ヘッダー -->
+            <header class="chapter-header">
+                <div class="chapter-badge">📘 Chapter</div>
+                <div class="chapter-number">12</div>
+                <h1 class="chapter-title">アプリを作成しよう<br />（サービス処理）</h1>
+                <p class="chapter-subtitle">Service層とトランザクション管理をマスターしよう</p>
+            </header>
+
+            <!-- 目次 -->
+            <nav class="toc">
+                <h2 class="toc-title">📚 この章で学ぶこと</h2>
+                <ul class="toc-list">
+                    <li class="toc-item">
+                        <span class="toc-number">12-1</span>
+                        <span class="toc-text">「Service」と「ServiceImpl」を作成しよう</span>
+                    </li>
+                    <li class="toc-item">
+                        <span class="toc-number">12-2</span>
+                        <span class="toc-text">トランザクション管理を知ろう</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- セクション 12-1 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 12-1</span>
+                    <h2 class="section-title">「Service」と「ServiceImpl」を作成しよう</h2>
+                </div>
+
+                <div class="intro-box">
+                    <p>
+                        ドメイン層の<span class="highlight">「Service」インターフェース</span>と<span class="highlight"
+                            >「ServiceImpl」実装クラス</span
+                        >は、アプリケーションの<strong>業務処理（ビジネスロジック）</strong>を担当する非常に重要な部分です。ここでは、ToDoアプリのサービス層を実際に作成していきましょう！
+                    </p>
+                </div>
+
+                <!-- サブセクション 12-1-1 -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-number">12-1-1</span>
+                        <h3 class="subsection-title">今回作成するコンポーネント</h3>
+                    </div>
+
+                    <p>
+                        ToDoアプリを完成させるために必要なコンポーネントの全体像を確認しましょう。今回は特に<strong>ドメイン層のService関連</strong>を作成します。
+                    </p>
+
+                    <!-- 全体像のイラスト -->
+                    <div class="architecture-diagram">
+                        <div class="diagram-title">図12.1 アプリケーションの3層構造</div>
+                        <svg viewBox="0 0 720 420" width="100%" height="420">
+                            <!-- 背景グラデーション定義 -->
+                            <defs>
+                                <linearGradient id="appGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color: #3b82f6; stop-opacity: 0.08" />
+                                    <stop offset="100%" style="stop-color: #3b82f6; stop-opacity: 0.18" />
+                                </linearGradient>
+                                <linearGradient id="domainGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color: #10b981; stop-opacity: 0.08" />
+                                    <stop offset="100%" style="stop-color: #10b981; stop-opacity: 0.18" />
+                                </linearGradient>
+                                <linearGradient id="infraGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color: #f59e0b; stop-opacity: 0.08" />
+                                    <stop offset="100%" style="stop-color: #f59e0b; stop-opacity: 0.18" />
+                                </linearGradient>
+                                <!-- 矢印マーカー -->
+                                <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
+                                </marker>
+                                <!-- ドロップシャドウ -->
+                                <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                                    <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.15" />
+                                </filter>
+                            </defs>
+
+                            <!-- ========== アプリケーション層 ========== -->
+                            <g filter="url(#shadow)">
+                                <rect x="20" y="20" width="210" height="380" rx="16" fill="url(#appGrad)" stroke="#3b82f6" stroke-width="3" />
+                            </g>
+                            <!-- ヘッダー -->
+                            <rect x="30" y="30" width="190" height="44" rx="10" fill="#3b82f6" />
+                            <text x="125" y="60" text-anchor="middle" fill="white" font-weight="bold" font-size="15">
+                                アプリケーション層
+                            </text>
+
+                            <!-- View -->
+                            <rect x="45" y="95" width="160" height="55" rx="10" fill="white" stroke="#3b82f6" stroke-width="2" />
+                            <text x="125" y="130" text-anchor="middle" fill="#3b82f6" font-weight="bold" font-size="14">View</text>
+
+                            <!-- Controller -->
+                            <rect x="45" y="165" width="160" height="55" rx="10" fill="white" stroke="#3b82f6" stroke-width="2" />
+                            <text x="125" y="200" text-anchor="middle" fill="#3b82f6" font-weight="bold" font-size="14">Controller</text>
+
+                            <!-- Form -->
+                            <rect x="45" y="235" width="160" height="55" rx="10" fill="white" stroke="#3b82f6" stroke-width="2" />
+                            <text x="125" y="270" text-anchor="middle" fill="#3b82f6" font-weight="bold" font-size="14">Form</text>
+
+                            <!-- ========== ドメイン層（今回作成する部分） ========== -->
+                            <g filter="url(#shadow)">
+                                <rect x="255" y="20" width="210" height="380" rx="16" fill="url(#domainGrad)" stroke="#10b981" stroke-width="3" />
+                            </g>
+                            <!-- ヘッダー -->
+                            <rect x="265" y="30" width="190" height="44" rx="10" fill="#10b981" />
+                            <text x="360" y="60" text-anchor="middle" fill="white" font-weight="bold" font-size="15">
+                                ドメイン層
+                            </text>
+
+                            <!-- 今回作成バッジ -->
+                            <rect x="270" y="88" width="72" height="24" rx="12" fill="#ef4444" />
+                            <text x="306" y="105" text-anchor="middle" fill="white" font-weight="bold" font-size="11">今回作成</text>
+
+                            <!-- Service（ハイライト） -->
+                            <rect x="280" y="120" width="160" height="50" rx="10" fill="#10b981" stroke="#059669" stroke-width="2" />
+                            <text x="360" y="152" text-anchor="middle" fill="white" font-weight="bold" font-size="14">Service</text>
+
+                            <!-- ServiceImpl（ハイライト） -->
+                            <rect x="280" y="180" width="160" height="50" rx="10" fill="#10b981" stroke="#059669" stroke-width="2" />
+                            <text x="360" y="212" text-anchor="middle" fill="white" font-weight="bold" font-size="14">ServiceImpl</text>
+
+                            <!-- Domain Object -->
+                            <rect x="280" y="250" width="160" height="50" rx="10" fill="white" stroke="#10b981" stroke-width="2" />
+                            <text x="360" y="282" text-anchor="middle" fill="#10b981" font-weight="bold" font-size="14">Domain Object</text>
+
+                            <!-- Repository -->
+                            <rect x="280" y="320" width="160" height="50" rx="10" fill="white" stroke="#10b981" stroke-width="2" />
+                            <text x="360" y="352" text-anchor="middle" fill="#10b981" font-weight="bold" font-size="14">Repository</text>
+
+                            <!-- ========== インフラストラクチャ層 ========== -->
+                            <g filter="url(#shadow)">
+                                <rect x="490" y="20" width="210" height="380" rx="16" fill="url(#infraGrad)" stroke="#f59e0b" stroke-width="3" />
+                            </g>
+                            <!-- ヘッダー -->
+                            <rect x="500" y="30" width="190" height="44" rx="10" fill="#f59e0b" />
+                            <text x="595" y="60" text-anchor="middle" fill="white" font-weight="bold" font-size="15">
+                                インフラ層
+                            </text>
+
+                            <!-- O/R Mapper -->
+                            <rect x="515" y="95" width="160" height="55" rx="10" fill="white" stroke="#f59e0b" stroke-width="2" />
+                            <text x="595" y="130" text-anchor="middle" fill="#f59e0b" font-weight="bold" font-size="14">O/R Mapper</text>
+
+                            <!-- RepositoryImpl -->
+                            <rect x="515" y="165" width="160" height="55" rx="10" fill="white" stroke="#f59e0b" stroke-width="2" />
+                            <text x="595" y="200" text-anchor="middle" fill="#f59e0b" font-weight="bold" font-size="14">RepositoryImpl</text>
+
+                            <!-- データベースアイコン（シリンダー形状） -->
+                            <ellipse cx="595" cy="280" rx="45" ry="16" fill="#f59e0b" />
+                            <rect x="550" y="280" width="90" height="55" fill="#f59e0b" />
+                            <ellipse cx="595" cy="335" rx="45" ry="16" fill="#f59e0b" />
+                            <ellipse cx="595" cy="280" rx="40" ry="13" fill="#fde68a" />
+                            <text x="595" y="315" text-anchor="middle" fill="white" font-weight="bold" font-size="13">Database</text>
+
+                            <!-- ========== 依存関係の矢印 ========== -->
+                            <!-- Controller → Service -->
+                            <line x1="205" y1="192" x2="275" y2="145" stroke="#64748b" stroke-width="2.5" marker-end="url(#arrowhead)" />
+
+                            <!-- Service → O/R Mapper -->
+                            <line x1="440" y1="145" x2="510" y2="122" stroke="#64748b" stroke-width="2.5" marker-end="url(#arrowhead)" />
+
+                            <!-- Repository → RepositoryImpl -->
+                            <line x1="440" y1="345" x2="510" y2="192" stroke="#64748b" stroke-width="2.5" marker-end="url(#arrowhead)" />
+                        </svg>
+                    </div>
+
+                    <div class="table-container">
+                        <p class="table-title">表12.1 作成予定コンポーネント</p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>層</th>
+                                    <th>コンポーネント</th>
+                                    <th>作成物名称</th>
+                                    <th>備考</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>アプリケーション層</td>
+                                    <td>View</td>
+                                    <td>―</td>
+                                    <td>見た目、画面です</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>アプリケーション層</td>
+                                    <td>Controller</td>
+                                    <td>ToDoController</td>
+                                    <td>制御の役割を担います</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>アプリケーション層</td>
+                                    <td>Form</td>
+                                    <td>ToDoForm</td>
+                                    <td>「画面のフォーム」を表現します</td>
+                                </tr>
+                                <tr style="background: #ecfdf5">
+                                    <td><strong>4</strong></td>
+                                    <td><strong>ドメイン層</strong></td>
+                                    <td><strong>Service</strong></td>
+                                    <td><strong>ToDoService</strong></td>
+                                    <td>インターフェースで作成します</td>
+                                </tr>
+                                <tr style="background: #ecfdf5">
+                                    <td><strong>5</strong></td>
+                                    <td><strong>ドメイン層</strong></td>
+                                    <td><strong>ServiceImpl</strong></td>
+                                    <td><strong>ToDoServiceImpl</strong></td>
+                                    <td>「Service」を実装します</td>
+                                </tr>
+                                <tr>
+                                    <td>6</td>
+                                    <td>ドメイン層</td>
+                                    <td>Domain Object</td>
+                                    <td>ToDo</td>
+                                    <td>ここでは「Entity」と同様です</td>
+                                </tr>
+                                <tr>
+                                    <td>7</td>
+                                    <td>ドメイン層</td>
+                                    <td>Repository</td>
+                                    <td>ToDoMapper</td>
+                                    <td>MyBatisのマッパーファイルを使用</td>
+                                </tr>
+                                <tr>
+                                    <td>8</td>
+                                    <td>インフラストラクチャ層</td>
+                                    <td>RepositoryImpl</td>
+                                    <td>―</td>
+                                    <td>O/Rマッパーにより自動作成</td>
+                                </tr>
+                                <tr>
+                                    <td>9</td>
+                                    <td>インフラストラクチャ層</td>
+                                    <td>O/R Mapper</td>
+                                    <td>―</td>
+                                    <td>MyBatis</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="point-box">
+                        <div class="point-title">今回のポイント</div>
+                        <p>
+                            表の<strong>緑色でハイライトされた行（No.4とNo.5）</strong>が今回作成する部分です。「Service」はインターフェースとして業務処理の<strong>定義</strong>を行い、「ServiceImpl」で実際の<strong>実装</strong>を記述します。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- サブセクション 12-1-2 -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-number">12-1-2</span>
+                        <h3 class="subsection-title">Serviceの作成</h3>
+                    </div>
+
+                    <p>
+                        まずはインターフェース「Service」を作成します。ここで記述する「業務処理（提供するサービス）」は「することの管理処理（CRUD）」となります。実装内容は記述しません。
+                    </p>
+
+                    <h4>Serviceインターフェースの作成手順</h4>
+
+                    <div class="step-cards">
+                        <div class="step-card">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <div class="step-title">フォルダを選択</div>
+                                <p class="step-desc">「webapp」の「src/main/java」フォルダを選択します</p>
+                            </div>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <div class="step-title">新規インターフェースを作成</div>
+                                <p class="step-desc">マウスを右クリックし、「新規」→「インターフェース」を選択します</p>
+                            </div>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <div class="step-title">設定内容を入力</div>
+                                <p class="step-desc">以下の設定内容を記述後、「完了」ボタンを押します</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-table">
+                        <div class="settings-row">
+                            <div class="settings-label">パッケージ</div>
+                            <div class="settings-value">com.example.webapp.service</div>
+                        </div>
+                        <div class="settings-row">
+                            <div class="settings-label">名前</div>
+                            <div class="settings-value">ToDoService</div>
+                        </div>
+                    </div>
+
+                    <p>
+                        「ToDoService」クラスの内容は以下のようになります。「すること」のCRUD処理のメソッド定義を記述しています。
+                    </p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">リスト12.1 ToDoService.java</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <div class="code-content">
+                            <pre><span class="code-keyword">package</span> com.example.webapp.service;
+
+<span class="code-keyword">import</span> java.util.List;
+
+<span class="code-keyword">import</span> com.example.webapp.entity.ToDo;
+
+<span class="code-comment">/**
+ * ToDo：サービス
+ */</span>
+<span class="code-keyword">public interface</span> <span class="code-class">ToDoService</span> {
+
+    <span class="code-comment">/**
+     * 全「すること」を検索します。
+     */</span>
+    <span class="code-type">List</span>&lt;<span class="code-class">ToDo</span>&gt; <span class="code-method">findAllToDo</span>();
+
+    <span class="code-comment">/**
+     * 指定されたIDの「すること」を検索します。
+     */</span>
+    <span class="code-class">ToDo</span> <span class="code-method">findByIdToDo</span>(<span class="code-type">Integer</span> id);
+
+    <span class="code-comment">/**
+     * 「すること」を新規登録します。
+     */</span>
+    <span class="code-keyword">void</span> <span class="code-method">insertToDo</span>(<span class="code-class">ToDo</span> toDo);
+
+    <span class="code-comment">/**
+     * 「すること」を更新します。
+     */</span>
+    <span class="code-keyword">void</span> <span class="code-method">updateToDo</span>(<span class="code-class">ToDo</span> toDo);
+
+    <span class="code-comment">/**
+     * 指定されたIDの「すること」を削除します。
+     */</span>
+    <span class="code-keyword">void</span> <span class="code-method">deleteToDo</span>(<span class="code-type">Integer</span> id);
+}</pre>
+                        </div>
+                    </div>
+
+                    <div class="point-box">
+                        <div class="point-title">インターフェースとは？</div>
+                        <p>
+                            <strong>インターフェース</strong
+                            >とは、「こういうメソッドを持ってね」という<strong>約束事（契約）</strong>を定義するものです。実際の処理内容は書かず、メソッドの「名前」「引数」「戻り値の型」だけを宣言します。これにより、実装を差し替えやすくなり、テストもしやすくなります。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- サブセクション 12-1-3 -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-number">12-1-3</span>
+                        <h3 class="subsection-title">ServiceImplの作成</h3>
+                    </div>
+
+                    <p>
+                        次に実装クラス「ServiceImpl」を作成します。「webapp」の「src/main/java」フォルダを選択し、マウスを右クリックし、「新規」→「クラス」を選択します。
+                    </p>
+
+                    <div class="settings-table">
+                        <div class="settings-row">
+                            <div class="settings-label">パッケージ</div>
+                            <div class="settings-value">com.example.webapp.service.impl</div>
+                        </div>
+                        <div class="settings-row">
+                            <div class="settings-label">名前</div>
+                            <div class="settings-value">ToDoServiceImpl</div>
+                        </div>
+                        <div class="settings-row">
+                            <div class="settings-label">インターフェース</div>
+                            <div class="settings-value">com.example.webapp.service.ToDoService</div>
+                        </div>
+                    </div>
+
+                    <p>「ToDoServiceImpl」クラスの内容は以下のようになります。</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">リスト12.2 ToDoServiceImpl.java</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <div class="code-content">
+                            <pre><span class="code-keyword">package</span> com.example.webapp.service.impl;
+
+<span class="code-keyword">import</span> java.util.List;
+
+<span class="code-keyword">import</span> org.springframework.stereotype.Service;
+<span class="code-keyword">import</span> org.springframework.transaction.annotation.Transactional;
+
+<span class="code-keyword">import</span> com.example.webapp.entity.ToDo;
+<span class="code-keyword">import</span> com.example.webapp.repository.ToDoMapper;
+<span class="code-keyword">import</span> com.example.webapp.service.ToDoService;
+
+<span class="code-keyword">import</span> lombok.RequiredArgsConstructor;
+
+<span class="code-comment">/**
+ * ToDo：サービス実装クラス
+ */</span>
+<span class="code-annotation">@Service</span>
+<span class="code-annotation">@Transactional</span>
+<span class="code-annotation">@RequiredArgsConstructor</span>
+<span class="code-keyword">public class</span> <span class="code-class">ToDoServiceImpl</span> <span class="code-keyword">implements</span> <span class="code-class">ToDoService</span> {
+
+    <span class="code-comment">/** DI */</span>
+    <span class="code-keyword">private final</span> <span class="code-class">ToDoMapper</span> toDoMapper;
+
+    <span class="code-annotation">@Override</span>
+    <span class="code-keyword">public</span> <span class="code-type">List</span>&lt;<span class="code-class">ToDo</span>&gt; <span class="code-method">findAllToDo</span>() {
+        <span class="code-keyword">return</span> toDoMapper.<span class="code-method">selectAll</span>();
+    }
+
+    <span class="code-annotation">@Override</span>
+    <span class="code-keyword">public</span> <span class="code-class">ToDo</span> <span class="code-method">findByIdToDo</span>(<span class="code-type">Integer</span> id) {
+        <span class="code-keyword">return</span> toDoMapper.<span class="code-method">selectById</span>(id);
+    }
+
+    <span class="code-annotation">@Override</span>
+    <span class="code-keyword">public void</span> <span class="code-method">insertToDo</span>(<span class="code-class">ToDo</span> toDo) {
+        toDoMapper.<span class="code-method">insert</span>(toDo);
+    }
+
+    <span class="code-annotation">@Override</span>
+    <span class="code-keyword">public void</span> <span class="code-method">updateToDo</span>(<span class="code-class">ToDo</span> toDo) {
+        toDoMapper.<span class="code-method">update</span>(toDo);
+    }
+
+    <span class="code-annotation">@Override</span>
+    <span class="code-keyword">public void</span> <span class="code-method">deleteToDo</span>(<span class="code-type">Integer</span> id) {
+        toDoMapper.<span class="code-method">delete</span>(id);
+    }
+}</pre>
+                        </div>
+                    </div>
+
+                    <p>オーバーライドしたメソッド処理は、全て「ToDoMapper」に処理を委譲します。</p>
+
+                    <div class="warning-box">
+                        <div class="warning-title">重要なアノテーション</div>
+                        <p>
+                            <strong>17行目の「@Service」</strong>をクラスに付与してインスタンス生成対象にします。<br />
+                            <strong>18行目の「@Transactional」</strong
+                            >がここでの重要部分になります。次のセクションで詳しく説明します。
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- セクション 12-2 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 12-2</span>
+                    <h2 class="section-title">トランザクション管理を知ろう</h2>
+                </div>
+
+                <div class="intro-box">
+                    <p>
+                        ここでは「4-3-1 トランザクション管理」で軽く説明した<span class="highlight"
+                            >「@Transactional」アノテーション</span
+                        >について使用方法を含め説明します。データベースを扱う上で非常に重要な概念です！
+                    </p>
+                </div>
+
+                <!-- サブセクション 12-2-1 -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-number">12-2-1</span>
+                        <h3 class="subsection-title">トランザクションとは？</h3>
+                    </div>
+
+                    <p>
+                        「<strong>トランザクション</strong>」とはデータベースやコンピュータプログラムで使われる概念で、<strong>複数の処理を1つにまとめたもの</strong>です。
+                    </p>
+
+                    <!-- トランザクション図解 -->
+                    <div class="architecture-diagram">
+                        <div class="diagram-title">図12.2 トランザクションの基本概念</div>
+                        <svg viewBox="0 0 740 300" width="100%" height="300">
+                            <defs>
+                                <!-- ドロップシャドウ -->
+                                <filter id="txShadow" x="-10%" y="-10%" width="120%" height="120%">
+                                    <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.12" />
+                                </filter>
+                                <!-- 成功の矢印マーカー -->
+                                <marker id="successArrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                                    <polygon points="0 0, 8 3, 0 6" fill="#10b981" />
+                                </marker>
+                                <!-- 失敗の矢印マーカー -->
+                                <marker id="failArrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                                    <polygon points="0 0, 8 3, 0 6" fill="#ef4444" />
+                                </marker>
+                            </defs>
+
+                            <!-- ========== 成功パターン（左側） ========== -->
+                            <g filter="url(#txShadow)">
+                                <rect x="20" y="55" width="330" height="200" rx="16" fill="#ecfdf5" stroke="#10b981" stroke-width="2.5" />
+                            </g>
+                            <!-- タイトル -->
+                            <text x="185" y="40" text-anchor="middle" fill="#10b981" font-weight="bold" font-size="16">
+                                ✅ 成功パターン → コミット
+                            </text>
+
+                            <!-- 処理フロー（成功） -->
+                            <g>
+                                <!-- 処理01 -->
+                                <rect x="40" y="85" width="80" height="55" rx="10" fill="white" stroke="#10b981" stroke-width="2" />
+                                <text x="80" y="110" text-anchor="middle" fill="#1e293b" font-weight="bold" font-size="13">処理01</text>
+                                <circle cx="80" cy="128" r="8" fill="#10b981" />
+                                <text x="80" y="132" text-anchor="middle" fill="white" font-weight="bold" font-size="9">✓</text>
+
+                                <!-- 矢印1 -->
+                                <line x1="125" y1="112" x2="145" y2="112" stroke="#10b981" stroke-width="2.5" marker-end="url(#successArrow)" />
+
+                                <!-- 処理02 -->
+                                <rect x="150" y="85" width="80" height="55" rx="10" fill="white" stroke="#10b981" stroke-width="2" />
+                                <text x="190" y="110" text-anchor="middle" fill="#1e293b" font-weight="bold" font-size="13">処理02</text>
+                                <circle cx="190" cy="128" r="8" fill="#10b981" />
+                                <text x="190" y="132" text-anchor="middle" fill="white" font-weight="bold" font-size="9">✓</text>
+
+                                <!-- 矢印2 -->
+                                <line x1="235" y1="112" x2="255" y2="112" stroke="#10b981" stroke-width="2.5" marker-end="url(#successArrow)" />
+
+                                <!-- 処理03 -->
+                                <rect x="260" y="85" width="80" height="55" rx="10" fill="white" stroke="#10b981" stroke-width="2" />
+                                <text x="300" y="110" text-anchor="middle" fill="#1e293b" font-weight="bold" font-size="13">処理03</text>
+                                <circle cx="300" cy="128" r="8" fill="#10b981" />
+                                <text x="300" y="132" text-anchor="middle" fill="white" font-weight="bold" font-size="9">✓</text>
+                            </g>
+
+                            <!-- 下向き矢印 -->
+                            <path d="M185 150 L185 170" stroke="#10b981" stroke-width="2.5" marker-end="url(#successArrow)" />
+
+                            <!-- コミットボタン -->
+                            <rect x="105" y="178" width="160" height="50" rx="25" fill="#10b981" />
+                            <text x="185" y="210" text-anchor="middle" fill="white" font-weight="bold" font-size="15">コミット（確定）</text>
+
+                            <!-- 説明テキスト -->
+                            <text x="185" y="250" text-anchor="middle" fill="#64748b" font-size="12">全ての処理が成功したら確定！</text>
+
+                            <!-- ========== 失敗パターン（右側） ========== -->
+                            <g filter="url(#txShadow)">
+                                <rect x="390" y="55" width="330" height="200" rx="16" fill="#fef2f2" stroke="#ef4444" stroke-width="2.5" />
+                            </g>
+                            <!-- タイトル -->
+                            <text x="555" y="40" text-anchor="middle" fill="#ef4444" font-weight="bold" font-size="16">
+                                ❌ 失敗パターン → ロールバック
+                            </text>
+
+                            <!-- 処理フロー（失敗） -->
+                            <g>
+                                <!-- 処理01 -->
+                                <rect x="410" y="85" width="80" height="55" rx="10" fill="white" stroke="#10b981" stroke-width="2" />
+                                <text x="450" y="110" text-anchor="middle" fill="#1e293b" font-weight="bold" font-size="13">処理01</text>
+                                <circle cx="450" cy="128" r="8" fill="#10b981" />
+                                <text x="450" y="132" text-anchor="middle" fill="white" font-weight="bold" font-size="9">✓</text>
+
+                                <!-- 矢印1 -->
+                                <line x1="495" y1="112" x2="515" y2="112" stroke="#10b981" stroke-width="2.5" marker-end="url(#successArrow)" />
+
+                                <!-- 処理02 -->
+                                <rect x="520" y="85" width="80" height="55" rx="10" fill="white" stroke="#10b981" stroke-width="2" />
+                                <text x="560" y="110" text-anchor="middle" fill="#1e293b" font-weight="bold" font-size="13">処理02</text>
+                                <circle cx="560" cy="128" r="8" fill="#10b981" />
+                                <text x="560" y="132" text-anchor="middle" fill="white" font-weight="bold" font-size="9">✓</text>
+
+                                <!-- 矢印2（失敗へ） -->
+                                <line x1="605" y1="112" x2="625" y2="112" stroke="#ef4444" stroke-width="2.5" marker-end="url(#failArrow)" />
+
+                                <!-- 処理03（失敗） -->
+                                <rect x="630" y="85" width="80" height="55" rx="10" fill="white" stroke="#ef4444" stroke-width="2.5" />
+                                <text x="670" y="110" text-anchor="middle" fill="#1e293b" font-weight="bold" font-size="13">処理03</text>
+                                <circle cx="670" cy="128" r="8" fill="#ef4444" />
+                                <text x="670" y="132" text-anchor="middle" fill="white" font-weight="bold" font-size="9">✗</text>
+                            </g>
+
+                            <!-- 下向き矢印 -->
+                            <path d="M555 150 L555 170" stroke="#ef4444" stroke-width="2.5" marker-end="url(#failArrow)" />
+
+                            <!-- ロールバックボタン -->
+                            <rect x="475" y="178" width="160" height="50" rx="25" fill="#ef4444" />
+                            <text x="555" y="210" text-anchor="middle" fill="white" font-weight="bold" font-size="15">ロールバック</text>
+
+                            <!-- 説明テキスト -->
+                            <text x="555" y="250" text-anchor="middle" fill="#64748b" font-size="12">途中で失敗したら全て取り消し！</text>
+                        </svg>
+                    </div>
+
+                    <p>
+                        トランザクションは<strong>成功か失敗のどちらかしかありません</strong>。中途半端に「成功」する、中途半端に「失敗」するなどはありません。
+                    </p>
+
+                    <div class="point-box">
+                        <div class="point-title">コミットとロールバック</div>
+                        <p>
+                            <strong>処理がすべて成功した場合</strong> →
+                            処理が確定されます。これを「<strong>コミット</strong>」といいます。<br />
+                            <strong>処理の途中で失敗した場合</strong> →
+                            トランザクションの実行前に戻ります。これを「<strong>ロールバック</strong>」といいます。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- サブセクション 12-2-2 -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-number">12-2-2</span>
+                        <h3 class="subsection-title">トランザクション境界とは？</h3>
+                    </div>
+
+                    <p>
+                        トランザクションは開始と終了を明示的に指定する必要があり、開始から終了までの範囲を「<strong>トランザクション境界</strong>」といいます。
+                    </p>
+
+                    <p>
+                        結論から言うと<span class="highlight"
+                            >トランザクション境界は「Service」の実装クラスに設定します</span
+                        >。
+                    </p>
+
+                    <!-- トランザクション境界図解 -->
+                    <div class="architecture-diagram">
+                        <div class="diagram-title">図12.3 トランザクション境界</div>
+                        <svg viewBox="0 0 650 220" width="100%" height="220">
+                            <defs>
+                                <!-- ドロップシャドウ -->
+                                <filter id="boundShadow" x="-10%" y="-10%" width="120%" height="120%">
+                                    <feDropShadow dx="2" dy="2" stdDeviation="2" flood-opacity="0.1" />
+                                </filter>
+                                <!-- 矢印マーカー -->
+                                <marker id="boundArrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
+                                </marker>
+                                <!-- トランザクション矢印（緑） -->
+                                <marker id="txArrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#10b981" />
+                                </marker>
+                            </defs>
+
+                            <!-- ========== アプリケーション層 ========== -->
+                            <g filter="url(#boundShadow)">
+                                <rect x="20" y="35" width="150" height="130" rx="14" fill="#eff6ff" stroke="#3b82f6" stroke-width="2.5" />
+                            </g>
+                            <!-- ヘッダー -->
+                            <rect x="30" y="45" width="130" height="32" rx="8" fill="#3b82f6" />
+                            <text x="95" y="68" text-anchor="middle" fill="white" font-weight="bold" font-size="12">アプリケーション層</text>
+                            <!-- Controller -->
+                            <rect x="40" y="92" width="110" height="48" rx="8" fill="white" stroke="#3b82f6" stroke-width="2" />
+                            <text x="95" y="122" text-anchor="middle" fill="#3b82f6" font-weight="bold" font-size="13">Controller</text>
+
+                            <!-- 矢印1: Controller → Service -->
+                            <line x1="175" y1="116" x2="215" y2="116" stroke="#64748b" stroke-width="2.5" marker-end="url(#boundArrow)" />
+
+                            <!-- ========== ドメイン層（Service） ========== -->
+                            <g filter="url(#boundShadow)">
+                                <rect x="220" y="35" width="150" height="130" rx="14" fill="#ecfdf5" stroke="#10b981" stroke-width="2.5" />
+                            </g>
+                            <!-- ヘッダー -->
+                            <rect x="230" y="45" width="130" height="32" rx="8" fill="#10b981" />
+                            <text x="295" y="68" text-anchor="middle" fill="white" font-weight="bold" font-size="12">ドメイン層</text>
+                            <!-- Service（ハイライト） -->
+                            <rect x="240" y="92" width="110" height="48" rx="8" fill="#10b981" stroke="#059669" stroke-width="2" />
+                            <text x="295" y="122" text-anchor="middle" fill="white" font-weight="bold" font-size="13">Service</text>
+
+                            <!-- トランザクション境界バッジ -->
+                            <rect x="225" y="170" width="140" height="28" rx="14" fill="#ef4444" />
+                            <text x="295" y="190" text-anchor="middle" fill="white" font-weight="bold" font-size="11">トランザクション境界</text>
+
+                            <!-- ========== ドメイン層（Repository） ========== -->
+                            <g filter="url(#boundShadow)">
+                                <rect x="420" y="35" width="150" height="130" rx="14" fill="#ecfdf5" stroke="#10b981" stroke-width="2.5" />
+                            </g>
+                            <!-- ヘッダー -->
+                            <rect x="430" y="45" width="130" height="32" rx="8" fill="#10b981" />
+                            <text x="495" y="68" text-anchor="middle" fill="white" font-weight="bold" font-size="12">ドメイン層</text>
+                            <!-- Repository -->
+                            <rect x="440" y="92" width="110" height="48" rx="8" fill="white" stroke="#10b981" stroke-width="2" />
+                            <text x="495" y="122" text-anchor="middle" fill="#10b981" font-weight="bold" font-size="13">Repository</text>
+
+                            <!-- トランザクション範囲を示す破線枠 -->
+                            <rect x="215" y="80" width="360" height="75" rx="10" fill="none" stroke="#10b981" stroke-width="2" stroke-dasharray="6,4" opacity="0.6" />
+
+                            <!-- 矢印2: Service → Repository（トランザクション内）※破線枠の上に描画 -->
+                            <line x1="375" y1="116" x2="415" y2="116" stroke="#10b981" stroke-width="2.5" marker-end="url(#txArrow)" />
+                            <!-- トランザクションラベル（最前面に描画） -->
+                            <rect x="358" y="60" width="84" height="22" rx="11" fill="#d1fae5" stroke="#10b981" stroke-width="1.5" />
+                            <text x="400" y="76" text-anchor="middle" fill="#059669" font-weight="bold" font-size="10">トランザクション</text>
+                        </svg>
+                    </div>
+
+                    <p>
+                        MVCモデルにおいて「サービス処理」は「Model」に属します。「Service」は「Model」の一部であり、「サービス処理」の入口（開始）と捉えることができます。このことからトランザクション境界は「Service」の実装クラスに指定します。
+                    </p>
+                </div>
+
+                <!-- サブセクション 12-2-3 -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-number">12-2-3</span>
+                        <h3 class="subsection-title">トランザクションの管理方法</h3>
+                    </div>
+
+                    <p>
+                        「トランザクションの管理方法」は「Spring
+                        Framework」から提供されている「<strong>@Transactional</strong>」アノテーションを使用します。
+                    </p>
+
+                    <p>
+                        使用方法は簡単です。クラスやメソッドに「@Transactional」アノテーションを付与することでトランザクションが管理され、トランザクションの「開始、コミット、ロールバック」が自動で行われます。
+                    </p>
+
+                    <div class="warning-box">
+                        <div class="warning-title">ロールバック発生条件</div>
+                        <p>
+                            ロールバック発生条件は、<strong>非検査例外（RuntimeException及びそのサブクラス）</strong>が発生した場合です。検査例外（Exception及び、そのサブクラスでRuntimeException以外）が発生した場合は、「ロールバック」されず「コミット」されますので注意してください。
+                        </p>
+                    </div>
+
+                    <!-- @Transactional付与方法の比較図 -->
+                    <div class="architecture-diagram">
+                        <div class="diagram-title">@Transactionalの付与方法比較</div>
+                        <svg viewBox="0 0 720 340" width="100%" height="340">
+                            <defs>
+                                <filter id="compareShadow" x="-5%" y="-5%" width="110%" height="110%">
+                                    <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.1" />
+                                </filter>
+                                <linearGradient id="meritGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color: #10b981; stop-opacity: 0.1" />
+                                    <stop offset="100%" style="stop-color: #10b981; stop-opacity: 0.05" />
+                                </linearGradient>
+                                <linearGradient id="demeritGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color: #ef4444; stop-opacity: 0.1" />
+                                    <stop offset="100%" style="stop-color: #ef4444; stop-opacity: 0.05" />
+                                </linearGradient>
+                            </defs>
+
+                            <!-- ========== クラスに付与（左側） ========== -->
+                            <g filter="url(#compareShadow)">
+                                <rect x="20" y="20" width="330" height="300" rx="16" fill="white" stroke="#3b82f6" stroke-width="2.5" />
+                            </g>
+                            <!-- ヘッダー -->
+                            <rect x="20" y="20" width="330" height="50" rx="16" fill="#3b82f6" />
+                            <rect x="20" y="50" width="330" height="20" fill="#3b82f6" />
+                            <text x="185" y="52" text-anchor="middle" fill="white" font-weight="bold" font-size="15">クラスに@Transactionalを付与</text>
+
+                            <!-- 説明テキスト -->
+                            <text x="185" y="90" text-anchor="middle" fill="#475569" font-size="11">クラス内の「すべてのメソッド」に</text>
+                            <text x="185" y="105" text-anchor="middle" fill="#475569" font-size="11">トランザクション制御をかける</text>
+
+                            <!-- メリットカード -->
+                            <rect x="35" y="118" width="300" height="90" rx="12" fill="url(#meritGrad)" stroke="#10b981" stroke-width="2" />
+                            <circle cx="55" cy="138" r="12" fill="#10b981" />
+                            <text x="55" y="143" text-anchor="middle" fill="white" font-weight="bold" font-size="14">✓</text>
+                            <text x="75" y="143" fill="#10b981" font-weight="bold" font-size="13">メリット</text>
+                            <text x="50" y="168" fill="#1e293b" font-size="11">クラス内の全メソッドに一括で</text>
+                            <text x="50" y="184" fill="#1e293b" font-size="11">トランザクション管理を適用できるため、</text>
+                            <text x="50" y="200" fill="#1e293b" font-size="11">コードがシンプルになります</text>
+
+                            <!-- デメリットカード -->
+                            <rect x="35" y="218" width="300" height="90" rx="12" fill="url(#demeritGrad)" stroke="#ef4444" stroke-width="2" />
+                            <circle cx="55" cy="238" r="12" fill="#ef4444" />
+                            <text x="55" y="243" text-anchor="middle" fill="white" font-weight="bold" font-size="14">✗</text>
+                            <text x="75" y="243" fill="#ef4444" font-weight="bold" font-size="13">デメリット</text>
+                            <text x="50" y="268" fill="#1e293b" font-size="11">トランザクションを必要としない</text>
+                            <text x="50" y="284" fill="#1e293b" font-size="11">メソッドまで適用される可能性があり、</text>
+                            <text x="50" y="300" fill="#1e293b" font-size="11">パフォーマンスに影響する場合があります</text>
+
+                            <!-- ========== メソッドに付与（右側） ========== -->
+                            <g filter="url(#compareShadow)">
+                                <rect x="370" y="20" width="330" height="300" rx="16" fill="white" stroke="#8b5cf6" stroke-width="2.5" />
+                            </g>
+                            <!-- ヘッダー -->
+                            <rect x="370" y="20" width="330" height="50" rx="16" fill="#8b5cf6" />
+                            <rect x="370" y="50" width="330" height="20" fill="#8b5cf6" />
+                            <text x="535" y="52" text-anchor="middle" fill="white" font-weight="bold" font-size="15">メソッドに@Transactionalを付与</text>
+
+                            <!-- 説明テキスト -->
+                            <text x="535" y="90" text-anchor="middle" fill="#475569" font-size="11">メソッドが呼ばれたタイミングで</text>
+                            <text x="535" y="105" text-anchor="middle" fill="#475569" font-size="11">トランザクションが開始される</text>
+
+                            <!-- メリットカード -->
+                            <rect x="385" y="118" width="300" height="90" rx="12" fill="url(#meritGrad)" stroke="#10b981" stroke-width="2" />
+                            <circle cx="405" cy="138" r="12" fill="#10b981" />
+                            <text x="405" y="143" text-anchor="middle" fill="white" font-weight="bold" font-size="14">✓</text>
+                            <text x="425" y="143" fill="#10b981" font-weight="bold" font-size="13">メリット</text>
+                            <text x="400" y="168" fill="#1e293b" font-size="11">個々のメソッドに対して</text>
+                            <text x="400" y="184" fill="#1e293b" font-size="11">トランザクションの有無をコントロール</text>
+                            <text x="400" y="200" fill="#1e293b" font-size="11">できるため、柔軟性があります</text>
+
+                            <!-- デメリットカード -->
+                            <rect x="385" y="218" width="300" height="90" rx="12" fill="url(#demeritGrad)" stroke="#ef4444" stroke-width="2" />
+                            <circle cx="405" cy="238" r="12" fill="#ef4444" />
+                            <text x="405" y="243" text-anchor="middle" fill="white" font-weight="bold" font-size="14">✗</text>
+                            <text x="425" y="243" fill="#ef4444" font-weight="bold" font-size="13">デメリット</text>
+                            <text x="400" y="268" fill="#1e293b" font-size="11">クラス内の多くのメソッドに</text>
+                            <text x="400" y="284" fill="#1e293b" font-size="11">個別にアノテーションを付ける必要があり、</text>
+                            <text x="400" y="300" fill="#1e293b" font-size="11">コードが冗長になる可能性があります</text>
+                        </svg>
+                    </div>
+
+                    <div class="point-box">
+                        <div class="point-title">推奨方法</div>
+                        <p>
+                            推奨方法は<strong>クラスに@Transactionalアノテーションを付与する方法</strong>です。「トランザクション境界」の設定が必要なのは更新処理（登録、更新、削除）を含むサービス処理だけですが、設定漏れによるバグを防ぐ事を目的として、クラスに@Transactionalアノテーションを付与することを推奨します。
+                        </p>
+                        <p>
+                            いずれの方法でもアノテーションを付与しておくだけで自動的に「コミット・ロールバック」をしてくれるので、とても便利です。@Transactionalアノテーションは、裏でAOP（Aspect-Oriented
+                            Programming：アスペクト指向プログラミング）を利用しています。もしAOPとは何か曖昧な場合は「4章
+                            Spring Frameworkのコア機能（AOP）を知ろう」を参照してください。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- サブセクション 12-2-4 -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-number">12-2-4</span>
+                        <h3 class="subsection-title">動作確認</h3>
+                    </div>
+
+                    <p>
+                        「Repository」を作成した際に行った動作確認と同じ方法で、今回作成したサービス処理の動作確認も行います。これを実現するために、「WebappApplication」を修正して動作確認を実施します。
+                    </p>
+
+                    <h4>ここまでの動作確認</h4>
+
+                    <p>
+                        「webapp」の「src/main/java」フォルダ配下のパッケージ「com.example.webapp」、クラス「WebappApplication」をリスト12.3のように修正します。
+                    </p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">リスト12.3 WebappApplication.java</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <div class="code-content">
+                            <pre><span class="code-keyword">package</span> com.example.webapp;
+
+<span class="code-keyword">import</span> org.springframework.boot.SpringApplication;
+<span class="code-keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;
+
+<span class="code-keyword">import</span> com.example.webapp.entity.ToDo;
+<span class="code-keyword">import</span> com.example.webapp.service.ToDoService;
+
+<span class="code-keyword">import</span> lombok.RequiredArgsConstructor;
+
+<span class="code-annotation">@SpringBootApplication</span>
+<span class="code-annotation">@RequiredArgsConstructor</span>
+<span class="code-keyword">public class</span> <span class="code-class">WebappApplication</span> {
+
+    <span class="code-keyword">public static void</span> <span class="code-method">main</span>(<span class="code-type">String</span>[] args) {
+        SpringApplication.<span class="code-method">run</span>(WebappApplication.<span class="code-keyword">class</span>, args)
+            .<span class="code-method">getBean</span>(WebappApplication.<span class="code-keyword">class</span>).<span class="code-method">exe</span>();
+    }
+
+    <span class="code-comment">/** DI */</span>
+    <span class="code-keyword">private final</span> <span class="code-class">ToDoService</span> service;
+
+    <span class="code-keyword">public void</span> <span class="code-method">exe</span>() {
+        <span class="code-comment">// ★全件検索</span>
+        System.out.<span class="code-method">println</span>(<span class="code-string">"=== 全件検索 ==="</span>);
+        <span class="code-keyword">for</span> (<span class="code-class">ToDo</span> row : service.<span class="code-method">findAllToDo</span>()) {
+            System.out.<span class="code-method">println</span>(row);
+        }
+
+        <span class="code-comment">// ★1件検索</span>
+        System.out.<span class="code-method">println</span>(<span class="code-string">"=== 1件検索 ==="</span>);
+        System.out.<span class="code-method">println</span>(service.<span class="code-method">findByIdToDo</span>(1));
+
+        <span class="code-comment">// ★登録</span>
+        <span class="code-comment">// 登録データ作成</span>
+        <span class="code-class">ToDo</span> todo = <span class="code-keyword">new</span> <span class="code-class">ToDo</span>();
+        todo.<span class="code-method">setTodo</span>(<span class="code-string">"サービスのテスト"</span>);
+        todo.<span class="code-method">setDetail</span>(<span class="code-string">"ToDo登録サービス"</span>);
+        service.<span class="code-method">insertToDo</span>(todo);
+        System.out.<span class="code-method">println</span>(<span class="code-string">"=== 登録確認 ==="</span>);
+        System.out.<span class="code-method">println</span>(service.<span class="code-method">findByIdToDo</span>(4));
+
+        <span class="code-comment">// ★更新</span>
+        <span class="code-class">ToDo</span> target = service.<span class="code-method">findByIdToDo</span>(4);
+        target.<span class="code-method">setTodo</span>(<span class="code-string">"サービスのテスト：更新"</span>);
+        target.<span class="code-method">setDetail</span>(<span class="code-string">"ToDo更新サービス"</span>);
+        service.<span class="code-method">updateToDo</span>(target);
+        System.out.<span class="code-method">println</span>(<span class="code-string">"=== 更新確認 ==="</span>);
+        System.out.<span class="code-method">println</span>(service.<span class="code-method">findByIdToDo</span>(4));
+
+        <span class="code-comment">// ★削除</span>
+        service.<span class="code-method">deleteToDo</span>(4);
+        System.out.<span class="code-method">println</span>(<span class="code-string">"=== 削除確認 ==="</span>);
+        <span class="code-keyword">for</span> (<span class="code-class">ToDo</span> row : service.<span class="code-method">findAllToDo</span>()) {
+            System.out.<span class="code-method">println</span>(row);
+        }
+    }
+}</pre>
+                        </div>
+                    </div>
+
+                    <p>
+                        「Repository」を作成したときに行った動作確認と同様の内容を、今回はサービスを介して行います。主な変更点は、20行目に「private
+                        final ToDoService
+                        service;」を追加することです。この変更を適用した後、アプリケーションを起動して動作を確認しましょう。
+                    </p>
+
+                    <div class="point-box">
+                        <div class="point-title">完成！</div>
+                        <p>
+                            インフラストラクチャ層とドメイン層の作成が完了しました。現時点の進捗を以下に示します。次はアプリケーション層の作成に取り掛かりましょう。
+                        </p>
+                    </div>
+
+                    <!-- 完成図 -->
+                    <div class="architecture-diagram">
+                        <div class="diagram-title">図12.4 ここまでの進捗</div>
+                        <svg viewBox="0 0 720 480" width="100%" height="480">
+                            <defs>
+                                <!-- ドロップシャドウ -->
+                                <filter id="progressShadow" x="-10%" y="-10%" width="120%" height="120%">
+                                    <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.12" />
+                                </filter>
+                                <!-- 矢印マーカー -->
+                                <marker id="progressArrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
+                                </marker>
+                                <!-- 完了グラデーション -->
+                                <linearGradient id="completedGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color: #10b981; stop-opacity: 0.15" />
+                                    <stop offset="100%" style="stop-color: #10b981; stop-opacity: 0.25" />
+                                </linearGradient>
+                                <!-- 未完了グラデーション -->
+                                <linearGradient id="pendingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color: #3b82f6; stop-opacity: 0.08" />
+                                    <stop offset="100%" style="stop-color: #3b82f6; stop-opacity: 0.15" />
+                                </linearGradient>
+                            </defs>
+
+                            <!-- ========== データベース（上部中央） ========== -->
+                            <ellipse cx="360" cy="45" rx="65" ry="20" fill="#64748b" />
+                            <rect x="295" y="45" width="130" height="45" fill="#64748b" />
+                            <ellipse cx="360" cy="90" rx="65" ry="20" fill="#64748b" />
+                            <ellipse cx="360" cy="45" rx="58" ry="16" fill="#94a3b8" />
+                            <text x="360" y="72" text-anchor="middle" fill="white" font-weight="bold" font-size="13">Database</text>
+                            <!-- 済バッジ -->
+                            <circle cx="435" cy="55" r="16" fill="#10b981" stroke="white" stroke-width="2" />
+                            <text x="435" y="60" text-anchor="middle" fill="white" font-weight="bold" font-size="10">✓</text>
+
+                            <!-- 接続線（DB → インフラ層） -->
+                            <line x1="360" y1="110" x2="360" y2="140" stroke="#64748b" stroke-width="2" stroke-dasharray="5,5" />
+
+                            <!-- ========== アプリケーション層（左・未完了） ========== -->
+                            <g filter="url(#progressShadow)">
+                                <rect x="25" y="160" width="200" height="280" rx="16" fill="url(#pendingGrad)" stroke="#3b82f6" stroke-width="3" stroke-dasharray="8,4" />
+                            </g>
+                            <!-- ヘッダー -->
+                            <rect x="35" y="170" width="180" height="40" rx="10" fill="#3b82f6" />
+                            <text x="125" y="197" text-anchor="middle" fill="white" font-weight="bold" font-size="14">アプリケーション層</text>
+                            <!-- 次回バッジ -->
+                            <rect x="150" y="218" width="65" height="22" rx="11" fill="#f59e0b" />
+                            <text x="182" y="234" text-anchor="middle" fill="white" font-weight="bold" font-size="10">次回作成</text>
+
+                            <!-- View -->
+                            <rect x="50" y="250" width="150" height="45" rx="10" fill="white" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4,2" />
+                            <text x="125" y="279" text-anchor="middle" fill="#3b82f6" font-weight="bold" font-size="13">View</text>
+                            <!-- Controller -->
+                            <rect x="50" y="305" width="150" height="45" rx="10" fill="white" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4,2" />
+                            <text x="125" y="334" text-anchor="middle" fill="#3b82f6" font-weight="bold" font-size="13">Controller</text>
+                            <!-- Form -->
+                            <rect x="50" y="360" width="150" height="45" rx="10" fill="white" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4,2" />
+                            <text x="125" y="389" text-anchor="middle" fill="#3b82f6" font-weight="bold" font-size="13">Form</text>
+
+                            <!-- ========== ドメイン層（中央・完了） ========== -->
+                            <g filter="url(#progressShadow)">
+                                <rect x="260" y="160" width="200" height="280" rx="16" fill="url(#completedGrad)" stroke="#10b981" stroke-width="3" />
+                            </g>
+                            <!-- ヘッダー -->
+                            <rect x="270" y="170" width="180" height="40" rx="10" fill="#10b981" />
+                            <text x="360" y="197" text-anchor="middle" fill="white" font-weight="bold" font-size="14">ドメイン層</text>
+                            <!-- 済バッジ -->
+                            <circle cx="430" cy="185" r="16" fill="#10b981" stroke="white" stroke-width="2" />
+                            <text x="430" y="190" text-anchor="middle" fill="white" font-weight="bold" font-size="10">✓</text>
+
+                            <!-- Service（完了・ハイライト） -->
+                            <rect x="285" y="225" width="150" height="40" rx="10" fill="#10b981" stroke="#059669" stroke-width="2" />
+                            <text x="360" y="251" text-anchor="middle" fill="white" font-weight="bold" font-size="12">Service</text>
+                            <!-- ServiceImpl（完了・ハイライト） -->
+                            <rect x="285" y="275" width="150" height="40" rx="10" fill="#10b981" stroke="#059669" stroke-width="2" />
+                            <text x="360" y="301" text-anchor="middle" fill="white" font-weight="bold" font-size="12">ServiceImpl</text>
+                            <!-- Domain Object -->
+                            <rect x="285" y="325" width="150" height="40" rx="10" fill="white" stroke="#10b981" stroke-width="2" />
+                            <text x="360" y="351" text-anchor="middle" fill="#10b981" font-weight="bold" font-size="12">Domain Object</text>
+                            <!-- Repository -->
+                            <rect x="285" y="375" width="150" height="40" rx="10" fill="white" stroke="#10b981" stroke-width="2" />
+                            <text x="360" y="401" text-anchor="middle" fill="#10b981" font-weight="bold" font-size="12">Repository</text>
+
+                            <!-- ========== インフラストラクチャ層（右・完了） ========== -->
+                            <g filter="url(#progressShadow)">
+                                <rect x="495" y="160" width="200" height="280" rx="16" fill="url(#completedGrad)" stroke="#f59e0b" stroke-width="3" />
+                            </g>
+                            <!-- ヘッダー -->
+                            <rect x="505" y="170" width="180" height="40" rx="10" fill="#f59e0b" />
+                            <text x="595" y="197" text-anchor="middle" fill="white" font-weight="bold" font-size="14">インフラ層</text>
+                            <!-- 済バッジ -->
+                            <circle cx="665" cy="185" r="16" fill="#10b981" stroke="white" stroke-width="2" />
+                            <text x="665" y="190" text-anchor="middle" fill="white" font-weight="bold" font-size="10">✓</text>
+
+                            <!-- O/R Mapper -->
+                            <rect x="520" y="225" width="150" height="40" rx="10" fill="white" stroke="#f59e0b" stroke-width="2" />
+                            <text x="595" y="251" text-anchor="middle" fill="#f59e0b" font-weight="bold" font-size="12">O/R Mapper</text>
+                            <!-- RepositoryImpl -->
+                            <rect x="520" y="275" width="150" height="40" rx="10" fill="white" stroke="#f59e0b" stroke-width="2" />
+                            <text x="595" y="301" text-anchor="middle" fill="#f59e0b" font-weight="bold" font-size="12">RepositoryImpl</text>
+                            <!-- MyBatis -->
+                            <rect x="520" y="335" width="150" height="45" rx="10" fill="#f59e0b" />
+                            <text x="595" y="364" text-anchor="middle" fill="white" font-weight="bold" font-size="13">MyBatis</text>
+
+                            <!-- ========== 依存関係の矢印（折れ線） ========== -->
+                            <!-- Controller → Service -->
+                            <polyline points="200,327 240,327 240,245 285,245" stroke="#64748b" stroke-width="2.5" fill="none" marker-end="url(#progressArrow)" />
+                            <!-- 矢印ラベル -->
+                            <rect x="205" y="270" width="50" height="18" rx="9" fill="#f1f5f9" stroke="#64748b" stroke-width="1" />
+                            <text x="230" y="283" text-anchor="middle" fill="#64748b" font-weight="bold" font-size="9">依存</text>
+                            <!-- Repository → RepositoryImpl -->
+                            <polyline points="435,395 480,395 480,295 520,295" stroke="#64748b" stroke-width="2.5" fill="none" marker-end="url(#progressArrow)" />
+                            <!-- 矢印ラベル -->
+                            <rect x="455" y="335" width="50" height="18" rx="9" fill="#f1f5f9" stroke="#64748b" stroke-width="1" />
+                            <text x="480" y="348" text-anchor="middle" fill="#64748b" font-weight="bold" font-size="9">実装</text>
+
+                            <!-- ========== 進捗サマリー（下部） ========== -->
+                            <rect x="180" y="455" width="360" height="20" rx="10" fill="#e2e8f0" />
+                            <rect x="180" y="455" width="240" height="20" rx="10" fill="#10b981" />
+                            <text x="360" y="469" text-anchor="middle" fill="white" font-weight="bold" font-size="11">進捗: 2/3 層完了</text>
+                        </svg>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- フッター -->
+        <footer class="chapter-footer">
+            <div class="container">
+                <div class="footer-title">🎉 第12章 完了！</div>
+                <p class="footer-desc">
+                    Service層の作成とトランザクション管理について学びました。次は「アプリケーション層」の作成に進みましょう！
+                </p>
+            </div>
+        </footer>
+
+        <footer class="footer">
+            <p>Spring Framework 入門チュートリアル</p>
+        </footer>
+
+        <div class="page-nav">
+            <a href="11-database-operations.html" class="page-nav-btn prev">
+                <span>←</span>
+                <div>
+                    <div class="page-nav-label">前の章</div>
+                    <div class="page-nav-title">第11章</div>
+                </div>
+            </a>
+
+            <a href="13_application_layer.html" class="page-nav-btn next">
+                <div>
+                    <div class="page-nav-label">次の章</div>
+                    <div class="page-nav-title">第13章</div>
+                </div>
+                <span>→</span>
+            </a>
+        </div>
+
+        <script>
+            function toggleMenu() {
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+                toggle.classList.toggle("active");
+                menu.classList.toggle("active");
+            }
+
+            document.addEventListener("click", function (e) {
+                const nav = document.querySelector(".global-nav");
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+
+                if (!nav.contains(e.target) && menu.classList.contains("active")) {
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+
+            window.addEventListener("resize", function () {
+                if (window.innerWidth >= 1024) {
+                    const toggle = document.querySelector(".nav-toggle");
+                    const menu = document.querySelector(".nav-menu");
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+        </script>
+    </body>
+</html>

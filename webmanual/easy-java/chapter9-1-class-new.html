@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>クラス型の参照渡し（h.sword = s）と h.sword.name の理解</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --card: #f9fafb;
+      --line: #e5e7eb;
+      --accent: #2563eb;
+      --accent2: #16a34a;
+      --warn: #b91c1c;
+      --codebg: #0b1020;
+      --codefg: #e5e7eb;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+    }
+    header {
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 18px 16px; }
+    nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .brand b { font-size: 18px; }
+    .brand span { color: var(--muted); font-size: 13px; }
+    .navlinks {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    a.btn {
+      display: inline-block;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      text-decoration: none;
+      color: var(--text);
+      background: #fff;
+      font-size: 14px;
+    }
+    a.btn.primary {
+      border-color: rgba(37,99,235,.25);
+      background: rgba(37,99,235,.08);
+      color: #1d4ed8;
+    }
+    a.btn:hover { border-color: #cbd5e1; }
+    main { padding: 22px 0 50px; }
+    h1 { font-size: 26px; margin: 0 0 8px; }
+    h2 { font-size: 18px; margin: 26px 0 10px; }
+    h3 { font-size: 16px; margin: 18px 0 8px; }
+    p { margin: 10px 0; }
+    .lead { color: var(--muted); margin-top: 6px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px 14px;
+      margin: 14px 0;
+    }
+    .callout {
+      border-left: 4px solid var(--accent);
+      background: rgba(37,99,235,.06);
+      padding: 12px 12px;
+      border-radius: 12px;
+      margin: 14px 0;
+    }
+    .callout.good { border-left-color: var(--accent2); background: rgba(22,163,74,.06); }
+    .callout.warn { border-left-color: var(--warn); background: rgba(185,28,28,.06); }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Noto Sans Mono CJK JP", "Courier New", monospace;
+    }
+    pre {
+      background: var(--codebg);
+      color: var(--codefg);
+      padding: 14px;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid rgba(229,231,235,.12);
+      margin: 12px 0;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 860px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+    .mini {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .kvs {
+      display: grid;
+      grid-template-columns: 170px 1fr;
+      gap: 8px 12px;
+      padding: 10px 0 0;
+    }
+    .kvs div { padding: 6px 0; border-bottom: 1px dashed var(--line); }
+    .kvs b { color: #111827; }
+    .footer {
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+      padding: 18px 16px;
+    }
+    .toc a { color: #1d4ed8; text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    .tag {
+      display: inline-block;
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--muted);
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="wrap">
+    <nav aria-label="ナビゲーション">
+      <div class="brand">
+        <b>Java 教科書：参照（クラス型）</b>
+        <span>h.sword = s; と h.sword.name の理解</span>
+      </div>
+      <div class="navlinks">
+        <a class="btn primary" href="java_class_instance.html">基礎・応用問題（java_class_instance.html）</a>
+        <a class="btn" href="#code">ソースコード</a>
+        <a class="btn" href="#reference">参照渡し</a>
+        <a class="btn" href="#memory">メモリ図</a>
+        <a class="btn" href="#pitfalls">よくある誤解</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <h1>クラス型の参照渡し（h.sword = s）と h.sword.name の理解</h1>
+    <p class="lead">
+      本ページでは、<b>クラス型変数は「オブジェクトそのもの」ではなく「参照（場所）」を持つ</b>という点を、ソースコードとメモリの観点から丁寧に説明いたします。
+    </p>
+
+    <section class="card toc" aria-label="目次">
+      <h2 style="margin-top:0;">目次 <span class="tag">読みやすさ優先</span></h2>
+      <ul>
+        <li><a href="#code">1. サンプルソースコード（テキスト化）</a></li>
+        <li><a href="#reference">2. h.sword = s; は何をしているのか</a></li>
+        <li><a href="#dot">3. h.sword.name は何をしているのか</a></li>
+        <li><a href="#memory">4. スタック領域・ヒープ領域のメモリ図</a></li>
+        <li><a href="#pitfalls">5. よくある誤解と注意点</a></li>
+        <li><a href="#check">6. 確認用の短い追加コード</a></li>
+      </ul>
+    </section>
+
+    <section id="code">
+      <h2>1. サンプルソースコード（テキスト化）</h2>
+      <p>
+        まずは、剣（Sword）と勇者（Hero）をクラスとして定義し、main メソッドでインスタンスを作成して関連付ける例です。
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <h3 style="margin-top:0;">Sword.java</h3>
+          <pre><code>// まず、Swordクラスを定義しておく
+public class Sword {
+    String name;   // 剣の名前
+    int damage;    // 剣の攻撃力
+}</code></pre>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-top:0;">Hero.java</h3>
+          <pre><code>// 次にHeroクラスを定義する
+public class Hero {
+    String name;
+    int hp;
+
+    Sword sword;   // 勇者が装備している剣の情報
+
+    public void attack() {
+        System.out.println(this.name + "は攻撃した！");
+        System.out.println("敵に5ポイントのダメージをあたえた！");
+    }
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-top:0;">Main.java</h3>
+        <pre><code>public class Main {
+    public static void main(String[] args) {
+
+        Sword s = new Sword();
+        s.name = "炎の剣";
+        s.damage = 10;
+
+        Hero h = new Hero();
+        h.name = "ミナト";
+        h.hp = 100;
+
+        h.sword = s;
+
+        System.out.println("現在の武器は" + h.sword.name);
+    }
+}</code></pre>
+      </div>
+    </section>
+
+    <section id="reference">
+      <h2>2. h.sword = s; は何をしているのか</h2>
+
+      <div class="callout good">
+        <p style="margin:0;">
+          <b>結論：</b><code>h.sword = s;</code> は、剣をコピーして渡すのではなく、<b>剣インスタンスの参照（場所）を代入</b>しています。
+        </p>
+      </div>
+
+      <p>
+        Java のクラス型変数（ここでは <code>Sword</code> 型）は、値そのもの（剣の中身）ではなく、
+        <b>ヒープ上に存在するオブジェクトの参照</b>を持ちます。
+      </p>
+
+      <div class="card">
+        <h3 style="margin-top:0;">ポイント整理</h3>
+        <div class="kvs" role="list">
+          <div role="listitem"><b>h</b></div><div>Hero インスタンスを指す参照を持つ変数です。</div>
+          <div role="listitem"><b>h.sword</b></div><div>Hero インスタンスの中にある <code>sword</code> フィールドで、<code>Sword</code> 参照を保持します。</div>
+          <div role="listitem"><b>s</b></div><div>Sword インスタンスを指す参照を持つ変数です。</div>
+          <div role="listitem"><b>h.sword = s;</b></div><div><code>s</code> が持つ参照を <code>h</code> の <code>sword</code> フィールドへ代入します。</div>
+        </div>
+        <p class="mini">※「参照渡し」という表現は、教育上「参照が渡る（共有される）」ことを明確にするために使われます。</p>
+      </div>
+
+      <div class="callout warn">
+        <p style="margin:0;">
+          <b>注意：</b>この代入では、剣インスタンスは増えません。増えるのは参照（矢印）だけです。
+        </p>
+      </div>
+    </section>
+
+    <section id="dot">
+      <h2>3. h.sword.name は何をしているのか</h2>
+
+      <p>
+        <code>h.sword.name</code> は「点（ドット）」でつながった参照をたどっています。分解すると次の順番です。
+      </p>
+
+      <div class="card">
+        <ol>
+          <li><code>h</code> から Hero インスタンスを参照します。</li>
+          <li><code>h.sword</code> で、Hero インスタンスが持つ Sword 参照（装備している剣）を取り出します。</li>
+          <li><code>h.sword.name</code> で、その Sword インスタンスの <code>name</code> フィールドを参照します。</li>
+        </ol>
+      </div>
+
+      <div class="callout good">
+        <p style="margin:0;">
+          <b>要点：</b><code>h.sword.name</code> は「Hero → Sword → name」という順に参照をたどり、最終的に剣の名前を取り出します。
+        </p>
+      </div>
+    </section>
+
+    <section id="memory">
+      <h2>4. スタック領域・ヒープ領域のメモリ図</h2>
+      <p>
+        実際の JVM 内部は実装により詳細が異なりますが、学習用には次のモデルで理解すると混乱しにくいです。
+      </p>
+
+      <div class="card">
+        <h3 style="margin-top:0;">(1) 変数 s と変数 h が作られる</h3>
+        <pre><code>[スタック領域（ローカル変数）]
+s  → （Swordインスタンスへの参照）
+h  → （Heroインスタンスへの参照）
+
+[ヒープ領域（newで生成された実体）]
+Swordインスタンス（name, damage など）
+Heroインスタンス（name, hp, sword など）</code></pre>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-top:0;">(2) h.sword = s; の後</h3>
+        <pre><code>[スタック領域]
+s  → Swordインスタンス
+h  → Heroインスタンス
+
+[ヒープ領域]
+Heroインスタンス
+  sword → Swordインスタンス   ← ここがポイントです（参照が入ります）
+Swordインスタンス
+  name = "炎の剣"
+  damage = 10</code></pre>
+      </div>
+
+      <div class="callout">
+        <p style="margin:0;">
+          <b>補足：</b>ローカル変数（ここでは <code>s</code> と <code>h</code>）はスタック領域に置かれます。<br />
+          <code>new</code> により生成されるオブジェクト本体はヒープ領域に置かれます。
+        </p>
+      </div>
+    </section>
+
+    <section id="pitfalls">
+      <h2>5. よくある誤解と注意点</h2>
+
+      <div class="card">
+        <h3 style="margin-top:0;">誤解1：h.sword = s; で剣がコピーされる</h3>
+        <p>
+          コピーではありません。<b>同じ剣インスタンスを複数の参照が共有</b>します。
+        </p>
+
+        <h3>誤解2：メソッドが終わればオブジェクトも消える</h3>
+        <p>
+          ローカル変数はスコープ終了で消えますが、<b>オブジェクトは参照が残っていれば消えません</b>。参照がなくなったときに GC が回収対象とします。
+        </p>
+
+        <h3>注意：null の可能性</h3>
+        <p>
+          <code>h.sword</code> が <code>null</code> のまま <code>h.sword.name</code> を実行すると、<b>NullPointerException</b> が発生します。
+          そのため、実務では「必ず装備させる（コンストラクタでセットする）」などの設計を行うことが多いです。
+        </p>
+      </div>
+    </section>
+
+    <section id="check">
+      <h2>6. 確認用の短い追加コード</h2>
+      <p>
+        「参照が共有される」ことを、最短で確認できる例です。
+      </p>
+
+      <div class="card">
+        <pre><code>// h.sword と s は同じ Sword インスタンスを参照しています
+h.sword.name = "氷の剣";
+
+// s.name も同じインスタンスを見ているため、変更が反映されます
+System.out.println(s.name); // "氷の剣" が表示されます</code></pre>
+        <p class="mini">
+          ※この動きが理解できると、「なぜ意図せずデータが変わるのか」「なぜ参照の扱いが重要なのか」が説明できるようになります。
+        </p>
+      </div>
+
+      <div class="callout good">
+        <p style="margin:0;">
+          <b>まとめ：</b>クラス型は「実体」ではなく「参照」を扱います。<code>h.sword = s;</code> は参照の代入であり、<code>h.sword.name</code> は参照をたどって値を参照しています。
+        </p>
+      </div>
+
+      <div class="card" style="margin-top:18px;">
+        <h3 style="margin-top:0;">次の学習（おすすめ）</h3>
+        <p>
+          理解を定着させるには演習が最短です。以下のリンクから「基礎・応用問題」に進んでください。
+        </p>
+        <p>
+          <a class="btn primary" href="java_class_instance.html">基礎・応用問題（java_class_instance.html）へ</a>
+        </p>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<div class="footer">
+  <div class="wrap">
+    <div>Java 教材：クラス型の参照（参照渡し）／スタックとヒープ／ドット参照の理解</div>
+    <div class="mini">※本ページは学習用に概念を整理したものであり、JVM の内部実装はバージョンや実行環境によって詳細が異なる場合があります。</div>
+  </div>
+</div>
+
+</body>
+</html>

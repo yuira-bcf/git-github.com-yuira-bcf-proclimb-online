@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>第1章 Spring Frameworkについて知ろう</title>
+
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&family=M+PLUS+Rounded+1c:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <!-- グローバルナビゲーション -->
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="1spring-framework-tutorial.html" class="nav-logo">
+                    <span class="nav-logo-icon">🌱</span>
+                    <span>Spring入門</span>
+                </a>
+                <button class="nav-toggle" onclick="toggleMenu()" aria-label="メニュー">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 章を選択</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="0promptprograming.html" class="nav-link">
+                                <span class="nav-chapter-num">0</span>
+                                <span>プロンプトプログラミング</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="1spring-framework-tutorial.html" class="nav-link active">
+                                <span class="nav-chapter-num">1</span>
+                                <span>Spring Frameworkについて知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="2java_basics.html" class="nav-link">
+                                <span class="nav-chapter-num">2</span>
+                                <span>基礎知識を身に付けよう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="3di-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">3</span>
+                                <span>DIを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="4aop-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">4</span>
+                                <span>AOPを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="5mvc-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">5</span>
+                                <span>MVCを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="6thymeleaf-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">6</span>
+                                <span>Thymeleafを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="7ServerDataSubmission.html" class="nav-link">
+                                <span class="nav-chapter-num">7</span>
+                                <span>サーバーへのデータ送信</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="8Validation_Textbook_Rewrite.html" class="nav-link">
+                                <span class="nav-chapter-num">8</span>
+                                <span>バリデーション</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="9_MyBatis_Tutorial__2_.html" class="nav-link">
+                                <span class="nav-chapter-num">9</span>
+                                <span>MyBatisチュートリアル</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="10app-preparation-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">10</span>
+                                <span>アプリケーション作成準備</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="11-database-operations.html" class="nav-link">
+                                <span class="nav-chapter-num">11</span>
+                                <span>データベース操作</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="12service-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">12</span>
+                                <span>サービス層</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="13_application_layer.html" class="nav-link">
+                                <span class="nav-chapter-num">13</span>
+                                <span>アプリケーション層</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="14_validation.html" class="nav-link">
+                                <span class="nav-chapter-num">14</span>
+                                <span>バリデーション（応用）</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="15-spring-security-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">15</span>
+                                <span>Spring Security</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <!-- ヘッダー -->
+            <header class="chapter-header">
+                <div class="chapter-badge">📘 Chapter</div>
+                <div class="chapter-number">1</div>
+                <h1 class="chapter-title">Spring Frameworkについて知ろう</h1>
+            </header>
+
+            <!-- 目次 -->
+            <nav class="toc">
+                <h2 class="toc-title">📑 この章の内容</h2>
+                <ul class="toc-list">
+                    <li class="toc-item">
+                        <span class="toc-number">1-1</span>
+                        <span>Springの概要について知ろう</span>
+                    </li>
+                    <li class="toc-item">
+                        <span class="toc-number">1-2</span>
+                        <span>開発環境の構築をしよう（IDE）</span>
+                    </li>
+                    <li class="toc-item">
+                        <span class="toc-number">1-3</span>
+                        <span>開発環境の構築をしよう（PostgreSQL）</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- セクション 1-1 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 1-1</span>
+                    <h2 class="section-title">Springの概要について知ろう</h2>
+                </div>
+
+                <div class="intro-text">
+                    <p>
+                        この章では、現在Javaの主要フレームワークである「Spring
+                        Framework」について、Java基礎文法を理解しているビギナーの方を対象に、わかりやすく解説します。この章を読み終えると「Spring
+                        Frameworkの全体像」が把握できるようになります。
+                    </p>
+                </div>
+
+                <h3>フレームワークとは？</h3>
+                <p>フレームワークとは、ソフトウェアやアプリケーション開発を効率的に行うための「骨組み」のことです。</p>
+                <p>
+                    フレームワークを利用すると、開発に必要な基本機能があらかじめ用意されているため、すべてを一から作る必要がありません。その結果、開発にかかる時間とコストを大幅に削減できます。
+                </p>
+                <p>一方で、フレームワーク特有のルールや使い方を習得する必要があるというデメリットもあります。</p>
+
+                <!-- 家の図解 -->
+                <div class="house-illustration">
+                    <svg viewBox="0 0 500 320" width="500" height="320">
+                        <!-- 背景 -->
+                        <rect width="500" height="320" fill="#f8fafc" />
+
+                        <!-- 家の骨組み -->
+                        <g transform="translate(100, 60)">
+                            <!-- 屋根 -->
+                            <polygon
+                                points="150,0 0,80 300,80"
+                                fill="none"
+                                stroke="#0ea5e9"
+                                stroke-width="6"
+                                stroke-linecap="round"
+                            />
+
+                            <!-- 柱 -->
+                            <line
+                                x1="30"
+                                y1="80"
+                                x2="30"
+                                y2="220"
+                                stroke="#0ea5e9"
+                                stroke-width="6"
+                                stroke-linecap="round"
+                            />
+                            <line
+                                x1="270"
+                                y1="80"
+                                x2="270"
+                                y2="220"
+                                stroke="#0ea5e9"
+                                stroke-width="6"
+                                stroke-linecap="round"
+                            />
+                            <line
+                                x1="150"
+                                y1="40"
+                                x2="150"
+                                y2="80"
+                                stroke="#0ea5e9"
+                                stroke-width="6"
+                                stroke-linecap="round"
+                            />
+
+                            <!-- 横梁 -->
+                            <line
+                                x1="30"
+                                y1="120"
+                                x2="270"
+                                y2="120"
+                                stroke="#0ea5e9"
+                                stroke-width="4"
+                                stroke-linecap="round"
+                            />
+                            <line
+                                x1="30"
+                                y1="170"
+                                x2="270"
+                                y2="170"
+                                stroke="#0ea5e9"
+                                stroke-width="4"
+                                stroke-linecap="round"
+                            />
+
+                            <!-- 土台 -->
+                            <line
+                                x1="10"
+                                y1="220"
+                                x2="290"
+                                y2="220"
+                                stroke="#0ea5e9"
+                                stroke-width="8"
+                                stroke-linecap="round"
+                            />
+
+                            <!-- 斜め補強 -->
+                            <line
+                                x1="30"
+                                y1="80"
+                                x2="80"
+                                y2="120"
+                                stroke="#0ea5e9"
+                                stroke-width="3"
+                                stroke-linecap="round"
+                            />
+                            <line
+                                x1="270"
+                                y1="80"
+                                x2="220"
+                                y2="120"
+                                stroke="#0ea5e9"
+                                stroke-width="3"
+                                stroke-linecap="round"
+                            />
+                        </g>
+
+                        <!-- メリット吹き出し -->
+                        <g transform="translate(20, 30)">
+                            <rect x="0" y="0" width="120" height="50" rx="8" fill="#22c55e" />
+                            <text x="60" y="22" text-anchor="middle" fill="white" font-size="12" font-weight="bold">
+                                メリット
+                            </text>
+                            <text x="60" y="40" text-anchor="middle" fill="white" font-size="10">
+                                基本機能が用意済み
+                            </text>
+                            <polygon points="100,50 110,70 90,50" fill="#22c55e" />
+                        </g>
+
+                        <!-- デメリット吹き出し -->
+                        <g transform="translate(360, 180)">
+                            <rect x="0" y="0" width="120" height="50" rx="8" fill="#f59e0b" />
+                            <text x="60" y="22" text-anchor="middle" fill="white" font-size="12" font-weight="bold">
+                                デメリット
+                            </text>
+                            <text x="60" y="40" text-anchor="middle" fill="white" font-size="10">
+                                使い方の学習が必要
+                            </text>
+                            <polygon points="20,50 10,70 30,50" fill="#f59e0b" />
+                        </g>
+
+                        <!-- ラベル -->
+                        <text x="250" y="305" text-anchor="middle" fill="#64748b" font-size="14" font-weight="bold">
+                            図1.1 フレームワークのイメージ（家の骨組み）
+                        </text>
+                    </svg>
+                </div>
+
+                <div class="merit-demerit">
+                    <div class="merit-card">
+                        <span class="card-label">✓ メリット</span>
+                        <div class="card-content">
+                            <div class="card-icon">🏗️</div>
+                            <p>骨組みが既に用意されているため、開発時間とコストを削減できる</p>
+                        </div>
+                    </div>
+                    <div class="demerit-card">
+                        <span class="card-label">△ デメリット</span>
+                        <div class="card-content">
+                            <div class="card-icon">📚</div>
+                            <p>フレームワーク固有のルールや使用方法を学ぶ必要がある</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>SpringとSpring Frameworkの違い</h3>
+                <p>「Spring」と「Spring Framework」は、しばしば同じ意味で使われますが、厳密には少し異なります。</p>
+                <p>
+                    <strong>Spring Framework</strong
+                    >は、Java開発における基盤となるフレームワークで、依存性の注入（DI）やアスペクト指向プログラミング（AOP）などのコア機能を提供します。
+                </p>
+                <p>
+                    一方、<strong>Spring</strong>は、「Spring
+                    Framework」を含む、多くの機能を提供する「フレームワークの集合体」を指します。
+                </p>
+
+                <!-- Springの全体像 図解 -->
+                <div class="spring-overview-diagram" style="display: flex; justify-content: center; margin: 2rem 0;">
+                    <svg viewBox="0 0 600 420" width="600" height="420">
+                        <!-- 背景 -->
+                        <rect width="600" height="420" fill="#f8fafc" rx="12" />
+
+                        <!-- 最外層: Spring全体を囲む枠 -->
+                        <rect x="30" y="30" width="540" height="340" rx="16" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="3" />
+
+                        <!-- Springラベル -->
+                        <g transform="translate(50, 50)">
+                            <text x="0" y="0" font-size="22" font-weight="bold" fill="#0369a1">
+                                <tspan fill="#22c55e" font-size="24">🌱</tspan> Spring
+                            </text>
+                            <text x="0" y="22" font-size="12" fill="#64748b">フレームワークの集合体</text>
+                        </g>
+
+                        <!-- Spring Boot層 -->
+                        <rect x="50" y="90" width="500" height="60" rx="10" fill="#22c55e" />
+                        <text x="300" y="118" text-anchor="middle" font-size="18" font-weight="bold" fill="white">🚀 Spring Boot</text>
+                        <text x="300" y="138" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.9)">煩雑な設定なしでSpringアプリケーションを迅速に作成</text>
+
+                        <!-- モジュール層 -->
+                        <g transform="translate(50, 165)">
+                            <!-- Spring Data -->
+                            <rect x="0" y="0" width="118" height="70" rx="8" fill="#3b82f6" />
+                            <text x="59" y="28" text-anchor="middle" font-size="11" font-weight="bold" fill="white">💾 Spring Data</text>
+                            <text x="59" y="45" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.85)">データベース</text>
+                            <text x="59" y="58" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.85)">アクセス</text>
+
+                            <!-- Spring MVC -->
+                            <rect x="128" y="0" width="118" height="70" rx="8" fill="#8b5cf6" />
+                            <text x="187" y="28" text-anchor="middle" font-size="11" font-weight="bold" fill="white">🌐 Spring MVC</text>
+                            <text x="187" y="45" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.85)">Webアプリ</text>
+                            <text x="187" y="58" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.85)">ケーション</text>
+
+                            <!-- Spring Batch -->
+                            <rect x="256" y="0" width="118" height="70" rx="8" fill="#f59e0b" />
+                            <text x="315" y="28" text-anchor="middle" font-size="11" font-weight="bold" fill="white">⚙️ Spring Batch</text>
+                            <text x="315" y="45" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.85)">大量データ</text>
+                            <text x="315" y="58" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.85)">バッチ処理</text>
+
+                            <!-- Spring Security -->
+                            <rect x="384" y="0" width="116" height="70" rx="8" fill="#ef4444" />
+                            <text x="442" y="28" text-anchor="middle" font-size="11" font-weight="bold" fill="white">🔐 Spring Security</text>
+                            <text x="442" y="45" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.85)">認証・認可</text>
+                            <text x="442" y="58" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.85)">セキュリティ</text>
+                        </g>
+
+                        <!-- Spring Framework基盤層 -->
+                        <rect x="50" y="250" width="500" height="105" rx="10" fill="#1e3a5f" />
+                        <text x="300" y="278" text-anchor="middle" font-size="16" font-weight="bold" fill="white">🏗️ Spring Framework（基盤）</text>
+                        <text x="300" y="296" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.8)">Javaアプリケーション開発の土台となるコア機能</text>
+
+                        <!-- DI と AOP -->
+                        <g transform="translate(100, 310)">
+                            <!-- DI -->
+                            <rect x="0" y="0" width="180" height="36" rx="6" fill="#38bdf8" />
+                            <text x="90" y="15" text-anchor="middle" font-size="12" font-weight="bold" fill="#0c4a6e">🔗 DI（依存性注入）</text>
+                            <text x="90" y="29" text-anchor="middle" font-size="9" fill="#0c4a6e">コンポーネント間の結合度を低減</text>
+
+                            <!-- AOP -->
+                            <rect x="220" y="0" width="180" height="36" rx="6" fill="#a78bfa" />
+                            <text x="310" y="15" text-anchor="middle" font-size="12" font-weight="bold" fill="#3b0764">🎯 AOP（横断的関心事）</text>
+                            <text x="310" y="29" text-anchor="middle" font-size="9" fill="#3b0764">共通処理を分離して管理</text>
+                        </g>
+
+                        <!-- 矢印（上から下への依存関係を示す） -->
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#94a3b8" />
+                            </marker>
+                        </defs>
+                        <line x1="520" y1="155" x2="520" y2="240" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrowhead)" stroke-dasharray="5,3" />
+                        <text x="535" y="200" font-size="10" fill="#64748b" transform="rotate(90, 535, 200)">依存</text>
+
+                        <!-- 図のキャプション -->
+                        <text x="300" y="400" text-anchor="middle" fill="#64748b" font-size="14" font-weight="bold">
+                            図1.2 Springの全体像
+                        </text>
+                    </svg>
+                </div>
+
+                <h3>各フレームワークの概要</h3>
+                <div class="module-list">
+                    <div class="module-item">
+                        <div class="module-icon">🚀</div>
+                        <div class="module-content">
+                            <h4>Spring Boot</h4>
+                            <p>Springアプリケーションを煩雑な設定なしで迅速に作成する機能を提供します。</p>
+                        </div>
+                    </div>
+                    <div class="module-item">
+                        <div class="module-icon">💾</div>
+                        <div class="module-content">
+                            <h4>Spring Data</h4>
+                            <p>データベースへのアクセスを簡単にする機能を提供します。</p>
+                        </div>
+                    </div>
+                    <div class="module-item">
+                        <div class="module-icon">🌐</div>
+                        <div class="module-content">
+                            <h4>Spring MVC</h4>
+                            <p>Webアプリケーションを簡単に作成する機能を提供します。</p>
+                        </div>
+                    </div>
+                    <div class="module-item">
+                        <div class="module-icon">⚙️</div>
+                        <div class="module-content">
+                            <h4>Spring Batch</h4>
+                            <p>大量データの一括処理（バッチ処理）を行う機能を提供します。</p>
+                        </div>
+                    </div>
+                    <div class="module-item">
+                        <div class="module-icon">🔐</div>
+                        <div class="module-content">
+                            <h4>Spring Security</h4>
+                            <p>認証・認可・セキュリティ関連の機能を提供します。</p>
+                        </div>
+                    </div>
+                    <div class="module-item">
+                        <div class="module-icon">🔗</div>
+                        <div class="module-content">
+                            <h4>Spring Framework（DI）</h4>
+                            <p>依存性注入の機能を提供し、コンポーネント間の結合度を低く保ちます。</p>
+                        </div>
+                    </div>
+                    <div class="module-item">
+                        <div class="module-icon">🎯</div>
+                        <div class="module-content">
+                            <h4>Spring Framework（AOP）</h4>
+                            <p>アスペクト指向プログラミングの機能を提供し、横断的関心事を分離します。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <p>
+                    本書で扱う機能は、主に「Spring Boot」「Spring MVC」「DI」「AOP」「Spring
+                    Security」になります。現時点では「Spring」とは様々な機能（フレームワーク）を提供してくれる集合体だとイメージしてください。
+                </p>
+
+                <!-- コラム -->
+                <div class="column">
+                    <div class="column-header">
+                        <span class="column-badge">Column</span>
+                        <span class="column-title">サンプルファイルを活用しよう</span>
+                    </div>
+                    <p>
+                        本書の学習方法としておすすめするのは、サポートページから提供されている「サンプルコード」をダウンロードして、ファイルに貼り付ける方法です。
+                    </p>
+                    <p>
+                        サンプルコードは動作確認済みです。まずはアプリケーションが動くことを確認し、その後、自分でコードを読み解いて学習することで、打ち間違いによるストレスから解放されます。
+                    </p>
+                    <p><strong>おすすめの学習ステップ：</strong></p>
+                    <ol class="step-list">
+                        <li>サンプルコードを使用してアプリケーションを動かす</li>
+                        <li>各ソースコードに自分のメモをコメントで記述する</li>
+                        <li>各ファイルの繋がりを意識するために、変数やクラス名などを自分なりに修正する</li>
+                    </ol>
+                </div>
+            </section>
+        </div>
+
+        <footer class="footer">
+            <p>Spring Framework 入門チュートリアル</p>
+        </footer>
+
+        <div class="page-nav">
+            <a href="0promptprograming.html" class="page-nav-btn prev">
+                <span>←</span>
+                <div>
+                    <div class="page-nav-label">前の章</div>
+                    <div class="page-nav-title">第0章</div>
+                </div>
+            </a>
+            <a href="2java_basics.html" class="page-nav-btn next">
+                <div>
+                    <div class="page-nav-label">次の章</div>
+                    <div class="page-nav-title">第2章</div>
+                </div>
+                <span>→</span>
+            </a>
+        </div>
+
+        <script>
+            function toggleMenu() {
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+                toggle.classList.toggle("active");
+                menu.classList.toggle("active");
+            }
+
+            document.addEventListener("click", function (e) {
+                const nav = document.querySelector(".global-nav");
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+
+                if (!nav.contains(e.target) && menu.classList.contains("active")) {
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+
+            window.addEventListener("resize", function () {
+                if (window.innerWidth >= 1024) {
+                    const toggle = document.querySelector(".nav-toggle");
+                    const menu = document.querySelector(".nav-menu");
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+        </script>
+    </body>
+</html>

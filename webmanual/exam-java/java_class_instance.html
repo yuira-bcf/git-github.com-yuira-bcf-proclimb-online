@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Java：クラス型変数と new（図解付き問題集：基礎5・応用5）</title>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --ink:#111827;
+      --muted:#6b7280;
+      --line:#e5e7eb;
+      --card:#f9fafb;
+      --accent:#2563eb;
+      --ok:#16a34a;
+      --warn:#b45309;
+      --codebg:#0b1020;
+      --codeink:#e5e7eb;
+      --shadow: 0 12px 26px rgba(0,0,0,.06);
+      --r:16px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Segoe UI", "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+      color:var(--ink);
+      background:linear-gradient(#fff,#fff 45%, #f8fafc);
+      line-height:1.75;
+    }
+    header{
+      position:sticky; top:0; z-index:10;
+      background:rgba(255,255,255,.92);
+      backdrop-filter:saturate(180%) blur(10px);
+      border-bottom:1px solid var(--line);
+    }
+    .wrap{max-width:1100px; margin:0 auto; padding:18px}
+    h1{margin:0; font-size:20px}
+    .sub{color:var(--muted); font-size:13px; margin-top:6px}
+    nav{
+      margin-top:10px;
+      display:flex; flex-wrap:wrap; gap:10px;
+    }
+    nav a{
+      text-decoration:none;
+      color:var(--accent);
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(37,99,235,.25);
+      background:rgba(37,99,235,.06);
+      font-size:13px;
+    }
+    nav a:hover{background:rgba(37,99,235,.12)}
+    main{padding:10px 0 40px}
+    section{
+      margin-top:16px;
+      border:1px solid var(--line);
+      border-radius:var(--r);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      background:var(--bg);
+    }
+    .sec-h{
+      padding:12px 16px;
+      border-bottom:1px solid var(--line);
+      background:linear-gradient(180deg,#fff,#fbfdff);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .sec-h h2{margin:0; font-size:16px}
+    .tag{
+      font-size:12px;
+      color:var(--muted);
+      border:1px solid var(--line);
+      background:#fff;
+      padding:3px 8px;
+      border-radius:999px;
+    }
+    .sec-b{padding:16px}
+    p{margin:10px 0}
+    ul{margin:10px 0; padding-left:20px}
+    pre{
+      margin:12px 0;
+      padding:14px;
+      border-radius:14px;
+      background:var(--codebg);
+      color:var(--codeink);
+      overflow:auto;
+      border:1px solid rgba(255,255,255,.08);
+      font-size:13px;
+    }
+    code{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Noto Sans Mono", monospace}
+    .note{
+      background:rgba(37,99,235,.06);
+      border-left:4px solid var(--accent);
+      padding:12px;
+      border-radius:12px;
+      margin:12px 0;
+    }
+    .warn{
+      background:rgba(180,83,9,.08);
+      border-left:4px solid var(--warn);
+      padding:12px;
+      border-radius:12px;
+      margin:12px 0;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:14px;
+    }
+    @media(min-width:980px){
+      .grid{grid-template-columns: 1.35fr .65fr}
+      .side{position:sticky; top:92px; align-self:start}
+    }
+    .card{
+      border:1px solid var(--line);
+      border-radius:var(--r);
+      background:#fff;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .card .sec-h{border-bottom:1px solid var(--line)}
+    .toc a{
+      display:block;
+      padding:8px 10px;
+      border-radius:12px;
+      text-decoration:none;
+      color:var(--ink);
+    }
+    .toc a:hover{background:rgba(37,99,235,.08)}
+    .small{font-size:12px; color:var(--muted)}
+    .q{
+      border:1px solid var(--line);
+      background:var(--card);
+      border-radius:14px;
+      padding:12px;
+      margin:12px 0;
+    }
+    .q h3{
+      margin:0 0 6px;
+      font-size:14px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .q .aim{font-size:12px; color:var(--muted); margin:0 0 8px}
+    .ask{
+      margin:10px 0 0;
+      padding-left:18px;
+    }
+    details{
+      margin-top:10px;
+      border:1px dashed rgba(107,114,128,.45);
+      border-radius:12px;
+      padding:10px 12px;
+      background:#fff;
+    }
+    summary{
+      cursor:pointer;
+      font-weight:800;
+      color:var(--accent);
+    }
+    .ascii{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Noto Sans Mono", monospace;
+      font-size:12.5px;
+      white-space:pre;
+      line-height:1.35;
+      background:#0b1020;
+      color:#dbeafe;
+      border-radius:14px;
+      padding:14px;
+      border:1px solid rgba(255,255,255,.08);
+      overflow:auto;
+    }
+    .pill-ok{
+      display:inline-block;
+      font-size:12px;
+      color:#064e3b;
+      background:rgba(22,163,74,.12);
+      border:1px solid rgba(22,163,74,.25);
+      padding:2px 8px;
+      border-radius:999px;
+    }
+    footer{
+      text-align:center;
+      color:var(--muted);
+      padding:22px 18px 38px;
+      font-size:12px;
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="wrap">
+    <h1>Java：クラス型変数と <code>new</code>（図解付き問題集）</h1>
+    <div class="sub">基礎 5題＋応用 5題｜問題文は「何を答えるか」を明確に記述しています</div>
+    <nav>
+      <a href="#concept">概念整理</a>
+      <a href="#diagram">図解（スタック/ヒープ）</a>
+      <a href="#basic">基礎問題 5題</a>
+      <a href="#advanced">応用問題 5題</a>
+      <a href="#answers">解答（折りたたみ）</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="grid">
+    <div>
+
+      <!-- 概念整理 -->
+      <section id="concept">
+        <div class="sec-h">
+          <h2>1. 概念整理</h2>
+          <span class="tag">覚えるべき結論</span>
+        </div>
+        <div class="sec-b">
+          <p><span class="pill-ok">結論</span> クラス型変数は <b>オブジェクト本体</b> を持たず、<b>参照（場所の情報）</b> を持ちます。</p>
+
+          <pre><code>// ① 宣言：変数（参照を入れる箱）だけ作る。オブジェクトはまだ作られない。
+Sword s;
+
+// ② 生成：ヒープ領域にオブジェクト（実体）を作る。
+new Sword();
+
+// ③ 代入：new が返した参照（場所の情報）を変数に入れる。
+Sword s = new Sword();</code></pre>
+
+          <div class="note">
+            <b>読み替え：</b><br>
+            ・<b>クラス</b>＝設計図（型の定義）<br>
+            ・<b>new</b>＝設計図から実体を作る（ヒープに作成）<br>
+            ・<b>クラス型変数</b>＝実体への参照を持つ（スタックに置かれやすい）
+          </div>
+
+          <div class="warn">
+            <b>注意：</b> <code>new</code> は「変数の中に本体を入れる」動作ではありません。<br>
+            変数に入るのは「参照（場所の情報）」です。
+          </div>
+        </div>
+      </section>
+
+      <!-- 図解 -->
+      <section id="diagram">
+        <div class="sec-h">
+          <h2>2. 図解：スタック領域とヒープ領域</h2>
+          <span class="tag">参照が何かを可視化</span>
+        </div>
+        <div class="sec-b">
+          <p>次のコードを例に、スタック（変数）とヒープ（オブジェクト実体）の関係を確認します。</p>
+
+          <pre><code>class Sword {
+  int damage;
+  String name;
+}
+
+public class Main {
+  public static void main(String[] args) {
+    Sword s = new Sword();
+    s.damage = 10;
+
+    Sword t = s;
+    t.damage = 99;
+  }
+}</code></pre>
+
+          <h3>2-1. <code>Sword s = new Sword();</code> の直後</h3>
+          <div class="ascii">スタック（変数）                    ヒープ（実体）
+--------------------            -------------------------
+s  ────────────────▶            Swordオブジェクト
+                                 damage: 0
+                                 name  : null</div>
+          <ul>
+            <li><code>s</code> は「参照（場所の情報）」を持つ</li>
+            <li>実体（フィールドを持つ本体）はヒープにある</li>
+          </ul>
+
+          <h3>2-2. <code>Sword t = s;</code> の直後</h3>
+          <div class="ascii">スタック（変数）                    ヒープ（実体）
+--------------------            -------------------------
+s  ────────────────▶            Swordオブジェクト
+t  ────────────────▶             damage: 10 → 99
+                                 name  : null</div>
+          <ul>
+            <li><code>t</code> に代入されたのは「参照」なので、<code>s</code> と <code>t</code> は同じ実体を指す</li>
+            <li>その結果、<code>t.damage = 99</code> は <code>s.damage</code> にも反映される</li>
+          </ul>
+
+          <h3>2-3. <code>null</code> の状態</h3>
+          <div class="ascii">スタック（変数）                    ヒープ（実体）
+--------------------            -------------------------
+s : null                         （参照先なし）</div>
+          <ul>
+            <li><code>null</code> は「どこも指していない」状態</li>
+            <li>この状態で <code>s.name</code> のように参照先へ進もうとすると、実行時エラー（NullPointerException）になります</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 基礎問題 -->
+      <section id="basic">
+        <div class="sec-h">
+          <h2>3. 基礎問題（5題）</h2>
+          <span class="tag">狙い：宣言/new/参照コピー/null</span>
+        </div>
+        <div class="sec-b">
+          <p class="small">各問題は「何を答えるか」を箇条書きで指定しています。必要なら図（スタック/ヒープ）も描いて説明してください。</p>
+
+          <div class="q">
+            <h3>基礎1：宣言・生成・代入を分解して説明する</h3>
+            <p class="aim">狙い：<code>Sword s = new Sword();</code> を正確に言語化できるか</p>
+            <pre><code>Sword s = new Sword();</code></pre>
+            <ul class="ask">
+              <li>この1行を「宣言」「生成」「代入」の3つに分けて説明しなさい。</li>
+              <li>スタックに置かれるもの／ヒープに置かれるものをそれぞれ書きなさい。</li>
+            </ul>
+          </div>
+
+          <div class="q">
+            <h3>基礎2：宣言だけの状態を説明する</h3>
+            <p class="aim">狙い：宣言＝オブジェクト生成ではない、と言えるか</p>
+            <pre><code>Sword s;</code></pre>
+            <ul class="ask">
+              <li>この時点で「オブジェクト（実体）」は存在するか、Yes/Noで答えなさい。</li>
+              <li><code>s</code> が持つべき内容（参照の有無）を説明しなさい。</li>
+            </ul>
+          </div>
+
+          <div class="q">
+            <h3>基礎3：参照のコピーを説明する</h3>
+            <p class="aim">狙い：同じ実体を共有することを理解しているか</p>
+            <pre><code>Sword s1 = new Sword();
+Sword s2 = s1;
+s2.damage = 10;</code></pre>
+            <ul class="ask">
+              <li><code>s1</code> と <code>s2</code> は「同じオブジェクト」か「別オブジェクト」か答えなさい。</li>
+              <li><code>s1.damage</code> は最終的にいくつになるか答えなさい。</li>
+              <li>理由を「参照がコピーされた」という言葉を使って説明しなさい。</li>
+            </ul>
+          </div>
+
+          <div class="q">
+            <h3>基礎4：プリミティブ型とクラス型の代入の違い</h3>
+            <p class="aim">狙い：値コピーと参照コピーの違いを言えるか</p>
+            <pre><code>int a = 10;
+int b = a;
+
+Sword x = new Sword();
+Sword y = x;</code></pre>
+            <ul class="ask">
+              <li><code>b</code> に入るのは「値」か「参照」か答えなさい。</li>
+              <li><code>y</code> に入るのは「値」か「参照」か答えなさい。</li>
+              <li>この違いが、プログラムの動作にどう影響するか1文で説明しなさい。</li>
+            </ul>
+          </div>
+
+          <div class="q">
+            <h3>基礎5：null の意味と結果を判断する</h3>
+            <p class="aim">狙い：null参照で何が起きるかを判断できるか</p>
+            <pre><code>Sword s = null;
+s.name = "Fire";</code></pre>
+            <ul class="ask">
+              <li>これは「コンパイルエラー」「実行時エラー」「正常動作」のどれか答えなさい。</li>
+              <li>理由を「参照先がない」という説明で書きなさい。</li>
+            </ul>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 応用問題 -->
+      <section id="advanced">
+        <div class="sec-h">
+          <h2>4. 応用問題（5題）</h2>
+          <span class="tag">狙い：引数渡し/参照のすり替え/配列/GC</span>
+        </div>
+        <div class="sec-b">
+          <p class="small">応用は「参照がコピーされる場面」を複数用意しています。結果だけでなく理由も書いてください。</p>
+
+          <div class="q">
+            <h3>応用1：参照を切るとどうなる（GCの観点）</h3>
+            <p class="aim">狙い：到達不能＝回収候補、を説明できるか</p>
+            <pre><code>Sword s = new Sword();
+s = null;</code></pre>
+            <ul class="ask">
+              <li>最初に作られた <code>Sword</code> オブジェクトは「回収の対象になりうる」か答えなさい。</li>
+              <li>理由を「参照が残っているかどうか」で説明しなさい。</li>
+              <li>回収の“タイミング”が常に同じとは限らない理由を1文で書きなさい。</li>
+            </ul>
+          </div>
+
+          <div class="q">
+            <h3>応用2：メソッド引数でフィールドを書き換える</h3>
+            <p class="aim">狙い：参照のコピーでも同じ実体を操作することを理解</p>
+            <pre><code>class Sword { int damage; }
+
+public static void change(Sword s) {
+  s.damage = 50;
+}
+
+public static void main(String[] args) {
+  Sword sword = new Sword();
+  sword.damage = 10;
+  change(sword);
+  System.out.println(sword.damage);
+}</code></pre>
+            <ul class="ask">
+              <li>出力は何か答えなさい。</li>
+              <li>理由を「引数に参照がコピーされる」「参照先は同じ」という2点で説明しなさい。</li>
+            </ul>
+          </div>
+
+          <div class="q">
+            <h3>応用3：メソッド内で参照を入れ替える（すり替え）</h3>
+            <p class="aim">狙い：ローカル変数の参照変更は呼び出し元に影響しないことを理解</p>
+            <pre><code>class Sword { int damage; }
+
+public static void change(Sword s) {
+  s = new Sword();
+  s.damage = 100;
+}
+
+public static void main(String[] args) {
+  Sword sword = new Sword();
+  sword.damage = 10;
+  change(sword);
+  System.out.println(sword.damage);
+}</code></pre>
+            <ul class="ask">
+              <li>出力は何か答えなさい。</li>
+              <li>問題「応用2」との違いを、参照の扱いの違いとして説明しなさい。</li>
+              <li>「どの変数の参照が変わったのか」を明確に書きなさい。</li>
+            </ul>
+          </div>
+
+          <div class="q">
+            <h3>応用4：配列要素が持つものは何か</h3>
+            <p class="aim">狙い：配列の要素も参照を持つことを理解</p>
+            <pre><code>class Sword { int damage; }
+
+Sword[] swords = new Sword[2];
+swords[0] = new Sword();
+swords[1] = swords[0];
+
+swords[1].damage = 30;
+System.out.println(swords[0].damage);</code></pre>
+            <ul class="ask">
+              <li>出力は何か答えなさい。</li>
+              <li><code>swords[0]</code> と <code>swords[1]</code> が持っているのは「本体」か「参照」か答えなさい。</li>
+              <li>スタック/ヒープの簡単な図を描いて説明しなさい。</li>
+            </ul>
+          </div>
+
+          <div class="q">
+            <h3>応用5：2回 new したらオブジェクトは何個できるか</h3>
+            <p class="aim">狙い：new の回数＝実体生成回数、を正確に数える</p>
+            <pre><code>Sword a = new Sword();
+Sword b = new Sword();
+Sword c = b;
+a = c;</code></pre>
+            <ul class="ask">
+              <li>ヒープ上に作成された <code>Sword</code> オブジェクトは合計で何個か答えなさい。</li>
+              <li>最後に <code>a</code>, <code>b</code>, <code>c</code> は「どのオブジェクト」を指しているか説明しなさい。</li>
+              <li>参照が残っていないオブジェクトがあるか（回収の対象になりうるか）も答えなさい。</li>
+            </ul>
+          </div>
+
+          <div class="note">
+            <b>授業での進め方（短）：</b>
+            <ul>
+              <li>図解（2章）を先に写す → 参照のイメージ固定</li>
+              <li>基礎3と応用2/3をセットで解かせる → 「同じ実体」「参照のすり替え」を区別</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 解答 -->
+      <section id="answers">
+        <div class="sec-h">
+          <h2>5. 解答（折りたたみ）</h2>
+          <span class="tag">結果＋理由</span>
+        </div>
+        <div class="sec-b">
+          <details>
+            <summary>基礎問題（1〜5）の解答</summary>
+            <div style="margin-top:10px">
+              <h3>基礎1</h3>
+              <ul>
+                <li>宣言：<code>Sword s;</code>（参照を入れる変数を用意）</li>
+                <li>生成：<code>new Sword()</code>（ヒープに実体を1つ作成）</li>
+                <li>代入：<code>s = (newが返した参照)</code>（参照をスタック上の変数<code>s</code>へ）</li>
+              </ul>
+
+              <h3>基礎2</h3>
+              <ul>
+                <li>実体は存在しない（No）</li>
+                <li><code>s</code> は参照を入れる箱であり、初期値を与えない状態では「参照先が決まっていない」</li>
+              </ul>
+
+              <h3>基礎3</h3>
+              <ul>
+                <li>同じオブジェクト</li>
+                <li><code>s1.damage</code> は 10</li>
+                <li>理由：<code>s2 = s1</code> は参照をコピーするため、参照先が同じになる</li>
+              </ul>
+
+              <h3>基礎4</h3>
+              <ul>
+                <li><code>b</code>：値</li>
+                <li><code>y</code>：参照</li>
+                <li>影響：クラス型は参照共有になり、片方の変更がもう片方から見える場合がある</li>
+              </ul>
+
+              <h3>基礎5</h3>
+              <ul>
+                <li>実行時エラー（NullPointerException）</li>
+                <li>理由：<code>s</code> が <code>null</code> で参照先がなく、フィールドへ進めない</li>
+              </ul>
+            </div>
+          </details>
+
+          <details>
+            <summary>応用問題（1〜5）の解答</summary>
+            <div style="margin-top:10px">
+              <h3>応用1</h3>
+              <ul>
+                <li>回収の対象になりうる（他に参照が残っていなければ到達不能）</li>
+                <li>理由：<code>s</code> の参照が切れて参照先に到達できないため</li>
+                <li>タイミング：回収の実行はJVMの都合（状況）に依存するため一定ではない</li>
+              </ul>
+
+              <h3>応用2</h3>
+              <ul>
+                <li>出力：50</li>
+                <li>理由：引数 <code>s</code> には参照がコピーされる。参照先は同じ実体なので、フィールド変更が反映される</li>
+              </ul>
+
+              <h3>応用3</h3>
+              <ul>
+                <li>出力：10</li>
+                <li>違い：メソッド内で <code>s</code> が新しい参照へ入れ替わっただけ（ローカル変数の参照変更）。呼び出し元 <code>sword</code> の参照は変わらない</li>
+              </ul>
+
+              <h3>応用4</h3>
+              <ul>
+                <li>出力：30</li>
+                <li>配列要素が持つのは参照</li>
+                <li><code>swords[1] = swords[0]</code> で同じ参照を共有し、同じ実体の <code>damage</code> を更新している</li>
+              </ul>
+
+              <h3>応用5</h3>
+              <ul>
+                <li>作成されたオブジェクト数：2個（newが2回）</li>
+                <li>最後に指す先：<code>b</code> と <code>c</code> は2個目、<code>a</code> も <code>a=c</code> により2個目</li>
+                <li>参照が残っていない：1個目は参照が残っていなければ回収の対象になりうる</li>
+              </ul>
+            </div>
+          </details>
+
+          <div class="warn">
+            <b>補足：</b> 「回収される」ではなく「回収の対象になりうる」が正確です（回収タイミングはJVMの判断）。
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- サイド -->
+    <div class="side">
+      <div class="card">
+        <div class="sec-h"><h2>目次</h2></div>
+        <div class="sec-b toc">
+          <a href="#concept">1. 概念整理 <span class="small">（参照とは何か）</span></a>
+          <a href="#diagram">2. 図解 <span class="small">（スタック/ヒープ）</span></a>
+          <a href="#basic">3. 基礎問題 <span class="small">（5題）</span></a>
+          <a href="#advanced">4. 応用問題 <span class="small">（5題）</span></a>
+          <a href="#answers">5. 解答 <span class="small">（折りたたみ）</span></a>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="sec-h"><h2>学習チェック</h2></div>
+        <div class="sec-b">
+          <ul>
+            <li>「クラス型変数＝参照」を自分の言葉で説明できる</li>
+            <li><code>s2 = s1</code> は本体コピーではなく参照コピーと言える</li>
+            <li>応用2と応用3の違いを図で説明できる</li>
+          </ul>
+          <p class="small">上の3つが言えれば、次の「アップキャスト/ダウンキャスト」も理解が速くなります。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  © Java教材：クラス型変数と new（図解付き問題集）
+</footer>
+</body>
+</html>

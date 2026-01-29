@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>中級11 CSVエクスポート</title>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="../style.css" />
+        <style>
+            .download-btn { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-left: auto; }
+            .code-header { display: flex; align-items: center; justify-content: space-between; }
+            .level-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; background: #fef9c3; color: #854d0e; margin-right: 8px; }
+        </style>
+    </head>
+    <body>
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="../1spring-framework-tutorial.html" class="nav-logo"><span class="nav-logo-icon">🌱</span><span>Spring入門</span></a>
+                <button class="nav-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 中級レベル</div>
+                    <ul class="nav-list">
+                        <li class="nav-item"><a href="06_pagination.html" class="nav-link"><span class="nav-chapter-num">6</span><span>ページネーション</span></a></li>
+                        <li class="nav-item"><a href="07_priority.html" class="nav-link"><span class="nav-chapter-num">7</span><span>優先度設定</span></a></li>
+                        <li class="nav-item"><a href="08_category.html" class="nav-link"><span class="nav-chapter-num">8</span><span>カテゴリ/タグ機能</span></a></li>
+                        <li class="nav-item"><a href="09_deadline.html" class="nav-link"><span class="nav-chapter-num">9</span><span>期限日と期限切れ警告</span></a></li>
+                        <li class="nav-item"><a href="10_bulk_delete.html" class="nav-link"><span class="nav-chapter-num">10</span><span>一括削除機能</span></a></li>
+                        <li class="nav-item"><a href="11_csv_export.html" class="nav-link active"><span class="nav-chapter-num">11</span><span>CSVエクスポート</span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <header class="chapter-header">
+                <div class="chapter-badge"><span class="level-badge">中級</span>📘 Intermediate</div>
+                <div class="chapter-number">11</div>
+                <h1 class="chapter-title">CSVエクスポート</h1>
+            </header>
+
+            <nav class="toc">
+                <h2 class="toc-title">📑 この章の内容</h2>
+                <ul class="toc-list">
+                    <li class="toc-item"><span class="toc-number">11-1</span><span>ファイルダウンロードの仕組み</span></li>
+                    <li class="toc-item"><span class="toc-number">11-2</span><span>CSVファイルの生成</span></li>
+                    <li class="toc-item"><span class="toc-number">11-3</span><span>文字化け対策</span></li>
+                </ul>
+            </nav>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 11-1</span>
+                    <h2 class="section-title">ファイルダウンロードの仕組み</h2>
+                </div>
+                <div class="intro-text">
+                    <p>ToDoデータを<strong>CSVファイルとしてダウンロード</strong>できる機能を追加します。</p>
+                </div>
+
+                <div class="module-list">
+                    <div class="module-item"><div class="module-icon">📥</div><div class="module-content"><h4>HttpServletResponse</h4><p>レスポンスヘッダーの設定とファイル出力に使用</p></div></div>
+                    <div class="module-item"><div class="module-icon">📝</div><div class="module-content"><h4>Content-Disposition</h4><p>ブラウザにダウンロードを指示するヘッダー</p></div></div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 11-2</span>
+                    <h2 class="section-title">CSVファイルの生成</h2>
+                </div>
+
+                <div class="code-block" id="controller-csv">
+                    <div class="code-header">
+                        <span class="code-title">TodoController.java</span>
+                        <button class="download-btn" onclick="downloadCode('controller-csv', 'TodoController_csv.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import jakarta.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
+/**
+ * CSVエクスポート
+ */
+@GetMapping("/export")
+public void exportCsv(HttpServletResponse response) throws Exception {
+    List&lt;Todo&gt; todoList = todoService.findAll();
+
+    // ファイル名（日本語対応）
+    String filename = URLEncoder.encode("todo_list.csv", StandardCharsets.UTF_8);
+
+    // レスポンスヘッダー設定
+    response.setContentType("text/csv; charset=UTF-8");
+    response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+
+    // BOM付きUTF-8（Excelで文字化けしないため）
+    PrintWriter writer = response.getWriter();
+    writer.print('\ufeff');  // BOM
+
+    // ヘッダー行
+    writer.println("No,タイトル,登録者,詳細,作成日");
+
+    // データ行
+    for (Todo todo : todoList) {
+        writer.println(String.format("%d,\"%s\",\"%s\",\"%s\",\"%s\"",
+            todo.getId(),
+            escapeCsv(todo.getTitle()),
+            escapeCsv(todo.getAuthor()),
+            escapeCsv(todo.getDetail()),
+            todo.getCreatedAt() != null ?
+                todo.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) : ""
+        ));
+    }
+}
+
+// CSV用エスケープ
+private String escapeCsv(String value) {
+    if (value == null) return "";
+    return value.replace("\"", "\"\"");
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="download-btn">
+                    <div class="code-header">
+                        <span class="code-title">index.html（ダウンロードボタン）</span>
+                        <button class="download-btn" onclick="downloadCode('download-btn', 'index_export.html')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>&lt;div class="action-bar"&gt;
+    &lt;a th:href="@{/todo/new}" class="btn btn-primary"&gt;新規登録&lt;/a&gt;
+    &lt;a th:href="@{/todo/export}" class="btn btn-secondary"&gt;📥 CSVダウンロード&lt;/a&gt;
+&lt;/div&gt;</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 11-3</span>
+                    <h2 class="section-title">文字化け対策</h2>
+                </div>
+
+                <h3>ExcelでCSVを開くときの問題</h3>
+                <table class="data-table">
+                    <thead><tr><th>対策</th><th>説明</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>BOM付きUTF-8</code></td><td><code>\ufeff</code>を先頭に付与</td></tr>
+                        <tr><td><code>ダブルクォート囲み</code></td><td>カンマを含む値を正しく処理</td></tr>
+                        <tr><td><code>ダブルクォートエスケープ</code></td><td><code>"</code>を<code>""</code>に置換</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="warning-box">
+                    <div class="warning-box-header"><span class="warning-box-icon">⚠️</span><span class="warning-box-title">BOMについて</span></div>
+                    <p>BOM（Byte Order Mark）を付けると、ExcelがUTF-8として認識します。<br>テキストエディタで開くと先頭に不可視文字が入りますが、正常な動作です。</p>
+                </div>
+
+                <div class="column">
+                    <div class="column-header"><span class="column-badge">Column</span><span class="column-title">中級レベル完了！</span></div>
+                    <p>おめでとうございます！中級レベルの6つの機能をすべて学習しました。</p>
+                    <ol class="step-list">
+                        <li>ページネーション - Pageable, Page&lt;T&gt;</li>
+                        <li>優先度設定 - Enum型、selectタグ</li>
+                        <li>カテゴリ/タグ機能 - テーブル結合、collection</li>
+                        <li>期限日と期限切れ警告 - 日付比較ロジック</li>
+                        <li>一括削除機能 - チェックボックス、配列パラメータ</li>
+                        <li>CSVエクスポート - ファイルダウンロード</li>
+                    </ol>
+                    <p style="margin-top: 1rem;">次は<strong>上級レベル</strong>に挑戦しましょう！</p>
+                </div>
+            </section>
+        </div>
+
+        <footer class="footer"><p>Spring Framework 入門チュートリアル - 中級レベル</p></footer>
+
+        <div class="page-nav">
+            <a href="10_bulk_delete.html" class="page-nav-btn prev"><span>←</span><div><div class="page-nav-label">前の機能</div><div class="page-nav-title">一括削除機能</div></div></a>
+            <a href="12_login.html" class="page-nav-btn next"><div><div class="page-nav-label">上級レベルへ</div><div class="page-nav-title">ログイン認証</div></div><span>→</span></a>
+        </div>
+
+        <script>
+            function toggleMenu() { document.querySelector(".nav-toggle").classList.toggle("active"); document.querySelector(".nav-menu").classList.toggle("active"); }
+            function downloadCode(id, filename) { const el = document.getElementById(id); const code = el.querySelector('code') || el.querySelector('pre'); const blob = new Blob([code.textContent], {type:'text/plain;charset=utf-8'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url); }
+        </script>
+    </body>
+</html>

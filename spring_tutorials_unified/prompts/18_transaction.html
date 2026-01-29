@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>上級18 トランザクション管理</title>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="../style.css" />
+        <style>
+            .download-btn { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-left: auto; }
+            .code-header { display: flex; align-items: center; justify-content: space-between; }
+            .level-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; background: #fee2e2; color: #991b1b; margin-right: 8px; }
+        </style>
+    </head>
+    <body>
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="../1spring-framework-tutorial.html" class="nav-logo"><span class="nav-logo-icon">🌱</span><span>Spring入門</span></a>
+                <button class="nav-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 上級レベル</div>
+                    <ul class="nav-list">
+                        <li class="nav-item"><a href="12_login.html" class="nav-link"><span class="nav-chapter-num">12</span><span>ログイン認証</span></a></li>
+                        <li class="nav-item"><a href="13_user_todo.html" class="nav-link"><span class="nav-chapter-num">13</span><span>ユーザー別ToDo管理</span></a></li>
+                        <li class="nav-item"><a href="14_role.html" class="nav-link"><span class="nav-chapter-num">14</span><span>ロール別権限制御</span></a></li>
+                        <li class="nav-item"><a href="15_rest_api.html" class="nav-link"><span class="nav-chapter-num">15</span><span>REST API化</span></a></li>
+                        <li class="nav-item"><a href="16_exception.html" class="nav-link"><span class="nav-chapter-num">16</span><span>例外ハンドリング</span></a></li>
+                        <li class="nav-item"><a href="17_aop.html" class="nav-link"><span class="nav-chapter-num">17</span><span>AOPでログ出力</span></a></li>
+                        <li class="nav-item"><a href="18_transaction.html" class="nav-link active"><span class="nav-chapter-num">18</span><span>トランザクション管理</span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <header class="chapter-header">
+                <div class="chapter-badge"><span class="level-badge">上級</span>📕 Advanced</div>
+                <div class="chapter-number">18</div>
+                <h1 class="chapter-title">トランザクション管理</h1>
+            </header>
+
+            <nav class="toc">
+                <h2 class="toc-title">📑 この章の内容</h2>
+                <ul class="toc-list">
+                    <li class="toc-item"><span class="toc-number">18-1</span><span>@Transactionalの基本</span></li>
+                    <li class="toc-item"><span class="toc-number">18-2</span><span>ロールバックの制御</span></li>
+                    <li class="toc-item"><span class="toc-number">18-3</span><span>トランザクションの伝播</span></li>
+                </ul>
+            </nav>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 18-1</span>
+                    <h2 class="section-title">@Transactionalの基本</h2>
+                </div>
+                <div class="intro-text">
+                    <p><strong>@Transactional</strong>を使って、データベース操作の整合性を保証します。</p>
+                </div>
+
+                <div class="module-list">
+                    <div class="module-item"><div class="module-icon">🔄</div><div class="module-content"><h4>@Transactional</h4><p>トランザクション境界を宣言的に設定</p></div></div>
+                    <div class="module-item"><div class="module-icon">↩️</div><div class="module-content"><h4>Rollback</h4><p>例外発生時に変更を取り消す</p></div></div>
+                </div>
+
+                <div class="code-block" id="basic-transaction">
+                    <div class="code-header">
+                        <span class="code-title">TodoService.java（基本的な使い方）</span>
+                        <button class="download-btn" onclick="downloadCode('basic-transaction', 'TodoService_tx.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Service;
+
+@Service
+public class TodoService {
+
+    private final TodoMapper todoMapper;
+    private final HistoryMapper historyMapper;
+
+    /**
+     * クラスレベルで@Transactionalを付与
+     * 全publicメソッドにトランザクションが適用される
+     */
+    @Transactional
+    public void save(Todo todo) {
+        // ToDoを保存
+        todoMapper.insert(todo);
+
+        // 履歴を保存（同一トランザクション内）
+        History history = new History();
+        history.setTodoId(todo.getId());
+        history.setAction("CREATE");
+        historyMapper.insert(history);
+
+        // どちらかで例外が発生すると両方ロールバック
+    }
+
+    /**
+     * 読み取り専用トランザクション
+     */
+    @Transactional(readOnly = true)
+    public List&lt;Todo&gt; findAll() {
+        return todoMapper.findAll();
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <h3>@Transactionalの属性</h3>
+                <table class="data-table">
+                    <thead><tr><th>属性</th><th>説明</th><th>デフォルト</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>readOnly</code></td><td>読み取り専用（最適化のヒント）</td><td>false</td></tr>
+                        <tr><td><code>timeout</code></td><td>タイムアウト（秒）</td><td>-1（制限なし）</td></tr>
+                        <tr><td><code>rollbackFor</code></td><td>ロールバック対象の例外</td><td>RuntimeException</td></tr>
+                        <tr><td><code>propagation</code></td><td>トランザクションの伝播</td><td>REQUIRED</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 18-2</span>
+                    <h2 class="section-title">ロールバックの制御</h2>
+                </div>
+
+                <div class="code-block" id="rollback-control">
+                    <div class="code-header">
+                        <span class="code-title">ロールバックの制御例</span>
+                        <button class="download-btn" onclick="downloadCode('rollback-control', 'TodoService_rollback.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>@Service
+public class TodoService {
+
+    /**
+     * チェック例外でもロールバックする
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void saveWithRollback(Todo todo) throws Exception {
+        todoMapper.insert(todo);
+
+        if (todo.getTitle().contains("error")) {
+            throw new Exception("強制エラー");  // ロールバックされる
+        }
+    }
+
+    /**
+     * 特定の例外ではロールバックしない
+     */
+    @Transactional(noRollbackFor = BusinessException.class)
+    public void saveWithNoRollback(Todo todo) {
+        todoMapper.insert(todo);
+
+        if (someCondition) {
+            // BusinessExceptionが発生してもコミットされる
+            throw new BusinessException("警告メッセージ");
+        }
+    }
+
+    /**
+     * 一括処理（一部失敗しても続行）
+     */
+    @Transactional
+    public BulkResult bulkInsert(List&lt;Todo&gt; todoList) {
+        int success = 0;
+        int failure = 0;
+
+        for (Todo todo : todoList) {
+            try {
+                todoMapper.insert(todo);
+                success++;
+            } catch (Exception e) {
+                failure++;
+                // 個別の失敗は無視して続行
+            }
+        }
+
+        return new BulkResult(success, failure);
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-box-header"><span class="warning-box-icon">⚠️</span><span class="warning-box-title">デフォルトのロールバック動作</span></div>
+                    <p><code>RuntimeException</code>（非チェック例外）は自動的にロールバックされます。<br>
+                    <code>Exception</code>（チェック例外）はデフォルトではロールバックされません。<br>
+                    チェック例外でもロールバックしたい場合は<code>rollbackFor</code>を指定してください。</p>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 18-3</span>
+                    <h2 class="section-title">トランザクションの伝播</h2>
+                </div>
+
+                <div class="code-block" id="propagation">
+                    <div class="code-header">
+                        <span class="code-title">トランザクション伝播の例</span>
+                        <button class="download-btn" onclick="downloadCode('propagation', 'TodoService_propagation.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.springframework.transaction.annotation.Propagation;
+
+@Service
+public class TodoService {
+
+    private final TodoMapper todoMapper;
+    private final AuditService auditService;
+
+    /**
+     * REQUIRED（デフォルト）: 既存トランザクションがあれば参加、なければ新規作成
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void save(Todo todo) {
+        todoMapper.insert(todo);
+        auditService.log("TODO_CREATED", todo.getId());  // 同一トランザクション
+    }
+
+    /**
+     * REQUIRES_NEW: 常に新しいトランザクションを作成
+     * 親トランザクションとは独立してコミット/ロールバック
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void saveIndependent(Todo todo) {
+        todoMapper.insert(todo);
+        // 親でロールバックされてもこの処理はコミットされる
+    }
+}
+
+@Service
+public class AuditService {
+
+    /**
+     * REQUIRES_NEW: 監査ログは独立してコミット
+     * 本体が失敗しても監査ログは残す
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void log(String action, Integer targetId) {
+        auditMapper.insert(new AuditLog(action, targetId));
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <h3>伝播属性（Propagation）</h3>
+                <table class="data-table">
+                    <thead><tr><th>属性</th><th>説明</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>REQUIRED</code></td><td>既存があれば参加、なければ新規作成（デフォルト）</td></tr>
+                        <tr><td><code>REQUIRES_NEW</code></td><td>常に新規トランザクションを作成</td></tr>
+                        <tr><td><code>SUPPORTS</code></td><td>既存があれば参加、なければトランザクションなし</td></tr>
+                        <tr><td><code>MANDATORY</code></td><td>既存トランザクション必須（なければ例外）</td></tr>
+                        <tr><td><code>NOT_SUPPORTED</code></td><td>トランザクションなしで実行</td></tr>
+                        <tr><td><code>NEVER</code></td><td>トランザクション禁止（あれば例外）</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="info-box">
+                    <div class="info-box-header"><span class="info-box-icon">💡</span><span class="info-box-title">@Transactionalの注意点</span></div>
+                    <ul>
+                        <li>publicメソッドにのみ適用される</li>
+                        <li>同一クラス内のメソッド呼び出しでは適用されない（プロキシの制限）</li>
+                        <li>インターフェース経由で呼び出す必要がある</li>
+                    </ul>
+                </div>
+
+                <div class="column">
+                    <div class="column-header"><span class="column-badge">Column</span><span class="column-title">上級レベル完了！</span></div>
+                    <p>おめでとうございます！上級レベルの7つの機能をすべて学習しました。</p>
+                    <ol class="step-list">
+                        <li>ログイン認証 - Spring Security基礎</li>
+                        <li>ユーザー別ToDo管理 - @AuthenticationPrincipal</li>
+                        <li>ロール別権限制御 - @PreAuthorize</li>
+                        <li>REST API化 - @RestController</li>
+                        <li>例外ハンドリング - @ControllerAdvice</li>
+                        <li>AOPでログ出力 - @Aspect</li>
+                        <li>トランザクション管理 - @Transactional</li>
+                    </ol>
+                    <p style="margin-top: 1rem;">これで<strong>ToDoアプリの機能追加チュートリアル</strong>は完了です！</p>
+                </div>
+            </section>
+        </div>
+
+        <footer class="footer"><p>Spring Framework 入門チュートリアル - 上級レベル</p></footer>
+
+        <div class="page-nav">
+            <a href="17_aop.html" class="page-nav-btn prev"><span>←</span><div><div class="page-nav-label">前の機能</div><div class="page-nav-title">AOPでログ出力</div></div></a>
+            <a href="../16extends-todo.html" class="page-nav-btn next"><div><div class="page-nav-label">トップに戻る</div><div class="page-nav-title">機能追加提案一覧</div></div><span>→</span></a>
+        </div>
+
+        <script>
+            function toggleMenu() { document.querySelector(".nav-toggle").classList.toggle("active"); document.querySelector(".nav-menu").classList.toggle("active"); }
+            function downloadCode(id, filename) { const el = document.getElementById(id); const code = el.querySelector('code') || el.querySelector('pre'); const blob = new Blob([code.textContent], {type:'text/plain;charset=utf-8'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url); }
+        </script>
+    </body>
+</html>

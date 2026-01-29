@@ -1,0 +1,1763 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>第7章 サーバーにデータを送信する方法を学ぼう</title>
+
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&family=M+PLUS+Rounded+1c:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <!-- グローバルナビゲーション -->
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="1spring-framework-tutorial.html" class="nav-logo">
+                    <span class="nav-logo-icon">🌱</span>
+                    <span>Spring入門</span>
+                </a>
+                <button class="nav-toggle" onclick="toggleMenu()" aria-label="メニュー">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 章を選択</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="0promptprograming.html" class="nav-link">
+                                <span class="nav-chapter-num">0</span>
+                                <span>プロンプトプログラミング</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="1spring-framework-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">1</span>
+                                <span>Spring Frameworkについて知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="2java_basics.html" class="nav-link">
+                                <span class="nav-chapter-num">2</span>
+                                <span>基礎知識を身に付けよう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="3di-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">3</span>
+                                <span>DIを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="4aop-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">4</span>
+                                <span>AOPを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="5mvc-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">5</span>
+                                <span>MVCを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="6thymeleaf-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">6</span>
+                                <span>Thymeleafを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="7ServerDataSubmission.html" class="nav-link active">
+                                <span class="nav-chapter-num">7</span>
+                                <span>サーバーへのデータ送信</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="8Validation_Textbook_Rewrite.html" class="nav-link">
+                                <span class="nav-chapter-num">8</span>
+                                <span>バリデーション</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="9_MyBatis_Tutorial__2_.html" class="nav-link">
+                                <span class="nav-chapter-num">9</span>
+                                <span>MyBatisチュートリアル</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="10app-preparation-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">10</span>
+                                <span>アプリケーション作成準備</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="11-database-operations.html" class="nav-link">
+                                <span class="nav-chapter-num">11</span>
+                                <span>データベース操作</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="12service-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">12</span>
+                                <span>サービス層</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="13_application_layer.html" class="nav-link">
+                                <span class="nav-chapter-num">13</span>
+                                <span>アプリケーション層</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="14_validation.html" class="nav-link">
+                                <span class="nav-chapter-num">14</span>
+                                <span>バリデーション（応用）</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="15-spring-security-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">15</span>
+                                <span>Spring Security</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <!-- ヘッダー -->
+            <header class="chapter-header">
+                <div class="chapter-badge">📘 Chapter</div>
+                <div class="chapter-number">7</div>
+                <h1 class="chapter-title">サーバーへのデータ送信</h1>
+            </header>
+
+            <!-- 目次 -->
+            <nav class="toc">
+                <h2 class="toc-title">📑 この章の内容</h2>
+                <ul class="toc-list">
+                    <li class="toc-item">
+                        <span class="toc-number">7-1</span>
+                        <span>リクエストパラメータについて知ろう</span>
+                    </li>
+                    <li class="toc-item">
+                        <span class="toc-number">7-2</span>
+                        <span>複数のリクエストパラメータを送ろう</span>
+                    </li>
+                    <li class="toc-item">
+                        <span class="toc-number">7-3</span>
+                        <span>URLに埋め込まれた値を受け取ろう</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- 7-1 リクエストパラメータについて知ろう -->
+            <section class="section" id="section7-1">
+                <div class="section-header">
+                    <span class="section-number">Section 7-1</span>
+                    <h2 class="section-title">リクエストパラメータについて知ろう</h2>
+                </div>
+
+                <p>
+                    この章では、Webアプリケーション開発で欠かせない「データの送受信」について学習します。ユーザーが画面（ビュー）で入力した情報をサーバーに送り、コントローラで受け取る仕組みを理解しましょう。サーバーに送られてくるデータのことを「リクエストパラメータ」と呼びます。
+                </p>
+
+                <h2>7-1-1 リクエストパラメータとは？</h2>
+
+                <p>
+                    ログインフォームや検索ボックスなど、ユーザーが何かを入力して送信ボタンを押すと、その入力内容はブラウザによってHTTPリクエストに格納されます。このリクエストに含まれるデータを「リクエストパラメータ」といい、Webアプリケーション側で取り出して処理することができます。
+                </p>
+
+                <h3>「GETメソッド」と「POSTメソッド」によるデータの送り方の違い</h3>
+
+                <p>
+                    復習になりますが、HTTPリクエストはクライアント（ブラウザ）からサーバーへ送られる通信データです。リクエストは「リクエストライン」「リクエストヘッダ」「リクエストボディ」の3つの部分で構成されています。
+                </p>
+
+                <!-- HTTPリクエスト構造図 -->
+                <div class="figure">
+                    <p class="figure-caption">【図7.1】HTTPリクエストの構造</p>
+                    <svg viewBox="0 0 700 250" style="max-width: 650px">
+                        <defs>
+                            <linearGradient id="clientGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color: #4a90d9" />
+                                <stop offset="100%" style="stop-color: #357abd" />
+                            </linearGradient>
+                            <linearGradient id="serverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color: #2d3748" />
+                                <stop offset="100%" style="stop-color: #1a202c" />
+                            </linearGradient>
+                            <linearGradient id="requestGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color: #48bb78" />
+                                <stop offset="100%" style="stop-color: #38a169" />
+                            </linearGradient>
+                            <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <path d="M0,0 L0,6 L9,3 z" fill="#38A169" />
+                            </marker>
+                        </defs>
+
+                        <!-- クライアント -->
+                        <rect
+                            x="30"
+                            y="70"
+                            width="120"
+                            height="100"
+                            rx="10"
+                            fill="url(#clientGrad)"
+                            stroke="#2B6CB0"
+                            stroke-width="2"
+                        />
+                        <rect x="45" y="85" width="90" height="55" rx="3" fill="#E2E8F0" />
+                        <rect x="70" y="145" width="40" height="8" rx="2" fill="#718096" />
+                        <text x="90" y="195" text-anchor="middle" fill="#2D3748" font-size="14" font-weight="bold">
+                            クライアント
+                        </text>
+
+                        <!-- HTTPリクエスト -->
+                        <rect
+                            x="230"
+                            y="30"
+                            width="200"
+                            height="180"
+                            rx="8"
+                            fill="#F7FAFC"
+                            stroke="#38A169"
+                            stroke-width="2"
+                        />
+                        <rect x="230" y="30" width="200" height="35" rx="8" fill="url(#requestGrad)" />
+                        <text x="330" y="53" text-anchor="middle" fill="white" font-size="14" font-weight="bold">
+                            HTTPリクエスト
+                        </text>
+
+                        <rect x="245" y="75" width="170" height="35" rx="5" fill="#E6FFFA" stroke="#38A169" />
+                        <text x="330" y="98" text-anchor="middle" fill="#276749" font-size="12" font-weight="bold">
+                            リクエストライン
+                        </text>
+
+                        <rect x="245" y="115" width="170" height="35" rx="5" fill="#EBF8FF" stroke="#3182CE" />
+                        <text x="330" y="138" text-anchor="middle" fill="#2C5282" font-size="12" font-weight="bold">
+                            リクエストヘッダ
+                        </text>
+
+                        <rect x="245" y="155" width="170" height="35" rx="5" fill="#FFF5F5" stroke="#E53E3E" />
+                        <text x="330" y="178" text-anchor="middle" fill="#C53030" font-size="12" font-weight="bold">
+                            リクエストボディ
+                        </text>
+
+                        <!-- Webサーバー -->
+                        <rect
+                            x="510"
+                            y="60"
+                            width="140"
+                            height="120"
+                            rx="8"
+                            fill="url(#serverGrad)"
+                            stroke="#1A202C"
+                            stroke-width="2"
+                        />
+                        <rect x="530" y="80" width="100" height="15" rx="2" fill="#48BB78" />
+                        <rect x="530" y="100" width="100" height="15" rx="2" fill="#4299E1" />
+                        <rect x="530" y="120" width="100" height="15" rx="2" fill="#ED8936" />
+                        <rect x="530" y="140" width="100" height="15" rx="2" fill="#9F7AEA" />
+                        <text x="580" y="200" text-anchor="middle" fill="#2D3748" font-size="14" font-weight="bold">
+                            Webサーバー
+                        </text>
+
+                        <!-- 矢印 -->
+                        <path
+                            d="M 155 120 L 220 120"
+                            stroke="#38A169"
+                            stroke-width="3"
+                            fill="none"
+                            marker-end="url(#arrowGreen)"
+                        />
+                        <path
+                            d="M 435 120 L 500 120"
+                            stroke="#38A169"
+                            stroke-width="3"
+                            fill="none"
+                            marker-end="url(#arrowGreen)"
+                        />
+                    </svg>
+                </div>
+
+                <table>
+                    <caption style="text-align: left; font-weight: bold; margin-bottom: 10px">
+                        【表7.1】リクエストの構成要素
+                    </caption>
+                    <tr>
+                        <th>構成要素</th>
+                        <th>説明</th>
+                    </tr>
+                    <tr>
+                        <td>リクエストライン</td>
+                        <td>サーバーに何をしてほしいかを伝える最初の行。例：GET /index.html HTTP/1.1</td>
+                    </tr>
+                    <tr>
+                        <td>リクエストヘッダ</td>
+                        <td>追加情報を提供。ブラウザの種類、言語設定、文字コードなどを含む</td>
+                    </tr>
+                    <tr>
+                        <td>リクエストボディ</td>
+                        <td>送信したいデータの本体。主にPOSTメソッドで使用される</td>
+                    </tr>
+                </table>
+
+                <table>
+                    <caption style="text-align: left; font-weight: bold; margin-bottom: 10px">
+                        【表7.2】GETメソッドとPOSTメソッドの比較
+                    </caption>
+                    <tr>
+                        <th>項目</th>
+                        <th style="background: #81e6d9">GETメソッド</th>
+                        <th style="background: #feb2b2">POSTメソッド</th>
+                    </tr>
+                    <tr>
+                        <td>データの格納場所</td>
+                        <td>リクエストライン（URL）</td>
+                        <td>リクエストボディ</td>
+                    </tr>
+                    <tr>
+                        <td>URL例</td>
+                        <td><code>/result?val=test</code></td>
+                        <td><code>/result</code>（URLに表示されない）</td>
+                    </tr>
+                    <tr>
+                        <td>特徴</td>
+                        <td>URLで確認可能、ブックマーク可能</td>
+                        <td>URLに表示されない、大容量データ送信可能</td>
+                    </tr>
+                </table>
+
+                <h2>7-1-2 リクエストパラメータの取得方法</h2>
+
+                <p>
+                    画面で入力された値や選択された値、隠しパラメータとして埋め込まれた値は、以下の2つの方法で取得できます。
+                </p>
+
+                <table>
+                    <caption style="text-align: left; font-weight: bold; margin-bottom: 10px">
+                        【表7.3】リクエストパラメータの取得方法
+                    </caption>
+                    <tr>
+                        <th>方法</th>
+                        <th>説明</th>
+                    </tr>
+                    <tr>
+                        <td>@RequestParamを使う</td>
+                        <td>アノテーションを使って、パラメータを1つずつ個別に取得する方法</td>
+                    </tr>
+                    <tr>
+                        <td>Formクラスを使う</td>
+                        <td>
+                            複数のパラメータをまとめて1つのオブジェクトで受け取る方法。型変換やフォーマット指定も可能で、実務でよく使われる
+                        </td>
+                    </tr>
+                </table>
+
+                <h2>7-1-3 リクエストパラメータを使用したプログラムの作成</h2>
+
+                <h3>01 プロジェクトの作成</h3>
+
+                <p>
+                    Spring Initializr（<a href="https://start.spring.io" target="_blank" rel="noopener noreferrer">https://start.spring.io</a>）を使用してプロジェクトを作成します。ブラウザでSpring Initializrにアクセスし、以下のように設定します。
+                </p>
+
+                <h5 style="margin: 20px 0 12px">設定内容</h5>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>項目</th>
+                                <th>設定値</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Project</td>
+                                <td>Maven</td>
+                            </tr>
+                            <tr>
+                                <td>Language</td>
+                                <td>Java</td>
+                            </tr>
+                            <tr>
+                                <td>Spring Boot</td>
+                                <td>3.4.x（最新の安定版）</td>
+                            </tr>
+                            <tr>
+                                <td>Group</td>
+                                <td>com.example</td>
+                            </tr>
+                            <tr>
+                                <td>Artifact</td>
+                                <td>RequestParamSample</td>
+                            </tr>
+                            <tr>
+                                <td>Name</td>
+                                <td>RequestParamSample</td>
+                            </tr>
+                            <tr>
+                                <td>Packaging</td>
+                                <td>Jar</td>
+                            </tr>
+                            <tr>
+                                <td>Java</td>
+                                <td>21</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p style="margin-top: 20px">
+                    「ADD DEPENDENCIES...」ボタンをクリックし、以下の依存関係を追加します。
+                </p>
+
+                <ul style="margin: 16px 0; padding-left: 24px">
+                    <li>Spring Boot DevTools（開発者ツール）</li>
+                    <li>Lombok（ボイラープレートコード削減）</li>
+                    <li>Thymeleaf（テンプレートエンジン）</li>
+                    <li>Spring Web（Web）</li>
+                </ul>
+
+                <p>
+                    設定が完了したら、「GENERATE」ボタンをクリックします。ZIPファイルがダウンロードされるので、任意の場所に解凍してください。
+                </p>
+
+                <h5 style="margin: 20px 0 12px">VSCodeでプロジェクトを開く</h5>
+                <p>
+                    VSCodeを起動し、メニューから「ファイル」→「フォルダーを開く」を選択します。解凍した「RequestParamSample」フォルダを選択して開きます。
+                </p>
+                <p>
+                    初回起動時、VSCodeの右下に「Java拡張機能をインストールしますか？」などの通知が表示された場合は、インストールすることをお勧めします。また、Mavenプロジェクトの読み込みに関する通知が表示された場合は「Yes」を選択してください。
+                </p>
+
+                <!-- フォルダ構成図解 -->
+                <div style="margin: 24px 0; background: #f8fafc; border-radius: 12px; padding: 24px; border: 2px solid #e2e8f0;">
+                    <h5 style="margin: 0 0 20px 0; color: #1e293b; font-size: 1rem;">サンプルプログラムのフォルダ構成</h5>
+
+                    <div style="display: flex; gap: 32px; flex-wrap: wrap;">
+                        <!-- フォルダツリー -->
+                        <div style="flex: 1; min-width: 280px;">
+                            <div style="background: #1e293b; border-radius: 8px; padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #e2e8f0;">
+                                <div>RequestParamSample/</div>
+                                <div style="margin-left: 16px;">src/</div>
+                                <div style="margin-left: 32px;">main/</div>
+                                <div style="margin-left: 48px;">java/</div>
+                                <div style="margin-left: 64px; color: #94a3b8;">com/example/demo/</div>
+                                <div style="margin-left: 80px; color: #fbbf24;">controller/</div>
+                                <div style="margin-left: 96px; color: #fbbf24;">RequestParamController.java</div>
+                                <div style="margin-left: 48px;">resources/</div>
+                                <div style="margin-left: 64px; background: #3b82f6; color: white; padding: 2px 8px; border-radius: 4px; display: inline-block;">templates/</div>
+                                <div style="margin-left: 80px; color: #60a5fa;">input.html <span style="color: #94a3b8;">← 入力画面</span></div>
+                                <div style="margin-left: 80px; color: #60a5fa;">output.html <span style="color: #94a3b8;">← 出力画面</span></div>
+                                <div style="margin-left: 64px; color: #94a3b8;">application.properties</div>
+                                <div style="margin-left: 16px; color: #94a3b8;">pom.xml <span style="color: #6b7280;">← Maven設定</span></div>
+                            </div>
+                        </div>
+
+                        <!-- 凡例 -->
+                        <div style="flex: 1; min-width: 250px;">
+                            <div style="background: white; border-radius: 8px; padding: 16px; border: 1px solid #e2e8f0;">
+                                <div style="font-weight: 600; color: #1e293b; margin-bottom: 12px;">ファイルの役割</div>
+
+                                <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px;">
+                                    <div style="background: #fbbf24; color: #1e293b; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; white-space: nowrap;">controller</div>
+                                    <div style="color: #475569; font-size: 0.9rem; line-height: 1.5;">
+                                        リクエストを受け取り処理するJavaクラス
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px;">
+                                    <div style="background: #3b82f6; color: white; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; white-space: nowrap;">templates</div>
+                                    <div style="color: #475569; font-size: 0.9rem; line-height: 1.5;">
+                                        HTMLファイル（ビュー）を配置<br>
+                                        <span style="color: #64748b; font-size: 0.85rem;">Thymeleafでレンダリング</span>
+                                    </div>
+                                </div>
+
+                                <div style="background: #f0fdf4; padding: 12px; border-radius: 8px; border-left: 4px solid #22c55e; margin-top: 16px;">
+                                    <div style="font-weight: 600; color: #166534; font-size: 0.85rem; margin-bottom: 4px;">今回作成するファイル</div>
+                                    <div style="color: #15803d; font-size: 0.85rem;">
+                                        <code style="background: #dcfce7; padding: 2px 6px; border-radius: 4px;">RequestParamController.java</code><br>
+                                        <code style="background: #dcfce7; padding: 2px 6px; border-radius: 4px;">input.html</code>・<code style="background: #dcfce7; padding: 2px 6px; border-radius: 4px;">output.html</code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>02 コントローラとビューの作成</h3>
+
+                <p>
+                    VSCodeのエクスプローラーで以下の手順でコントローラを作成します。
+                </p>
+
+                <ol style="margin: 16px 0; padding-left: 24px">
+                    <li>「src/main/java/com/example/demo」フォルダを右クリック</li>
+                    <li>「新しいフォルダー」を選択し、「controller」という名前のフォルダを作成</li>
+                    <li>作成した「controller」フォルダを右クリック</li>
+                    <li>「新しいファイル」を選択し、「RequestParamController.java」という名前でファイルを作成</li>
+                </ol>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <span class="code-dot red"></span>
+                            <span class="code-dot yellow"></span>
+                            <span class="code-dot green"></span>
+                        </div>
+                        <span class="code-title">リスト7.1 RequestParamController.java</span>
+                    </div>
+                    <div class="code-content">
+                        <pre><span class="line-num">001:</span> <span class="code-keyword">package</span> com.example.demo.controller;
+<span class="line-num">002:</span>
+<span class="line-num">003:</span> <span class="code-keyword">import</span> org.springframework.stereotype.Controller;
+<span class="line-num">004:</span> <span class="code-keyword">import</span> org.springframework.web.bind.annotation.GetMapping;
+<span class="line-num">005:</span>
+<span class="line-num">006:</span> <span class="code-annotation">@Controller</span>
+<span class="line-num">007:</span> <span class="code-keyword">public class</span> RequestParamController {
+<span class="line-num">008:</span>
+<span class="line-num">009:</span>     <span class="code-comment">// GET かつ [url：/show]</span>
+<span class="line-num">010:</span>     <span class="code-annotation">@GetMapping("show")</span>
+<span class="line-num">011:</span>     <span class="code-keyword">public</span> String showView() {
+<span class="line-num">012:</span>         <span class="code-comment">// 表示する「ビュー名」</span>
+<span class="line-num">013:</span>         <span class="code-keyword">return</span> <span class="code-string">"input"</span>;
+<span class="line-num">014:</span>     }
+<span class="line-num">015:</span> }</pre>
+                    </div>
+                </div>
+
+                <p>
+                    続いて「showView」メソッドの戻り値に対応するビュー「input.html」を作成します。「src/main/resources/templates」フォルダに配置してください。
+                </p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <span class="code-dot red"></span>
+                            <span class="code-dot yellow"></span>
+                            <span class="code-dot green"></span>
+                        </div>
+                        <span class="code-title">リスト7.2 input.html</span>
+                    </div>
+                    <div class="code-content">
+                        <pre><span class="line-num">001:</span> &lt;!DOCTYPE html&gt;
+<span class="line-num">002:</span> &lt;html xmlns:th=<span class="code-string">"http://www.thymeleaf.org"</span>&gt;
+<span class="line-num">003:</span> &lt;head&gt;
+<span class="line-num">004:</span> &lt;meta charset=<span class="code-string">"UTF-8"</span>&gt;
+<span class="line-num">005:</span> &lt;title&gt;RequestParam&lt;/title&gt;
+<span class="line-num">006:</span> &lt;/head&gt;
+<span class="line-num">007:</span> &lt;body&gt;
+<span class="line-num">008:</span>     &lt;h1&gt;入力画面&lt;/h1&gt;
+<span class="line-num">009:</span>     &lt;hr&gt;
+<span class="line-num">010:</span>     &lt;form action=<span class="code-string">"./output.html"</span> method=<span class="code-string">"get"</span>&gt;
+<span class="line-num">011:</span>         &lt;label for=<span class="code-string">"get-value"</span>&gt;入力値：&lt;/label&gt;
+<span class="line-num">012:</span>         &lt;input type=<span class="code-string">"text"</span> id=<span class="code-string">"get-value"</span> name=<span class="code-string">"val"</span>&gt;
+<span class="line-num">013:</span>         &lt;button type=<span class="code-string">"submit"</span>&gt;GET送信&lt;/button&gt;
+<span class="line-num">014:</span>     &lt;/form&gt;
+<span class="line-num">015:</span>     &lt;br&gt;
+<span class="line-num">016:</span>     &lt;form action=<span class="code-string">"./output.html"</span> method=<span class="code-string">"post"</span>&gt;
+<span class="line-num">017:</span>         &lt;label for=<span class="code-string">"post-value"</span>&gt;入力値：&lt;/label&gt;
+<span class="line-num">018:</span>         &lt;input type=<span class="code-string">"text"</span> id=<span class="code-string">"post-value"</span> name=<span class="code-string">"val"</span>&gt;
+<span class="line-num">019:</span>         &lt;button type=<span class="code-string">"submit"</span>&gt;POST送信&lt;/button&gt;
+<span class="line-num">020:</span>     &lt;/form&gt;
+<span class="line-num">021:</span> &lt;/body&gt;
+<span class="line-num">022:</span> &lt;/html&gt;</pre>
+                    </div>
+                </div>
+
+                <p>
+                    ここでは「ナチュラルテンプレート」の利点を活かすため、10行目と16行目でaction属性に相対パス「./output.html」を指定しています。action属性はフォームデータの送信先URLを指定します。12行目と18行目の<code>name="val"</code>が、後でサーバー側で値を受け取るための「キー」になります。
+                </p>
+
+                <p>次に出力画面「output.html」を作成します。同じく「templates」フォルダに配置してください。</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <span class="code-dot red"></span>
+                            <span class="code-dot yellow"></span>
+                            <span class="code-dot green"></span>
+                        </div>
+                        <span class="code-title">リスト7.3 output.html</span>
+                    </div>
+                    <div class="code-content">
+                        <pre><span class="line-num">001:</span> &lt;!DOCTYPE html&gt;
+<span class="line-num">002:</span> &lt;html xmlns:th=<span class="code-string">"http://www.thymeleaf.org"</span>&gt;
+<span class="line-num">003:</span> &lt;head&gt;
+<span class="line-num">004:</span> &lt;meta charset=<span class="code-string">"UTF-8"</span>&gt;
+<span class="line-num">005:</span> &lt;title&gt;RequestParam&lt;/title&gt;
+<span class="line-num">006:</span> &lt;/head&gt;
+<span class="line-num">007:</span> &lt;body&gt;
+<span class="line-num">008:</span>     &lt;h1&gt;出力画面&lt;/h1&gt;
+<span class="line-num">009:</span>     &lt;hr&gt;
+<span class="line-num">010:</span>     &lt;h2 th:text=<span class="code-string">"${value}"</span>&gt;送信された値が表示される&lt;/h2&gt;
+<span class="line-num">011:</span>     &lt;a href=<span class="code-string">"./input.html"</span>&gt;入力画面へ&lt;/a&gt;
+<span class="line-num">012:</span> &lt;/body&gt;
+<span class="line-num">013:</span> &lt;/html&gt;</pre>
+                    </div>
+                </div>
+
+                <p>
+                    10行目の<code>th:text="${value}"</code>は、コントローラからModelに格納された「value」という名前のデータを表示します。タグ内の「送信された値が表示される」は、アプリケーション起動前にHTMLファイルを直接開いた場合のプレビュー用テキストです。
+                </p>
+
+                <div class="info-box primary">
+                    <h4>💡 ナチュラルテンプレートの利点</h4>
+                    <p>
+                        VSCodeのエクスプローラーからinput.htmlを右クリックし「エクスプローラーで表示」を選択してファイルをブラウザで開くと、アプリケーションを起動しなくても画面の見た目や遷移を確認できます。または、ファイルをFinderやエクスプローラーからブラウザにドラッグ＆ドロップしても開けます。
+                    </p>
+                </div>
+
+                <h3>03 コントローラとビューの修正</h3>
+
+                <p>
+                    作成したビューとコントローラを、実際にSpring
+                    Bootで動作するように修正します。まず「input.html」のformタグを修正します。
+                </p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <span class="code-dot red"></span>
+                            <span class="code-dot yellow"></span>
+                            <span class="code-dot green"></span>
+                        </div>
+                        <span class="code-title">リスト7.4 input.html（修正後・抜粋）</span>
+                    </div>
+                    <div class="code-content">
+                        <pre><span class="line-num">001:</span> &lt;h1&gt;入力画面&lt;/h1&gt;
+<span class="line-num">002:</span> &lt;hr&gt;
+<span class="line-num">003:</span> &lt;form action=<span class="code-string">"./output.html"</span> <span class="code-annotation">th:action="@{/result}"</span> method=<span class="code-string">"get"</span>&gt;
+<span class="line-num">004:</span>     :
+<span class="line-num">005:</span>     :
+<span class="line-num">006:</span> &lt;form action=<span class="code-string">"./output.html"</span> <span class="code-annotation">th:action="@{/result}"</span> method=<span class="code-string">"post"</span>&gt;</pre>
+                    </div>
+                </div>
+
+                <p>
+                    <code>th:action</code>はThymeleafでフォームの送信先を指定する属性です。<code>@{/result}</code>の「@{
+                    }」記法でサーバー側の処理URLを指定します（ここでは「/result」）。
+                </p>
+
+                <p>続いて「output.html」のリンクを修正します。</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <span class="code-dot red"></span>
+                            <span class="code-dot yellow"></span>
+                            <span class="code-dot green"></span>
+                        </div>
+                        <span class="code-title">リスト7.5 output.html（修正後・抜粋）</span>
+                    </div>
+                    <div class="code-content">
+                        <pre><span class="line-num">001:</span> &lt;h2 th:text=<span class="code-string">"${value}"</span>&gt;送信された値が表示される&lt;/h2&gt;
+<span class="line-num">002:</span> &lt;a href=<span class="code-string">"./input.html"</span> <span class="code-annotation">th:href="@{/show}"</span>&gt;入力画面へ&lt;/a&gt;</pre>
+                    </div>
+                </div>
+
+                <p>
+                    <code>th:href</code
+                    >はThymeleafでリンク先を指定する属性です。<code>@{/show}</code>でコントローラの「/show」にマッピングされたメソッドへ遷移します。
+                </p>
+
+                <p>最後に「RequestParamController」を修正して、リクエストパラメータを受け取る処理を追加します。</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <span class="code-dot red"></span>
+                            <span class="code-dot yellow"></span>
+                            <span class="code-dot green"></span>
+                        </div>
+                        <span class="code-title">リスト7.6 RequestParamController.java（修正後）</span>
+                    </div>
+                    <div class="code-content">
+                        <pre><span class="line-num">001:</span> <span class="code-keyword">package</span> com.example.demo.controller;
+<span class="line-num">002:</span>
+<span class="line-num">003:</span> <span class="code-keyword">import</span> org.springframework.stereotype.Controller;
+<span class="line-num">004:</span> <span class="code-keyword">import</span> org.springframework.ui.Model;
+<span class="line-num">005:</span> <span class="code-keyword">import</span> org.springframework.web.bind.annotation.GetMapping;
+<span class="line-num">006:</span> <span class="code-keyword">import</span> org.springframework.web.bind.annotation.PostMapping;
+<span class="line-num">007:</span> <span class="code-keyword">import</span> org.springframework.web.bind.annotation.RequestParam;
+<span class="line-num">008:</span>
+<span class="line-num">009:</span> <span class="code-annotation">@Controller</span>
+<span class="line-num">010:</span> <span class="code-keyword">public class</span> RequestParamController {
+<span class="line-num">011:</span>
+<span class="line-num">012:</span>     <span class="code-comment">// GET かつ [url：/show]</span>
+<span class="line-num">013:</span>     <span class="code-annotation">@GetMapping("show")</span>
+<span class="line-num">014:</span>     <span class="code-keyword">public</span> String showView() {
+<span class="line-num">015:</span>         <span class="code-keyword">return</span> <span class="code-string">"input"</span>;
+<span class="line-num">016:</span>     }
+<span class="line-num">017:</span>
+<span class="line-num">018:</span>     <span class="code-comment">// GET かつ [url：/result]</span>
+<span class="line-num">019:</span>     <span class="code-annotation">@GetMapping("result")</span>
+<span class="line-num">020:</span>     <span class="code-keyword">public</span> String showResultGet(
+<span class="line-num">021:</span>             <span class="code-annotation">@RequestParam</span> String val, Model model) {
+<span class="line-num">022:</span>         model.addAttribute(<span class="code-string">"value"</span>, val);
+<span class="line-num">023:</span>         <span class="code-keyword">return</span> <span class="code-string">"output"</span>;
+<span class="line-num">024:</span>     }
+<span class="line-num">025:</span>
+<span class="line-num">026:</span>     <span class="code-comment">// POST かつ [url：/result]</span>
+<span class="line-num">027:</span>     <span class="code-annotation">@PostMapping("result")</span>
+<span class="line-num">028:</span>     <span class="code-keyword">public</span> String showResultPost(
+<span class="line-num">029:</span>             <span class="code-annotation">@RequestParam</span> String val, Model model) {
+<span class="line-num">030:</span>         model.addAttribute(<span class="code-string">"value"</span>, val);
+<span class="line-num">031:</span>         <span class="code-keyword">return</span> <span class="code-string">"output"</span>;
+<span class="line-num">032:</span>     }
+<span class="line-num">033:</span> }</pre>
+                    </div>
+                </div>
+
+                <p>
+                    21行目と29行目の<code>@RequestParam String val</code
+                    >がポイントです。<code>@RequestParam</code>アノテーションを付けることで、HTTPリクエストに含まれるパラメータを引数として受け取れます。引数名「val」は、ビュー側のinputタグで指定した<code>name="val"</code>と一致させる必要があります。
+                </p>
+
+                <!-- @RequestParamの図 -->
+                <div class="figure">
+                    <p class="figure-caption">【図7.2】@RequestParamでのデータ渡し</p>
+                    <svg viewBox="0 0 700 180" style="max-width: 600px">
+                        <defs>
+                            <linearGradient id="viewGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color: #4299e1" />
+                                <stop offset="100%" style="stop-color: #3182ce" />
+                            </linearGradient>
+                            <linearGradient id="ctrlGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color: #48bb78" />
+                                <stop offset="100%" style="stop-color: #38a169" />
+                            </linearGradient>
+                            <marker id="arrowOrange" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <path d="M0,0 L0,6 L9,3 z" fill="#ED8936" />
+                            </marker>
+                        </defs>
+
+                        <!-- ビュー側 -->
+                        <rect
+                            x="30"
+                            y="30"
+                            width="220"
+                            height="120"
+                            rx="10"
+                            fill="#EBF8FF"
+                            stroke="#3182CE"
+                            stroke-width="2"
+                        />
+                        <rect x="30" y="30" width="220" height="35" rx="10" fill="url(#viewGrad)" />
+                        <text x="140" y="53" text-anchor="middle" fill="white" font-size="13" font-weight="bold">
+                            ビューの入力フィールド
+                        </text>
+
+                        <rect x="50" y="80" width="180" height="50" rx="5" fill="white" stroke="#A0AEC0" />
+                        <text x="60" y="100" fill="#718096" font-size="11" font-family="monospace">
+                            &lt;input type="text"
+                        </text>
+                        <text x="60" y="118" fill="#718096" font-size="11" font-family="monospace">
+                            name="
+                            <tspan fill="#E53E3E" font-weight="bold">val</tspan>
+                            "&gt;
+                        </text>
+
+                        <!-- 矢印 -->
+                        <path
+                            d="M 260 90 L 410 90"
+                            stroke="#ED8936"
+                            stroke-width="3"
+                            fill="none"
+                            marker-end="url(#arrowOrange)"
+                        />
+                        <rect x="300" y="55" width="70" height="25" rx="12" fill="#FEEBC8" stroke="#ED8936" />
+                        <text x="335" y="72" text-anchor="middle" fill="#C05621" font-size="11" font-weight="bold">
+                            同じ名前
+                        </text>
+
+                        <!-- コントローラ側 -->
+                        <rect
+                            x="420"
+                            y="30"
+                            width="250"
+                            height="120"
+                            rx="10"
+                            fill="#F0FFF4"
+                            stroke="#38A169"
+                            stroke-width="2"
+                        />
+                        <rect x="420" y="30" width="250" height="35" rx="10" fill="url(#ctrlGrad)" />
+                        <text x="545" y="53" text-anchor="middle" fill="white" font-size="13" font-weight="bold">
+                            コントローラの引数
+                        </text>
+
+                        <rect x="440" y="80" width="210" height="50" rx="5" fill="white" stroke="#A0AEC0" />
+                        <text x="450" y="110" fill="#718096" font-size="11" font-family="monospace">
+                            @RequestParam String
+                            <tspan fill="#E53E3E" font-weight="bold">val</tspan>
+                        </text>
+                    </svg>
+                </div>
+
+                <h3>04 実行と確認</h3>
+
+                <p>
+                    「Bootダッシュボード」で「RequestParamSample」を選択し、「起動」ボタンを押します。ブラウザで「http://localhost:8080/show」にアクセスすると入力画面が表示されます。
+                </p>
+
+                <p>
+                    【GET送信の確認】入力値に「ゲット」と入力して「GET送信」ボタンをクリックすると、出力画面が表示されます。URLを見ると「?val=ゲット」と表示され、リクエストパラメータがURLに含まれていることがわかります。
+                </p>
+
+                <p>
+                    【POST送信の確認】入力画面に戻り、「ポスト」と入力して「POST送信」ボタンをクリックします。出力画面が表示されますが、URLには値が表示されません。POSTではデータがリクエストボディに格納されるためです。
+                </p>
+
+                <div class="info-box success">
+                    <h4>✅ 確認完了</h4>
+                    <p>
+                        GETメソッドとPOSTメソッドで値を送り、@RequestParamで受け取る基本的な流れを理解できましたか？次は複数の値を送受信する方法を学習しましょう。
+                    </p>
+                </div>
+
+                <!-- Column -->
+                <div class="column">
+                    <h3>Column | @RequestParamのオプション属性</h3>
+                    <p>@RequestParamには便利なオプション属性があります。</p>
+                    <ul style="margin: 15px 0 0 20px">
+                        <li>
+                            <strong>value / name</strong>：パラメータ名を指定。引数名と異なる場合に使用。例：<code
+                                >@RequestParam(name="userName")</code
+                            >
+                        </li>
+                        <li><strong>required</strong>：必須かどうかを指定。デフォルトはtrue。falseにすると省略可能</li>
+                        <li>
+                            <strong>defaultValue</strong>：パラメータがない場合のデフォルト値を指定。例：<code
+                                >@RequestParam(defaultValue="ゲスト")</code
+                            >
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 7-2 複数のリクエストパラメータを送ろう -->
+            <section class="section" id="section7-2">
+                <div class="section-header">
+                    <span class="section-number">Section 7-2</span>
+                    <h2 class="section-title">複数のリクエストパラメータを送ろう</h2>
+                </div>
+
+                <p>
+                    実際のWebアプリケーションでは、名前、年齢、生年月日など複数の入力項目を一度に送信することがほとんどです。この節では、複数のリクエストパラメータをまとめて受け取る方法を学びます。
+                </p>
+
+                <div class="info-box warning">
+                    <h4>⚠️ @RequestParamだけでは不便な理由</h4>
+                    <p>
+                        @RequestParamは1つの値を受け取るには便利ですが、入力項目が増えると引数がどんどん増えて管理が大変になります。Spring
+                        MVCでは「Formクラス」を使うことで、複数のパラメータをスッキリまとめて受け取ることができます。
+                    </p>
+                </div>
+
+                <h2>7-2-1 「@RequestParam」で複数値を受け取る</h2>
+
+                <p>
+                    まずは@RequestParamで複数値を受け取る方法を確認しましょう。先ほどの「RequestParamSample」プロジェクトに追加していきます。
+                </p>
+
+                <h3>01 コントローラとビューの作成</h3>
+
+                <p>新しいコントローラ「RequestParamMultipleController」を作成します。</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <span class="code-dot red"></span>
+                            <span class="code-dot yellow"></span>
+                            <span class="code-dot green"></span>
+                        </div>
+                        <span class="code-title">リスト7.7 RequestParamMultipleController.java</span>
+                    </div>
+                    <div class="code-content">
+                        <pre><span class="line-num">001:</span> <span class="code-keyword">package</span> com.example.demo.controller;
+<span class="line-num">002:</span>
+<span class="line-num">003:</span> <span class="code-keyword">import</span> org.springframework.stereotype.Controller;
+<span class="line-num">004:</span> <span class="code-keyword">import</span> org.springframework.web.bind.annotation.GetMapping;
+<span class="line-num">005:</span>
+<span class="line-num">006:</span> <span class="code-annotation">@Controller</span>
+<span class="line-num">007:</span> <span class="code-keyword">public class</span> RequestParamMultipleController {
+<span class="line-num">008:</span>
+<span class="line-num">009:</span>     <span class="code-annotation">@GetMapping("multiple")</span>
+<span class="line-num">010:</span>     <span class="code-keyword">public</span> String showView() {
+<span class="line-num">011:</span>         <span class="code-keyword">return</span> <span class="code-string">"entry"</span>;
+<span class="line-num">012:</span>     }
+<span class="line-num">013:</span> }</pre>
+                    </div>
+                </div>
+
+                <p>入力画面「entry.html」を作成します。</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <span class="code-dot red"></span>
+                            <span class="code-dot yellow"></span>
+                            <span class="code-dot green"></span>
+                        </div>
+                        <span class="code-title">リスト7.8 entry.html</span>
+                    </div>
+                    <div class="code-content">
+                        <pre><span class="line-num">001:</span> &lt;!DOCTYPE html&gt;
+<span class="line-num">002:</span> &lt;html xmlns:th=<span class="code-string">"http://www.thymeleaf.org"</span>&gt;
+<span class="line-num">003:</span> &lt;head&gt;
+<span class="line-num">004:</span> &lt;meta charset=<span class="code-string">"UTF-8"</span>&gt;
+<span class="line-num">005:</span> &lt;title&gt;入力画面&lt;/title&gt;
+<span class="line-num">006:</span> &lt;/head&gt;
+<span class="line-num">007:</span> &lt;body&gt;
+<span class="line-num">008:</span>     &lt;form th:action=<span class="code-string">"@{/confirm}"</span> method=<span class="code-string">"post"</span>&gt;
+<span class="line-num">009:</span>         &lt;div&gt;
+<span class="line-num">010:</span>             &lt;label for=<span class="code-string">"name"</span>&gt;名前：&lt;/label&gt;
+<span class="line-num">011:</span>             &lt;input type=<span class="code-string">"text"</span> name=<span class="code-string">"name"</span>&gt;
+<span class="line-num">012:</span>         &lt;/div&gt;
+<span class="line-num">013:</span>         &lt;div&gt;
+<span class="line-num">014:</span>             &lt;label for=<span class="code-string">"age"</span>&gt;年齢：&lt;/label&gt;
+<span class="line-num">015:</span>             &lt;input type=<span class="code-string">"number"</span> name=<span class="code-string">"age"</span> min=<span class="code-string">"1"</span> max=<span class="code-string">"100"</span>&gt;歳
+<span class="line-num">016:</span>         &lt;/div&gt;
+<span class="line-num">017:</span>         &lt;div&gt;
+<span class="line-num">018:</span>             &lt;label for=<span class="code-string">"birth"</span>&gt;生年月日：&lt;/label&gt;
+<span class="line-num">019:</span>             &lt;input type=<span class="code-string">"date"</span> name=<span class="code-string">"birth"</span>&gt;
+<span class="line-num">020:</span>         &lt;/div&gt;
+<span class="line-num">021:</span>         &lt;input type=<span class="code-string">"submit"</span> value=<span class="code-string">"送信"</span>&gt;
+<span class="line-num">022:</span>     &lt;/form&gt;
+<span class="line-num">023:</span> &lt;/body&gt;
+<span class="line-num">024:</span> &lt;/html&gt;</pre>
+                    </div>
+                </div>
+
+                <p>
+                    15行目の<code>type="number"</code>は数値入力欄を作成し、min/max属性で入力範囲を制限できます。19行目の<code>type="date"</code>は日付選択欄を作成します。表示形式はブラウザのロケールに依存しますが、実際の値は常に「yyyy-MM-dd」形式です。
+                </p>
+
+                <h3>02 コントローラへの追記</h3>
+
+                <p>@RequestParamで複数値を受け取るメソッドを追加します。</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <span class="code-dot red"></span>
+                            <span class="code-dot yellow"></span>
+                            <span class="code-dot green"></span>
+                        </div>
+                        <span class="code-title">リスト7.9 RequestParamMultipleControllerへの追記</span>
+                    </div>
+                    <div class="code-content">
+                        <pre><span class="line-num">001:</span> <span class="code-annotation">@PostMapping("confirm")</span>
+<span class="line-num">002:</span> <span class="code-keyword">public</span> String confirmView(Model model,
+<span class="line-num">003:</span>         <span class="code-annotation">@RequestParam</span> String name,
+<span class="line-num">004:</span>         <span class="code-annotation">@RequestParam</span> Integer age,
+<span class="line-num">005:</span>         <span class="code-annotation">@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)</span>
+<span class="line-num">006:</span>         <span class="code-annotation">@RequestParam</span> LocalDate birth) {
+<span class="line-num">007:</span>     model.addAttribute(<span class="code-string">"name"</span>, name);
+<span class="line-num">008:</span>     model.addAttribute(<span class="code-string">"age"</span>, age);
+<span class="line-num">009:</span>     model.addAttribute(<span class="code-string">"birth"</span>, birth);
+<span class="line-num">010:</span>     <span class="code-keyword">return</span> <span class="code-string">"confirm"</span>;
+<span class="line-num">011:</span> }</pre>
+                    </div>
+                </div>
+
+                <p>
+                    見ての通り、パラメータが3つあるだけで引数がかなり長くなります。5〜6行目の<code>@DateTimeFormat</code>は日付形式を指定するアノテーションで、「yyyy-MM-dd」形式の文字列をLocalDate型に変換します。
+                </p>
+
+                <h3>03 ビューの作成（確認画面）</h3>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <span class="code-dot red"></span>
+                            <span class="code-dot yellow"></span>
+                            <span class="code-dot green"></span>
+                        </div>
+                        <span class="code-title">リスト7.10 confirm.html</span>
+                    </div>
+                    <div class="code-content">
+                        <pre><span class="line-num">001:</span> &lt;!DOCTYPE html&gt;
+<span class="line-num">002:</span> &lt;html xmlns:th=<span class="code-string">"http://www.thymeleaf.org"</span>&gt;
+<span class="line-num">003:</span> &lt;head&gt;
+<span class="line-num">004:</span>     &lt;meta charset=<span class="code-string">"UTF-8"</span>&gt;
+<span class="line-num">005:</span>     &lt;title&gt;確認画面&lt;/title&gt;
+<span class="line-num">006:</span> &lt;/head&gt;
+<span class="line-num">007:</span> &lt;body&gt;
+<span class="line-num">008:</span>     &lt;ul&gt;
+<span class="line-num">009:</span>         &lt;li&gt;名前    ：[[${name}]]&lt;/li&gt;
+<span class="line-num">010:</span>         &lt;li&gt;年齢    ：[[${age}]] 歳&lt;/li&gt;
+<span class="line-num">011:</span>         &lt;li&gt;生年月日：[[${birth}]]&lt;/li&gt;
+<span class="line-num">012:</span>     &lt;/ul&gt;
+<span class="line-num">013:</span> &lt;/body&gt;
+<span class="line-num">014:</span> &lt;/html&gt;</pre>
+                    </div>
+                </div>
+
+                <h2>7-2-2 Formクラスとは？</h2>
+
+                <p>
+                    Formクラスは、HTMLフォームから送信されるデータをまとめて受け取るためのJavaクラスです。フォームの各入力フィールドに対応するフィールドを持ち、Spring
+                    MVCが自動的にデータを格納してくれます。
+                </p>
+
+                <!-- Formクラスのイメージ図 -->
+                <div class="figure">
+                    <p class="figure-caption">【図7.3】Formクラスのイメージ</p>
+                    <svg viewBox="0 0 750 200" style="max-width: 700px">
+                        <defs>
+                            <linearGradient id="boxGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color: #d69e2e" />
+                                <stop offset="100%" style="stop-color: #b7791f" />
+                            </linearGradient>
+                            <marker id="arrowGray" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <path d="M0,0 L0,6 L9,3 z" fill="#718096" />
+                            </marker>
+                        </defs>
+
+                        <!-- バラバラの荷物 -->
+                        <text x="90" y="20" text-anchor="middle" fill="#2D3748" font-size="12" font-weight="bold">
+                            バラバラのデータ
+                        </text>
+                        <rect
+                            x="20"
+                            y="35"
+                            width="60"
+                            height="40"
+                            rx="5"
+                            fill="#FC8181"
+                            stroke="#C53030"
+                            stroke-width="2"
+                        />
+                        <text x="50" y="60" text-anchor="middle" fill="white" font-size="10" font-weight="bold">
+                            name
+                        </text>
+                        <rect
+                            x="90"
+                            y="45"
+                            width="60"
+                            height="40"
+                            rx="5"
+                            fill="#63B3ED"
+                            stroke="#2B6CB0"
+                            stroke-width="2"
+                        />
+                        <text x="120" y="70" text-anchor="middle" fill="white" font-size="10" font-weight="bold">
+                            age
+                        </text>
+                        <rect
+                            x="50"
+                            y="90"
+                            width="60"
+                            height="40"
+                            rx="5"
+                            fill="#68D391"
+                            stroke="#276749"
+                            stroke-width="2"
+                        />
+                        <text x="80" y="115" text-anchor="middle" fill="white" font-size="10" font-weight="bold">
+                            birth
+                        </text>
+
+                        <!-- 矢印1 -->
+                        <path
+                            d="M 170 80 L 230 80"
+                            stroke="#718096"
+                            stroke-width="2"
+                            fill="none"
+                            marker-end="url(#arrowGray)"
+                        />
+
+                        <!-- 段ボール箱 -->
+                        <text x="330" y="20" text-anchor="middle" fill="#2D3748" font-size="12" font-weight="bold">
+                            Formクラスにまとめる
+                        </text>
+                        <rect
+                            x="250"
+                            y="35"
+                            width="160"
+                            height="120"
+                            rx="8"
+                            fill="url(#boxGrad)"
+                            stroke="#975A16"
+                            stroke-width="2"
+                        />
+                        <rect x="265" y="50" width="130" height="90" rx="5" fill="#FEFCBF" stroke="#D69E2E" />
+                        <text x="330" y="70" text-anchor="middle" fill="#744210" font-size="11" font-weight="bold">
+                            SampleForm
+                        </text>
+                        <line x1="275" y1="77" x2="385" y2="77" stroke="#D69E2E" />
+                        <text x="285" y="95" fill="#744210" font-size="10">• name</text>
+                        <text x="285" y="112" fill="#744210" font-size="10">• age</text>
+                        <text x="285" y="129" fill="#744210" font-size="10">• birth</text>
+
+                        <!-- 矢印2 -->
+                        <path
+                            d="M 420 90 L 480 90"
+                            stroke="#718096"
+                            stroke-width="2"
+                            fill="none"
+                            marker-end="url(#arrowGray)"
+                        />
+
+                        <!-- コントローラ -->
+                        <text x="610" y="20" text-anchor="middle" fill="#2D3748" font-size="12" font-weight="bold">
+                            コントローラで受け取り
+                        </text>
+                        <rect
+                            x="490"
+                            y="35"
+                            width="220"
+                            height="120"
+                            rx="10"
+                            fill="#F0FFF4"
+                            stroke="#38A169"
+                            stroke-width="2"
+                        />
+                        <rect x="490" y="35" width="220" height="28" rx="10" fill="#48BB78" />
+                        <text x="600" y="54" text-anchor="middle" fill="white" font-size="11" font-weight="bold">
+                            Controller
+                        </text>
+                        <rect x="505" y="73" width="190" height="68" rx="5" fill="white" stroke="#A0AEC0" />
+                        <text x="515" y="93" fill="#718096" font-size="10" font-family="monospace">
+                            public String confirmView(
+                        </text>
+                        <text x="530" y="110" fill="#48BB78" font-size="10" font-family="monospace" font-weight="bold">
+                            SampleForm form
+                        </text>
+                        <text x="515" y="127" fill="#718096" font-size="10" font-family="monospace">) { ... }</text>
+
+                        <!-- 説明テキスト -->
+                        <text x="375" y="185" text-anchor="middle" fill="#4A5568" font-size="11">
+                            複数のデータを1つのオブジェクトにまとめて渡すことができます
+                        </text>
+                    </svg>
+                </div>
+
+                <div class="info-box primary">
+                    <h4>💡 Formクラスのイメージ</h4>
+                    <p>
+                        通販で複数の商品を購入したとき、1個ずつ届くより、まとめて1つの段ボールで届く方が受け取りが楽ですよね。Formクラスは、バラバラのデータを1つの「段ボール箱」にまとめるイメージです。
+                    </p>
+                </div>
+
+                <h3>01 Formクラスの作成</h3>
+
+                <p>
+                    「src/main/java」→「com.example.demo」に「form」パッケージを作成し、「SampleForm」クラスを作成します。
+                </p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <span class="code-dot red"></span>
+                            <span class="code-dot yellow"></span>
+                            <span class="code-dot green"></span>
+                        </div>
+                        <span class="code-title">リスト7.11 SampleForm.java</span>
+                    </div>
+                    <div class="code-content">
+                        <pre><span class="line-num">001:</span> <span class="code-keyword">package</span> com.example.demo.form;
+<span class="line-num">002:</span>
+<span class="line-num">003:</span> <span class="code-keyword">import</span> java.time.LocalDate;
+<span class="line-num">004:</span> <span class="code-keyword">import</span> org.springframework.format.annotation.DateTimeFormat;
+<span class="line-num">005:</span> <span class="code-keyword">import</span> lombok.Data;
+<span class="line-num">006:</span>
+<span class="line-num">007:</span> <span class="code-annotation">@Data</span>
+<span class="line-num">008:</span> <span class="code-keyword">public class</span> SampleForm {
+<span class="line-num">009:</span>     <span class="code-keyword">private</span> String name;
+<span class="line-num">010:</span>     <span class="code-keyword">private</span> Integer age;
+<span class="line-num">011:</span>     <span class="code-annotation">@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)</span>
+<span class="line-num">012:</span>     <span class="code-keyword">private</span> LocalDate birth;
+<span class="line-num">013:</span> }</pre>
+                    </div>
+                </div>
+
+                <p>
+                    7行目の<code>@Data</code>はLombokのアノテーションで、getter/setterを自動生成します。フィールド名はHTMLのname属性と一致させてください。
+                </p>
+
+                <h3>02 コントローラへの修正・追記</h3>
+
+                <p>Formクラスを使った新しいメソッドを追加します。</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <span class="code-dot red"></span>
+                            <span class="code-dot yellow"></span>
+                            <span class="code-dot green"></span>
+                        </div>
+                        <span class="code-title">リスト7.12 confirmView（Formクラス使用）</span>
+                    </div>
+                    <div class="code-content">
+                        <pre><span class="line-num">001:</span> <span class="code-comment">// POST かつ [url：/confirm]</span>
+<span class="line-num">002:</span> <span class="code-annotation">@PostMapping("confirm")</span>
+<span class="line-num">003:</span> <span class="code-keyword">public</span> String confirmView(SampleForm f) {
+<span class="line-num">004:</span>     <span class="code-keyword">return</span> <span class="code-string">"confirm2"</span>;
+<span class="line-num">005:</span> }</pre>
+                    </div>
+                </div>
+
+                <p>
+                    驚くほどシンプルになりました！引数に<code>SampleForm f</code>を指定するだけで、Spring
+                    MVCが自動的にリクエストパラメータをFormクラスに格納し、さらにModelにも自動登録してくれます。
+                </p>
+
+                <h3>03 ビューの作成（確認画面：Formクラス使用）</h3>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <span class="code-dot red"></span>
+                            <span class="code-dot yellow"></span>
+                            <span class="code-dot green"></span>
+                        </div>
+                        <span class="code-title">リスト7.13 confirm2.html</span>
+                    </div>
+                    <div class="code-content">
+                        <pre><span class="line-num">001:</span> &lt;!DOCTYPE html&gt;
+<span class="line-num">002:</span> &lt;html xmlns:th=<span class="code-string">"http://www.thymeleaf.org"</span>&gt;
+<span class="line-num">003:</span> &lt;head&gt;
+<span class="line-num">004:</span>     &lt;meta charset=<span class="code-string">"UTF-8"</span>&gt;
+<span class="line-num">005:</span>     &lt;title&gt;確認画面：Formクラス使用&lt;/title&gt;
+<span class="line-num">006:</span> &lt;/head&gt;
+<span class="line-num">007:</span> &lt;body&gt;
+<span class="line-num">008:</span>     &lt;ul th:object=<span class="code-string">"${sampleForm}"</span>&gt;
+<span class="line-num">009:</span>         &lt;li&gt;名前    ：[[*{name}]]&lt;/li&gt;
+<span class="line-num">010:</span>         &lt;li&gt;年齢    ：[[*{age}]] 歳&lt;/li&gt;
+<span class="line-num">011:</span>         &lt;li&gt;生年月日：[[*{birth}]]&lt;/li&gt;
+<span class="line-num">012:</span>     &lt;/ul&gt;
+<span class="line-num">013:</span> &lt;/body&gt;
+<span class="line-num">014:</span> &lt;/html&gt;</pre>
+                    </div>
+                </div>
+
+                <p>
+                    8行目の<code>th:object="${sampleForm}"</code>でFormクラスを指定します。クラス名「SampleForm」の先頭を小文字にした「sampleForm」がModelに登録される名前です。9〜11行目の<code>*{フィールド名}</code>でFormクラスの各フィールドにアクセスします。
+                </p>
+
+                <h2>7-2-3 まとめ</h2>
+
+                <p>Formクラスを使うメリットをまとめます。</p>
+
+                <table>
+                    <tr>
+                        <th>ポイント</th>
+                        <th>説明</th>
+                    </tr>
+                    <tr>
+                        <td>データの自動バインド</td>
+                        <td>HTMLのname属性とFormクラスのフィールド名を一致させると、自動的にデータが格納される</td>
+                    </tr>
+                    <tr>
+                        <td>型変換の自動化</td>
+                        <td>文字列から数値や日付への変換が自動で行われる</td>
+                    </tr>
+                    <tr>
+                        <td>Modelへの自動登録</td>
+                        <td>Formクラスを引数にすると、自動的にModelに登録される（Modelを引数に書く必要なし）</td>
+                    </tr>
+                    <tr>
+                        <td>命名規則</td>
+                        <td>
+                            Modelには「クラス名の先頭を小文字にした名前」で登録される（例：SampleForm → sampleForm）
+                        </td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- 7-3 URLに埋め込まれた値を受け取ろう -->
+            <section class="section" id="section7-3">
+                <div class="section-header">
+                    <span class="section-number">Section 7-3</span>
+                    <h2 class="section-title">URLに埋め込まれた値を受け取ろう</h2>
+                </div>
+
+                <p>
+                    この節では、URLのパス部分に埋め込まれた値を取得する<code>@PathVariable</code>と、同じフォーム内の複数ボタンを判別する方法を学びます。
+                </p>
+
+                <h2>7-3-1 プロジェクトの作成（リンク）</h2>
+
+                <p>
+                    7-1-3と同様の手順で、Spring Initializr（<a href="https://start.spring.io" target="_blank" rel="noopener noreferrer">https://start.spring.io</a>）を使用して新しいプロジェクト「PathValiableSample」を作成します。Projectは「Maven」、依存関係は「Spring Boot DevTools」「Thymeleaf」「Spring Web」を選択してください。ダウンロードしたZIPを解凍し、VSCodeで開きます。
+                </p>
+
+                <h3>01 コントローラとビューの作成</h3>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <span class="code-dot red"></span>
+                            <span class="code-dot yellow"></span>
+                            <span class="code-dot green"></span>
+                        </div>
+                        <span class="code-title">リスト7.14 PathValiableController.java</span>
+                    </div>
+                    <div class="code-content">
+                        <pre><span class="line-num">001:</span> <span class="code-keyword">package</span> com.example.demo.controller;
+<span class="line-num">002:</span>
+<span class="line-num">003:</span> <span class="code-keyword">import</span> org.springframework.stereotype.Controller;
+<span class="line-num">004:</span> <span class="code-keyword">import</span> org.springframework.web.bind.annotation.GetMapping;
+<span class="line-num">005:</span>
+<span class="line-num">006:</span> <span class="code-annotation">@Controller</span>
+<span class="line-num">007:</span> <span class="code-keyword">public class</span> PathValiableController {
+<span class="line-num">008:</span>     <span class="code-annotation">@GetMapping("show")</span>
+<span class="line-num">009:</span>     <span class="code-keyword">public</span> String showView() {
+<span class="line-num">010:</span>         <span class="code-keyword">return</span> <span class="code-string">"show"</span>;
+<span class="line-num">011:</span>     }
+<span class="line-num">012:</span> }</pre>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <span class="code-dot red"></span>
+                            <span class="code-dot yellow"></span>
+                            <span class="code-dot green"></span>
+                        </div>
+                        <span class="code-title">リスト7.15 show.html</span>
+                    </div>
+                    <div class="code-content">
+                        <pre><span class="line-num">001:</span> &lt;!DOCTYPE html&gt;
+<span class="line-num">002:</span> &lt;html xmlns:th=<span class="code-string">"http://www.thymeleaf.org"</span>&gt;
+<span class="line-num">003:</span> &lt;head&gt;
+<span class="line-num">004:</span>     &lt;meta charset=<span class="code-string">"UTF-8"</span>&gt;
+<span class="line-num">005:</span>     &lt;title&gt;URL埋め込みとボタン判別&lt;/title&gt;
+<span class="line-num">006:</span> &lt;/head&gt;
+<span class="line-num">007:</span> &lt;body&gt;
+<span class="line-num">008:</span>     &lt;div&gt;
+<span class="line-num">009:</span>         <span class="code-comment">&lt;!-- URLへの値埋め込み --&gt;</span>
+<span class="line-num">010:</span>         &lt;h3&gt;&lt;a th:href=<span class="code-string">"@{/function/1}"</span>&gt;機能-1&lt;/a&gt;&lt;/h3&gt;
+<span class="line-num">011:</span>         &lt;h3&gt;&lt;a th:href=<span class="code-string">"@{/function/2}"</span>&gt;機能-2&lt;/a&gt;&lt;/h3&gt;
+<span class="line-num">012:</span>         &lt;h3&gt;&lt;a th:href=<span class="code-string">"@{/function/3}"</span>&gt;機能-3&lt;/a&gt;&lt;/h3&gt;
+<span class="line-num">013:</span>         <span class="code-comment">&lt;!-- 同じformタグ内にある複数ボタン --&gt;</span>
+<span class="line-num">014:</span>         &lt;form th:action=<span class="code-string">"@{/send}"</span> method=<span class="code-string">"post"</span>&gt;
+<span class="line-num">015:</span>             &lt;input type=<span class="code-string">"submit"</span> value=<span class="code-string">"ボタンA"</span> name=<span class="code-string">"a"</span>&gt;
+<span class="line-num">016:</span>             &lt;input type=<span class="code-string">"submit"</span> value=<span class="code-string">"ボタンB"</span> name=<span class="code-string">"b"</span>&gt;
+<span class="line-num">017:</span>             &lt;input type=<span class="code-string">"submit"</span> value=<span class="code-string">"ボタンC"</span> name=<span class="code-string">"c"</span>&gt;
+<span class="line-num">018:</span>         &lt;/form&gt;
+<span class="line-num">019:</span>     &lt;/div&gt;
+<span class="line-num">020:</span> &lt;/body&gt;
+<span class="line-num">021:</span> &lt;/html&gt;</pre>
+                    </div>
+                </div>
+
+                <p>
+                    10〜12行目の<code>@{/function/1}</code>などでURLに値「1」「2」「3」を埋め込んでいます。14〜18行目は同じフォーム内に3つのボタンがあり、すべて同じURL「/send」にPOSTされます。各ボタンのname属性で押されたボタンを判別します。
+                </p>
+
+                <h3>02 コントローラへの追記（リンク処理）</h3>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <span class="code-dot red"></span>
+                            <span class="code-dot yellow"></span>
+                            <span class="code-dot green"></span>
+                        </div>
+                        <span class="code-title">リスト7.16 selectFunctionメソッド</span>
+                    </div>
+                    <div class="code-content">
+                        <pre><span class="line-num">001:</span> <span class="code-comment">// GET かつ [/function/{no}] ※{no}は動的に変わる</span>
+<span class="line-num">002:</span> <span class="code-annotation">@GetMapping("/function/{no}")</span>
+<span class="line-num">003:</span> <span class="code-keyword">public</span> String selectFunction(<span class="code-annotation">@PathVariable</span> Integer no) {
+<span class="line-num">004:</span>     String view = <span class="code-keyword">null</span>;
+<span class="line-num">005:</span>     <span class="code-keyword">switch</span> (no) {
+<span class="line-num">006:</span>     <span class="code-keyword">case</span> 1:
+<span class="line-num">007:</span>         view = <span class="code-string">"pathvaliable/function1"</span>;
+<span class="line-num">008:</span>         <span class="code-keyword">break</span>;
+<span class="line-num">009:</span>     <span class="code-keyword">case</span> 2:
+<span class="line-num">010:</span>         view = <span class="code-string">"pathvaliable/function2"</span>;
+<span class="line-num">011:</span>         <span class="code-keyword">break</span>;
+<span class="line-num">012:</span>     <span class="code-keyword">case</span> 3:
+<span class="line-num">013:</span>         view = <span class="code-string">"pathvaliable/function3"</span>;
+<span class="line-num">014:</span>         <span class="code-keyword">break</span>;
+<span class="line-num">015:</span>     }
+<span class="line-num">016:</span>     <span class="code-keyword">return</span> view;
+<span class="line-num">017:</span> }</pre>
+                    </div>
+                </div>
+
+                <p>
+                    2行目の<code>{no}</code>はプレースホルダです。URLの該当部分の値がここに格納されます。3行目の<code
+                        >@PathVariable Integer no</code
+                    >で、プレースホルダと同名の変数に値を受け取ります。
+                </p>
+
+                <!-- @PathVariableの図 -->
+                <div class="figure">
+                    <p class="figure-caption">【図7.4】@PathVariableの仕組み</p>
+                    <svg viewBox="0 0 700 200" style="max-width: 600px">
+                        <defs>
+                            <linearGradient id="urlGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color: #9f7aea" />
+                                <stop offset="100%" style="stop-color: #805ad5" />
+                            </linearGradient>
+                            <linearGradient id="mappingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color: #4299e1" />
+                                <stop offset="100%" style="stop-color: #3182ce" />
+                            </linearGradient>
+                            <marker id="arrowDown" markerWidth="10" markerHeight="10" refX="3" refY="9" orient="auto">
+                                <path d="M0,0 L6,0 L3,9 z" fill="#718096" />
+                            </marker>
+                            <marker
+                                id="arrowOrange2"
+                                markerWidth="10"
+                                markerHeight="10"
+                                refX="9"
+                                refY="3"
+                                orient="auto"
+                            >
+                                <path d="M0,0 L0,6 L9,3 z" fill="#ED8936" />
+                            </marker>
+                        </defs>
+
+                        <!-- URL例 -->
+                        <text x="170" y="20" text-anchor="middle" fill="#2D3748" font-size="13" font-weight="bold">
+                            リクエストURL
+                        </text>
+                        <rect
+                            x="30"
+                            y="30"
+                            width="280"
+                            height="45"
+                            rx="8"
+                            fill="url(#urlGrad)"
+                            stroke="#6B46C1"
+                            stroke-width="2"
+                        />
+                        <text x="170" y="58" text-anchor="middle" fill="white" font-size="12" font-family="monospace">
+                            /function/
+                            <tspan fill="#FED7E2" font-weight="bold">1</tspan>
+                        </text>
+
+                        <!-- 矢印 -->
+                        <path
+                            d="M 170 85 L 170 110"
+                            stroke="#718096"
+                            stroke-width="2"
+                            fill="none"
+                            marker-end="url(#arrowDown)"
+                        />
+
+                        <!-- @GetMapping -->
+                        <text x="170" y="140" text-anchor="middle" fill="#2D3748" font-size="13" font-weight="bold">
+                            マッピング定義
+                        </text>
+                        <rect
+                            x="30"
+                            y="150"
+                            width="280"
+                            height="45"
+                            rx="8"
+                            fill="url(#mappingGrad)"
+                            stroke="#2B6CB0"
+                            stroke-width="2"
+                        />
+                        <text x="170" y="178" text-anchor="middle" fill="white" font-size="11" font-family="monospace">
+                            @GetMapping("/function/
+                            <tspan fill="#FED7E2" font-weight="bold">{no}</tspan>
+                            ")
+                        </text>
+
+                        <!-- 接続矢印 -->
+                        <path
+                            d="M 320 110 L 390 110"
+                            stroke="#ED8936"
+                            stroke-width="3"
+                            fill="none"
+                            marker-end="url(#arrowOrange2)"
+                        />
+                        <rect x="330" y="80" width="70" height="25" rx="12" fill="#FEEBC8" stroke="#ED8936" />
+                        <text x="365" y="97" text-anchor="middle" fill="#C05621" font-size="10" font-weight="bold">
+                            同じ名前
+                        </text>
+
+                        <!-- メソッド引数 -->
+                        <text x="540" y="20" text-anchor="middle" fill="#2D3748" font-size="13" font-weight="bold">
+                            メソッド引数
+                        </text>
+                        <rect
+                            x="400"
+                            y="30"
+                            width="280"
+                            height="165"
+                            rx="10"
+                            fill="#F0FFF4"
+                            stroke="#38A169"
+                            stroke-width="2"
+                        />
+                        <rect x="400" y="30" width="280" height="35" rx="10" fill="#48BB78" />
+                        <text x="540" y="53" text-anchor="middle" fill="white" font-size="12" font-weight="bold">
+                            Controller メソッド
+                        </text>
+
+                        <rect x="415" y="80" width="250" height="100" rx="5" fill="white" stroke="#A0AEC0" />
+                        <text x="425" y="103" fill="#718096" font-size="10" font-family="monospace">
+                            public String selectFunction(
+                        </text>
+                        <text x="440" y="123" fill="#805AD5" font-size="10" font-family="monospace" font-weight="bold">
+                            @PathVariable Integer
+                            <tspan fill="#E53E3E">no</tspan>
+                        </text>
+                        <text x="425" y="143" fill="#718096" font-size="10" font-family="monospace">) {</text>
+                        <text x="440" y="163" fill="#A0AEC0" font-size="10" font-family="monospace">
+                            // no = 1 が格納される
+                        </text>
+                    </svg>
+                </div>
+
+                <h3>03 ビューの作成（機能画面）</h3>
+
+                <p>
+                    「templates」フォルダ内に「pathvaliable」パッケージを作成し、「function1.html」「function2.html」「function3.html」を作成します。
+                </p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <span class="code-dot red"></span>
+                            <span class="code-dot yellow"></span>
+                            <span class="code-dot green"></span>
+                        </div>
+                        <span class="code-title">リスト7.17 function1.html</span>
+                    </div>
+                    <div class="code-content">
+                        <pre><span class="line-num">001:</span> &lt;!DOCTYPE html&gt;
+<span class="line-num">002:</span> &lt;html&gt;
+<span class="line-num">003:</span> &lt;head&gt;
+<span class="line-num">004:</span>     &lt;meta charset=<span class="code-string">"UTF-8"</span>&gt;
+<span class="line-num">005:</span>     &lt;title&gt;機能1&lt;/title&gt;
+<span class="line-num">006:</span> &lt;/head&gt;
+<span class="line-num">007:</span> &lt;body&gt;
+<span class="line-num">008:</span>     &lt;h1&gt;機能1の画面&lt;/h1&gt;
+<span class="line-num">009:</span> &lt;/body&gt;
+<span class="line-num">010:</span> &lt;/html&gt;</pre>
+                    </div>
+                </div>
+
+                <h2>7-3-2 プロジェクトの作成（ボタン）</h2>
+
+                <h3>01 コントローラへの追記（ボタン判別処理）</h3>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <span class="code-dot red"></span>
+                            <span class="code-dot yellow"></span>
+                            <span class="code-dot green"></span>
+                        </div>
+                        <span class="code-title">リスト7.18 PathValiableControllerボタン処理</span>
+                    </div>
+                    <div class="code-content">
+                        <pre><span class="line-num">001:</span> <span class="code-comment">/** 「ボタンA」押下処理 */</span>
+<span class="line-num">002:</span> <span class="code-annotation">@PostMapping(value = "send", params = "a")</span>
+<span class="line-num">003:</span> <span class="code-keyword">public</span> String showAView() {
+<span class="line-num">004:</span>     <span class="code-keyword">return</span> <span class="code-string">"submit/a"</span>;
+<span class="line-num">005:</span> }
+<span class="line-num">006:</span>
+<span class="line-num">007:</span> <span class="code-comment">/** 「ボタンB」押下処理 */</span>
+<span class="line-num">008:</span> <span class="code-annotation">@PostMapping(value = "send", params = "b")</span>
+<span class="line-num">009:</span> <span class="code-keyword">public</span> String showBView() {
+<span class="line-num">010:</span>     <span class="code-keyword">return</span> <span class="code-string">"submit/b"</span>;
+<span class="line-num">011:</span> }
+<span class="line-num">012:</span>
+<span class="line-num">013:</span> <span class="code-comment">/** 「ボタンC」押下処理 */</span>
+<span class="line-num">014:</span> <span class="code-annotation">@PostMapping(value = "send", params = "c")</span>
+<span class="line-num">015:</span> <span class="code-keyword">public</span> String showCView() {
+<span class="line-num">016:</span>     <span class="code-keyword">return</span> <span class="code-string">"submit/c"</span>;
+<span class="line-num">017:</span> }</pre>
+                    </div>
+                </div>
+
+                <p>
+                    <code>@PostMapping</code
+                    >の<code>params</code>属性で、ボタンのname属性を指定します。同じURL「/send」へのPOSTでも、押されたボタンによって異なるメソッドが呼ばれます。
+                </p>
+
+                <!-- Column -->
+                <div class="column">
+                    <h3>Column | @PathVariableと@RequestParamの使い分け</h3>
+
+                    <!-- 比較図 -->
+                    <svg viewBox="0 0 700 280" style="max-width: 650px; margin: 20px auto; display: block">
+                        <defs>
+                            <linearGradient id="pathVarGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color: #9f7aea" />
+                                <stop offset="100%" style="stop-color: #805ad5" />
+                            </linearGradient>
+                            <linearGradient id="reqParamGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color: #48bb78" />
+                                <stop offset="100%" style="stop-color: #38a169" />
+                            </linearGradient>
+                        </defs>
+
+                        <!-- タイトル -->
+                        <text x="350" y="25" text-anchor="middle" fill="#2D3748" font-size="14" font-weight="bold">
+                            @PathVariable と @RequestParam の使い分け
+                        </text>
+
+                        <!-- @PathVariable -->
+                        <rect
+                            x="30"
+                            y="45"
+                            width="310"
+                            height="220"
+                            rx="10"
+                            fill="#FAF5FF"
+                            stroke="#805AD5"
+                            stroke-width="2"
+                        />
+                        <rect x="30" y="45" width="310" height="38" rx="10" fill="url(#pathVarGrad2)" />
+                        <text x="185" y="70" text-anchor="middle" fill="white" font-size="13" font-weight="bold">
+                            @PathVariable
+                        </text>
+
+                        <text x="50" y="105" fill="#553C9A" font-size="11" font-weight="bold">使いどころ</text>
+                        <text x="50" y="123" fill="#4A5568" font-size="10">URLのパス部分に含まれるデータを</text>
+                        <text x="50" y="138" fill="#4A5568" font-size="10">取得したい場合に使用</text>
+
+                        <text x="50" y="165" fill="#553C9A" font-size="11" font-weight="bold">URL例</text>
+                        <rect x="50" y="175" width="270" height="26" rx="5" fill="#E9D8FD" stroke="#805AD5" />
+                        <text
+                            x="185"
+                            y="193"
+                            text-anchor="middle"
+                            fill="#553C9A"
+                            font-size="11"
+                            font-family="monospace"
+                        >
+                            /users/
+                            <tspan fill="#E53E3E" font-weight="bold">123</tspan>
+                        </text>
+
+                        <text x="50" y="225" fill="#553C9A" font-size="11" font-weight="bold">特徴</text>
+                        <text x="50" y="243" fill="#4A5568" font-size="10">URLの構造から直接、パラメータを抽出</text>
+
+                        <!-- @RequestParam -->
+                        <rect
+                            x="360"
+                            y="45"
+                            width="310"
+                            height="220"
+                            rx="10"
+                            fill="#F0FFF4"
+                            stroke="#38A169"
+                            stroke-width="2"
+                        />
+                        <rect x="360" y="45" width="310" height="38" rx="10" fill="url(#reqParamGrad2)" />
+                        <text x="515" y="70" text-anchor="middle" fill="white" font-size="13" font-weight="bold">
+                            @RequestParam
+                        </text>
+
+                        <text x="380" y="105" fill="#276749" font-size="11" font-weight="bold">使いどころ</text>
+                        <text x="380" y="123" fill="#4A5568" font-size="10">クエリパラメータやフォームデータ</text>
+                        <text x="380" y="138" fill="#4A5568" font-size="10">として送られてくる値を取得</text>
+
+                        <text x="380" y="165" fill="#276749" font-size="11" font-weight="bold">URL例</text>
+                        <rect x="380" y="175" width="270" height="26" rx="5" fill="#C6F6D5" stroke="#38A169" />
+                        <text
+                            x="515"
+                            y="193"
+                            text-anchor="middle"
+                            fill="#276749"
+                            font-size="11"
+                            font-family="monospace"
+                        >
+                            /users?userId=
+                            <tspan fill="#E53E3E" font-weight="bold">123</tspan>
+                        </text>
+
+                        <text x="380" y="225" fill="#276749" font-size="11" font-weight="bold">特徴</text>
+                        <text x="380" y="243" fill="#4A5568" font-size="10">
+                            リクエストボディやURLのクエリ部分から取得
+                        </text>
+                    </svg>
+
+                    <p>
+                        @PathVariableはURLパスに埋め込まれた固定的なリソース識別子（ユーザーID、商品IDなど）を取得するのに適しています。一方、@RequestParamは検索条件やフォーム入力など、動的なパラメータを取得するのに適しています。
+                    </p>
+                </div>
+
+                <!-- 終了ページ -->
+                <div class="end-page">
+                    <h2>🎉 第7章 完了</h2>
+                    <p style="font-size: 1.3rem; margin-bottom: 30px">お疲れ様でした！</p>
+                    <p>この章では以下の内容を学習しました：</p>
+                    <ul class="toc-list">
+                        <li>✅ リクエストパラメータの基本概念とGET/POSTの違い</li>
+                        <li>✅ @RequestParamによる値の受け取り方</li>
+                        <li>✅ Formクラスを使った複数値のまとめ受け取り</li>
+                        <li>✅ @PathVariableでURLに埋め込まれた値の取得</li>
+                        <li>✅ 複数ボタンの判別処理（params属性）</li>
+                    </ul>
+                    <p style="margin-top: 30px; font-size: 1.1rem">
+                        次章では「バリデーション（入力チェック）」について学習します
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <footer class="footer">
+            <p>Spring Framework 入門チュートリアル</p>
+        </footer>
+
+        <div class="page-nav">
+            <a href="6thymeleaf-tutorial.html" class="page-nav-btn prev">
+                <span>←</span>
+                <div>
+                    <div class="page-nav-label">前の章</div>
+                    <div class="page-nav-title">第6章</div>
+                </div>
+            </a>
+
+            <a href="8Validation_Textbook_Rewrite.html" class="page-nav-btn next">
+                <div>
+                    <div class="page-nav-label">次の章</div>
+                    <div class="page-nav-title">第8章</div>
+                </div>
+                <span>→</span>
+            </a>
+        </div>
+
+        <script>
+            function toggleMenu() {
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+                toggle.classList.toggle("active");
+                menu.classList.toggle("active");
+            }
+
+            document.addEventListener("click", function (e) {
+                const nav = document.querySelector(".global-nav");
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+
+                if (!nav.contains(e.target) && menu.classList.contains("active")) {
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+
+            window.addEventListener("resize", function () {
+                if (window.innerWidth >= 1024) {
+                    const toggle = document.querySelector(".nav-toggle");
+                    const menu = document.querySelector(".nav-menu");
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+        </script>
+    </body>
+</html>

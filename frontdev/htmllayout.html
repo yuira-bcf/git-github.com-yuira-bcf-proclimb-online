@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HTML / CSS レイアウト解説（教科書用）＋練習問題10題</title>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --text:#111;
+      --muted:#555;
+      --line:#e6e6e6;
+      --card:#fafafa;
+      --code:#0b1020;
+      --codeText:#e8e8e8;
+      --accent:#1a73e8;
+      --accent2:#0f9d58;
+      --warn:#b00020;
+      --radius:14px;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.75;
+    }
+    header{
+      position: sticky;
+      top: 0;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(8px);
+      border-bottom:1px solid var(--line);
+      z-index: 10;
+    }
+    .container{
+      max-width: 1024px;
+      margin: 0 auto;
+      padding: 18px 18px;
+    }
+    .title{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      padding: 8px 0 4px;
+    }
+    .title h1{
+      margin:0;
+      font-size: 22px;
+      letter-spacing: .02em;
+    }
+    .title p{
+      margin:0;
+      color:var(--muted);
+      font-size: 14px;
+    }
+    nav.toc{
+      margin-top: 10px;
+      border-top:1px dashed var(--line);
+      padding-top: 12px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px 14px;
+      font-size: 14px;
+    }
+    nav.toc a{
+      color: var(--accent);
+      text-decoration: none;
+      padding: 6px 10px;
+      border:1px solid var(--line);
+      border-radius: 999px;
+      background:#fff;
+    }
+    nav.toc a:hover{ border-color: var(--accent); }
+
+    main{ padding: 22px 0 60px; }
+    section{
+      margin: 18px 0 26px;
+      padding: 18px;
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+    section h2{
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+    section h3{
+      margin: 18px 0 8px;
+      font-size: 16px;
+    }
+    .lead{
+      color: var(--muted);
+      margin: 0 0 10px;
+    }
+    ul, ol{ margin: 8px 0 8px 1.1em; }
+    li{ margin: 4px 0; }
+    .note{
+      background: var(--card);
+      border:1px solid var(--line);
+      border-left: 4px solid var(--accent);
+      padding: 12px 12px;
+      border-radius: 12px;
+      margin: 12px 0;
+      color: var(--muted);
+    }
+    .warn{
+      background: #fff5f5;
+      border:1px solid #ffd7d7;
+      border-left: 4px solid var(--warn);
+      padding: 12px 12px;
+      border-radius: 12px;
+      margin: 12px 0;
+      color: #7a0012;
+    }
+    code, pre{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Noto Sans Mono", "Courier New", monospace;
+    }
+    pre{
+      background: var(--code);
+      color: var(--codeText);
+      padding: 14px 14px;
+      border-radius: 12px;
+      overflow:auto;
+      margin: 10px 0;
+      border: 1px solid #222a44;
+    }
+    .pillrow{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin: 8px 0 0;
+    }
+    .pill{
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border:1px solid var(--line);
+      background:#fff;
+      color: var(--muted);
+    }
+    .pill.good{ border-color: #cfead8; background:#f3fbf6; color:#0b5d2a; }
+    .pill.main{ border-color: #d6e6ff; background:#f4f8ff; color:#0b3b8a; }
+    .grid2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 780px){
+      .grid2{ grid-template-columns: 1fr; }
+    }
+    .q{
+      background: #fff;
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin: 14px 0;
+    }
+    .q h3{
+      margin: 0 0 6px;
+      font-size: 16px;
+    }
+    .q .meta{
+      color: var(--muted);
+      font-size: 13px;
+      margin: 0 0 10px;
+    }
+    .q h4{
+      margin: 12px 0 6px;
+      font-size: 14px;
+    }
+    .q ul{ margin-left: 1.1em; }
+    footer{
+      border-top:1px solid var(--line);
+      color: var(--muted);
+      padding: 18px 0;
+      font-size: 13px;
+    }
+    a.anchor{
+      color:inherit;
+      text-decoration:none;
+      border-bottom: 1px dotted var(--line);
+    }
+    .summary{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top: 10px;
+    }
+    .summary .box{
+      flex: 1 1 220px;
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .summary .box strong{ display:block; margin-bottom: 6px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="title">
+      <h1>HTML / CSS レイアウト解説（教科書用）＋練習問題10題</h1>
+      <p>略語や曖昧な表現を避け、数値と条件を明確にした説明と課題です。</p>
+    </div>
+
+    <nav class="toc" aria-label="目次">
+      <a href="#sec-1">1. レイアウトとは</a>
+      <a href="#sec-2">2. ボックスモデル</a>
+      <a href="#sec-3">3. 通常フロー</a>
+      <a href="#sec-4">4. display</a>
+      <a href="#sec-5">5. Flexbox</a>
+      <a href="#sec-6">6. Grid</a>
+      <a href="#sec-7">7. position</a>
+      <a href="#sec-8">8. float</a>
+      <a href="#sec-9">9. レスポンシブ</a>
+      <a href="#sec-10">10. 使い分け</a>
+      <a href="htmllayout-test.html">練習問題10題</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+
+  <section id="sec-1">
+    <h2>1. レイアウトとは何か</h2>
+    <p class="lead">
+      CSS のレイアウトとは、ページ上の要素（文字・画像・見出し・ボタン・箱など）を、
+      「どこに」「どの大きさで」「どの順序で」「どのように並べるか」を決める仕組みです。
+    </p>
+
+    <div class="note">
+      HTML の要素は、ブラウザの中では基本的に「四角い箱」として扱われます。<br />
+      レイアウトの学習では、まず「箱の性質」を理解し、その上で「並べ方の道具（Flexbox、Grid など）」を使い分けることが重要です。
+    </div>
+
+    <ul>
+      <li><strong>ボックスモデル</strong>：内容・内側余白・枠線・外側余白の考え方</li>
+      <li><strong>表示形式（display）</strong>：箱の並び方を決めるスイッチ</li>
+      <li><strong>通常フロー</strong>：何も指定しないときの並び方</li>
+      <li><strong>Flexbox</strong>：横並びや縦並びなど、一次元の整列に強い方法</li>
+      <li><strong>Grid</strong>：行と列の二次元配置に強い方法</li>
+      <li><strong>位置指定（position）</strong>：重ねる、固定する、貼り付けるための方法</li>
+      <li><strong>レスポンシブ</strong>：画面幅や親要素の幅に応じてレイアウトを切り替えること</li>
+    </ul>
+
+    <div class="summary">
+      <div class="box">
+        <strong>重要</strong>
+        レイアウトは「見た目」だけではなく、要素の配置ルール（並び方・サイズ計算・順序）を扱います。
+      </div>
+      <div class="box">
+        <strong>学習の順序</strong>
+        ボックスモデル → 通常フロー → display → Flexbox / Grid → position → レスポンシブ
+      </div>
+      <div class="box">
+        <strong>実務の主役</strong>
+        Flexbox と Grid が中心で、position は補助、float は回り込み目的で使います。
+      </div>
+    </div>
+  </section>
+
+  <section id="sec-2">
+    <h2>2. レイアウトの土台：ボックスモデル</h2>
+
+    <h3>2.1 ボックスモデルの構造</h3>
+    <p>
+      要素は、内側から外側へ次の順に広がります。
+    </p>
+    <ol>
+      <li><strong>内容（content）</strong>：文字や画像などの中身</li>
+      <li><strong>内側余白（padding）</strong>：内容の周囲の余白</li>
+      <li><strong>枠線（border）</strong>：境界線</li>
+      <li><strong>外側余白（margin）</strong>：他の要素との距離</li>
+    </ol>
+
+    <h3>2.2 幅の計算を安定させる設定</h3>
+    <p>
+      レイアウトでつまずきやすい理由の一つは、「指定した幅と見た目の幅がずれる」ことです。
+      そのため、次の設定を基本として使用することが多いです。
+    </p>
+
+    <pre><code>* {
+  box-sizing: border-box;
+}</code></pre>
+
+    <p class="lead">
+      <code>border-box</code> を指定すると、<code>width</code> に内側余白（padding）と枠線（border）が含まれるため、サイズ計算が安定します。
+    </p>
+  </section>
+
+  <section id="sec-3">
+    <h2>3. レイアウトの出発点：通常フロー</h2>
+
+    <p>
+      CSS を特に指定しない場合、要素は「通常フロー（通常の並び方）」で配置されます。
+    </p>
+
+    <div class="grid2">
+      <div class="note">
+        <strong>ブロック要素</strong><br />
+        上から下へ縦に並びます。幅は基本的に親要素いっぱいになります。<br />
+        例：div、p、h1
+      </div>
+      <div class="note">
+        <strong>インライン要素</strong><br />
+        文章のように左から右へ横に流れます。幅や高さの指定は効きにくいです。<br />
+        例：span、a
+      </div>
+    </div>
+
+    <p class="lead">
+      通常フローを理解しておくと、Flexbox や Grid を使ったときに「何が変わったのか」を説明しやすくなります。
+    </p>
+  </section>
+
+  <section id="sec-4">
+    <h2>4. display（表示形式）はレイアウトのスイッチです</h2>
+
+    <p>
+      <code>display</code> は、要素の並び方を大きく変える重要な指定です。
+    </p>
+
+    <ul>
+      <li><code>display: block;</code>：縦に積まれる（ブロック要素として振る舞います）</li>
+      <li><code>display: inline;</code>：横に流れる（インライン要素として振る舞います）</li>
+      <li><code>display: inline-block;</code>：横に並びますが、幅・高さを持てます（扱いに癖があります）</li>
+      <li><code>display: flex;</code>：Flexbox（一次元の並びに強い方法）</li>
+      <li><code>display: grid;</code>：Grid（行と列の二次元配置に強い方法）</li>
+    </ul>
+
+    <div class="pillrow" aria-label="重要タグ">
+      <span class="pill main">実務の中心：flex / grid</span>
+      <span class="pill">基礎理解：block / inline</span>
+      <span class="pill">補助知識：inline-block</span>
+    </div>
+  </section>
+
+  <section id="sec-5">
+    <h2>5. Flexbox（フレックスボックス）：一次元の並びに強い方法</h2>
+
+    <h3>5.1 Flexbox の考え方</h3>
+    <p>
+      Flexbox は、親要素（フレックスコンテナ）の中で、子要素（フレックスアイテム）を並べる仕組みです。<br />
+      「一次元」とは、横方向（行）または縦方向（列）のどちらか一方向を中心に整列する、という意味です。
+    </p>
+
+    <h3>5.2 よく使う指定</h3>
+    <ul>
+      <li><code>display: flex;</code>：Flexbox を開始します（親要素に指定します）</li>
+      <li><code>flex-direction</code>：並ぶ向きを決めます（横または縦）</li>
+      <li><code>justify-content</code>：並ぶ向き（主方向）での揃え方を決めます</li>
+      <li><code>align-items</code>：主方向と直角の向き（交差方向）での揃え方を決めます</li>
+      <li><code>gap</code>：要素間のすき間を指定します</li>
+      <li><code>flex-wrap</code>：入りきらないときに折り返すかどうかを決めます</li>
+    </ul>
+
+    <h3>5.3 例：横並びメニュー（中央寄せ）</h3>
+    <pre><code>.menu {
+  display: flex;
+  justify-content: center; /* 左右方向の中央揃え */
+  align-items: center;     /* 上下方向の中央揃え */
+  gap: 16px;               /* リンク同士の間隔 */
+  height: 56px;
+}</code></pre>
+
+    <div class="note">
+      Flexbox は、上下左右の中央揃えや、均等な間隔の並びを作るのが得意です。<br />
+      「中央寄せが難しい」という昔の悩みは、Flexbox でかなり解決できます。
+    </div>
+  </section>
+
+  <section id="sec-6">
+    <h2>6. Grid（グリッド）：行と列の二次元配置に強い方法</h2>
+
+    <h3>6.1 Grid の考え方</h3>
+    <p>
+      Grid は、親要素に「行」と「列」を定義し、そのマス目の中へ要素を配置する仕組みです。<br />
+      ページ全体の骨組み（ヘッダー・本文・サイドバー・フッター）を作るのに向いています。
+    </p>
+
+    <h3>6.2 よく使う指定</h3>
+    <ul>
+      <li><code>display: grid;</code></li>
+      <li><code>grid-template-columns</code>：列の幅を決めます</li>
+      <li><code>grid-template-rows</code>：行の高さを決めます</li>
+      <li><code>gap</code>：マス目のすき間を決めます</li>
+      <li><code>grid-template-areas</code>：名前で配置を指定できます（教科書向きです）</li>
+      <li><code>fr</code>：残りの空間を分配する単位です</li>
+    </ul>
+
+    <h3>6.3 例：2列（左 240px、右は残り全部）</h3>
+    <pre><code>.layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 16px;
+}</code></pre>
+
+    <div class="note">
+      Grid は「行と列の両方を設計する」ため、ページ全体の構造を作るのが得意です。
+    </div>
+  </section>
+
+  <section id="sec-7">
+    <h2>7. position（位置指定）：固定・重ね・貼り付けに使う方法</h2>
+
+    <p>
+      <code>position</code> は、要素を通常フローから外したり、指定した位置へ固定したりするために使います。<br />
+      ただし、ページ全体の骨組みは Grid や Flexbox の方が分かりやすいため、位置指定は「特殊効果」として使うのが基本です。
+    </p>
+
+    <ul>
+      <li><code>position: relative;</code>：現在の位置を基準にします（absolute の基準作りにも使用します）</li>
+      <li><code>position: absolute;</code>：基準（多くは relative を指定した親）からの位置で配置します</li>
+      <li><code>position: fixed;</code>：画面（表示領域）に固定します</li>
+      <li><code>position: sticky;</code>：スクロール中に特定位置へ吸着します（条件があります）</li>
+    </ul>
+
+    <div class="warn">
+      <strong>注意：</strong> position を多用してページ全体を組み立てると、後から修正しづらくなることがあります。<br />
+      レイアウトの骨組みは Grid / Flexbox、重ねや固定は position、と役割分担すると整理しやすいです。
+    </div>
+  </section>
+
+  <section id="sec-8">
+    <h2>8. float（フロート）：文章の回り込みに使う方法</h2>
+
+    <p>
+      <code>float</code> は、現在ではページ全体のレイアウトには通常使いません。<br />
+      本来の目的は、文章の途中にある画像に文章を回り込ませることです。
+    </p>
+
+    <ul>
+      <li>回り込み：<code>float: left;</code> など</li>
+      <li>回り込み解除：<code>clear: both;</code> など</li>
+    </ul>
+
+    <div class="note">
+      float は「文章と画像の回り込み」を学ぶときに、役割がはっきりして理解しやすい方法です。
+    </div>
+  </section>
+
+  <section id="sec-9">
+    <h2>9. レスポンシブ（画面幅や親要素の幅への対応）</h2>
+
+    <h3>9.1 メディアクエリ（画面幅で切り替える）</h3>
+    <p>
+      メディアクエリは、画面の幅が条件を満たすときに CSS を切り替える仕組みです。
+    </p>
+    <pre><code>@media (max-width: 768px) {
+  /* ここにスマートフォン向けの指定を書きます */
+}</code></pre>
+
+    <h3>9.2 コンテナクエリ（親要素の幅で切り替える）</h3>
+    <p>
+      コンテナクエリは、画面全体ではなく、部品（親要素）の幅を基準にして CSS を切り替える仕組みです。<br />
+      同じ部品を別の場所に置いたときでも、置かれた場所の幅に応じて見た目を変えられます。
+    </p>
+    <pre><code>.card-area {
+  container-type: inline-size;
+}
+
+@container (max-width: 500px) {
+  /* 親要素の幅が 500px 以下の場合の指定 */
+}</code></pre>
+
+    <div class="note">
+      教材では「画面幅での切り替え（メディアクエリ）」から学び、慣れてから「親要素の幅での切り替え（コンテナクエリ）」へ進むと理解がスムーズです。
+    </div>
+  </section>
+
+  <section id="sec-10">
+    <h2>10. 使い分けの目安（まとめ）</h2>
+
+    <ul>
+      <li><strong>横並び・縦並び・中央揃え・均等配置・折り返し</strong>：Flexbox</li>
+      <li><strong>ページ全体の区画・行と列の設計・二次元の配置</strong>：Grid</li>
+      <li><strong>重ねる・固定する・右上にバッジを置く</strong>：position</li>
+      <li><strong>文章に画像を回り込ませる</strong>：float</li>
+      <li><strong>画面幅で切り替える</strong>：メディアクエリ</li>
+      <li><strong>親要素の幅で切り替える</strong>：コンテナクエリ</li>
+    </ul>
+
+    <div class="pillrow">
+      <span class="pill good">迷ったら：まず Flexbox または Grid を検討します</span>
+      <span class="pill">position は補助として使用します</span>
+      <span class="pill">float は回り込み目的で使用します</span>
+    </div>
+  </section>
+
+ 
+</main>
+
+<footer>
+  <div class="container">
+    <div>教材メモ：このページは「説明→課題」の順に構成しています。課題の模範解答が必要な場合は、各問ごとの HTML/CSS を別ページとして作成すると配布しやすくなります。</div>
+  </div>
+</footer>
+
+</body>
+</html>

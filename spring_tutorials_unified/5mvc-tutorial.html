@@ -1,0 +1,1665 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>第5章 MVCモデルを知ろう</title>
+
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&family=M+PLUS+Rounded+1c:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <!-- グローバルナビゲーション -->
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="1spring-framework-tutorial.html" class="nav-logo">
+                    <span class="nav-logo-icon">🌱</span>
+                    <span>Spring入門</span>
+                </a>
+                <button class="nav-toggle" onclick="toggleMenu()" aria-label="メニュー">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 章を選択</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="0promptprograming.html" class="nav-link">
+                                <span class="nav-chapter-num">0</span>
+                                <span>プロンプトプログラミング</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="1spring-framework-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">1</span>
+                                <span>Spring Frameworkについて知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="2java_basics.html" class="nav-link">
+                                <span class="nav-chapter-num">2</span>
+                                <span>基礎知識を身に付けよう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="3di-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">3</span>
+                                <span>DIを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="4aop-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">4</span>
+                                <span>AOPを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="5mvc-tutorial.html" class="nav-link active">
+                                <span class="nav-chapter-num">5</span>
+                                <span>MVCを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="6thymeleaf-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">6</span>
+                                <span>Thymeleafを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="7ServerDataSubmission.html" class="nav-link">
+                                <span class="nav-chapter-num">7</span>
+                                <span>サーバーへのデータ送信</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="8Validation_Textbook_Rewrite.html" class="nav-link">
+                                <span class="nav-chapter-num">8</span>
+                                <span>バリデーション</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="9_MyBatis_Tutorial__2_.html" class="nav-link">
+                                <span class="nav-chapter-num">9</span>
+                                <span>MyBatisチュートリアル</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="10app-preparation-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">10</span>
+                                <span>アプリケーション作成準備</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="11-database-operations.html" class="nav-link">
+                                <span class="nav-chapter-num">11</span>
+                                <span>データベース操作</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="12service-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">12</span>
+                                <span>サービス層</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="13_application_layer.html" class="nav-link">
+                                <span class="nav-chapter-num">13</span>
+                                <span>アプリケーション層</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="14_validation.html" class="nav-link">
+                                <span class="nav-chapter-num">14</span>
+                                <span>バリデーション（応用）</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="15-spring-security-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">15</span>
+                                <span>Spring Security</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <!-- ヘッダー -->
+            <header class="chapter-header">
+                <div class="chapter-badge">📘 Chapter</div>
+                <div class="chapter-number">5</div>
+                <h1 class="chapter-title">MVCモデルを知ろう</h1>
+            </header>
+
+            <!-- 目次 -->
+            <nav class="toc">
+                <h2 class="toc-title">この章で学ぶこと</h2>
+                <ul class="toc-list">
+                    <li class="toc-item">
+                        <span class="toc-number">5-1</span>
+                        <span class="toc-text">MVCモデルについて知ろう</span>
+                    </li>
+                    <li class="toc-item">
+                        <span class="toc-number">5-2</span>
+                        <span class="toc-text">Spring MVCについて知ろう</span>
+                    </li>
+                    <li class="toc-item">
+                        <span class="toc-number">5-3</span>
+                        <span class="toc-text">Spring MVCを使ってみよう</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Section 5-1 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 5-1</span>
+                    <h2 class="section-title">MVCモデルについて知ろう</h2>
+                </div>
+
+                <!-- 5-1-1 -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-number">5-1-1</span>
+                        <h3 class="subsection-title">MVCモデルとは？</h3>
+                    </div>
+
+                    <p>
+                        MVCモデルとは、<span class="highlight"
+                            >プログラムの処理を役割ごとに分けてプログラムを作成する考え方</span
+                        >です。Webシステムの開発で頻繁に用いられており、役割は<strong>Model（モデル：M）</strong>、<strong>View（ビュー：V）</strong>、<strong>Controller（コントローラ：C）</strong>の3種類に分類されます。
+                    </p>
+
+                    <!-- MVC図解 -->
+                    <div class="mvc-diagram">
+                        <div class="mvc-circle model">
+                            <span class="mvc-letter">M</span>
+                            <span class="mvc-name">Model</span>
+                        </div>
+                        <div class="mvc-connector"></div>
+                        <div class="mvc-circle view">
+                            <span class="mvc-letter">V</span>
+                            <span class="mvc-name">View</span>
+                        </div>
+                        <div class="mvc-connector"></div>
+                        <div class="mvc-circle controller">
+                            <span class="mvc-letter">C</span>
+                            <span class="mvc-name">Controller</span>
+                        </div>
+                    </div>
+
+                    <!-- M V C 詳細カード -->
+                    <div class="mvc-cards">
+                        <div class="mvc-card model">
+                            <div class="mvc-card-header">
+                                <div class="mvc-card-icon">M</div>
+                                <div>
+                                    <div class="mvc-card-title">Model（モデル）</div>
+                                    <div class="mvc-card-subtitle">ビジネスロジックを記述する</div>
+                                </div>
+                            </div>
+                            <div class="mvc-card-content">
+                                <p>
+                                    システムにおいて「ビジネスロジック」は、「システムのコア部分」や「システムの主要な機能」などと説明されます。これは一般的に「業務処理」または「サービス処理」とも呼ばれます。
+                                </p>
+                                <p style="margin: 0">
+                                    例えば、オンラインショッピングサイトでは、商品の検索やカートへの追加、注文処理などがビジネスロジックに該当します。MVCモデルでは、このビジネスロジックは「Model」部分で実装されます。
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="mvc-card view">
+                            <div class="mvc-card-header">
+                                <div class="mvc-card-icon">V</div>
+                                <div>
+                                    <div class="mvc-card-title">View（ビュー）</div>
+                                    <div class="mvc-card-subtitle">入力・出力など表示する</div>
+                                </div>
+                            </div>
+                            <div class="mvc-card-content">
+                                <p style="margin: 0">
+                                    一言で説明すると「見た目」です。ユーザーからの入力、ユーザーへの結果出力などシステムの中で「表示部分」に該当し、Webアプリケーションでは主に画面に相当します。
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="mvc-card controller">
+                            <div class="mvc-card-header">
+                                <div class="mvc-card-icon">C</div>
+                                <div>
+                                    <div class="mvc-card-title">Controller（コントローラ）</div>
+                                    <div class="mvc-card-subtitle">ModelとViewをコントロールする</div>
+                                </div>
+                            </div>
+                            <div class="mvc-card-content">
+                                <p style="margin: 0">
+                                    ビジネスロジックを行う「Model」と画面表示を行う「View」をコントロール（制御）する役割を持ちます。ユーザーからの入力を「View」から受け取り、受け取ったデータをもとに「Model」に指示を伝えます。また「Model」から受け取った結果を「View」に伝え、反映させ画面に表示します。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5-1-2 -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-number">5-1-2</span>
+                        <h3 class="subsection-title">MVCモデルの全体像とメリット</h3>
+                    </div>
+
+                    <p>
+                        「ビジネスロジック」Model（モデル：M）、「見た目」View（ビュー：V）、「制御」Controller（コントローラ：C）と役割分担することで、プログラムの独立性が高くなります。
+                    </p>
+
+                    <!-- 全体像フロー -->
+                    <div class="mvc-overview-diagram">
+                        <h4 class="diagram-title">図5.5 MVCモデルの全体像</h4>
+
+                        <div class="mvc-diagram-inner">
+                            <!-- ユーザー -->
+                            <div class="user-box">
+                                <div class="user-icon">&#128100;</div>
+                                <span class="user-label">ユーザー</span>
+                            </div>
+
+                            <!-- View（左上） -->
+                            <div class="mvc-component-item view-item">
+                                <div class="mvc-circle-item">
+                                    <span class="letter">V</span>
+                                    <span class="name">View</span>
+                                </div>
+                                <span class="mvc-desc">見た目</span>
+                            </div>
+
+                            <!-- Model（右上） -->
+                            <div class="mvc-component-item model-item">
+                                <div class="mvc-circle-item">
+                                    <span class="letter">M</span>
+                                    <span class="name">Model</span>
+                                </div>
+                                <span class="mvc-desc">ビジネスロジック</span>
+                            </div>
+
+                            <!-- Controller（下中央） -->
+                            <div class="mvc-component-item controller-item">
+                                <div class="mvc-circle-item">
+                                    <span class="letter">C</span>
+                                    <span class="name">Controller</span>
+                                </div>
+                                <span class="mvc-desc">制御</span>
+                            </div>
+
+                            <!-- 矢印（SVG） -->
+                            <svg class="arrows-svg" viewBox="0 0 600 380">
+                                <defs>
+                                    <marker id="arrowhead-mvc" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                        <polygon points="0 0, 10 3.5, 0 7" fill="#888"/>
+                                    </marker>
+                                    <marker id="arrowhead-blue-mvc" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                        <polygon points="0 0, 10 3.5, 0 7" fill="#2196F3"/>
+                                    </marker>
+                                </defs>
+
+                                <!-- ユーザー → View (入力) -->
+                                <line x1="25" y1="65" x2="100" y2="65"
+                                      stroke="#888" stroke-width="2" marker-end="url(#arrowhead-mvc)"/>
+
+                                <!-- View → ユーザー (表示) -->
+                                <line x1="100" y1="85" x2="25" y2="85"
+                                      stroke="#888" stroke-width="2" marker-end="url(#arrowhead-mvc)"/>
+
+                                <!-- View → Model (青) -->
+                                <line x1="240" y1="75" x2="390" y2="75"
+                                      stroke="#2196F3" stroke-width="2" marker-end="url(#arrowhead-blue-mvc)"/>
+
+                                <!-- Controller → View (受取) (青) -->
+                                <line x1="270" y1="230" x2="185" y2="110"
+                                      stroke="#2196F3" stroke-width="2" marker-end="url(#arrowhead-blue-mvc)"/>
+
+                                <!-- Controller → View (コントロール) -->
+                                <line x1="250" y1="240" x2="165" y2="120"
+                                      stroke="#888" stroke-width="2" marker-end="url(#arrowhead-mvc)"/>
+
+                                <!-- Controller → Model (指示) (青) -->
+                                <line x1="340" y1="230" x2="425" y2="110"
+                                      stroke="#2196F3" stroke-width="2" marker-end="url(#arrowhead-blue-mvc)"/>
+
+                                <!-- Controller → Model (参照) -->
+                                <line x1="360" y1="240" x2="445" y2="120"
+                                      stroke="#888" stroke-width="2" marker-end="url(#arrowhead-mvc)"/>
+                            </svg>
+
+                            <!-- 矢印ラベル -->
+                            <span class="arrow-label label-input">入力</span>
+                            <span class="arrow-label label-display">表示</span>
+                            <span class="arrow-label label-control">コントロール</span>
+                            <span class="arrow-label label-receive">受取</span>
+                            <span class="arrow-label label-instruction">指示</span>
+                            <span class="arrow-label label-reference">参照</span>
+                        </div>
+                    </div>
+
+                    <h4 style="margin-top: 32px; margin-bottom: 16px">MVCモデルのメリット</h4>
+
+                    <div class="merit-grid">
+                        <div class="merit-card">
+                            <div class="merit-icon">
+                                <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                </svg>
+                            </div>
+                            <div class="merit-title">役割の明確化</div>
+                            <p class="merit-text">
+                                各コンポーネントが独立しているため、一つのコンポーネントを変更しても他のコンポーネントに影響を与えにくいです。これにより、メンテナンスや拡張が容易になります。
+                            </p>
+                        </div>
+
+                        <div class="merit-card">
+                            <div class="merit-icon">
+                                <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3l-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3l-3 3"
+                                    />
+                                </svg>
+                            </div>
+                            <div class="merit-title">再利用性</div>
+                            <p class="merit-text">
+                                各コンポーネントが独立しているため、再利用が容易です。例えば、同じビジネスロジック（モデル）を異なる画面（ビュー）で表示する、または同じ画面（ビュー）に異なるビジネスロジック（モデル）を適用することが容易になります。
+                            </p>
+                        </div>
+
+                        <div class="merit-card">
+                            <div class="merit-icon">
+                                <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085"
+                                    />
+                                </svg>
+                            </div>
+                            <div class="merit-title">テスト容易性</div>
+                            <p class="merit-text">
+                                MVCの各コンポーネントは独立しているため、単体テストが行いやすくなります。
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- コラム：タンスの例え -->
+                    <div class="column-box">
+                        <span class="column-badge">Column</span>
+                        <div class="column-title">現実世界に置き換えて考えよう</div>
+                        <p>
+                            難しく考えてはダメです。ITでは良く「〇〇パターン」とか「××モデル」とか「△△構造」など、様々な言葉で分散方法を説明してきます。難しい言葉にビギナーの方はやられてしまうのです。
+                        </p>
+                        <p>現実世界に置き換えて考えましょう。今回はタンスの中に衣類をしまう方法に置き換えてみます。</p>
+
+                        <div class="analogy-diagram">
+                            <div class="analogy-box">
+                                <div class="closet-icon"></div>
+                                <div class="analogy-text">整理されていないタンス</div>
+                            </div>
+                            <div class="arrow-icon">→</div>
+                            <div class="analogy-box">
+                                <div class="closet-icon closet-organized"></div>
+                                <div class="analogy-text">種類ごとに整理されたタンス</div>
+                            </div>
+                        </div>
+
+                        <p>
+                            <strong>整理整頓</strong
+                            >：一つ一つの引き出し毎に、特定の種類の衣類をしまうルールを設定することで、新しい衣類を追加するときも、しまう引き出しに迷わず、すぐに整理できます。ITでもルール通りに役割の場所にプログラムを格納することで整理できます。
+                        </p>
+                        <p>
+                            <strong>効率的なアクセス</strong
+                            >：ルールで衣類を分けておくと、どこの引き出しに何があるのか必要なものをすぐに見つけられます。ITでも同様で、情報が整理されているとアクセスが速くなります。
+                        </p>
+                        <p style="margin: 0">
+                            <strong>柔軟性</strong
+                            >：季節が変われば、冬服と夏服の位置を入れ替えるなど、柔軟に対応できます。ITでもルール通りに分類することで、一部を変更する際に、他の部分に影響を与えにくくでき、仕様変更に柔軟に対応できます。
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 5-2 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 5-2</span>
+                    <h2 class="section-title">Spring MVCについて知ろう</h2>
+                </div>
+
+                <p>
+                    「MVCモデル」について役割分担のイメージができましたか？では次にSpringが提供するWebアプリケーションを簡単に作るためのフレームワーク「Spring
+                    MVC」の説明をします。正式名称は「Spring Web MVC」で、一般的に「Spring MVC」と呼ばれます。
+                </p>
+
+                <!-- 5-2-1 -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-number">5-2-1</span>
+                        <h3 class="subsection-title">Spring MVCとは？</h3>
+                    </div>
+
+                    <p>
+                        「Spring
+                        MVC」は、Webアプリケーションを効率的に開発するためのフレームワークです。このフレームワークは<span
+                            class="highlight"
+                            >「フロントコントローラ・パターン」</span
+                        >に基づいて設計されています。
+                    </p>
+
+                    <p>
+                        「フロントコントローラ・パターン」とは、デザインパターンの一つであり、すべてのクライアントからのリクエストを最初に一つの「コントローラ」が受け取ります。このフロントコントローラは、リクエストに応じて適切な処理を行うコントローラにリクエストを振り分けます。
+                    </p>
+
+                    <p>
+                        Spring
+                        MVCの主な機能として、画面遷移の管理や、クライアント（通常はWebブラウザ）とサーバー間でのデータの入出力を簡単に行えるようにする機能があります。
+                    </p>
+
+                    <h4 style="margin: 24px 0 16px">Spring MVCの構成要素</h4>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>要素</th>
+                                    <th>概要</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>DispatcherServlet</strong></td>
+                                    <td>
+                                        「フロントコントローラ」です。すべてのクライアントからのリクエストを最初に受け取ります
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Model</strong></td>
+                                    <td>
+                                        「コントローラ」から「ビュー」に渡す表示データを格納するオブジェクトです。HttpServletRequestやHttpSessionと同様の機能を提供します
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>コントローラ</strong></td>
+                                    <td>リクエストに応じて適切な処理を行います</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ビジネスロジック</strong></td>
+                                    <td>
+                                        データベースへのアクセス、データの取得、加工などを担います。この部分は開発者が設計と実装を行います（Spring
+                                        MVCとは直接関係ありません）
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ビュー</strong></td>
+                                    <td>画面表示処理を担います</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 5-2-2 -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-number">5-2-2</span>
+                        <h3 class="subsection-title">リクエスト受信からレスポンス送信までの流れ</h3>
+                    </div>
+
+                    <p>「Spring MVC」でのリクエストからレスポンスまでの流れを説明します。</p>
+
+                    <div class="architecture-diagram">
+                        <h4 style="text-align: center; margin-bottom: 32px">Spring MVC リクエスト処理の流れ</h4>
+
+                        <svg viewBox="0 0 700 380" style="max-width: 100%; height: auto">
+                            <!-- クライアント -->
+                            <g transform="translate(20, 55)">
+                                <rect
+                                    x="0"
+                                    y="0"
+                                    width="90"
+                                    height="70"
+                                    rx="8"
+                                    fill="#f1f5f9"
+                                    stroke="#64748b"
+                                    stroke-width="2"
+                                />
+                                <text
+                                    x="45"
+                                    y="30"
+                                    text-anchor="middle"
+                                    font-size="11"
+                                    fill="#1e293b"
+                                    font-weight="600"
+                                >
+                                    クライアント
+                                </text>
+                                <text x="45" y="50" text-anchor="middle" font-size="10" fill="#64748b">(ブラウザ)</text>
+                            </g>
+
+                            <!-- DispatcherServlet -->
+                            <g transform="translate(250, 45)">
+                                <rect
+                                    x="0"
+                                    y="0"
+                                    width="110"
+                                    height="90"
+                                    rx="8"
+                                    fill="#0ea5e9"
+                                    stroke="#0284c7"
+                                    stroke-width="2"
+                                />
+                                <text x="55" y="35" text-anchor="middle" font-size="11" fill="white" font-weight="700">
+                                    Dispatcher
+                                </text>
+                                <text x="55" y="52" text-anchor="middle" font-size="11" fill="white" font-weight="700">
+                                    Servlet
+                                </text>
+                                <text x="55" y="72" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">
+                                    フロントコントローラ
+                                </text>
+                            </g>
+
+                            <!-- Spring MVC 枠 -->
+                            <rect
+                                x="230"
+                                y="10"
+                                width="150"
+                                height="340"
+                                rx="12"
+                                fill="none"
+                                stroke="#0ea5e9"
+                                stroke-width="2"
+                                stroke-dasharray="8,4"
+                            />
+                            <text x="305" y="35" text-anchor="middle" font-size="12" fill="#0ea5e9" font-weight="700">
+                                Spring MVC
+                            </text>
+
+                            <!-- コントローラ -->
+                            <g transform="translate(440, 60)">
+                                <rect
+                                    x="0"
+                                    y="0"
+                                    width="100"
+                                    height="60"
+                                    rx="8"
+                                    fill="#f59e0b"
+                                    stroke="#d97706"
+                                    stroke-width="2"
+                                />
+                                <text x="50" y="35" text-anchor="middle" font-size="11" fill="white" font-weight="700">
+                                    コントローラ
+                                </text>
+                                <circle cx="-35" cy="5" r="14" fill="#ef4444" />
+                                <text x="-35" y="10" text-anchor="middle" font-size="11" fill="white" font-weight="700">
+                                    2
+                                </text>
+                            </g>
+
+                            <!-- ビジネスロジック -->
+                            <g transform="translate(590, 60)">
+                                <rect
+                                    x="0"
+                                    y="0"
+                                    width="100"
+                                    height="60"
+                                    rx="8"
+                                    fill="#8b5cf6"
+                                    stroke="#7c3aed"
+                                    stroke-width="2"
+                                />
+                                <text x="50" y="28" text-anchor="middle" font-size="11" fill="white" font-weight="700">
+                                    ビジネス
+                                </text>
+                                <text x="50" y="45" text-anchor="middle" font-size="11" fill="white" font-weight="700">
+                                    ロジック
+                                </text>
+                                <circle cx="-25" cy="5" r="14" fill="#ef4444" />
+                                <text x="-25" y="10" text-anchor="middle" font-size="11" fill="white" font-weight="700">
+                                    3
+                                </text>
+                            </g>
+
+                            <!-- Model -->
+                            <g transform="translate(255, 280)">
+                                <rect
+                                    x="0"
+                                    y="0"
+                                    width="100"
+                                    height="60"
+                                    rx="8"
+                                    fill="#3b82f6"
+                                    stroke="#2563eb"
+                                    stroke-width="2"
+                                />
+                                <text x="50" y="35" text-anchor="middle" font-size="11" fill="white" font-weight="700">
+                                    Model
+                                </text>
+                                <circle cx="205" cy="15" r="14" fill="#ef4444" />
+                                <text x="205" y="20" text-anchor="middle" font-size="11" fill="white" font-weight="700">
+                                    4
+                                </text>
+                            </g>
+
+                            <!-- ビュー -->
+                            <g transform="translate(90, 180)">
+                                <rect
+                                    x="0"
+                                    y="0"
+                                    width="100"
+                                    height="60"
+                                    rx="8"
+                                    fill="#10b981"
+                                    stroke="#059669"
+                                    stroke-width="2"
+                                />
+                                <text x="50" y="35" text-anchor="middle" font-size="11" fill="white" font-weight="700">
+                                    ビュー
+                                </text>
+                                <circle cx="175" cy="5" r="14" fill="#ef4444" />
+                                <text x="175" y="10" text-anchor="middle" font-size="11" fill="white" font-weight="700">
+                                    5
+                                </text>
+                            </g>
+
+                            <!-- 矢印 -->
+                            <!-- 1: クライアント → DispatcherServlet -->
+                            <path
+                                d="M110 90 L245 90"
+                                stroke="#64748b"
+                                stroke-width="2"
+                                fill="none"
+                                marker-end="url(#arrow-gray)"
+                            />
+                            <circle cx="165" cy="70" r="14" fill="#ef4444" />
+                            <text x="165" y="75" text-anchor="middle" font-size="11" fill="white" font-weight="700">
+                                1
+                            </text>
+
+                            <!-- 2: DispatcherServlet → コントローラ -->
+                            <path
+                                d="M380 90 L435 90"
+                                stroke="#0ea5e9"
+                                stroke-width="2"
+                                fill="none"
+                                marker-end="url(#arrow-blue)"
+                            />
+
+                            <!-- 3: コントローラ → ビジネスロジック -->
+                            <path
+                                d="M545 90 L590 90"
+                                stroke="#0ea5e9"
+                                stroke-width="2"
+                                fill="none"
+                                marker-end="url(#arrow-blue)"
+                            />
+
+                            <!-- 4: コントローラ → Model -->
+                            <path
+                                d="M490 120 L490 310 L365 310"
+                                stroke="#0ea5e9"
+                                stroke-width="2"
+                                fill="none"
+                                marker-end="url(#arrow-blue)"
+                            />
+                            <text x="420" y="155" font-size="9" fill="#64748b">ビュー名</text>
+
+                            <!-- 5: DispatcherServlet → ビュー -->
+                            <path
+                                d="M305 135 L305 210 L190 210"
+                                stroke="#0ea5e9"
+                                stroke-width="2"
+                                fill="none"
+                                marker-end="url(#arrow-blue)"
+                            />
+
+                            <!-- 6: ビュー → クライアント -->
+                            <path
+                                d="M90 210 L65 210 L65 125"
+                                stroke="#64748b"
+                                stroke-width="2"
+                                fill="none"
+                                marker-end="url(#arrow-gray)"
+                            />
+                            <circle cx="38" cy="170" r="14" fill="#ef4444" />
+                            <text x="38" y="175" text-anchor="middle" font-size="11" fill="white" font-weight="700">
+                                6
+                            </text>
+
+                            <defs>
+                                <marker
+                                    id="arrow-gray"
+                                    markerWidth="10"
+                                    markerHeight="7"
+                                    refX="9"
+                                    refY="3.5"
+                                    orient="auto"
+                                >
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
+                                </marker>
+                                <marker
+                                    id="arrow-blue"
+                                    markerWidth="10"
+                                    markerHeight="7"
+                                    refX="9"
+                                    refY="3.5"
+                                    orient="auto"
+                                >
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#0ea5e9" />
+                                </marker>
+                            </defs>
+                        </svg>
+
+                        <!-- 凡例 -->
+                        <div style="display: flex; justify-content: center; gap: 40px; margin-top: 24px; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 12px; padding: 12px 20px; background: #f0f9ff; border-radius: 8px; border: 2px solid #0ea5e9;">
+                                <span style="font-size: 14px; font-weight: 600; color: #0369a1;">Spring MVCが提供</span>
+                                <span style="font-size: 12px; color: #64748b;">DispatcherServlet、Model</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 12px; padding: 12px 20px; background: #fefce8; border-radius: 8px; border: 2px solid #eab308;">
+                                <span style="font-size: 14px; font-weight: 600; color: #a16207;">自分で作成</span>
+                                <span style="font-size: 12px; color: #64748b;">コントローラ、ビジネスロジック、ビュー</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-guide">
+                        <div class="step-item">
+                            <div class="step-number-box">1</div>
+                            <div class="step-content">
+                                <div class="step-title">リクエストの受信</div>
+                                <p class="step-text">
+                                    すべてのリクエストを受信するフロントコントローラである「DispatcherServlet」が「クライアント」からの「リクエスト」を受け取ります。
+                                </p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number-box">2</div>
+                            <div class="step-content">
+                                <div class="step-title">コントローラの呼び出し</div>
+                                <p class="step-text">
+                                    「DispatcherServlet」が「コントローラ」の「リクエストハンドラメソッド」を呼び出します。
+                                </p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number-box">3</div>
+                            <div class="step-content">
+                                <div class="step-title">ビジネスロジックの実行</div>
+                                <p class="step-text">
+                                    「コントローラ」は、「ビジネスロジック」を呼び出し、「処理結果」を取得します。
+                                </p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number-box">4</div>
+                            <div class="step-content">
+                                <div class="step-title">Modelへの格納</div>
+                                <p class="step-text">処理結果を「Model」に設定し、「ビュー名」を返却します。</p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number-box">5</div>
+                            <div class="step-content">
+                                <div class="step-title">ビューの呼び出し</div>
+                                <p class="step-text">
+                                    「DispatcherServlet」がビュー名に対応する「ビュー」に対して、画面表示処理を依頼します。
+                                </p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number-box">6</div>
+                            <div class="step-content">
+                                <div class="step-title">レスポンスの返却</div>
+                                <p class="step-text">
+                                    「クライアント」が「レスポンス」を受け取り、ブラウザに処理結果が表示されます。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p>
+                        実際はSpring
+                        MVCは内部で様々なクラスが処理をしてくれていますが、本書では「DispatcherServlet」と「Model」に着目して頂きたいため省略しています。図を参照すると、煩雑な処理は「Spring
+                        MVC」が担当してくれるため、実際に私達が作成する部分としては、「コントローラ」、「ビジネスロジック」、「ビュー」の3つということがわかります。
+                    </p>
+                </div>
+            </section>
+
+            <!-- Section 5-3 -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 5-3</span>
+                    <h2 class="section-title">Spring MVCを使ってみよう</h2>
+                </div>
+
+                <p>
+                    これから「Spring
+                    MVC」を使用して、Webアプリケーションを作成していきます。「リクエスト」で送られる「URL」に対応する「メソッド」のことを「リクエストハンドラメソッド」と呼びます。「コントローラ」に「リクエストハンドラメソッド」を作成後、「ビュー」を作成して「ブラウザ」で「Hello
+                    View!!!」と表示するプログラムを作成します。
+                </p>
+
+                <!-- 5-3-1 -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-number">5-3-1</span>
+                        <h3 class="subsection-title">Spring MVCのプログラムの作成</h3>
+                    </div>
+
+                    <h4>01 プロジェクトの作成</h4>
+
+                    <p>
+                        Spring Initializr（<a href="https://start.spring.io" target="_blank" rel="noopener noreferrer">https://start.spring.io</a>）を使用してプロジェクトを作成します。ブラウザでSpring Initializrにアクセスし、以下のように設定します。
+                    </p>
+
+                    <h5 style="margin: 20px 0 12px">設定内容</h5>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>設定値</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Project</td>
+                                    <td>Maven</td>
+                                </tr>
+                                <tr>
+                                    <td>Language</td>
+                                    <td>Java</td>
+                                </tr>
+                                <tr>
+                                    <td>Spring Boot</td>
+                                    <td>3.4.x（最新の安定版）</td>
+                                </tr>
+                                <tr>
+                                    <td>Group</td>
+                                    <td>com.example</td>
+                                </tr>
+                                <tr>
+                                    <td>Artifact</td>
+                                    <td>SpringMVCViewSample</td>
+                                </tr>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>SpringMVCViewSample</td>
+                                </tr>
+                                <tr>
+                                    <td>Packaging</td>
+                                    <td>Jar</td>
+                                </tr>
+                                <tr>
+                                    <td>Java</td>
+                                    <td>21</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p style="margin-top: 20px">
+                        「ADD DEPENDENCIES...」ボタンをクリックし、以下の依存関係を追加します。なお、選択した「Spring Web」が「Spring MVC」になります。
+                    </p>
+
+                    <ul style="margin: 16px 0; padding-left: 24px">
+                        <li>Spring Boot DevTools（開発者ツール）</li>
+                        <li>Thymeleaf（テンプレートエンジン）</li>
+                        <li>Spring Web（Web）</li>
+                    </ul>
+
+                    <p>
+                        設定が完了したら、「GENERATE」ボタンをクリックします。ZIPファイルがダウンロードされるので、任意の場所に解凍してください。
+                    </p>
+
+                    <h5 style="margin: 20px 0 12px">VSCodeでプロジェクトを開く</h5>
+                    <p>
+                        VSCodeを起動し、メニューから「ファイル」→「フォルダーを開く」を選択します。解凍した「SpringMVCViewSample」フォルダを選択して開きます。
+                    </p>
+                    <p>
+                        初回起動時、VSCodeの右下に「Java拡張機能をインストールしますか？」などの通知が表示された場合は、インストールすることをお勧めします。また、Mavenプロジェクトの読み込みに関する通知が表示された場合は「Yes」を選択してください。
+                    </p>
+
+                    <!-- Thymeleafコラム -->
+                    <div class="column-box">
+                        <span class="column-badge">Column</span>
+                        <div class="column-title">Thymeleaf（タイムリーフ）とは？</div>
+                        <p style="margin: 0">
+                            テンプレートエンジンは、データと特定の形式（テンプレート）を組み合わせて、最終的な表示内容（ビュー）を作成するツールです。Thymeleaf（タイムリーフ）はそのようなテンプレートエンジンの一つで、Spring
+                            Bootで使用が推奨されています。簡単に言えば、ThymeleafはSpring
+                            Bootと一緒に使うと、データを画面に表示する作業を簡単にしてくれます。
+                        </p>
+                    </div>
+
+                    <h4>02 コントローラの作成</h4>
+
+                    <p>
+                        実際に私達が作成する部分の「コントローラ」を作成します。VSCodeのエクスプローラーで以下の手順でファイルを作成します。
+                    </p>
+
+                    <ol style="margin: 16px 0; padding-left: 24px">
+                        <li>「src/main/java/com/example/demo」フォルダを右クリック</li>
+                        <li>「新しいフォルダー」を選択し、「controller」という名前のフォルダを作成</li>
+                        <li>作成した「controller」フォルダを右クリック</li>
+                        <li>「新しいファイル」を選択し、「HelloViewController.java」という名前でファイルを作成</li>
+                    </ol>
+
+                    <h5 style="margin: 20px 0 12px">ファイル構成</h5>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>値</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>パッケージ</td>
+                                    <td>com.example.demo.controller</td>
+                                </tr>
+                                <tr>
+                                    <td>ファイル名</td>
+                                    <td>HelloViewController.java</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p style="margin-top: 20px">「HelloViewController.java」ファイルに以下のコードを入力します。</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">HelloViewController.java</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <div class="code-content">
+                            <pre><span class="code-keyword">package</span> com.example.demo.controller;
+
+<span class="code-keyword">import</span> org.springframework.stereotype.Controller;
+<span class="code-keyword">import</span> org.springframework.web.bind.annotation.GetMapping;
+<span class="code-keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;
+
+<span class="code-annotation">@Controller</span>
+<span class="code-annotation">@RequestMapping</span>(<span class="code-string">"hello"</span>)
+<span class="code-keyword">public class</span> <span class="code-class">HelloViewController</span> {
+
+    <span class="code-annotation">@GetMapping</span>(<span class="code-string">"view"</span>)
+    <span class="code-keyword">public</span> String <span class="code-method">helloView</span>() {
+        <span class="code-comment">// 戻り値は「ビュー名」を返す</span>
+        <span class="code-keyword">return</span> <span class="code-string">"hello"</span>;
+    }
+}</pre>
+                        </div>
+                    </div>
+
+                    <!-- アノテーション図解 -->
+                    <div class="code-explanation-box">
+                        <h5 class="code-explanation-title">コードの解説</h5>
+
+                        <!-- @Controller の説明 -->
+                        <div class="code-explanation-item blue">
+                            <div class="code-explanation-header">
+                                <span class="code-explanation-line">7行目</span>
+                                <code class="code-explanation-code">@Controller</code>
+                            </div>
+                            <div class="code-explanation-label">インスタンス生成アノテーション（ステレオタイプアノテーション）</div>
+                            <p class="code-explanation-desc">
+                                このアノテーションが付与されたクラスは、HTTPリクエストを受け取り、適切な「ビジネスロジック」を呼び出し、レスポンスを返す役割を持ちます。クライアントとのデータ入出力を制御する「アプリケーション層」の「コントローラ」に付与します。
+                            </p>
+                        </div>
+
+                        <!-- @RequestMapping の説明 -->
+                        <div class="code-explanation-item yellow">
+                            <div class="code-explanation-header">
+                                <span class="code-explanation-line">8行目</span>
+                                <code class="code-explanation-code">@RequestMapping</code>
+                            </div>
+                            <div class="code-explanation-label">URLマッピングアノテーション</div>
+                            <p class="code-explanation-desc">
+                                「コントローラ」の「リクエストハンドラメソッド」と「URL」をマッピングするためのアノテーションです。クラスまたはメソッドに付与します。基本的にはvalue属性とmethod属性を指定します。
+                            </p>
+                        </div>
+
+                        <!-- @GetMapping の説明 -->
+                        <div class="code-explanation-item green">
+                            <div class="code-explanation-header">
+                                <span class="code-explanation-line">11行目</span>
+                                <code class="code-explanation-code">@GetMapping</code>
+                            </div>
+                            <div class="code-explanation-label">GETリクエスト専用のマッピング</div>
+                            <p class="code-explanation-desc">
+                                「@RequestMapping」のGETリクエスト用のアノテーションです。使用することで記述の省略と可読性の向上に繋がります。
+                            </p>
+                        </div>
+
+                        <!-- 戻り値の説明 -->
+                        <div class="code-explanation-item purple">
+                            <div class="code-explanation-header">
+                                <span class="code-explanation-line">14行目</span>
+                                <code class="code-explanation-code">return "hello"</code>
+                            </div>
+                            <div class="code-explanation-label">ビュー名の返却</div>
+                            <p class="code-explanation-desc">
+                                リクエストハンドラメソッドの戻り値を「ビュー名」にすることで、「テンプレートエンジン」の「ビュー」がレスポンスのHTMLを生成します。
+                            </p>
+                        </div>
+                    </div>
+
+                    <h4 style="margin-top: 32px">指定する属性</h4>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>属性</th>
+                                    <th>概要</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>value属性</strong></td>
+                                    <td>
+                                        マッピングするURLパスを指定します。valueは最初の「/」を省略できます。つまり、「/hello」と「hello」は同じ意味です。URLパスのみ指定する場合は属性名「value」を省略できます。複数のURLパスを指定することもできます
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>method属性</strong></td>
+                                    <td>
+                                        「GET」や「POST」などのHTTPメソッドを指定します。「GET」を指定するには「RequestMethod.GET」を使用します。「POST」を指定するには「RequestMethod.POST」を使用します。複数のHTTPメソッドを指定することもできます。クラスに「@RequestMapping」を付与する場合は指定しません
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 属性のコード例 -->
+                    <div style="margin: 24px 0; background: #f8fafc; border-radius: 12px; padding: 24px; border: 2px solid #e2e8f0;">
+                        <h5 style="margin: 0 0 20px 0; color: #1e293b; font-size: 1rem;">ソースコードでの使用例</h5>
+
+                        <!-- value属性の例 -->
+                        <div style="margin-bottom: 24px;">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                                <span style="background: #3b82f6; color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;">value属性</span>
+                                <span style="color: #64748b; font-size: 0.9rem;">URLパスの指定</span>
+                            </div>
+                            <div class="code-block" style="margin: 0;">
+                                <div class="code-header">
+                                    <span class="code-title">value属性の書き方</span>
+                                    <span class="code-lang">Java</span>
+                                </div>
+                                <div class="code-content">
+                                    <pre><span class="code-comment">// 以下の3つは全て同じ意味（URLパス「/hello」にマッピング）</span>
+<span class="code-annotation">@RequestMapping</span>(value = <span class="code-string">"hello"</span>)      <span class="code-comment">// value属性を明示</span>
+<span class="code-annotation">@RequestMapping</span>(<span class="code-string">"hello"</span>)              <span class="code-comment">// value属性名を省略</span>
+<span class="code-annotation">@RequestMapping</span>(<span class="code-string">"/hello"</span>)             <span class="code-comment">// 先頭の「/」は省略可能</span></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- method属性の例 -->
+                        <div style="margin-bottom: 24px;">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                                <span style="background: #f59e0b; color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;">method属性</span>
+                                <span style="color: #64748b; font-size: 0.9rem;">HTTPメソッドの指定</span>
+                            </div>
+                            <div class="code-block" style="margin: 0;">
+                                <div class="code-header">
+                                    <span class="code-title">method属性の書き方</span>
+                                    <span class="code-lang">Java</span>
+                                </div>
+                                <div class="code-content">
+                                    <pre><span class="code-comment">// GETリクエストのみ受け付ける</span>
+<span class="code-annotation">@RequestMapping</span>(value = <span class="code-string">"hello"</span>, method = RequestMethod.GET)
+
+<span class="code-comment">// POSTリクエストのみ受け付ける</span>
+<span class="code-annotation">@RequestMapping</span>(value = <span class="code-string">"hello"</span>, method = RequestMethod.POST)</pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 省略形アノテーションの例 -->
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                                <span style="background: #22c55e; color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;">省略形</span>
+                                <span style="color: #64748b; font-size: 0.9rem;">@GetMapping / @PostMapping</span>
+                            </div>
+                            <div class="code-block" style="margin: 0;">
+                                <div class="code-header">
+                                    <span class="code-title">省略形アノテーション（推奨）</span>
+                                    <span class="code-lang">Java</span>
+                                </div>
+                                <div class="code-content">
+                                    <pre><span class="code-comment">// @RequestMapping + method = GET の省略形</span>
+<span class="code-annotation">@GetMapping</span>(<span class="code-string">"view"</span>)
+
+<span class="code-comment">// @RequestMapping + method = POST の省略形</span>
+<span class="code-annotation">@PostMapping</span>(<span class="code-string">"submit"</span>)</pre>
+                                </div>
+                            </div>
+                            <p style="margin: 12px 0 0 0; color: #475569; font-size: 0.9rem; background: #ecfdf5; padding: 12px; border-radius: 8px; border-left: 4px solid #22c55e;">
+                                <strong>推奨：</strong>method属性を指定する代わりに、<code style="background: #d1fae5; padding: 2px 6px; border-radius: 4px;">@GetMapping</code>や<code style="background: #d1fae5; padding: 2px 6px; border-radius: 4px;">@PostMapping</code>などの省略形アノテーションを使用することで、コードがシンプルで読みやすくなります。
+                            </p>
+                        </div>
+                    </div>
+
+                    <h4>03 URLマッピング</h4>
+
+                    <p>
+                        HelloViewControllerクラスは、クラスに「@RequestMapping("hello")」アノテーション（8行目）を付与し、リクエストハンドラメソッドに「@GetMapping("view")」アノテーション（11行目）を付与しています。
+                    </p>
+
+                    <p>
+                        クライアントからURL「http://localhost:8080/hello/view」がGETメソッドで送信されると、「HelloViewController」クラスの「helloView」メソッドが呼ばれます。
+                    </p>
+
+                    <!-- URLコラム -->
+                    <div class="column-box">
+                        <span class="column-badge">Column</span>
+                        <div class="column-title">Spring BootでのURL表記について</div>
+                        <p>「http://localhost:8080/hello/view」について補足します。</p>
+
+                        <div class="table-container" style="margin: 16px 0">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>言葉</th>
+                                        <th>補足</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>localhost</strong></td>
+                                        <td>
+                                            「自分自身」を指すコンピューターの名前です。つまり、自分のコンピューター内で動いているプログラムにアクセスするときに使用する文字です
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>8080</strong></td>
+                                        <td>
+                                            「ポート番号」と呼ばれるもので、コンピューター内で複数のプログラムがネットワークを使うときに、どのプログラムにデータを送るかを区別するための番号です。イメージとしては「部屋番号」のようなものです
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>hello/view</strong></td>
+                                        <td>
+                                            アプリケーション内の特定の機能やページに直接アクセスするための「ルーティング」によるエンドポイントです
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <p style="margin: 0">
+                            通常、Webアプリケーションにアクセスする際は、「http://［サーバー名］：［ポート番号］/［アプリケーション名］/［機能名］」という形式になります。しかし、Spring
+                            Bootでは特に設定しない限り、［アプリケーション名］（もしくは「コンテキストパス」とも呼ばれます）は省略されます。つまり、このURLは「自分のコンピューター（localhost）の8080番のポートで動いているSpring
+                            Bootアプリケーションの、"hello/view"という機能にアクセスしてください」という意味になります。
+                        </p>
+                    </div>
+
+                    <h4>04 ビューの作成</h4>
+
+                    <p>Spring Bootプロジェクトで「ビュー」を作成する時は、以下のルールに従ってください。</p>
+
+                    <div class="qa-box">
+                        <div class="qa-question">Q：「ビュー」はどこに置く？</div>
+                        <div class="qa-answer">A：「resources/templates」というフォルダに配置します。</div>
+                    </div>
+
+                    <div class="qa-box">
+                        <div class="qa-question">Q：沢山の画面がある時はどうする？</div>
+                        <div class="qa-answer">A：機能別にサブフォルダを作って、その中に各ビューを配置します。</div>
+                    </div>
+
+                    <div class="qa-box">
+                        <div class="qa-question">
+                            Q：サブフォルダを作ったら、どうやってリクエストハンドラメソッドで指定するの？
+                        </div>
+                        <div class="qa-answer">
+                            A：リクエストハンドラメソッドの中で、templatesフォルダ以下のパスを指定します。例えば、「templates/user/login.html」というファイルがあれば、「user/login」と指定します。
+                        </div>
+                    </div>
+
+                    <div class="qa-box">
+                        <div class="qa-question">Q：スタイルシート（CSS）やJavaScriptはどこに置く？</div>
+                        <div class="qa-answer">
+                            A：「resources/static」というフォルダに配置することで、使用できます。
+                        </div>
+                    </div>
+
+                    <!-- フォルダ構成図解 -->
+                    <div style="margin: 24px 0; background: #f8fafc; border-radius: 12px; padding: 24px; border: 2px solid #e2e8f0;">
+                        <h5 style="margin: 0 0 20px 0; color: #1e293b; font-size: 1rem;">Spring Bootプロジェクトのフォルダ構成</h5>
+
+                        <div style="display: flex; gap: 32px; flex-wrap: wrap;">
+                            <!-- フォルダツリー -->
+                            <div style="flex: 1; min-width: 280px;">
+                                <div style="background: #1e293b; border-radius: 8px; padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #e2e8f0;">
+                                    <div>SpringMVCViewSample/</div>
+                                    <div style="margin-left: 16px;">src/</div>
+                                    <div style="margin-left: 32px;">main/</div>
+                                    <div style="margin-left: 48px;">java/</div>
+                                    <div style="margin-left: 64px; color: #94a3b8;">com/example/demo/</div>
+                                    <div style="margin-left: 80px; color: #fbbf24;">controller/</div>
+                                    <div style="margin-left: 96px; color: #fbbf24;">HelloViewController.java</div>
+                                    <div style="margin-left: 48px;">resources/</div>
+                                    <div style="margin-left: 64px; background: #3b82f6; color: white; padding: 2px 8px; border-radius: 4px; display: inline-block;">templates/</div>
+                                    <div style="margin-left: 80px; color: #60a5fa;">hello.html <span style="color: #94a3b8;">← ビュー</span></div>
+                                    <div style="margin-left: 80px; color: #94a3b8;">user/</div>
+                                    <div style="margin-left: 96px; color: #60a5fa;">login.html</div>
+                                    <div style="margin-left: 96px; color: #60a5fa;">register.html</div>
+                                    <div style="margin-left: 64px; background: #22c55e; color: white; padding: 2px 8px; border-radius: 4px; display: inline-block;">static/</div>
+                                    <div style="margin-left: 80px; color: #4ade80;">css/</div>
+                                    <div style="margin-left: 96px; color: #4ade80;">style.css</div>
+                                    <div style="margin-left: 80px; color: #4ade80;">js/</div>
+                                    <div style="margin-left: 96px; color: #4ade80;">app.js</div>
+                                </div>
+                            </div>
+
+                            <!-- 凡例 -->
+                            <div style="flex: 1; min-width: 250px;">
+                                <div style="background: white; border-radius: 8px; padding: 16px; border: 1px solid #e2e8f0;">
+                                    <div style="font-weight: 600; color: #1e293b; margin-bottom: 12px;">配置ルール</div>
+
+                                    <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px;">
+                                        <div style="background: #3b82f6; color: white; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; white-space: nowrap;">templates</div>
+                                        <div style="color: #475569; font-size: 0.9rem; line-height: 1.5;">
+                                            HTMLファイル（ビュー）を配置<br>
+                                            <span style="color: #64748b; font-size: 0.85rem;">戻り値：<code style="background: #dbeafe; padding: 2px 6px; border-radius: 4px;">"hello"</code></span>
+                                        </div>
+                                    </div>
+
+                                    <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px;">
+                                        <div style="background: #22c55e; color: white; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; white-space: nowrap;">static</div>
+                                        <div style="color: #475569; font-size: 0.9rem; line-height: 1.5;">
+                                            CSS、JavaScript、画像を配置<br>
+                                            <span style="color: #64748b; font-size: 0.85rem;">直接アクセス可能</span>
+                                        </div>
+                                    </div>
+
+                                    <div style="background: #fef3c7; padding: 12px; border-radius: 8px; border-left: 4px solid #f59e0b; margin-top: 16px;">
+                                        <div style="font-weight: 600; color: #92400e; font-size: 0.85rem; margin-bottom: 4px;">サブフォルダ使用時</div>
+                                        <div style="color: #78350f; font-size: 0.85rem;">
+                                            <code style="background: #fef9c3; padding: 2px 6px; border-radius: 4px;">user/login.html</code><br>
+                                            → 戻り値：<code style="background: #fef9c3; padding: 2px 6px; border-radius: 4px;">"user/login"</code>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p>ではビューを作成します。以下の手順に従ってください。</p>
+
+                    <div class="step-guide">
+                        <div class="step-item">
+                            <div class="step-number-box">1</div>
+                            <div class="step-content">
+                                <div class="step-title">templatesフォルダを開く</div>
+                                <p class="step-text">
+                                    VSCodeのエクスプローラーで「src/main/resources/templates」フォルダを右クリックします。
+                                </p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number-box">2</div>
+                            <div class="step-content">
+                                <div class="step-title">新しいファイルを作成</div>
+                                <p class="step-text">
+                                    メニューから「新しいファイル」を選択します。
+                                </p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number-box">3</div>
+                            <div class="step-content">
+                                <div class="step-title">ファイル名を入力</div>
+                                <p class="step-text">
+                                    ファイル名に「hello.html」と入力してEnterキーを押します。templatesフォルダ内にhello.htmlが作成されます。
+                                </p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number-box">4</div>
+                            <div class="step-content">
+                                <div class="step-title">HTMLコードを入力</div>
+                                <p class="step-text">
+                                    hello.htmlに以下のコードを入力します。&lt;body&gt;タグの中に、&lt;h1&gt;タグで「Hello View!!!」を囲むだけのシンプルな内容です。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">hello.html</span>
+                            <span class="code-lang">HTML</span>
+                        </div>
+                        <div class="code-content">
+                            <pre><span class="code-keyword">&lt;!DOCTYPE html&gt;</span>
+<span class="code-keyword">&lt;html&gt;</span>
+<span class="code-keyword">&lt;head&gt;</span>
+    <span class="code-keyword">&lt;meta</span> <span class="code-class">charset</span>=<span class="code-string">"UTF-8"</span><span class="code-keyword">&gt;</span>
+    <span class="code-keyword">&lt;title&gt;</span>View Sample<span class="code-keyword">&lt;/title&gt;</span>
+<span class="code-keyword">&lt;/head&gt;</span>
+<span class="code-keyword">&lt;body&gt;</span>
+    <span class="code-keyword">&lt;h1&gt;</span>Hello View!!!<span class="code-keyword">&lt;/h1&gt;</span>
+<span class="code-keyword">&lt;/body&gt;</span>
+<span class="code-keyword">&lt;/html&gt;</span></pre>
+                        </div>
+                    </div>
+
+                    <h4>05 実行と確認</h4>
+
+                    <p>
+                        今回作成したのは、Spring BootのWebアプリケーションです。VSCodeでは複数の実行方法がありますが、ここではターミナルを使った実行方法を紹介します。
+                    </p>
+
+                    <h5 style="margin: 20px 0 12px">方法1: ターミナルから実行（推奨）</h5>
+                    <p>
+                        VSCodeのメニューから「ターミナル」→「新しいターミナル」を選択します。ターミナルが開いたら、以下のコマンドを入力して実行します。
+                    </p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">ターミナル</span>
+                            <span class="code-lang">Shell</span>
+                        </div>
+                        <div class="code-content">
+                            <pre>./mvnw spring-boot:run</pre>
+                        </div>
+                    </div>
+
+                    <!-- OS別コマンドの違い -->
+                    <div style="margin: 20px 0; display: flex; gap: 16px; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 200px; background: #f0fdf4; border: 2px solid #22c55e; border-radius: 8px; padding: 16px;">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <span style="font-size: 1.2rem;">&#128038;</span>
+                                <span style="font-weight: 600; color: #166534;">macOS / Linux</span>
+                            </div>
+                            <code style="background: #dcfce7; padding: 8px 12px; border-radius: 4px; display: block; font-family: 'JetBrains Mono', monospace;">./mvnw spring-boot:run</code>
+                        </div>
+                        <div style="flex: 1; min-width: 200px; background: #eff6ff; border: 2px solid #3b82f6; border-radius: 8px; padding: 16px;">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <span style="font-size: 1.2rem;">&#128187;</span>
+                                <span style="font-weight: 600; color: #1e40af;">Windows</span>
+                            </div>
+                            <code style="background: #dbeafe; padding: 8px 12px; border-radius: 4px; display: block; font-family: 'JetBrains Mono', monospace;">mvnw spring-boot:run</code>
+                        </div>
+                    </div>
+
+                    <div class="column-box" style="margin: 20px 0">
+                        <span class="column-badge">Column</span>
+                        <div class="column-title">なぜWindowsでは「./」が不要なのか？</div>
+                        <p>
+                            これには<strong>Mavenラッパーの構成</strong>と<strong>OSの仕組み</strong>の2つが関係しています。
+                        </p>
+
+                        <h5 style="margin: 16px 0 12px; color: #1e293b;">1. Mavenラッパーのファイル構成</h5>
+                        <p>Spring Bootプロジェクトには、OS別に2つのラッパーファイルが用意されています。</p>
+                        <div style="display: flex; gap: 12px; flex-wrap: wrap; margin: 12px 0;">
+                            <div style="background: #f0fdf4; padding: 12px 16px; border-radius: 8px; border: 1px solid #bbf7d0;">
+                                <code style="font-weight: 600; color: #166534;">mvnw</code>
+                                <span style="color: #64748b; font-size: 0.85rem; margin-left: 8px;">macOS / Linux用（シェルスクリプト）</span>
+                            </div>
+                            <div style="background: #eff6ff; padding: 12px 16px; border-radius: 8px; border: 1px solid #bfdbfe;">
+                                <code style="font-weight: 600; color: #1e40af;">mvnw.cmd</code>
+                                <span style="color: #64748b; font-size: 0.85rem; margin-left: 8px;">Windows用（バッチファイル）</span>
+                            </div>
+                        </div>
+
+                        <h5 style="margin: 20px 0 12px; color: #1e293b;">2. OSごとの実行方法の違い</h5>
+                        <div class="table-container" style="margin: 12px 0">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>OS</th>
+                                        <th>実行の仕組み</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>macOS / Linux</strong></td>
+                                        <td>
+                                            セキュリティ上の理由から、カレントディレクトリはコマンド検索パスに<strong>含まれていません</strong>。そのため「./」を付けて「このフォルダにある<code>mvnw</code>を実行する」と明示的に指定する必要があります
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Windows</strong></td>
+                                        <td>
+                                            カレントディレクトリが自動的に検索パスに<strong>含まれています</strong>。さらに「mvnw」と入力すると、Windowsが自動的に<code>.cmd</code>や<code>.bat</code>などの拡張子を補完して<code>mvnw.cmd</code>を見つけて実行します
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p style="margin: 0; color: #64748b; font-size: 0.9rem;">
+                            ※ 「./」の「.」はカレントディレクトリ（現在のフォルダ）を意味し、「/」はパスの区切り文字です。
+                        </p>
+                    </div>
+
+                    <h5 style="margin: 20px 0 12px">方法2: Spring Boot Dashboard拡張機能を使用</h5>
+                    <p>
+                        VSCodeに「Spring Boot Extension Pack」拡張機能をインストールしている場合、サイドバーに「SPRING BOOT DASHBOARD」が表示されます。「SpringMVCViewSample」を右クリックして「Run」を選択するか、再生ボタンをクリックして起動できます。
+                    </p>
+
+                    <p style="margin-top: 20px">
+                        起動するとターミナルにログが表示され、サーバーが起動したことが確認できます。「Tomcat started on port(s): 8080」はTomcatの起動を示します。Spring BootはTomcatサーバーを内包しているため、サーバーの設定などをせずに使用できます。「Started SpringMvcViewSampleApplication」はアプリケーションがスタートしたことを示します。
+                    </p>
+
+                    <div class="column-box" style="margin: 20px 0">
+                        <span class="column-badge">Tip</span>
+                        <div class="column-title">アプリケーションの停止方法</div>
+                        <p style="margin: 0">
+                            アプリケーションを停止するには、ターミナルで「Ctrl + C」（macOSの場合は「Control + C」）を押します。
+                        </p>
+                    </div>
+
+                    <p>
+                        ブラウザを立ち上げ、アドレスバーに「http://localhost:8080/hello/view」と入力してください。ブラウザに「Hello
+                        View!!!」と表示されました。
+                    </p>
+
+                    <!-- ブラウザ表示のイメージ -->
+                    <div
+                        style="
+                            background: #f8fafc;
+                            border: 2px solid #e2e8f0;
+                            border-radius: 12px;
+                            padding: 20px;
+                            margin: 24px 0;
+                        "
+                    >
+                        <div
+                            style="
+                                display: flex;
+                                align-items: center;
+                                gap: 8px;
+                                margin-bottom: 16px;
+                                padding-bottom: 12px;
+                                border-bottom: 1px solid #e2e8f0;
+                            "
+                        >
+                            <div style="width: 12px; height: 12px; border-radius: 50%; background: #ef4444"></div>
+                            <div style="width: 12px; height: 12px; border-radius: 50%; background: #f59e0b"></div>
+                            <div style="width: 12px; height: 12px; border-radius: 50%; background: #22c55e"></div>
+                            <div
+                                style="
+                                    flex: 1;
+                                    background: #e2e8f0;
+                                    border-radius: 4px;
+                                    padding: 6px 12px;
+                                    margin-left: 12px;
+                                    font-size: 0.875rem;
+                                    color: #64748b;
+                                "
+                            >
+                                localhost:8080/hello/view
+                            </div>
+                        </div>
+                        <div style="font-size: 2rem; font-weight: bold">Hello View!!!</div>
+                    </div>
+                </div>
+
+                <!-- 5-3-2 まとめ -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-number">5-3-2</span>
+                        <h3 class="subsection-title">まとめ</h3>
+                    </div>
+
+                    <p>ここまでの処理の流れを示します。</p>
+
+                    <!-- 図5.16 処理の流れ -->
+                    <style>
+                        .figure {
+                            text-align: center;
+                            margin: 30px 0;
+                        }
+                        .figure svg {
+                            max-width: 100%;
+                            height: auto;
+                        }
+                        .figure-caption {
+                            font-size: 14px;
+                            color: #666;
+                            margin-top: 15px;
+                            font-weight: bold;
+                        }
+                    </style>
+                    <div class="figure">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="650" height="280" viewBox="0 0 650 280">
+                            <defs>
+                                <marker id="arr" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#2196F3"/>
+                                </marker>
+                            </defs>
+                            <rect width="650" height="280" fill="#f8f9fa"/>
+                            <text x="325" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#333">Spring MVCの処理の流れ（Hello View!!!の例）</text>
+
+                            <!-- ブラウザ -->
+                            <rect x="30" y="80" width="100" height="120" rx="8" fill="#9E9E9E" stroke="#757575" stroke-width="2"/>
+                            <text x="80" y="105" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#fff">ブラウザ</text>
+                            <rect x="40" y="115" width="80" height="70" rx="4" fill="#fff"/>
+                            <text x="80" y="135" text-anchor="middle" font-family="monospace" font-size="10" fill="#333">localhost:</text>
+                            <text x="80" y="150" text-anchor="middle" font-family="monospace" font-size="10" fill="#333">8080/</text>
+                            <text x="80" y="165" text-anchor="middle" font-family="monospace" font-size="10" fill="#333">hello/view</text>
+
+                            <!-- コントローラ -->
+                            <rect x="250" y="80" width="150" height="120" rx="8" fill="#4CAF50" stroke="#388E3C" stroke-width="2"/>
+                            <text x="325" y="105" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#fff">コントローラ</text>
+                            <rect x="260" y="115" width="130" height="70" rx="4" fill="#fff"/>
+                            <text x="325" y="135" text-anchor="middle" font-family="monospace" font-size="10" fill="#333">HelloViewController</text>
+                            <text x="325" y="150" text-anchor="middle" font-family="monospace" font-size="10" fill="#333">.java</text>
+                            <text x="325" y="170" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#666">戻り値: "hello"</text>
+
+                            <!-- ビュー -->
+                            <rect x="500" y="80" width="120" height="120" rx="8" fill="#9C27B0" stroke="#7B1FA2" stroke-width="2"/>
+                            <text x="560" y="105" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#fff">ビュー</text>
+                            <rect x="510" y="115" width="100" height="70" rx="4" fill="#fff"/>
+                            <text x="560" y="140" text-anchor="middle" font-family="monospace" font-size="10" fill="#333">hello.html</text>
+                            <text x="560" y="160" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#666">templates/</text>
+                            <text x="560" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#666">フォルダ内</text>
+
+                            <!-- 矢印1: ブラウザ → コントローラ -->
+                            <line x1="130" y1="140" x2="245" y2="140" stroke="#2196F3" stroke-width="2" marker-end="url(#arr)"/>
+                            <circle cx="188" cy="140" r="12" fill="#2196F3"/>
+                            <text x="188" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff">1</text>
+                            <text x="188" y="115" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#666">GETリクエスト</text>
+
+                            <!-- 矢印2: コントローラ → ビュー -->
+                            <line x1="400" y1="140" x2="495" y2="140" stroke="#2196F3" stroke-width="2" marker-end="url(#arr)"/>
+                            <circle cx="448" cy="140" r="12" fill="#2196F3"/>
+                            <text x="448" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff">2</text>
+                            <text x="448" y="115" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#666">ビュー名を返却</text>
+
+                            <!-- 矢印3: ビュー → ブラウザ（コの字型直線） -->
+                            <line x1="560" y1="200" x2="560" y2="260" stroke="#2196F3" stroke-width="2"/>
+                            <line x1="560" y1="260" x2="80" y2="260" stroke="#2196F3" stroke-width="2"/>
+                            <line x1="80" y1="260" x2="80" y2="205" stroke="#2196F3" stroke-width="2" marker-end="url(#arr)"/>
+                            <circle cx="325" cy="260" r="12" fill="#2196F3"/>
+                            <text x="325" y="265" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff">3</text>
+                            <text x="325" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#666">HTMLをレスポンスとして返却</text>
+                        </svg>
+                        <div class="figure-caption">図5.16 処理の流れ</div>
+                    </div>
+
+                    <p>
+                        「ビジネスロジック」はまだ作成していませんが、「コントローラ」と「ビュー」を自分で作成し、「クライアント」から送られてくる「URL」に対応する「リクエストハンドラメソッド」が戻り値として「ビュー名」を返し、対応する「ビュー」を表示する「Spring
+                        MVC」の流れがなんとなくイメージできたのではないでしょうか。
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <!-- フッター -->
+        <footer class="chapter-footer">
+            <p class="footer-text">第5章 MVCモデルを知ろう - 完了</p>
+        </footer>
+
+        <footer class="footer">
+            <p>Spring Framework 入門チュートリアル</p>
+        </footer>
+
+        <div class="page-nav">
+            <a href="4aop-tutorial.html" class="page-nav-btn prev">
+                <span>←</span>
+                <div>
+                    <div class="page-nav-label">前の章</div>
+                    <div class="page-nav-title">第4章</div>
+                </div>
+            </a>
+
+            <a href="6thymeleaf-tutorial.html" class="page-nav-btn next">
+                <div>
+                    <div class="page-nav-label">次の章</div>
+                    <div class="page-nav-title">第6章</div>
+                </div>
+                <span>→</span>
+            </a>
+        </div>
+
+        <script>
+            function toggleMenu() {
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+                toggle.classList.toggle("active");
+                menu.classList.toggle("active");
+            }
+
+            document.addEventListener("click", function (e) {
+                const nav = document.querySelector(".global-nav");
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+
+                if (!nav.contains(e.target) && menu.classList.contains("active")) {
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+
+            window.addEventListener("resize", function () {
+                if (window.innerWidth >= 1024) {
+                    const toggle = document.querySelector(".nav-toggle");
+                    const menu = document.querySelector(".nav-menu");
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+        </script>
+    </body>
+</html>

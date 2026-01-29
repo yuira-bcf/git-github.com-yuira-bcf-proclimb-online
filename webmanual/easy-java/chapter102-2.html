@@ -1,0 +1,1206 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chapter10：継承（クラス継承 / Java Silver）</title>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --panel:#ffffff;
+      --text:#111827;       /* gray-900 */
+      --muted:#6b7280;      /* gray-500 */
+      --border:#e5e7eb;     /* gray-200 */
+      --accent:#2563eb;     /* blue-600 */
+      --good:#16a34a;       /* green-600 */
+      --warn:#d97706;       /* amber-600 */
+      --bad:#dc2626;        /* red-600 */
+      --codebg:#0b1220;     /* dark code background */
+      --codeborder:#111827; /* dark border for code */
+      --shadow: 0 8px 30px rgba(17,24,39,.08);
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height:1.75;
+    }
+
+    header{
+      padding: 30px 18px 14px;
+      border-bottom:1px solid var(--border);
+      background:
+        radial-gradient(900px 420px at 10% 10%, rgba(37,99,235,.10), transparent 55%),
+        radial-gradient(900px 420px at 95% 0%, rgba(22,163,74,.08), transparent 55%),
+        #ffffff;
+    }
+
+    .wrap{ max-width: 1020px; margin: 0 auto; padding: 0 18px 80px; }
+    h1{ margin:0; font-size: 28px; letter-spacing:.02em; }
+    .sub{ margin:10px 0 0; color: var(--muted); font-size: 14px; }
+
+    nav{
+      margin: 18px 0 0;
+      padding: 12px 14px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+    }
+    nav a{
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(17,24,39,.35);
+    }
+    nav a:hover{ border-bottom-color: var(--accent); color: var(--accent); }
+    nav ul{ margin: 8px 0 0; padding-left: 18px; }
+
+    section{
+      margin-top: 22px;
+      padding: 18px 16px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    h2{ margin:0 0 10px; font-size: 20px; }
+    h3{ margin: 18px 0 8px; font-size: 16px; color: var(--accent); }
+
+    .note, .point, .warn, .bad{
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #f9fafb; /* gray-50 */
+      margin: 10px 0;
+    }
+    .point{ border-left: 5px solid var(--good); }
+    .warn{ border-left: 5px solid var(--warn); }
+    .bad{ border-left: 5px solid var(--bad); }
+
+    code, pre{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Noto Sans Mono CJK JP", monospace;
+    }
+    code{
+      background: #f3f4f6; /* gray-100 */
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 1px 6px;
+    }
+    pre{
+      margin: 10px 0;
+      padding: 12px 12px;
+      background: var(--codebg);
+      color: #e5e7eb;
+      border: 1px solid var(--codeborder);
+      border-radius: 14px;
+      overflow:auto;
+    }
+    pre code{
+      background: transparent;
+      border: none;
+      padding: 0;
+      color: inherit;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 920px){
+      .grid{ grid-template-columns: 1fr 1fr; }
+    }
+
+    table{
+      width:100%;
+      border-collapse: collapse;
+      margin: 10px 0 0;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow:hidden;
+    }
+    th, td{
+      padding: 10px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    th{
+      text-align:left;
+      background: #f9fafb;
+      color: var(--muted);
+      font-weight:700;
+      width: 28%;
+    }
+
+    .tag{
+      display:inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(37,99,235,.08);
+      border:1px solid rgba(37,99,235,.18);
+      color: #1e3a8a; /* blue-900 */
+      font-size: 12px;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+
+    .hr{
+      height:1px;
+      background: var(--border);
+      margin: 18px 0;
+    }
+
+    footer{
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="wrap">
+    <h1>Chapter10：継承（Inheritance）</h1>
+    <p class="sub">
+      対象：初学者 / Java Silver 範囲（クラス継承）
+      <br />
+      <span class="tag">extends</span>
+      <span class="tag">is-a / have-a</span>
+      <span class="tag">constructor</span>
+      <span class="tag">@Override</span>
+      <span class="tag">polymorphism</span>
+      <span class="tag">インスタンス多重構造</span>
+      <br />
+      ※ 次章で interface / abstract を扱う前提のため、この章は「クラス継承」＋「多態の入口」＋「内部構造」を固めます。
+    </p>
+
+    <nav aria-label="目次">
+      <strong>目次</strong>
+      <ul>
+        <li><a href="#reorg">10.1 再度整理（この章で押さえること）</a></li>
+        <li><a href="#why">10.2 継承はなぜ必要なのか（効率）</a></li>
+        <li><a href="#class-inheritance">10.3 クラス型継承（extends）</a></li>
+        <li><a href="#is-a-have-a">10.4 is-a / have-a の原則</a></li>
+        <li><a href="#constructor">10.5 継承とコンストラクタ</a></li>
+        <li><a href="#override">10.6 オーバーライド（Override）</a></li>
+        <li><a href="#polymorphism">10.7 ポリモーフィズムとの関連性</a></li>
+        <li><a href="#instance-structure">10.8 インスタンスの多重構造（内部の見え方）</a></li>
+        <li><a href="#no-inheritance-override">10.9 継承・オーバーライドの禁止</a></li>
+        <li><a href="#summary">10.10 まとめ</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="reorg">
+    <h2>10.1 再度整理（この章で押さえること）</h2>
+
+    <div class="point">
+      <strong>この章のゴール：</strong>
+      <ul style="margin:8px 0 0;">
+        <li><strong>継承とは何か</strong>（is-a / have-a の判断ができる）</li>
+        <li><strong>コンストラクタの実行順</strong>（親 → 子）を説明できる</li>
+        <li><strong>オーバーライド</strong>が「多態（ポリモーフィズム）」の土台であることを理解する</li>
+        <li><strong>インスタンス内部は多重構造</strong>（親の領域＋子の領域）だと理解する</li>
+        <li><strong>継承・オーバーライドを禁止すべき場面</strong>を言語化できる</li>
+      </ul>
+    </div>
+
+    <div class="warn">
+      <strong>つまずきやすい点（先に整理します）：</strong>
+      <ul style="margin:8px 0 0;">
+        <li>コンストラクタは<strong>継承されません</strong>（重要）</li>
+        <li>子のインスタンスには、内部に<strong>親インスタンス部分</strong>が含まれます</li>
+        <li>親のコンストラクタ呼び出しが必要なのに <code>super(...)</code> を書かないと<strong>コンパイルエラー</strong>になります</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="why">
+    <h2>10.2 継承はなぜ必要なのか（効率）</h2>
+
+    <p>
+      継承は「同じようなクラスが増えたとき」に、共通部分を親へ集約して
+      <strong>重複を減らし、変更に強くする</strong>ために使います。<br />
+      コピー＆ペーストで増やすと、仕様変更時に修正箇所が増え、修正漏れが起きやすくなります。
+    </p>
+
+    <div class="grid">
+      <div class="point">
+        <strong>効率①：修正箇所が減る</strong><br />
+        共通処理を親クラスにまとめると、仕様変更は親を直せば済むケースが増えます。
+      </div>
+      <div class="point">
+        <strong>効率②：重複が減る</strong><br />
+        同じフィールド・同じメソッドを各クラスに持たせないので、コード量と不具合リスクが下がります。
+      </div>
+      <div class="point">
+        <strong>効率③：拡張が楽</strong><br />
+        新しい種類（サブクラス）を追加しても、共通部分を再利用できます。
+      </div>
+      <div class="point">
+        <strong>効率④：多態の土台になる</strong><br />
+        親型でまとめて扱えるようになり、条件分岐を減らしやすくなります（10.7）。
+      </div>
+    </div>
+
+    <div class="warn">
+      <strong>注意：</strong>効率化の前提は is-a / have-a の判断が正しいことです。<br />
+      関係性が適切でない継承は、保守コストが増える原因になります。
+    </div>
+  </section>
+
+  <section id="class-inheritance">
+    <h2>10.3 クラス型継承（extends）</h2>
+
+    <h3>概要</h3>
+    <p>
+      クラス型継承は、<strong>親クラスの機能を引き継ぎ、子クラスで追加・変更</strong>する仕組みです。<br />
+      Javaでは <code>extends</code> を使います。
+    </p>
+
+    <h3>定義</h3>
+    <table aria-label="クラス継承の用語">
+      <tr>
+        <th>親クラス</th>
+        <td>スーパークラス（superclass）。共通部分をまとめる。</td>
+      </tr>
+      <tr>
+        <th>子クラス</th>
+        <td>サブクラス（subclass）。差分（追加・変更）を持つ。</td>
+      </tr>
+      <tr>
+        <th>extends</th>
+        <td>継承宣言：<code>class Child extends Parent</code></td>
+      </tr>
+      <tr>
+        <th>super</th>
+        <td>親を指す。<code>super(...)</code> は親コンストラクタ呼び出し。</td>
+      </tr>
+      <tr>
+        <th>オーバーライド</th>
+        <td>親メソッドを子で上書き（<code>@Override</code> 推奨）。</td>
+      </tr>
+    </table>
+
+    <h3>サンプルソース</h3>
+    <p class="note">
+      本教材のサンプルは <strong>すべて 1ファイル（Main.java）</strong> にまとめてあります。<br />
+      ここでは Main.java の「該当部分（抜粋）」を掲載します。全体は 10.10 に載せています。
+    </p>
+
+    <pre><code>// Main.java（抜粋：Demo10_3）
+public static class Demo10_3 {
+    public static void run() {
+        title("10.3 クラス型継承（extends）");
+
+        Demo10_3.Animal a = new Demo10_3.Dog("ポチ"); // 親型で子を参照（多態の入口）
+        a.speak();                                   // 実体（Dog）のメソッドが動く
+
+        Demo10_3.Person p = new Demo10_3.Employee("佐藤", 24, "E-1024");
+        System.out.println(p.profile());
+    }
+
+    // --- 基本例：Animal / Dog ---
+    public static class Animal {
+        protected String name;
+
+        public Animal(String name) {
+            this.name = name;
+            System.out.println("Animal constructor");
+        }
+
+        public void speak() {
+            System.out.println("...");
+        }
+    }
+
+    public static class Dog extends Animal {
+        public Dog(String name) {
+            super(name); // 親コンストラクタの呼び出し
+            System.out.println("Dog constructor");
+        }
+
+        @Override
+        public void speak() {
+            System.out.println(this.name + "：ワン");
+        }
+    }
+
+    // --- 実例：Person / Employee ---
+    public static class Person {
+        private String name;
+        private int age;
+
+        public Person(String name, int age) {
+            this.name = name;
+            this.age = age;
+        }
+
+        public String profile() {
+            return this.name + "（" + this.age + "）";
+        }
+    }
+
+    public static class Employee extends Person {
+        private String employeeId;
+
+        public Employee(String name, int age, String employeeId) {
+            super(name, age);
+            this.employeeId = employeeId;
+        }
+
+        @Override
+        public String profile() {
+            return super.profile() + " / id=" + this.employeeId;
+        }
+    }
+}</code></pre>
+
+    <h3>ソースコード解析</h3>
+    <div class="grid">
+      <div class="note">
+        <strong>① <code>extends</code> の意味</strong><br />
+        <code>Dog</code> は <code>Animal</code> の一種として扱えます（is-a）。<br />
+        そのため <code>Animal a = new Dog(...)</code> が可能です。
+      </div>
+
+      <div class="note">
+        <strong>② コンストラクタの順序</strong><br />
+        <code>new Dog(...)</code> では、まず親側（Animal部分）を初期化する必要があります。<br />
+        そのため <code>super(name)</code> により親コンストラクタが先に実行されます。
+      </div>
+
+      <div class="note">
+        <strong>③ メソッド呼び出しの切り替え</strong><br />
+        参照型が <code>Animal</code> でも、実体が <code>Dog</code> なら <code>speak()</code> は Dog版が実行されます（多態）。
+      </div>
+
+      <div class="note">
+        <strong>④ 注意：コンストラクタは継承されない</strong><br />
+        子は子のコンストラクタを定義します。親の初期化が必要な場合は <code>super(...)</code> で呼び出します。
+      </div>
+    </div>
+
+    <h3>実例</h3>
+    <p>
+      Person / Employee は「社員は人の一種（is-a）」なので継承が自然です。<br />
+      <code>profile()</code> をオーバーライドして、親の表示に社員IDを追加しています。
+    </p>
+  </section>
+
+  <section id="is-a-have-a">
+    <h2>10.4 is-a / have-a の原則</h2>
+
+    <div class="grid">
+      <div class="note">
+        <h3>is-a（継承）</h3>
+        <p>「A は B の一種」なら継承。例：Dog is an Animal</p>
+      </div>
+      <div class="note">
+        <h3>have-a（保持）</h3>
+        <p>「A は B を持つ」ならフィールド。例：Car has an Engine</p>
+      </div>
+    </div>
+
+    <pre><code>// Main.java（抜粋：Demo10_4）
+public static class Demo10_4 {
+    public static void run() {
+        title("10.4 is-a / have-a");
+
+        Demo10_4.Car car = new Demo10_4.Car(new Demo10_4.Engine()); // have-a（Car は Engine を持つ）
+        car.start();
+    }
+
+    public static class Engine {
+        public void ignite() {
+            System.out.println("Engine: ignite");
+        }
+    }
+
+    public static class Car {
+        private Demo10_4.Engine engine;
+
+        public Car(Demo10_4.Engine engine) {
+            this.engine = engine;
+        }
+
+        public void start() {
+            this.engine.ignite();
+            System.out.println("Car: start");
+        }
+    }
+}</code></pre>
+
+    <div class="warn">
+      「とりあえず extends」で部品関係を継承にすると、構造が分かりにくくなることがあります。<br />
+      is-a が自然に言えないなら have-a を検討します。
+    </div>
+  </section>
+
+  <section id="constructor">
+    <h2>10.5 継承とコンストラクタ</h2>
+
+    <div class="point">
+      <strong>ルール：</strong>子クラスのコンストラクタ実行前に、親クラスのコンストラクタが必ず先に実行されます。
+    </div>
+
+    <pre><code>// Main.java（抜粋：Demo10_5）
+public static class Demo10_5 {
+    public static void run() {
+        title("10.5 継承とコンストラクタ");
+
+        // 親→子の実行順
+        new Demo10_5.B();
+
+        // 親コンストラクタへ引数を渡す（親部分を作るため）
+        new Demo10_5.Child("X");
+
+        // 親部分の情報をサブクラスで使う例（protected）
+        Demo10_5.Employee emp = new Demo10_5.Employee("田中", "E-1");
+        System.out.println(emp.describe());
+
+        // 参考：コンパイルエラー例は「コメント」にしてあります（本文参照）
+    }
+
+    // --- 親→子の実行順 ---
+    public static class A {
+        public A() { System.out.println("A()"); }
+    }
+    public static class B extends A {
+        public B() { System.out.println("B()"); }
+    }
+
+    // --- 親コンストラクタの呼び出し（super(...)）---
+    public static class Parent {
+        public Parent(String v) { System.out.println("Parent=" + v); }
+    }
+    public static class Child extends Parent {
+        public Child(String v) {
+            super(v); // super(...) はコンストラクタ先頭行
+            System.out.println("Child");
+        }
+    }
+
+    // --- 親部分（スーパークラス）の値をサブクラスから参照する例 ---
+    public static class Person {
+        // protected：同一パッケージ or サブクラスから参照可能
+        protected String name;
+
+        public Person(String name) { this.name = name; }
+    }
+
+    public static class Employee extends Person {
+        private String id;
+
+        public Employee(String name, String id) {
+            super(name); // 親部分へ引数を渡す
+            this.id = id;
+        }
+
+        public String describe() {
+            return this.name + " / id=" + this.id;
+        }
+    }
+
+    /*
+    // --- 親インスタンス部分が作れない状況（コンパイルエラーになる例） ---
+    // public static class ParentNoDefault { public ParentNoDefault(String x) {} }
+    // public static class ChildNoSuper extends ParentNoDefault { public ChildNoSuper() {} }
+    //
+    // 理由：ChildNoSuper() は暗黙に super() を呼ぼうとするが、ParentNoDefault() が存在しないため。
+    */
+
+    // 補足：コンストラクタは継承されない（子は子のコンストラクタを定義し、superで親を初期化する）
+}</code></pre>
+
+    <div class="note">
+      <strong>重要：</strong>コンストラクタは継承されません。親の初期化が必要な場合は <code>super(...)</code> を使います。
+    </div>
+  </section>
+
+  <section id="override">
+    <h2>10.6 オーバーライド（Override）</h2>
+
+    <p>
+      オーバーライドは、親クラスのメソッドを子クラスで上書きして、振る舞いを差し替えることです。<br />
+      <code>@Override</code> を付けると、意図しないシグネチャ違いを検出しやすくなります。
+    </p>
+    <pre><code>// Main.java（抜粋：Demo10_6）
+public static class Demo10_6 {
+    public static void run() {
+        title("10.6 オーバーライド");
+
+        Demo10_6.Parent p = new Demo10_6.Child();
+        p.hello(); // 実体（Child）の実装が動く
+    }
+
+    public static class Parent {
+        public void hello() {
+            System.out.println("Parent.hello");
+        }
+    }
+
+    public static class Child extends Parent {
+        @Override
+        public void hello() {
+            System.out.println("Child.hello");
+        }
+
+        /*
+        // コンパイルエラー例（アクセス修飾子は弱くできない）
+        // protected void hello() { }
+        */
+    }
+}</code></pre>
+  </section>
+
+  <section id="polymorphism">
+    <h2>10.7 ポリモーフィズムとの関連性</h2>
+
+    <p>
+      ポリモーフィズム（多態性）とは、
+      <strong>同じ親型で扱っているのに、実体（子）によって動作が変わる</strong>性質です。
+    </p>
+
+    <pre><code>
+// Main.java（抜粋：Demo10_7）※配列/for を使わない版
+public static class Demo10_7 {
+    public static void run() {
+        title("10.7 ポリモーフィズム（多態性）");
+
+        // 配列・forを使わずに、多態（メソッド呼び出しの切替）を見せる
+        Demo10_7.Animal a1 = new Demo10_7.Dog("ポチ");
+        Demo10_7.Animal a2 = new Demo10_7.Cat("タマ");
+
+        a1.speak(); // 実体が Dog なので Dog.speak()
+        a2.speak(); // 実体が Cat なので Cat.speak()
+
+        // フィールド参照は参照型に従う（多態の対象は主にメソッド）
+        Demo10_7.P p = new Demo10_7.C();
+        System.out.println("p.x = " + p.x);
+
+        // 呼べるメソッドは参照型で決まる
+        Demo10_7.Parent ref = new Demo10_7.Child();
+        ref.common();
+        // ref.onlyChild(); // コンパイルエラー（参照型 Parent に onlyChild() が無い）
+    }
+
+    // --- 多態：メソッド ---
+    public static class Animal {
+        protected String name;
+
+        public Animal(String name) { this.name = name; }
+
+        public void speak() { System.out.println("..."); }
+    }
+
+    public static class Dog extends Animal {
+        public Dog(String name) { super(name); }
+
+        @Override
+        public void speak() { System.out.println(this.name + "：ワン"); }
+    }
+
+    public static class Cat extends Animal {
+        public Cat(String name) { super(name); }
+
+        @Override
+        public void speak() { System.out.println(this.name + "：ニャー"); }
+    }
+
+    // --- フィールド：参照型に従う ---
+    public static class P { public int x = 1; }
+    public static class C extends P { public int x = 2; }
+
+    // --- 呼べるメソッド：参照型に従う ---
+    public static class Parent {
+        public void common() { System.out.println("Parent.common"); }
+    }
+
+    public static class Child extends Parent {
+        @Override
+        public void common() { System.out.println("Child.common"); }
+
+        public void onlyChild() { System.out.println("Child.onlyChild"); }
+    }
+}
+
+
+    </code></pre>
+
+
+    <h2>配列版</h2>
+
+
+
+    <pre><code>// Main.java（抜粋：Demo10_7）
+public static class Demo10_7 {
+    public static void run() {
+        title("10.7 ポリモーフィズム（多態性）");
+
+        Demo10_7.Animal[] animals = { new Demo10_7.Dog("ポチ"), new Demo10_7.Cat("タマ") };
+        for (Demo10_7.Animal a : animals) {
+            a.speak(); // 実体に応じて呼び先が変わる
+        }
+
+        // フィールド参照は参照型に従う（多態の対象は主にメソッド）
+        Demo10_7.P p = new Demo10_7.C();
+        System.out.println("p.x = " + p.x);
+
+        // 呼べるメソッドは参照型で決まる
+        Demo10_7.Parent ref = new Demo10_7.Child();
+        ref.common();
+        // ref.onlyChild(); // コンパイルエラー（参照型 Parent に onlyChild() が無い）
+    }
+
+    // --- 多態：メソッド ---
+    public static class Animal {
+        protected String name;
+
+        public Animal(String name) { this.name = name; }
+
+        public void speak() { System.out.println("..."); }
+    }
+
+    public static class Dog extends Animal {
+        public Dog(String name) { super(name); }
+
+        @Override
+        public void speak() { System.out.println(this.name + "：ワン"); }
+    }
+
+    public static class Cat extends Animal {
+        public Cat(String name) { super(name); }
+
+        @Override
+        public void speak() { System.out.println(this.name + "：ニャー"); }
+    }
+
+    // --- フィールド：参照型に従う ---
+    public static class P { public int x = 1; }
+    public static class C extends P { public int x = 2; }
+
+    // --- 呼べるメソッド：参照型に従う ---
+    public static class Parent {
+        public void common() { System.out.println("Parent.common"); }
+    }
+
+    public static class Child extends Parent {
+        @Override
+        public void common() { System.out.println("Child.common"); }
+
+        public void onlyChild() { System.out.println("Child.onlyChild"); }
+    }
+}</code></pre>
+  </section>
+
+  <section id="instance-structure">
+    <h2>10.8 インスタンスの多重構造（内部の見え方）</h2>
+
+    <p>
+      子クラスのインスタンスの中には、<strong>親クラスのインスタンス部分</strong>が含まれます。<br />
+      そのため、子インスタンスは「親部分 + 子部分」を併せ持つ1つのオブジェクトとして扱えます。
+    </p>
+
+    <pre><code>// Main.java（抜粋：Demo10_8）
+public static class Demo10_8 {
+    public static void run() {
+        title("10.8 インスタンスの多重構造");
+
+        Demo10_8.Child c = new Demo10_8.Child();
+        c.demo();
+
+        Demo10_8.Parent ref = new Demo10_8.Child();
+        ref.show(); // 実体（Child）の show() が動く
+
+        new Demo10_8.ChildCtor("Z");
+    }
+
+    // --- super による親部分アクセス ---
+    public static class Parent {
+        public String name = "P";
+
+        public void show() { System.out.println("Parent.show"); }
+    }
+
+    public static class Child extends Parent {
+        public String name = "C";
+
+        @Override
+        public void show() { System.out.println("Child.show"); }
+
+        public void demo() {
+            System.out.println("name = " + this.name);
+            System.out.println("super.name = " + super.name);
+            super.show();
+            this.show();
+        }
+    }
+
+    // --- 親コンストラクタの呼び出し（親部分を作る）---
+    public static class ParentCtor {
+        public ParentCtor(String v) { System.out.println("ParentCtor=" + v); }
+    }
+
+    public static class ChildCtor extends ParentCtor {
+        public ChildCtor(String v) {
+            super(v);
+            System.out.println("ChildCtor");
+        }
+    }
+
+    /*
+    // --- 親インスタンス部分が作れない状況（コンパイルエラーになる例） ---
+    // public static class ParentNoDefault { public ParentNoDefault(String v) {} }
+    // public static class ChildNoSuper extends ParentNoDefault { public ChildNoSuper() {} }
+    */
+}</code></pre>
+  </section>
+
+  <section id="no-inheritance-override">
+    <h2>10.9 継承・オーバーライドの禁止</h2>
+
+    <h3>継承の禁止（final class）</h3>
+    <h3>オーバーライドの禁止（final method）</h3>
+
+    <pre><code>// Main.java（抜粋：Demo10_9）
+public static class Demo10_9 {
+    public static void run() {
+        title("10.9 継承・オーバーライドの禁止（final）");
+
+        Demo10_9.Derived d = new Demo10_9.Derived();
+        d.validate(); // final メソッドは継承して呼び出せる（ただし上書きは不可）
+    }
+
+    // 継承の禁止（final class）
+    public static final class SecureToken {
+        // このクラスは extends できない
+    }
+    /*
+    // コンパイルエラー例
+    // public static class MyToken extends SecureToken { }
+    */
+
+    // オーバーライドの禁止（final method）
+    public static class Base {
+        public final void validate() {
+            System.out.println("Base.validate");
+        }
+    }
+
+    public static class Derived extends Base {
+        /*
+        // コンパイルエラー例
+        // @Override
+        // public void validate() { }
+        */
+    }
+}</code></pre>
+
+    <div class="note">
+      <strong>補足：</strong>禁止は強い制約です。設計上「変更されると困る部分」を守る目的で使います。
+    </div>
+  </section>
+
+  <section id="summary">
+    <h2>10.10 まとめ</h2>
+    <ul>
+      <li>継承は「重複排除」「変更に強く」「種類（is-a）の表現」のために使う</li>
+      <li>多態性は「継承 + 親型参照 + オーバーライド」で成立する</li>
+      <li>子インスタンスは「親部分 + 子部分」の<strong>多重構造</strong></li>
+      <li><code>super</code> は「同じインスタンスの親部分」を指す</li>
+      <li>コンストラクタは <strong>親 → 子</strong> の順で実行される</li>
+      <li><strong>コンストラクタは継承されない</strong>。親の初期化は <code>super(...)</code> で呼び出す</li>
+      <li>親に引数なしコンストラクタが無いと、子が親部分を作れず <strong>コンパイルエラー</strong>になる</li>
+      <li><code>final</code> で「継承禁止」「オーバーライド禁止」を表現できる</li>
+    </ul>
+
+    <div class="hr"></div>
+
+    <h3>Main.java（全サンプル統合版）</h3>
+    <p class="note">
+      下の <code>Main.java</code> をそのまま保存して実行できます。<br />
+      <code>java Main</code> で全デモを実行、<code>java Main 10.7</code> のように引数で特定章だけも実行できます。
+    </p>
+
+    <pre><code>// Main.java（全サンプル統合版）
+public class Main {
+
+    public static void main(String[] args) {
+        String target = (args.length == 0) ? "all" : args[0];
+
+        boolean matched = false;
+
+        if (isTarget(target, "10.3")) { Demo10_3.run(); matched = true; }
+        if (isTarget(target, "10.4")) { Demo10_4.run(); matched = true; }
+        if (isTarget(target, "10.5")) { Demo10_5.run(); matched = true; }
+        if (isTarget(target, "10.6")) { Demo10_6.run(); matched = true; }
+        if (isTarget(target, "10.7")) { Demo10_7.run(); matched = true; }
+        if (isTarget(target, "10.8")) { Demo10_8.run(); matched = true; }
+        if (isTarget(target, "10.9")) { Demo10_9.run(); matched = true; }
+
+        if (!matched) {
+            System.out.println("Usage: java Main [all|10.3|10.4|10.5|10.6|10.7|10.8|10.9]");
+        }
+    }
+
+    private static boolean isTarget(String target, String key) {
+        return "all".equals(target) || key.equals(target);
+    }
+
+    public static void title(String s) {
+        System.out.println();
+        System.out.println("===== " + s + " =====");
+    }
+
+    // ----------------------------------------------------------------
+    // 10.3 クラス型継承（extends）
+    // ----------------------------------------------------------------
+    public static class Demo10_3 {
+        public static void run() {
+            title("10.3 クラス型継承（extends）");
+
+            Demo10_3.Animal a = new Demo10_3.Dog("ポチ");
+            a.speak();
+
+            Demo10_3.Person p = new Demo10_3.Employee("佐藤", 24, "E-1024");
+            System.out.println(p.profile());
+        }
+
+        public static class Animal {
+            protected String name;
+
+            public Animal(String name) {
+                this.name = name;
+                System.out.println("Animal constructor");
+            }
+
+            public void speak() {
+                System.out.println("...");
+            }
+        }
+
+        public static class Dog extends Animal {
+            public Dog(String name) {
+                super(name);
+                System.out.println("Dog constructor");
+            }
+
+            @Override
+            public void speak() {
+                System.out.println(this.name + "：ワン");
+            }
+        }
+
+        public static class Person {
+            private String name;
+            private int age;
+
+            public Person(String name, int age) {
+                this.name = name;
+                this.age = age;
+            }
+
+            public String profile() {
+                return this.name + "（" + this.age + "）";
+            }
+        }
+
+        public static class Employee extends Person {
+            private String employeeId;
+
+            public Employee(String name, int age, String employeeId) {
+                super(name, age);
+                this.employeeId = employeeId;
+            }
+
+            @Override
+            public String profile() {
+                return super.profile() + " / id=" + this.employeeId;
+            }
+        }
+    }
+
+    // ----------------------------------------------------------------
+    // 10.4 is-a / have-a
+    // ----------------------------------------------------------------
+    public static class Demo10_4 {
+        public static void run() {
+            title("10.4 is-a / have-a");
+
+            Demo10_4.Car car = new Demo10_4.Car(new Demo10_4.Engine());
+            car.start();
+        }
+
+        public static class Engine {
+            public void ignite() {
+                System.out.println("Engine: ignite");
+            }
+        }
+
+        public static class Car {
+            private Demo10_4.Engine engine;
+
+            public Car(Demo10_4.Engine engine) {
+                this.engine = engine;
+            }
+
+            public void start() {
+                this.engine.ignite();
+                System.out.println("Car: start");
+            }
+        }
+    }
+
+    // ----------------------------------------------------------------
+    // 10.5 継承とコンストラクタ
+    // ----------------------------------------------------------------
+    public static class Demo10_5 {
+        public static void run() {
+            title("10.5 継承とコンストラクタ");
+
+            new Demo10_5.B();
+
+            new Demo10_5.Child("X");
+
+            Demo10_5.Employee emp = new Demo10_5.Employee("田中", "E-1");
+            System.out.println(emp.describe());
+        }
+
+        public static class A {
+            public A() { System.out.println("A()"); }
+        }
+
+        public static class B extends A {
+            public B() { System.out.println("B()"); }
+        }
+
+        public static class Parent {
+            public Parent(String v) { System.out.println("Parent=" + v); }
+        }
+
+        public static class Child extends Parent {
+            public Child(String v) {
+                super(v);
+                System.out.println("Child");
+            }
+        }
+
+        public static class Person {
+            protected String name;
+
+            public Person(String name) { this.name = name; }
+        }
+
+        public static class Employee extends Person {
+            private String id;
+
+            public Employee(String name, String id) {
+                super(name);
+                this.id = id;
+            }
+
+            public String describe() {
+                return this.name + " / id=" + this.id;
+            }
+        }
+
+        /*
+        // 親インスタンス部分が作れない状況（コンパイルエラーになる例）
+        // public static class ParentNoDefault { public ParentNoDefault(String x) {} }
+        // public static class ChildNoSuper extends ParentNoDefault { public ChildNoSuper() {} }
+        */
+    }
+
+    // ----------------------------------------------------------------
+    // 10.6 オーバーライド
+    // ----------------------------------------------------------------
+    public static class Demo10_6 {
+        public static void run() {
+            title("10.6 オーバーライド");
+
+            Demo10_6.Parent p = new Demo10_6.Child();
+            p.hello();
+        }
+
+        public static class Parent {
+            public void hello() { System.out.println("Parent.hello"); }
+        }
+
+        public static class Child extends Parent {
+            @Override
+            public void hello() { System.out.println("Child.hello"); }
+
+            /*
+            // コンパイルエラー例（アクセス修飾子は弱くできない）
+            // protected void hello() { }
+            */
+        }
+    }
+
+    // ----------------------------------------------------------------
+    // 10.7 ポリモーフィズム（多態性）
+    // ----------------------------------------------------------------
+    public static class Demo10_7 {
+        public static void run() {
+            title("10.7 ポリモーフィズム（多態性）");
+
+            Demo10_7.Animal[] animals = { new Demo10_7.Dog("ポチ"), new Demo10_7.Cat("タマ") };
+            for (Demo10_7.Animal a : animals) {
+                a.speak();
+            }
+
+            Demo10_7.P p = new Demo10_7.C();
+            System.out.println("p.x = " + p.x);
+
+            Demo10_7.Parent ref = new Demo10_7.Child();
+            ref.common();
+            // ref.onlyChild(); // コンパイルエラー（参照型 Parent に onlyChild() が無い）
+        }
+
+        public static class Animal {
+            protected String name;
+
+            public Animal(String name) { this.name = name; }
+
+            public void speak() { System.out.println("..."); }
+        }
+
+        public static class Dog extends Animal {
+            public Dog(String name) { super(name); }
+
+            @Override
+            public void speak() { System.out.println(this.name + "：ワン"); }
+        }
+
+        public static class Cat extends Animal {
+            public Cat(String name) { super(name); }
+
+            @Override
+            public void speak() { System.out.println(this.name + "：ニャー"); }
+        }
+
+        public static class P { public int x = 1; }
+        public static class C extends P { public int x = 2; }
+
+        public static class Parent {
+            public void common() { System.out.println("Parent.common"); }
+        }
+
+        public static class Child extends Parent {
+            @Override
+            public void common() { System.out.println("Child.common"); }
+
+            public void onlyChild() { System.out.println("Child.onlyChild"); }
+        }
+    }
+
+    // ----------------------------------------------------------------
+    // 10.8 インスタンスの多重構造（内部の見え方）
+    // ----------------------------------------------------------------
+    public static class Demo10_8 {
+        public static void run() {
+            title("10.8 インスタンスの多重構造");
+
+            Demo10_8.Child c = new Demo10_8.Child();
+            c.demo();
+
+            Demo10_8.Parent ref = new Demo10_8.Child();
+            ref.show();
+
+            new Demo10_8.ChildCtor("Z");
+        }
+
+        public static class Parent {
+            public String name = "P";
+
+            public void show() { System.out.println("Parent.show"); }
+        }
+
+        public static class Child extends Parent {
+            public String name = "C";
+
+            @Override
+            public void show() { System.out.println("Child.show"); }
+
+            public void demo() {
+                System.out.println("name = " + this.name);
+                System.out.println("super.name = " + super.name);
+                super.show();
+                this.show();
+            }
+        }
+
+        public static class ParentCtor {
+            public ParentCtor(String v) { System.out.println("ParentCtor=" + v); }
+        }
+
+        public static class ChildCtor extends ParentCtor {
+            public ChildCtor(String v) {
+                super(v);
+                System.out.println("ChildCtor");
+            }
+        }
+
+        /*
+        // 親インスタンス部分が作れない状況（コンパイルエラーになる例）
+        // public static class ParentNoDefault { public ParentNoDefault(String v) {} }
+        // public static class ChildNoSuper extends ParentNoDefault { public ChildNoSuper() {} }
+        */
+    }
+
+    // ----------------------------------------------------------------
+    // 10.9 継承・オーバーライドの禁止（final）
+    // ----------------------------------------------------------------
+    public static class Demo10_9 {
+        public static void run() {
+            title("10.9 継承・オーバーライドの禁止（final）");
+
+            Demo10_9.Derived d = new Demo10_9.Derived();
+            d.validate();
+        }
+
+        public static final class SecureToken {
+            // extends できない
+        }
+
+        /*
+        // コンパイルエラー例
+        // public static class MyToken extends SecureToken { }
+        */
+
+        public static class Base {
+            public final void validate() {
+                System.out.println("Base.validate");
+            }
+        }
+
+        public static class Derived extends Base {
+            /*
+            // コンパイルエラー例（final メソッドは上書き不可）
+            // @Override
+            // public void validate() { }
+            */
+        }
+    }
+}</code></pre>
+
+    <footer>
+      <p style="margin:0;">
+        次章（abstract / interface）では「共通の型だけ欲しい」「実装を強制したい」など、継承だけでは表現しづらい状況を扱います。
+      </p>
+    </footer>
+  </section>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>webmanual HTML 一覧</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+      margin: 0;
+      color: #111827;
+      background: #f3f4f6;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin: 0;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 18px 40px;
+    }
+
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 20px;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+      margin-bottom: 22px;
+    }
+
+    .hero p {
+      margin: 6px 0 0;
+      color: #6b7280;
+      font-size: 0.95rem;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      margin: 8px 0;
+    }
+
+    a {
+      color: #1b5e20;
+      text-decoration: none;
+    }
+
+    a:hover,
+    a:focus {
+      text-decoration: underline;
+    }
+
+    .group {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 16px 16px 12px;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+    }
+
+    .group h2 {
+      margin: 0 0 10px;
+      font-size: 1.1rem;
+      color: #0f172a;
+    }
+
+    .path {
+      color: #5f6368;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="hero">
+      <div>
+        <h1>webmanual HTML 一覧</h1>
+        <p>学習コンテンツへのリンクをカード形式で整理しています。</p>
+      </div>
+    </div>
+
+    <div class="cards">
+      <div class="group">
+        <h2>フレームワーク</h2>
+        <ul>
+          <li>
+            <a href="spring_tutorials_unified/1spring-framework-tutorial.html">フレームワーク基礎①</a>
+          </li>
+          <li>
+            <a href="webmanual/framework/SpringBootBasic.pdf">フレームワーク基礎②</a>
+          </li>
+          <li>
+            <a href="webmanual/framework/SpringBootCode.pdf">SpringBoot【CRUD】　手順書</a>
+          </li>
+          <li>
+            <a href="webmanual/framework/SpringBootCodeEx.pdf">SpringBoot【CRUD】　解説</a>
+          </li>
+          <li>
+            <a href="webmanual/framework/src.zip">SpringBoot【CRUD】　サンプル</a>
+          </li>
+          <!-- <li>
+            <a href="webmanual/framework/SpringBootBasicApiCode.pdf">SpringBoot【API】　手順書</a>
+          </li>
+          <li>
+            <a href="webmanual/framework/SpringBootBasic.pdf">SpringBoot【API】　解説</a>
+          </li> -->
+           
+        </ul>
+      </div>
+    
+    <div class="cards">
+      <div class="group">
+        <h2>演習問題</h2>
+        <ul>
+          <li>
+            <a href="webmanual/exam-pg-java/training1.html">トレーニング1　じゃんけん</a>
+          </li>
+          <li>
+            <a href="webmanual/exam-pg-java/training2.html">トレーニング2　じゃんけん　クラス、継承</a>
+          </li>
+           <li>
+            <a href="webmanual/exam-pg-java/training3.html">トレーニング2　じゃんけん　ポリモーフィズム・インターフェース・抽象クラス</a>
+          </li>
+        </ul>
+      </div>
+    
+    <div class="cards">
+      <div class="group">
+        <h2>プロンプトプログラミング</h2>
+        <ul>
+          <li>
+            <a href="promptpg_manual/prompt-pg-manual.html">プロンプトプログラミングマニュアル</a>
+          </li>
+          <li>
+            <a href="promptpg_manual/prompt-pg-overview.html">プロンプトプログラミング概論</a>
+          </li>
+          <li>
+            <a href="promptpg_manual/prompt-pg-step.html">使い方（最短手順）</a>
+          </li>
+          <li>
+            <a href="promptpg_manual/prompt-pg-markdown.html">マークダウン概論</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="group">
+        <h2>プロンプトテンプレート</h2>
+        <ul>
+          <li>
+            <a href="webmanual/prompt_templates/index.html">プロンプトテンプレート一覧</a>
+          </li>
+          <li>
+            <a href="webmanual/prompt_templates/PROMPT_00_BASELINE.html">PROMPT_00_BASELINE：基本ルール固定（Baseline）</a>
+          </li>
+          <li>
+            <a href="webmanual/prompt_templates/PROMPT_01_SCOPE.html">PROMPT_01_SCOPE：目的・範囲の確定（Scope）</a>
+          </li>
+          <li>
+            <a href="webmanual/prompt_templates/PROMPT_02_REQUIREMENTS.html">PROMPT_02_REQUIREMENTS：要件定義（Requirements）</a>
+          </li>
+          <li>
+            <a href="webmanual/prompt_templates/PROMPT_03_ASSUMPTIONS.html">PROMPT_03_ASSUMPTIONS：仮定と未決定事項の固定（Assumptions）</a>
+          </li>
+          <li>
+            <a href="webmanual/prompt_templates/PROMPT_04_DESIGN.html">PROMPT_04_DESIGN：設計（Design）</a>
+          </li>
+          <li>
+            <a href="webmanual/prompt_templates/PROMPT_05_IMPLEMENTATION.html">PROMPT_05_IMPLEMENTATION：実装生成（Implementation）</a>
+          </li>
+          <li>
+            <a href="webmanual/prompt_templates/PROMPT_06_VERIFICATION.html">PROMPT_06_VERIFICATION：検証（Verification）</a>
+          </li>
+          <li>
+            <a href="webmanual/prompt_templates/PROMPT_07_REVIEW.html">PROMPT_07_REVIEW：レビューと改善（Review）</a>
+          </li>
+          <li>
+            <a href="webmanual/prompt_templates/PROMPT_08_CHANGE_CONTROL.html">PROMPT_08_CHANGE_CONTROL：変更管理（Change Control）</a>
+          </li>
+          <li>
+            <a href="webmanual/prompt_templates/PROMPT_09_ASSETIZATION.html">PROMPT_09_ASSETIZATION：資産化（Assetization）</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="group">
+        <h2>コーディング課題</h2>
+        <ul>
+          <li>
+            <a href="webmanual/exam-java/java_silver_practice.html">Java Silver 対応：練習問題集（第2章〜第13章）</a>
+          </li>
+          <li>
+            <a href="webmanual/exam-java/java_class_instance.html">Java：クラス型変数と new（図解付き問題集：基礎5・応用5）</a>
+          </li>
+           <li>
+            <a href="webmanual/easy-java/chapter9-2-constracta.html">Java：コンストラクター問題集（選択式5問＋プログラミング5問）</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="group">
+
+        <h2>Javaプログラミング補足</h2>
+        <ul>
+          <li>
+            <a href="webmanual/easy-java/chapter4.html">ガベージコレクション（初学者向け）</a>
+          </li>
+                    <li>
+            <a href="webmanual/easy-java/chapter6.html">ソースファイルを分割する（複数ファイル開発・コンパイル・実行・JAR）</a>
+          </li>
+          <li>
+            <a href="webmanual/easy-java/chapter5.html">メソッドとは（概要・定義・呼び出し・mainから呼び出し）</a>
+          </li>
+          <li>
+            <a href="webmanual/easy-java/chapter8.html">インスタンスとクラス（精度確認・再考案版）</a>
+          </li>
+          <li>
+            <a href="webmanual/easy-java/chapter9-1-class-new.html">クラス型の参照渡し（h.sword = s）と h.sword.name の理解</a>
+          </li>
+          <li>
+            <a href="webmanual/oop/constracter.html">コンストラクター概論</a>
+          </li>
+          <li>
+            <a href="webmanual/easy-java/chapter102-2.html">継承</a>
+          </li>
+          <li>
+            <a href="webmanual/easy-java/chapter11.html">抽象クラス・インターフェース</a>
+          </li>
+          <li>
+            <a href="webmanual/easy-java/annotation.html">アノテーション@Override</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="group">
+        <h2>オブジェクト指向</h2>
+        <ul>
+           <li>
+            <a href="webmanual/easy-java/chapter7.html">オブジェクト指向とは（歴史・定義・効果・メリット）</a>
+          </li>
+          <li>
+            <a href="webmanual/oop/systemdesign2.html">オブジェクト指向とは何か（他のプログラミング指向との比較：設計ベース）</a>
+          </li>
+          <li>
+            <a href="webmanual/oop/systemdesign.html">図書館 貸出・返却・予約システム Mini 設計書（オブジェクト指向解説付き・完全版）</a>
+          </li>
+          
+          <li>
+            <a href="webmanual/oop/opp-example-cook.html">オブジェクト指向をレトルト料理で例える</a>
+          </li>
+          <li>
+            <a href="webmanual/oop/opp-example-cosme.html">オブジェクト指向を化粧品（コスメ）で説明</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

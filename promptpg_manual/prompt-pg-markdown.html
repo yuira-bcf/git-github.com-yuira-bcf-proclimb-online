@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>マークダウン概論</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #fafafa;
+      --surface: #ffffff;
+      --text: #222222;
+      --muted: #5f6368;
+      --accent: #1b5e20;
+      --border: #e0e0e0;
+      --code-bg: #f3f4f6;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+      line-height: 1.7;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    .layout {
+      width: 100%;
+      margin: 0;
+      padding: 16px 2vw;
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      gap: 16px;
+    }
+
+    .toc {
+      position: sticky;
+      top: 16px;
+      align-self: start;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 14px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    }
+
+    .toc h2 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      color: var(--muted);
+    }
+
+    .toc ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .toc li {
+      margin: 6px 0;
+    }
+
+    .toc a {
+      color: var(--text);
+      text-decoration: none;
+      display: block;
+      padding: 6px 8px;
+      border-radius: 6px;
+    }
+
+    .toc a:hover,
+    .toc a:focus {
+      background: var(--code-bg);
+    }
+
+    main {
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+      min-height: 100vh;
+    }
+
+    section {
+      margin: 0 0 16px;
+      padding: 24px 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    }
+
+    h1 {
+      margin: 0 0 16px;
+      font-size: 28px;
+      border-left: 6px solid var(--accent);
+      padding-left: 12px;
+    }
+
+    h2 {
+      margin: 24px 0 12px;
+      font-size: 22px;
+    }
+
+    h3 {
+      margin: 20px 0 8px;
+      font-size: 18px;
+      color: var(--accent);
+    }
+
+    p {
+      margin: 10px 0;
+    }
+
+    ul,
+    ol {
+      margin: 8px 0 12px 20px;
+      padding: 0;
+    }
+
+    li {
+      margin: 6px 0;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      background: var(--code-bg);
+      padding: 0 4px;
+      border-radius: 4px;
+    }
+
+    pre {
+      background: var(--code-bg);
+      padding: 12px;
+      border-radius: 6px;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+    }
+
+    pre code {
+      background: transparent;
+      padding: 0;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 24px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 16px;
+    }
+
+    th,
+    td {
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    thead th {
+      background: var(--code-bg);
+    }
+
+    em {
+      color: var(--muted);
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .toc {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <nav class="toc">
+      <h2>目次</h2>
+      <ul>
+        <li><a href="#chapter-1">第1章 Markdownとは</a></li>
+        <li><a href="#chapter-2">第2章 見出しの書き方</a></li>
+        <li><a href="#chapter-3">第3章 箇条書きと番号付きリスト</a></li>
+        <li><a href="#chapter-4">第4章 文字の強調</a></li>
+        <li><a href="#chapter-5">第5章 コードの記述方法</a></li>
+        <li><a href="#chapter-6">第6章 区切り線</a></li>
+      </ul>
+    </nav>
+    <main>
+    <section>
+<h1 id="chapter-1">第1章 Markdownとは</h1>
+<h2>1.1 Markdownの概要</h2>
+<p>Markdown（マークダウン）とは、 <strong>文章の構造（見出し・箇条書き・コードなど）を、記号を使って表現する記法</strong>です。</p>
+<p>Word や Google ドキュメントのような装飾中心のツールとは異なり、 <strong>文章の意味や構造を重視して記述する</strong>点が特徴です。</p>
+<hr>
+<h2>1.2 Markdownを使う目的</h2>
+<p>Markdownは、次のような目的で使用されます。</p>
+<ul>
+<li>教科書・講義資料の作成</li>
+<li>システム仕様書・設計書の作成</li>
+<li>README（使い方説明書）の作成</li>
+<li>プログラム教材・サンプルコードの整理</li>
+</ul>
+<p>特に IT 分野では、 <strong>「人にも機械にも読みやすい形式」</strong>として広く利用されています。</p>
+<hr>
+<h2>1.3 Markdownの特徴</h2>
+<ul>
+<li>プレーンテキストで記述できる</li>
+<li>特別なソフトがなくても作成できる</li>
+<li>HTML や PDF に変換できる</li>
+<li>GitHub や VS Code で標準対応している</li>
+</ul>
+    </section>
+    <section>
+<h1 id="chapter-2">第2章 見出しの書き方</h1>
+<h2>2.1 見出しの役割</h2>
+<p>見出しは、文章を章・節・項目に分けるために使用します。 教科書では <strong>章立ての基本</strong>となります。</p>
+<hr>
+<h2>2.2 見出しの記法</h2>
+<p>第1章 タイトル</p>
+<ol>
+<li>1 小見出し</li>
+<li>1.1 小項目</li>
+</ol>
+<hr>
+<h2>2.3 見出しの使い分け</h2>
+<p>| 記号 | 用途 | |---|---| | <code>#</code> | 章タイトル | | <code>##</code> | 節 | | <code>###</code> | 小項目 | | <code>####</code> | 補足説明 |</p>
+    </section>
+    <section>
+<h1 id="chapter-3">第3章 箇条書きと番号付きリスト</h1>
+<h2>3.1 箇条書き（リスト）</h2>
+<h3>用途</h3>
+<ul>
+<li>条件の列挙</li>
+<li>特徴の整理</li>
+<li>注意点の提示</li>
+</ul>
+<h3>記法</h3>
+<ul>
+<li>項目1</li>
+<li>項目2</li>
+<ul>
+<li>サブ項目</li>
+</ul>
+</ul>
+<hr>
+<h2>3.2 番号付きリスト</h2>
+<h3>用途</h3>
+<ul>
+<li>手順説明</li>
+<li>処理の流れ</li>
+<li>学習ステップ</li>
+</ul>
+<h3>記法</h3>
+<ol>
+<li>準備</li>
+<li>設計</li>
+<li>実装</li>
+<li>確認</li>
+</ol>
+    </section>
+    <section>
+<h1 id="chapter-4">第4章 文字の強調</h1>
+<h2>4.1 強調の目的</h2>
+<p>重要な用語や結論を目立たせるために使用します。</p>
+<hr>
+<h2>4.2 強調の記法</h2>
+<h3>使い分け</h3>
+<ul>
+<li><strong>太字</strong>：定義・結論・注意</li>
+<li><em>斜体</em>：補足・参考</li>
+</ul>
+<p>重要なポイント 補足説明</p>
+<h3>使い分け</h3>
+<ul>
+<li><strong>太字</strong>：定義・結論・注意</li>
+<li><em>斜体</em>：補足・参考</li>
+</ul>
+    </section>
+    <section>
+<h1 id="chapter-5">第5章 コードの記述方法</h1>
+<h2>5.1 コードブロックとは</h2>
+<p>プログラムコードをそのまま表示するための記法です。 <strong>教科書では最も重要な要素の一つ</strong>です。</p>
+<hr>
+<h2>5.2 コードブロックの記法</h2>
+<pre><code class="language-java">
+public class Main {
+    public static void main(String[] args) {
+        System.out.println(&quot;Hello World&quot;);
+    }
+}
+
+ポイント
+言語名を書くと色分け表示される
+インデントはそのまま保持される
+
+
+## 5.3 インラインコード
+
+文章中でクラス名や命令を示す場合に使用します。
+
+例：
+Main クラスでは main メソッドを定義します。
+
+
+---
+
+## 📄 Chapter06.md
+
+</code></pre>
+    </section>
+    <section>
+<h1 id="chapter-6">第6章 区切り線</h1>
+<h2>6.1 区切り線の役割</h2>
+<p>区切り線は、章と章の境界を明確にし、 文章を読みやすくするために使用します。</p>
+<h3>記法</h3>
+<hr>
+    </section>
+    </main>
+  </div>
+</body>
+</html>

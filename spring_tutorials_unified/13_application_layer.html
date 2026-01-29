@@ -1,0 +1,2723 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>第13章 アプリを作成しよう（アプリケーション層）</title>
+
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&family=M+PLUS+Rounded+1c:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <!-- グローバルナビゲーション -->
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="1spring-framework-tutorial.html" class="nav-logo">
+                    <span class="nav-logo-icon">🌱</span>
+                    <span>Spring入門</span>
+                </a>
+                <button class="nav-toggle" onclick="toggleMenu()" aria-label="メニュー">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 章を選択</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="0promptprograming.html" class="nav-link">
+                                <span class="nav-chapter-num">0</span>
+                                <span>プロンプトプログラミング</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="1spring-framework-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">1</span>
+                                <span>Spring Frameworkについて知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="2java_basics.html" class="nav-link">
+                                <span class="nav-chapter-num">2</span>
+                                <span>基礎知識を身に付けよう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="3di-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">3</span>
+                                <span>DIを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="4aop-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">4</span>
+                                <span>AOPを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="5mvc-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">5</span>
+                                <span>MVCを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="6thymeleaf-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">6</span>
+                                <span>Thymeleafを知ろう</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="7ServerDataSubmission.html" class="nav-link">
+                                <span class="nav-chapter-num">7</span>
+                                <span>サーバーへのデータ送信</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="8Validation_Textbook_Rewrite.html" class="nav-link">
+                                <span class="nav-chapter-num">8</span>
+                                <span>バリデーション</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="9_MyBatis_Tutorial__2_.html" class="nav-link">
+                                <span class="nav-chapter-num">9</span>
+                                <span>MyBatisチュートリアル</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="10app-preparation-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">10</span>
+                                <span>アプリケーション作成準備</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="11-database-operations.html" class="nav-link">
+                                <span class="nav-chapter-num">11</span>
+                                <span>データベース操作</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="12service-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">12</span>
+                                <span>サービス層</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="13_application_layer.html" class="nav-link active">
+                                <span class="nav-chapter-num">13</span>
+                                <span>アプリケーション層</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="14_validation.html" class="nav-link">
+                                <span class="nav-chapter-num">14</span>
+                                <span>バリデーション（応用）</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="15-spring-security-tutorial.html" class="nav-link">
+                                <span class="nav-chapter-num">15</span>
+                                <span>Spring Security</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <!-- ヘッダー -->
+            <header class="chapter-header">
+                <div class="chapter-badge">📘 Chapter</div>
+                <div class="chapter-number">13</div>
+                <h1 class="chapter-title">アプリを作成しよう<br />（アプリケーション層）</h1>
+                <p class="chapter-subtitle">ToDoアプリのCRUD機能を完成させる</p>
+            </header>
+
+            <!-- Table of Contents -->
+            <nav class="toc">
+                <h2 class="toc-title">📚 この章で学ぶこと</h2>
+                <ul class="toc-list">
+                    <li class="toc-item">
+                        <span class="toc-number">13-1</span>
+                        <span>ToDoアプリ」参照処理を実装しよう</span>
+                    </li>
+                    <li class="toc-item">
+                        <span class="toc-number">13-2</span>
+                        <span>ToDoアプリ」登録・更新処理を実装しよう</span>
+                    </li>
+                    <li class="toc-item">
+                        <span class="toc-number">13-3</span>
+                        <span>ToDoアプリ」削除処理を実装しよう</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Introduction -->
+            <div class="content-card">
+                <div class="intro-box">
+                    <p>
+                        「インフラストラクチャ層」と「ドメイン層」のプログラム作成が完了したので、次は「アプリケーション層」の作成に取り組みます。この層では、「画面」や「リクエストハンドラメソッド」などを開発し、「ToDoアプリ」を完成に近づけます。
+                    </p>
+                </div>
+
+                <!-- Component Overview Diagram -->
+                <div class="diagram-container">
+                    <div class="diagram-title">📋 ToDoアプリのコンポーネント構成</div>
+                    <svg viewBox="0 0 900 500" style="max-width: 100%; height: auto">
+                        <!-- Background Layers -->
+                        <defs>
+                            <linearGradient id="appLayerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color: #e3f2fd" />
+                                <stop offset="100%" style="stop-color: #bbdefb" />
+                            </linearGradient>
+                            <linearGradient id="domainLayerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color: #f3e5f5" />
+                                <stop offset="100%" style="stop-color: #e1bee7" />
+                            </linearGradient>
+                            <linearGradient id="infraLayerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color: #fff3e0" />
+                                <stop offset="100%" style="stop-color: #ffcc80" />
+                            </linearGradient>
+                            <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.2" />
+                            </filter>
+                        </defs>
+
+                        <!-- Layer Labels -->
+                        <text x="450" y="30" fill="#333" font-size="18" font-weight="bold" text-anchor="middle">
+                            ToDoアプリのレイヤー構成
+                        </text>
+
+                        <!-- Application Layer -->
+                        <rect
+                            x="30"
+                            y="60"
+                            width="280"
+                            height="400"
+                            rx="15"
+                            fill="url(#appLayerGrad)"
+                            stroke="#1976d2"
+                            stroke-width="2"
+                        />
+                        <text x="170" y="90" fill="#1976d2" font-size="16" font-weight="bold" text-anchor="middle">
+                            アプリケーション層
+                        </text>
+
+                        <!-- View -->
+                        <rect x="50" y="110" width="110" height="60" rx="8" fill="white" filter="url(#shadow)" />
+                        <text x="105" y="138" fill="#1976d2" font-size="13" font-weight="bold" text-anchor="middle">
+                            View
+                        </text>
+                        <text x="105" y="158" fill="#666" font-size="10" text-anchor="middle">画面表示</text>
+
+                        <!-- Controller -->
+                        <rect x="180" y="110" width="110" height="60" rx="8" fill="#667eea" filter="url(#shadow)" />
+                        <text x="235" y="138" fill="white" font-size="13" font-weight="bold" text-anchor="middle">
+                            Controller
+                        </text>
+                        <text x="235" y="158" fill="rgba(255,255,255,0.8)" font-size="10" text-anchor="middle">
+                            ToDoController
+                        </text>
+
+                        <!-- Form -->
+                        <rect x="50" y="190" width="110" height="60" rx="8" fill="#667eea" filter="url(#shadow)" />
+                        <text x="105" y="218" fill="white" font-size="13" font-weight="bold" text-anchor="middle">
+                            Form
+                        </text>
+                        <text x="105" y="238" fill="rgba(255,255,255,0.8)" font-size="10" text-anchor="middle">
+                            ToDoForm
+                        </text>
+
+                        <!-- Helper -->
+                        <rect x="180" y="190" width="110" height="60" rx="8" fill="#667eea" filter="url(#shadow)" />
+                        <text x="235" y="218" fill="white" font-size="13" font-weight="bold" text-anchor="middle">
+                            Helper
+                        </text>
+                        <text x="235" y="238" fill="rgba(255,255,255,0.8)" font-size="10" text-anchor="middle">
+                            ToDoHelper
+                        </text>
+
+                        <!-- Domain Layer -->
+                        <rect
+                            x="330"
+                            y="60"
+                            width="280"
+                            height="400"
+                            rx="15"
+                            fill="url(#domainLayerGrad)"
+                            stroke="#7b1fa2"
+                            stroke-width="2"
+                        />
+                        <text x="470" y="90" fill="#7b1fa2" font-size="16" font-weight="bold" text-anchor="middle">
+                            ドメイン層
+                        </text>
+
+                        <!-- Service -->
+                        <rect x="350" y="110" width="110" height="60" rx="8" fill="white" filter="url(#shadow)" />
+                        <text x="405" y="138" fill="#7b1fa2" font-size="13" font-weight="bold" text-anchor="middle">
+                            Service
+                        </text>
+                        <text x="405" y="158" fill="#666" font-size="10" text-anchor="middle">ToDoService</text>
+
+                        <!-- ServiceImpl -->
+                        <rect x="350" y="190" width="110" height="60" rx="8" fill="white" filter="url(#shadow)" />
+                        <text x="405" y="218" fill="#7b1fa2" font-size="13" font-weight="bold" text-anchor="middle">
+                            ServiceImpl
+                        </text>
+                        <text x="405" y="238" fill="#666" font-size="10" text-anchor="middle">ToDoServiceImpl</text>
+
+                        <!-- Domain Object -->
+                        <rect x="480" y="110" width="110" height="60" rx="8" fill="white" filter="url(#shadow)" />
+                        <text x="535" y="138" fill="#7b1fa2" font-size="13" font-weight="bold" text-anchor="middle">
+                            Domain Object
+                        </text>
+                        <text x="535" y="158" fill="#666" font-size="10" text-anchor="middle">ToDo (Entity)</text>
+
+                        <!-- Repository Interface -->
+                        <rect x="480" y="190" width="110" height="60" rx="8" fill="white" filter="url(#shadow)" />
+                        <text x="535" y="218" fill="#7b1fa2" font-size="13" font-weight="bold" text-anchor="middle">
+                            Repository
+                        </text>
+                        <text x="535" y="238" fill="#666" font-size="10" text-anchor="middle">ToDoMapper</text>
+
+                        <!-- Infrastructure Layer -->
+                        <rect
+                            x="630"
+                            y="60"
+                            width="240"
+                            height="400"
+                            rx="15"
+                            fill="url(#infraLayerGrad)"
+                            stroke="#f57c00"
+                            stroke-width="2"
+                        />
+                        <text x="750" y="90" fill="#f57c00" font-size="16" font-weight="bold" text-anchor="middle">
+                            インフラストラクチャ層
+                        </text>
+
+                        <!-- RepositoryImpl -->
+                        <rect x="660" y="110" width="180" height="60" rx="8" fill="white" filter="url(#shadow)" />
+                        <text x="750" y="138" fill="#f57c00" font-size="13" font-weight="bold" text-anchor="middle">
+                            RepositoryImpl
+                        </text>
+                        <text x="750" y="158" fill="#666" font-size="10" text-anchor="middle">MyBatisが自動生成</text>
+
+                        <!-- O/R Mapper -->
+                        <rect x="660" y="190" width="180" height="60" rx="8" fill="white" filter="url(#shadow)" />
+                        <text x="750" y="218" fill="#f57c00" font-size="13" font-weight="bold" text-anchor="middle">
+                            O/R Mapper
+                        </text>
+                        <text x="750" y="238" fill="#666" font-size="10" text-anchor="middle">MyBatis</text>
+
+                        <!-- Database -->
+                        <ellipse
+                            cx="750"
+                            cy="320"
+                            rx="70"
+                            ry="35"
+                            fill="white"
+                            stroke="#f57c00"
+                            stroke-width="2"
+                            filter="url(#shadow)"
+                        />
+                        <text x="750" y="325" fill="#f57c00" font-size="13" font-weight="bold" text-anchor="middle">
+                            Database
+                        </text>
+
+                        <!-- Arrows -->
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#666" />
+                            </marker>
+                        </defs>
+
+                        <!-- Controller -> View -->
+                        <line
+                            x1="180"
+                            y1="140"
+                            x2="162"
+                            y2="140"
+                            stroke="#666"
+                            stroke-width="2"
+                            marker-end="url(#arrowhead)"
+                        />
+                        <!-- Controller -> Form -->
+                        <line
+                            x1="235"
+                            y1="170"
+                            x2="150"
+                            y2="188"
+                            stroke="#666"
+                            stroke-width="2"
+                            marker-end="url(#arrowhead)"
+                        />
+                        <!-- Controller -> Helper -->
+                        <line
+                            x1="235"
+                            y1="170"
+                            x2="235"
+                            y2="188"
+                            stroke="#666"
+                            stroke-width="2"
+                            marker-end="url(#arrowhead)"
+                        />
+                        <!-- Controller -> Service -->
+                        <line
+                            x1="290"
+                            y1="140"
+                            x2="348"
+                            y2="140"
+                            stroke="#666"
+                            stroke-width="2"
+                            marker-end="url(#arrowhead)"
+                        />
+                        <!-- Service -> ServiceImpl -->
+                        <line
+                            x1="405"
+                            y1="170"
+                            x2="405"
+                            y2="188"
+                            stroke="#666"
+                            stroke-width="2"
+                            marker-end="url(#arrowhead)"
+                        />
+                        <!-- ServiceImpl -> Repository -->
+                        <line
+                            x1="460"
+                            y1="220"
+                            x2="478"
+                            y2="220"
+                            stroke="#666"
+                            stroke-width="2"
+                            marker-end="url(#arrowhead)"
+                        />
+                        <!-- Repository -> RepositoryImpl -->
+                        <line
+                            x1="590"
+                            y1="140"
+                            x2="658"
+                            y2="140"
+                            stroke="#666"
+                            stroke-width="2"
+                            marker-end="url(#arrowhead)"
+                        />
+                        <!-- RepositoryImpl -> Database -->
+                        <line
+                            x1="750"
+                            y1="250"
+                            x2="750"
+                            y2="283"
+                            stroke="#666"
+                            stroke-width="2"
+                            marker-end="url(#arrowhead)"
+                        />
+
+                        <!-- Legend -->
+                        <rect x="50" y="420" width="20" height="20" rx="4" fill="#667eea" />
+                        <text x="80" y="435" fill="#333" font-size="12">今回作成するコンポーネント</text>
+                        <rect x="250" y="420" width="20" height="20" rx="4" fill="white" stroke="#666" />
+                        <text x="280" y="435" fill="#333" font-size="12">作成済みのコンポーネント</text>
+                    </svg>
+                </div>
+
+                <p>
+                    この章で作成するのは、上図で<strong style="color: #667eea">紫色</strong
+                    >で示されたコンポーネントです。Controller、Form、Helper、そしてView（画面）を実装することで、ToDoアプリのアプリケーション層が完成します。
+                </p>
+            </div>
+
+            <!-- プロジェクト作成と環境構築 -->
+            <div class="content-card" id="project-setup">
+                <div class="section-badge">環境構築</div>
+                <h2>プロジェクトの作成（Spring Initializr + VSCode + Maven）</h2>
+
+                <div class="intro-box">
+                    <p>
+                        ToDoアプリを作成する前に、Spring Initializrを使用してMavenプロジェクトを作成し、VSCodeで開発を行う準備をしましょう。
+                    </p>
+                </div>
+
+                <h3>Spring Initializrでのプロジェクト作成</h3>
+
+                <p>
+                    <a href="https://start.spring.io/" target="_blank">Spring Initializr（https://start.spring.io/）</a>にアクセスし、以下の設定でプロジェクトを作成します。
+                </p>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>項目</th>
+                            <th>設定値</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Project</td>
+                            <td><strong>Maven</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Language</td>
+                            <td>Java</td>
+                        </tr>
+                        <tr>
+                            <td>Spring Boot</td>
+                            <td>3.x.x（最新の安定版）</td>
+                        </tr>
+                        <tr>
+                            <td>Group</td>
+                            <td>com.example</td>
+                        </tr>
+                        <tr>
+                            <td>Artifact</td>
+                            <td>webapp</td>
+                        </tr>
+                        <tr>
+                            <td>Name</td>
+                            <td>webapp</td>
+                        </tr>
+                        <tr>
+                            <td>Packaging</td>
+                            <td>Jar</td>
+                        </tr>
+                        <tr>
+                            <td>Java</td>
+                            <td>21（または17）</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>追加する依存関係（Dependencies）</h4>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>依存関係</th>
+                            <th>用途</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Spring Web</td>
+                            <td>Webアプリケーション開発</td>
+                        </tr>
+                        <tr>
+                            <td>Thymeleaf</td>
+                            <td>テンプレートエンジン</td>
+                        </tr>
+                        <tr>
+                            <td>Spring Boot DevTools</td>
+                            <td>開発時の自動再起動</td>
+                        </tr>
+                        <tr>
+                            <td>Lombok</td>
+                            <td>ボイラープレートコードの削減</td>
+                        </tr>
+                        <tr>
+                            <td>MyBatis Framework</td>
+                            <td>O/Rマッパー</td>
+                        </tr>
+                        <tr>
+                            <td>MySQL Driver</td>
+                            <td>MySQLデータベース接続</td>
+                        </tr>
+                        <tr>
+                            <td>Validation</td>
+                            <td>入力値検証</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="concept-box">
+                    <h4>GENERATEボタンでダウンロード</h4>
+                    <p>
+                        設定が完了したら「GENERATE」ボタンをクリックして、ZIPファイルをダウンロードします。ダウンロードしたZIPファイルを任意の場所に解凍してください。
+                    </p>
+                </div>
+
+                <h3>VSCodeでプロジェクトを開く</h3>
+
+                <p>以下の手順でVSCodeでプロジェクトを開きます。</p>
+
+                <ol>
+                    <li>VSCodeを起動します</li>
+                    <li>「ファイル」→「フォルダーを開く」を選択</li>
+                    <li>解凍したプロジェクトフォルダ（webapp）を選択</li>
+                    <li>VSCodeが自動的にMavenプロジェクトとして認識します</li>
+                </ol>
+
+                <div class="concept-box">
+                    <h4>推奨VSCode拡張機能</h4>
+                    <p>以下の拡張機能をインストールすることで、開発効率が向上します。</p>
+                    <ul>
+                        <li><strong>Extension Pack for Java</strong> - Java開発の基本機能</li>
+                        <li><strong>Spring Boot Extension Pack</strong> - Spring Boot開発サポート</li>
+                        <li><strong>Lombok Annotations Support for VS Code</strong> - Lombokサポート</li>
+                    </ul>
+                </div>
+
+                <h3>プロジェクトのフォルダ構成</h3>
+
+                <p>
+                    ToDoアプリのフォルダ構成は以下のようになります。各層の役割に応じてパッケージを分けて管理します。
+                </p>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">📁 プロジェクトのフォルダ構成</div>
+                    <div class="code-block" data-filename="フォルダ構成">
+                        <div class="code-content">
+                            <pre>webapp/
+├── pom.xml                          <span class="code-comment">← Mavenの設定ファイル</span>
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/
+│   │   │       └── example/
+│   │   │           └── webapp/
+│   │   │               ├── WebappApplication.java    <span class="code-comment">← メインクラス</span>
+│   │   │               │
+│   │   │               ├── controller/               <span class="code-comment">← アプリケーション層</span>
+│   │   │               │   └── ToDoController.java
+│   │   │               │
+│   │   │               ├── form/                     <span class="code-comment">← フォームクラス</span>
+│   │   │               │   └── ToDoForm.java
+│   │   │               │
+│   │   │               ├── helper/                   <span class="code-comment">← ヘルパークラス</span>
+│   │   │               │   └── ToDoHelper.java
+│   │   │               │
+│   │   │               ├── service/                  <span class="code-comment">← ドメイン層（サービス）</span>
+│   │   │               │   ├── ToDoService.java
+│   │   │               │   └── ToDoServiceImpl.java
+│   │   │               │
+│   │   │               ├── entity/                   <span class="code-comment">← ドメイン層（エンティティ）</span>
+│   │   │               │   └── ToDo.java
+│   │   │               │
+│   │   │               └── repository/               <span class="code-comment">← インフラストラクチャ層</span>
+│   │   │                   └── ToDoMapper.java
+│   │   │
+│   │   └── resources/
+│   │       ├── application.properties               <span class="code-comment">← アプリ設定</span>
+│   │       │
+│   │       ├── templates/                           <span class="code-comment">← Thymeleafテンプレート</span>
+│   │       │   └── todo/
+│   │       │       ├── list.html
+│   │       │       ├── detail.html
+│   │       │       ├── form.html
+│   │       │       └── confirm.html
+│   │       │
+│   │       ├── static/                              <span class="code-comment">← 静的ファイル（CSS/JS/画像）</span>
+│   │       │   └── css/
+│   │       │       └── style.css
+│   │       │
+│   │       └── com/
+│   │           └── example/
+│   │               └── webapp/
+│   │                   └── repository/
+│   │                       └── ToDoMapper.xml       <span class="code-comment">← MyBatis SQLマッピング</span>
+│   │
+│   └── test/
+│       └── java/                                    <span class="code-comment">← テストコード</span>
+│           └── com/
+│               └── example/
+│                   └── webapp/
+│                       └── WebappApplicationTests.java
+│
+└── target/                                          <span class="code-comment">← ビルド出力（自動生成）</span></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="concept-box">
+                    <h4>レイヤー別パッケージ構成</h4>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>層</th>
+                                <th>パッケージ</th>
+                                <th>役割</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>アプリケーション層</td>
+                                <td>controller, form, helper</td>
+                                <td>画面制御、フォーム、変換処理</td>
+                            </tr>
+                            <tr>
+                                <td>ドメイン層</td>
+                                <td>service, entity</td>
+                                <td>ビジネスロジック、データモデル</td>
+                            </tr>
+                            <tr>
+                                <td>インフラストラクチャ層</td>
+                                <td>repository</td>
+                                <td>データベースアクセス</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>application.propertiesの設定</h3>
+
+                <p>
+                    MySQLデータベースに接続するための設定を<code>src/main/resources/application.properties</code>に記述します。
+                </p>
+
+                <div class="code-block" data-filename="application.properties">
+                    <div class="code-content">
+                        <pre><span class="code-comment"># サーバーポート</span>
+server.port=8080
+
+<span class="code-comment"># MySQL データベース接続設定</span>
+spring.datasource.url=jdbc:mysql://localhost:3306/todo_db?useSSL=false&serverTimezone=Asia/Tokyo&characterEncoding=UTF-8
+spring.datasource.username=root
+spring.datasource.password=password
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+<span class="code-comment"># MyBatis設定</span>
+mybatis.mapper-locations=classpath*:com/example/webapp/repository/*.xml
+mybatis.configuration.map-underscore-to-camel-case=true
+
+<span class="code-comment"># Thymeleaf設定（開発時はキャッシュを無効化）</span>
+spring.thymeleaf.cache=false</pre>
+                    </div>
+                </div>
+
+                <h3>アプリケーションの起動</h3>
+
+                <p>VSCodeでアプリケーションを起動する方法は以下の通りです。</p>
+
+                <ol>
+                    <li><code>WebappApplication.java</code>を開く</li>
+                    <li>mainメソッドの上に表示される「Run」をクリック</li>
+                    <li>または、ターミナルで<code>./mvnw spring-boot:run</code>を実行</li>
+                </ol>
+
+                <div class="concept-box">
+                    <h4>Mavenコマンド（ターミナル）</h4>
+                    <p>ターミナルから以下のコマンドでも操作できます。</p>
+                    <ul>
+                        <li><code>./mvnw spring-boot:run</code> - アプリケーション起動</li>
+                        <li><code>./mvnw clean package</code> - ビルド（JARファイル生成）</li>
+                        <li><code>./mvnw test</code> - テスト実行</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Section 13-1: 参照処理 -->
+            <div class="content-card" id="section1">
+                <div class="section-badge">Section 13-1</div>
+                <h2>「ToDoアプリ」参照処理を実装しよう</h2>
+
+                <div class="intro-box">
+                    <p>
+                        まずは「一覧表示」と「詳細表示」の参照処理から実装を始めます。ControllerとViewを作成して、ToDoデータを画面に表示できるようにしましょう。
+                    </p>
+                </div>
+
+                <h3>13-1-1 今回作成するコンポーネント</h3>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>層</th>
+                            <th>コンポーネント</th>
+                            <th>作成物名称</th>
+                            <th>備考</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>アプリケーション層</td>
+                            <td>View</td>
+                            <td>—</td>
+                            <td>見た目、画面です</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>アプリケーション層</td>
+                            <td>Controller</td>
+                            <td>ToDoController</td>
+                            <td>制御の役割を担います</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>アプリケーション層</td>
+                            <td>Form</td>
+                            <td>ToDoForm</td>
+                            <td>画面のフォームを表現します</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>ドメイン層</td>
+                            <td>Service</td>
+                            <td>ToDoService</td>
+                            <td>インターフェースで作成します</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>ドメイン層</td>
+                            <td>ServiceImpl</td>
+                            <td>ToDoServiceImpl</td>
+                            <td>Serviceを実装します</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>ドメイン層</td>
+                            <td>Domain Object</td>
+                            <td>ToDo</td>
+                            <td>Entityと同様です</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>ドメイン層</td>
+                            <td>Repository</td>
+                            <td>ToDoMapper</td>
+                            <td>インターフェースで作成（MyBatisのマッパーファイルを使用）</td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td>インフラストラクチャ層</td>
+                            <td>RepositoryImpl</td>
+                            <td>—</td>
+                            <td>O/Rマッパーにより自動作成されます</td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td>インフラストラクチャ層</td>
+                            <td>O/R Mapper</td>
+                            <td>—</td>
+                            <td>MyBatis</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>13-1-2 Controllerの作成（ToDo一覧、ToDo詳細）</h3>
+
+                <p>
+                    ToDoCRUD用のControllerを作成します。Controllerは「リクエスト」を処理にマッピングし、結果を「View」に渡すという制御を担当します。
+                </p>
+
+                <div class="file-location">
+                    <span>ファイルの場所</span>
+                    <code>src/main/java/com/example/webapp/controller/ToDoController.java</code>
+                </div>
+
+                <!-- URL Table -->
+                <h4>URLマッピング一覧</h4>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>役割</th>
+                            <th>HTTPメソッド</th>
+                            <th>URL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>一覧画面を表示する</td>
+                            <td><span class="method-badge method-get">GET</span></td>
+                            <td><span class="url-badge">/todos</span></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>詳細画面を表示する</td>
+                            <td><span class="method-badge method-get">GET</span></td>
+                            <td><span class="url-badge">/todos/{id}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block" data-filename="ToDoController.java">
+                    <div class="code-content">
+                        <pre><span class="code-keyword">package</span> com.example.webapp.controller;
+
+<span class="code-keyword">import</span> org.springframework.stereotype.Controller;
+<span class="code-keyword">import</span> org.springframework.ui.Model;
+<span class="code-keyword">import</span> org.springframework.web.bind.annotation.GetMapping;
+<span class="code-keyword">import</span> org.springframework.web.bind.annotation.PathVariable;
+<span class="code-keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;
+<span class="code-keyword">import</span> org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+<span class="code-keyword">import</span> com.example.webapp.entity.ToDo;
+<span class="code-keyword">import</span> com.example.webapp.service.ToDoService;
+
+<span class="code-keyword">import</span> lombok.RequiredArgsConstructor;
+
+<span class="code-comment">/**
+ * ToDo：コントローラ
+ */</span>
+<span class="code-annotation">@Controller</span>
+<span class="code-annotation">@RequestMapping</span>(<span class="code-string">"/todos"</span>)
+<span class="code-annotation">@RequiredArgsConstructor</span>
+<span class="code-keyword">public class</span> <span class="code-class">ToDoController</span> {
+
+    <span class="code-comment">/** DI */</span>
+    <span class="code-keyword">private final</span> <span class="code-class">ToDoService</span> toDoService;
+
+    <span class="code-comment">/**
+     * 「すること」の一覧を表示します。
+     */</span>
+    <span class="code-annotation">@GetMapping</span>
+    <span class="code-keyword">public</span> <span class="code-class">String</span> <span class="code-method">list</span>(<span class="code-class">Model</span> model) {
+        model.<span class="code-method">addAttribute</span>(<span class="code-string">"todos"</span>, toDoService.<span class="code-method">findAllToDo</span>());
+        <span class="code-keyword">return</span> <span class="code-string">"todo/list"</span>;
+    }
+
+    <span class="code-comment">/**
+     * 指定されたIDの「すること」の詳細を表示します。
+     */</span>
+    <span class="code-annotation">@GetMapping</span>(<span class="code-string">"/{id}"</span>)
+    <span class="code-keyword">public</span> <span class="code-class">String</span> <span class="code-method">detail</span>(<span class="code-annotation">@PathVariable</span> <span class="code-class">Integer</span> id, <span class="code-class">Model</span> model, <span class="code-class">RedirectAttributes</span> attributes) {
+        <span class="code-comment">// 「すること」IDに対応する「すること」情報を取得</span>
+        <span class="code-class">ToDo</span> ToDo = toDoService.<span class="code-method">findByIdToDo</span>(id);
+        <span class="code-keyword">if</span> (ToDo != <span class="code-keyword">null</span>) {
+            <span class="code-comment">// 対象データがある場合はモデルに格納</span>
+            model.<span class="code-method">addAttribute</span>(<span class="code-string">"todo"</span>, toDoService.<span class="code-method">findByIdToDo</span>(id));
+            <span class="code-keyword">return</span> <span class="code-string">"todo/detail"</span>;
+        } <span class="code-keyword">else</span> {
+            <span class="code-comment">// 対象データがない場合はフラッシュメッセージを設定</span>
+            attributes.<span class="code-method">addFlashAttribute</span>(<span class="code-string">"errorMessage"</span>, <span class="code-string">"対象データがありません"</span>);
+            <span class="code-comment">// リダイレクト</span>
+            <span class="code-keyword">return</span> <span class="code-string">"redirect:/todos"</span>;
+        }
+    }
+}</pre>
+                    </div>
+                </div>
+
+                <div class="concept-box">
+                    <h4>@PathVariableとは</h4>
+                    <p>
+                        39行目では「@PathVariable Integer
+                        id」を用いて、URLから「すること」のIDを取得しています。@PathVariableの使用方法の詳細は、「7-3
+                        URLに埋め込まれた値を受け取ろう」で確認できます。
+                    </p>
+                    <p>
+                        42行目では「toDoService.findByIdToDo(id)」を使って、対応する「ToDo」を検索します。取得した「ToDo」が存在する場合、Modelにキー「todo」として格納し、詳細画面を表示します。存在しない場合は、エラーメッセージをフラッシュメッセージに追加し、「すること」の一覧画面にリダイレクトします。
+                    </p>
+                </div>
+
+                <h3>リダイレクトとフラッシュメッセージ</h3>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">🔄 リダイレクトの仕組み</div>
+                    <svg viewBox="0 0 800 320" style="max-width: 100%; height: auto">
+                        <!-- Browser -->
+                        <rect
+                            x="50"
+                            y="30"
+                            width="180"
+                            height="280"
+                            rx="10"
+                            fill="#e3f2fd"
+                            stroke="#1976d2"
+                            stroke-width="2"
+                        />
+                        <text x="140" y="60" fill="#1976d2" font-size="14" font-weight="bold" text-anchor="middle">
+                            ブラウザ
+                        </text>
+                        <text x="140" y="85" fill="#333" font-size="12" text-anchor="middle">クライアント</text>
+
+                        <!-- Server -->
+                        <rect
+                            x="570"
+                            y="30"
+                            width="180"
+                            height="280"
+                            rx="10"
+                            fill="#fff3e0"
+                            stroke="#f57c00"
+                            stroke-width="2"
+                        />
+                        <text x="660" y="60" fill="#f57c00" font-size="14" font-weight="bold" text-anchor="middle">
+                            サーバー
+                        </text>
+                        <text x="660" y="85" fill="#333" font-size="12" text-anchor="middle">Spring MVC</text>
+
+                        <!-- Arrows with labels -->
+                        <defs>
+                            <marker id="arrowRed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#e53935" />
+                            </marker>
+                            <marker id="arrowBlue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#1976d2" />
+                            </marker>
+                            <marker id="arrowGreen" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#4caf50" />
+                            </marker>
+                        </defs>
+
+                        <!-- Request 1 -->
+                        <text x="400" y="130" fill="#1976d2" font-size="11" text-anchor="middle">① リクエスト</text>
+                        <line
+                            x1="230"
+                            y1="145"
+                            x2="568"
+                            y2="145"
+                            stroke="#1976d2"
+                            stroke-width="2"
+                            marker-end="url(#arrowBlue)"
+                        />
+
+                        <!-- Response (Redirect) -->
+                        <text x="400" y="180" fill="#e53935" font-size="11" text-anchor="middle">
+                            ② 302 Redirect（別URLへ転送指示）
+                        </text>
+                        <line
+                            x1="568"
+                            y1="195"
+                            x2="232"
+                            y2="195"
+                            stroke="#e53935"
+                            stroke-width="2"
+                            marker-end="url(#arrowRed)"
+                        />
+
+                        <!-- Request 2 -->
+                        <text x="400" y="230" fill="#1976d2" font-size="11" text-anchor="middle">
+                            ③ 新しいURLにリクエスト
+                        </text>
+                        <line
+                            x1="230"
+                            y1="245"
+                            x2="568"
+                            y2="245"
+                            stroke="#1976d2"
+                            stroke-width="2"
+                            marker-end="url(#arrowBlue)"
+                        />
+
+                        <!-- Response 2 -->
+                        <text x="400" y="280" fill="#4caf50" font-size="11" text-anchor="middle">
+                            ④ 200 OK（画面表示）
+                        </text>
+                        <line
+                            x1="568"
+                            y1="295"
+                            x2="232"
+                            y2="295"
+                            stroke="#4caf50"
+                            stroke-width="2"
+                            marker-end="url(#arrowGreen)"
+                        />
+                    </svg>
+                </div>
+
+                <p>
+                    <strong>リダイレクト</strong
+                    >は、ウェブサイトやページのURLが変更された際に、自動的に新しいURLへ転送する仕組みです。このプロセスは、HTTPの「302」ステータスコードを用いて実行されます。このステータスコードはブラウザに対して、指定された別のURLへアクセスするよう指示します。
+                </p>
+                <p>
+                    Spring MVCでは、「redirect:」という文字列を使ってリダイレクトを行います。51行目の「return
+                    "redirect:/todos";」は、ToDo一覧ページを表示するURL「/todos」にリダイレクトしています。
+                </p>
+
+                <h4>フラッシュメッセージ</h4>
+                <p>
+                    40行目で使用される「RedirectAttributes」は、Spring
+                    MVCにおいてリダイレクト時に一時的にデータを渡すためのオブジェクトです。これにより、リダイレクト先のページで表示するメッセージなどを設定できます。この方法で渡されるデータを「フラッシュメッセージ」と呼びます。
+                </p>
+                <p>
+                    49行目「attributes.addFlashAttribute("errorMessage",
+                    "対象データがありません");」では、エラーメッセージをフラッシュメッセージとして設定しています。
+                </p>
+
+                <div class="concept-box">
+                    <h4>PRGパターンとは</h4>
+                    <p>
+                        Webアプリケーションで「リダイレクト」の典型的な用例として「PRGパターン」があります。このパターンの名前は、「Post」、「Redirect」、「Get」の各単語の頭文字を取っています。
+                    </p>
+                    <p>
+                        PRGパターンは、「POST」メソッドでのリクエストに対し「Redirect」を返し、次に「GET」メソッドで応答する遷移先の画面を表示するデザインパターンです。このパターンを用いることで、ブラウザの再読み込み時にフォームデータが二重送信されることを防げます。
+                    </p>
+                </div>
+
+                <!-- PRG Pattern Diagram -->
+                <div class="diagram-container">
+                    <div class="diagram-title">🔄 PRGパターン</div>
+                    <svg viewBox="0 0 850 420" style="max-width: 100%; height: auto">
+                        <defs>
+                            <linearGradient id="clientGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color: #e3f2fd" />
+                                <stop offset="100%" style="stop-color: #bbdefb" />
+                            </linearGradient>
+                            <linearGradient id="serverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color: #fff3e0" />
+                                <stop offset="100%" style="stop-color: #ffcc80" />
+                            </linearGradient>
+                            <marker id="arrowPrgRed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#e53935" />
+                            </marker>
+                            <marker id="arrowPrgOrange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#ff9800" />
+                            </marker>
+                            <marker id="arrowPrgGreen" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#4caf50" />
+                            </marker>
+                            <marker id="arrowPrgBlue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#2196f3" />
+                            </marker>
+                        </defs>
+
+                        <!-- Client Box -->
+                        <rect
+                            x="50"
+                            y="30"
+                            width="200"
+                            height="360"
+                            rx="12"
+                            fill="url(#clientGrad)"
+                            stroke="#1976d2"
+                            stroke-width="2"
+                        />
+                        <text x="150" y="60" fill="#1976d2" font-size="16" font-weight="bold" text-anchor="middle">
+                            クライアント
+                        </text>
+
+                        <!-- Browser Icon -->
+                        <rect x="100" y="80" width="100" height="70" rx="5" fill="white" stroke="#1976d2" />
+                        <rect x="105" y="95" width="90" height="50" fill="#f5f5f5" />
+                        <text x="150" y="125" fill="#333" font-size="11" text-anchor="middle">ブラウザ</text>
+
+                        <!-- Refresh Icon -->
+                        <circle cx="150" cy="330" r="30" fill="white" stroke="#1976d2" stroke-width="2" />
+                        <text x="150" y="335" fill="#1976d2" font-size="11" text-anchor="middle">再描画</text>
+                        <text x="150" y="375" fill="#333" font-size="10" text-anchor="middle">
+                            しても、送信されるのはGET
+                        </text>
+
+                        <!-- Server Box -->
+                        <rect
+                            x="600"
+                            y="30"
+                            width="200"
+                            height="360"
+                            rx="12"
+                            fill="url(#serverGrad)"
+                            stroke="#f57c00"
+                            stroke-width="2"
+                        />
+                        <text x="700" y="60" fill="#f57c00" font-size="16" font-weight="bold" text-anchor="middle">
+                            サーバー
+                        </text>
+
+                        <!-- Server Process -->
+                        <rect x="630" y="80" width="140" height="50" rx="8" fill="white" stroke="#f57c00" />
+                        <text x="700" y="110" fill="#333" font-size="12" text-anchor="middle">データ処理</text>
+
+                        <!-- PRG Label -->
+                        <rect x="620" y="300" width="160" height="70" rx="8" fill="#4caf50" opacity="0.2" />
+                        <text x="700" y="330" fill="#2e7d32" font-size="13" font-weight="bold" text-anchor="middle">
+                            PRGパターン
+                        </text>
+                        <text x="700" y="350" fill="#333" font-size="10" text-anchor="middle">
+                            Post → Redirect → Get
+                        </text>
+
+                        <!-- Step Labels -->
+                        <text x="425" y="155" fill="#333" font-size="12" font-weight="bold" text-anchor="middle">
+                            【ステップ1】フォーム送信
+                        </text>
+
+                        <!-- POST Arrow -->
+                        <rect x="360" y="165" width="130" height="28" rx="4" fill="#e53935" />
+                        <text x="425" y="184" fill="white" font-size="12" font-weight="bold" text-anchor="middle">
+                            ① POST /input
+                        </text>
+                        <path
+                            d="M 250 210 L 598 210"
+                            stroke="#e53935"
+                            stroke-width="3"
+                            fill="none"
+                            marker-end="url(#arrowPrgRed)"
+                        />
+
+                        <!-- Step 2 Label -->
+                        <text x="425" y="240" fill="#333" font-size="12" font-weight="bold" text-anchor="middle">
+                            【ステップ2】リダイレクト指示
+                        </text>
+
+                        <!-- Redirect Arrow -->
+                        <rect x="350" y="250" width="150" height="28" rx="4" fill="#ff9800" />
+                        <text x="425" y="269" fill="white" font-size="12" font-weight="bold" text-anchor="middle">
+                            ② 302 Redirect
+                        </text>
+                        <path
+                            d="M 598 295 L 252 295"
+                            stroke="#ff9800"
+                            stroke-width="3"
+                            fill="none"
+                            marker-end="url(#arrowPrgOrange)"
+                        />
+
+                        <!-- Step 3 Label -->
+                        <text x="425" y="325" fill="#333" font-size="12" font-weight="bold" text-anchor="middle">
+                            【ステップ3】画面取得
+                        </text>
+
+                        <!-- GET Arrow -->
+                        <rect x="360" y="335" width="130" height="28" rx="4" fill="#4caf50" />
+                        <text x="425" y="354" fill="white" font-size="12" font-weight="bold" text-anchor="middle">
+                            ③ GET /output
+                        </text>
+                        <path
+                            d="M 250 380 L 598 380"
+                            stroke="#4caf50"
+                            stroke-width="3"
+                            fill="none"
+                            marker-end="url(#arrowPrgGreen)"
+                        />
+
+                        <!-- OK Response -->
+                        <rect x="360" y="390" width="130" height="24" rx="4" fill="#2196f3" />
+                        <text x="425" y="406" fill="white" font-size="11" font-weight="bold" text-anchor="middle">
+                            ④ 200 OK（画面）
+                        </text>
+                    </svg>
+                </div>
+
+                <h3>13-1-3 Viewの作成（ToDo一覧、ToDo詳細）</h3>
+
+                <p>
+                    ビューにあたるファイルは、デフォルトでプロジェクトの「src/main/resources/templates」フォルダに配置する必要があります。「templates」フォルダ配下に「todo」フォルダと一覧画面用の「list.html」ファイル、詳細画面用の「detail.html」ファイルを作成します。
+                </p>
+
+                <h4>一覧画面用のView</h4>
+
+                <div class="file-location">
+                    <span>ファイルの場所</span>
+                    <code>webapp/src/main/resources/templates/todo/list.html</code>
+                </div>
+
+                <div class="code-block" data-filename="list.html">
+                    <div class="code-content">
+                        <pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attr">xmlns:th</span>=<span class="attr-value">"http://www.thymeleaf.org"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;title&gt;</span>ToDo一覧<span class="tag">&lt;/title&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+    <span class="tag">&lt;h2&gt;</span>ToDo一覧<span class="tag">&lt;/h2&gt;</span>
+    <span class="code-comment">&lt;!-- Flashメッセージの表示 --&gt;</span>
+    <span class="tag">&lt;p</span> <span class="attr">th:if</span>=<span class="attr-value">"${errorMessage}"</span>
+       <span class="attr">th:text</span>=<span class="attr-value">"${errorMessage}"</span>
+       <span class="attr">style</span>=<span class="attr-value">"color: red;"</span><span class="tag">&gt;</span>
+        エラーメッセージ
+    <span class="tag">&lt;/p&gt;</span>
+    <span class="tag">&lt;table</span> <span class="attr">border</span>=<span class="attr-value">"1"</span> <span class="attr">width</span>=<span class="attr-value">"300"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;thead&gt;</span>
+            <span class="tag">&lt;tr&gt;</span>
+                <span class="tag">&lt;th&gt;</span>ID<span class="tag">&lt;/th&gt;</span>
+                <span class="tag">&lt;th&gt;</span>ToDo<span class="tag">&lt;/th&gt;</span>
+                <span class="tag">&lt;th&gt;</span>詳細<span class="tag">&lt;/th&gt;</span>
+            <span class="tag">&lt;/tr&gt;</span>
+        <span class="tag">&lt;/thead&gt;</span>
+        <span class="tag">&lt;tbody&gt;</span>
+            <span class="tag">&lt;tr</span> <span class="attr">th:each</span>=<span class="attr-value">"todo : ${todos}"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;td</span> <span class="attr">th:text</span>=<span class="attr-value">"${todo.id}"</span><span class="tag">&gt;&lt;/td&gt;</span>
+                <span class="tag">&lt;td</span> <span class="attr">th:text</span>=<span class="attr-value">"${todo.todo}"</span><span class="tag">&gt;&lt;/td&gt;</span>
+                <span class="tag">&lt;td&gt;</span>
+                    <span class="tag">&lt;a</span> <span class="attr">th:href</span>=<span class="attr-value">"@{/todos/{id}(id=${todo.id})}"</span><span class="tag">&gt;</span>詳細<span class="tag">&lt;/a&gt;</span>
+                <span class="tag">&lt;/td&gt;</span>
+            <span class="tag">&lt;/tr&gt;</span>
+        <span class="tag">&lt;/tbody&gt;</span>
+    <span class="tag">&lt;/table&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+                    </div>
+                </div>
+
+                <p>
+                    9行目〜12行目で対象の「すること：ToDo」が存在しなかった場合、フラッシュメッセージを表示します。22行目〜30行目は、コントローラでModelに格納したキー「todos」を使用して、各することのID、ToDo、詳細画面へのリンクを表示しています。
+                </p>
+
+                <div class="concept-box">
+                    <h4>REST形式のURLとは</h4>
+                    <p>
+                        22行目の「&lt;tr th:each="todo :
+                        ${todos}"&gt;」は、th:each属性を使用して、サーバーサイドから渡された「すること：ToDo」のリストを格納したキー「todos」を使用し、リストの各要素「ToDo」エンティティを順番に取り出し、テーブルの行（&lt;tr&gt;）を繰り返し生成します。
+                    </p>
+                    <p>
+                        26行目の「&lt;a
+                        th:href="@{/todos/{id}(id=${todo.id})}"&gt;」は、th:href属性を使用して、詳細リンクのURLを動的に生成しています。
+                    </p>
+                </div>
+
+                <!-- REST Format Diagram -->
+                <div class="diagram-container">
+                    <div class="diagram-title">📐 REST形式のURL構造</div>
+                    <svg viewBox="0 0 750 320" style="max-width: 100%; height: auto">
+                        <!-- URL Display Box -->
+                        <rect x="50" y="30" width="650" height="60" rx="10" fill="#1a1a2e" />
+
+                        <!-- URL Text - split into parts for precise positioning -->
+                        <!-- @{ -->
+                        <text x="100" y="68" fill="#50fa7b" font-family="monospace" font-size="18">@{</text>
+                        <!-- /todos/ with highlight -->
+                        <rect x="122" y="48" width="77" height="30" rx="4" fill="none" stroke="#4fc3f7" stroke-width="2" />
+                        <text x="125" y="68" fill="#50fa7b" font-family="monospace" font-size="18">/todos/</text>
+                        <!-- {id} with highlight -->
+                        <rect x="199" y="48" width="44" height="30" rx="4" fill="none" stroke="#667eea" stroke-width="2" />
+                        <text x="202" y="68" fill="#50fa7b" font-family="monospace" font-size="18">{id}</text>
+                        <!-- ( -->
+                        <text x="246" y="68" fill="#50fa7b" font-family="monospace" font-size="18">(</text>
+                        <!-- id= with highlight -->
+                        <rect x="255" y="48" width="33" height="30" rx="4" fill="none" stroke="#ff79c6" stroke-width="2" />
+                        <text x="258" y="68" fill="#50fa7b" font-family="monospace" font-size="18">id=</text>
+                        <!-- ${todo.id} with highlight -->
+                        <rect x="288" y="48" width="121" height="30" rx="4" fill="none" stroke="#f1fa8c" stroke-width="2" />
+                        <text x="291" y="68" fill="#50fa7b" font-family="monospace" font-size="18">${todo.id}</text>
+                        <!-- )} -->
+                        <text x="412" y="68" fill="#50fa7b" font-family="monospace" font-size="18">)}</text>
+
+                        <!-- Annotation Lines and Labels -->
+                        <!-- /todos annotation -->
+                        <line x1="160" y1="90" x2="160" y2="130" stroke="#4fc3f7" stroke-width="2" />
+                        <rect x="85" y="135" width="150" height="50" rx="8" fill="#4fc3f7" fill-opacity="0.15" stroke="#4fc3f7" stroke-width="1" />
+                        <text x="160" y="158" fill="#4fc3f7" font-size="13" font-weight="bold" text-anchor="middle">ベースパス</text>
+                        <text x="160" y="176" fill="#4fc3f7" font-size="11" text-anchor="middle">/todos/</text>
+
+                        <!-- {id} annotation -->
+                        <line x1="221" y1="90" x2="285" y2="130" stroke="#667eea" stroke-width="2" />
+                        <rect x="245" y="135" width="160" height="50" rx="8" fill="#667eea" fill-opacity="0.15" stroke="#667eea" stroke-width="1" />
+                        <text x="325" y="158" fill="#667eea" font-size="13" font-weight="bold" text-anchor="middle">プレースホルダ</text>
+                        <text x="325" y="176" fill="#667eea" font-size="11" text-anchor="middle">{id} → 動的に置き換え</text>
+
+                        <!-- id= annotation -->
+                        <line x1="271" y1="90" x2="420" y2="130" stroke="#ff79c6" stroke-width="2" />
+                        <rect x="415" y="135" width="160" height="50" rx="8" fill="#ff79c6" fill-opacity="0.15" stroke="#ff79c6" stroke-width="1" />
+                        <text x="495" y="158" fill="#ff79c6" font-size="13" font-weight="bold" text-anchor="middle">変数名</text>
+                        <text x="495" y="176" fill="#ff79c6" font-size="11" text-anchor="middle">id=（{id}と同じ名前）</text>
+
+                        <!-- ${todo.id} annotation -->
+                        <line x1="348" y1="90" x2="570" y2="130" stroke="#f1fa8c" stroke-width="2" />
+                        <rect x="585" y="135" width="140" height="50" rx="8" fill="#f1fa8c" fill-opacity="0.15" stroke="#f1fa8c" stroke-width="1" />
+                        <text x="655" y="158" fill="#c9b800" font-size="13" font-weight="bold" text-anchor="middle">実際の値</text>
+                        <text x="655" y="176" fill="#c9b800" font-size="11" text-anchor="middle">${todo.id} → 例: 1</text>
+
+                        <!-- Connection arrow between placeholder and variable -->
+                        <defs>
+                            <marker id="arrowRestLink" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                                <polygon points="0 0, 8 3, 0 6" fill="#888" />
+                            </marker>
+                        </defs>
+                        <polyline
+                            points="325,190 325,220 495,220 495,190"
+                            stroke="#888"
+                            stroke-width="2"
+                            fill="none"
+                            marker-end="url(#arrowRestLink)"
+                        />
+                        <text x="410" y="238" fill="#666" font-size="11" text-anchor="middle">
+                            プレースホルダと同じ変数名にする
+                        </text>
+
+                        <!-- Result Example -->
+                        <rect x="150" y="260" width="450" height="45" rx="8" fill="#2e7d32" fill-opacity="0.15" stroke="#4caf50" stroke-width="2" />
+                        <text x="375" y="280" fill="#2e7d32" font-size="12" font-weight="bold" text-anchor="middle">
+                            生成されるURL例
+                        </text>
+                        <text x="375" y="298" fill="#4caf50" font-family="monospace" font-size="14" text-anchor="middle">
+                            /todos/1  （todo.id が 1 の場合）
+                        </text>
+                    </svg>
+                </div>
+
+                <p>
+                    「@{/todos/{id}(id=${todo.id})}」の部分は、URLの{id}部分にtodo.idの値が埋め込まれます。これにより、各「すること」の詳細ページへのリンクが生成されます。{id}の部分は、URLパラメータのプレースホルダ（置き換えられる箇所）です。「{id=${todo.id}}」の部分で、プレースホルダ{id}に挿入する値を指定しています。このような形式をREST形式と言います。
+                </p>
+
+                <h4>詳細画面用のView</h4>
+
+                <div class="file-location">
+                    <span>ファイルの場所</span>
+                    <code>webapp/src/main/resources/templates/todo/detail.html</code>
+                </div>
+
+                <div class="code-block" data-filename="detail.html">
+                    <div class="code-content">
+                        <pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attr">xmlns:th</span>=<span class="attr-value">"http://www.thymeleaf.org"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;title&gt;</span>ToDo詳細<span class="tag">&lt;/title&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+    <span class="tag">&lt;h2&gt;</span>ToDo詳細<span class="tag">&lt;/h2&gt;</span>
+    <span class="tag">&lt;table</span> <span class="attr">border</span>=<span class="attr-value">"1"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;tr&gt;</span>
+            <span class="tag">&lt;th&gt;</span>ID<span class="tag">&lt;/th&gt;</span>
+            <span class="tag">&lt;td</span> <span class="attr">th:text</span>=<span class="attr-value">"${todo.id}"</span><span class="tag">&gt;&lt;/td&gt;</span>
+        <span class="tag">&lt;/tr&gt;</span>
+        <span class="tag">&lt;tr&gt;</span>
+            <span class="tag">&lt;th&gt;</span>タイトル<span class="tag">&lt;/th&gt;</span>
+            <span class="tag">&lt;td</span> <span class="attr">th:text</span>=<span class="attr-value">"${todo.todo}"</span><span class="tag">&gt;&lt;/td&gt;</span>
+        <span class="tag">&lt;/tr&gt;</span>
+        <span class="tag">&lt;tr&gt;</span>
+            <span class="tag">&lt;th&gt;</span>詳細<span class="tag">&lt;/th&gt;</span>
+            <span class="tag">&lt;td</span> <span class="attr">th:text</span>=<span class="attr-value">"${todo.detail}"</span><span class="tag">&gt;&lt;/td&gt;</span>
+        <span class="tag">&lt;/tr&gt;</span>
+        <span class="tag">&lt;tr&gt;</span>
+            <span class="tag">&lt;th&gt;</span>登録日時<span class="tag">&lt;/th&gt;</span>
+            <span class="tag">&lt;td</span> <span class="attr">th:text</span>=<span class="attr-value">"${todo.createdAt.format(T(java.time.format.DateTimeFormatter).ofPattern('yyyy/MM/dd HH:mm:ss'))}"</span><span class="tag">&gt;&lt;/td&gt;</span>
+        <span class="tag">&lt;/tr&gt;</span>
+        <span class="tag">&lt;tr&gt;</span>
+            <span class="tag">&lt;th&gt;</span>更新日時<span class="tag">&lt;/th&gt;</span>
+            <span class="tag">&lt;td</span> <span class="attr">th:text</span>=<span class="attr-value">"${todo.updatedAt.format(T(java.time.format.DateTimeFormatter).ofPattern('yyyy/MM/dd HH:mm:ss'))}"</span><span class="tag">&gt;&lt;/td&gt;</span>
+        <span class="tag">&lt;/tr&gt;</span>
+    <span class="tag">&lt;/table&gt;</span>
+    <span class="tag">&lt;a</span> <span class="attr">th:href</span>=<span class="attr-value">"@{/todos}"</span><span class="tag">&gt;</span>ToDo一覧へ<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+                    </div>
+                </div>
+
+                <p>
+                    8行目〜35行目では、サーバーサイドから渡されたToDoエンティティが格納されているキー「todo」を使用して、ID、ToDoの内容、詳細情報をテーブルの各セルに表示しています。「todo.createdAt」はLocalDateTime型の日時データです。この日時データを「yyyy/MM/dd
+                    HH:mm:ss」の形式にフォーマットするために「format」メソッドを利用します。Thymeleafテンプレート内でJavaのクラスにアクセスする際には、「T(...)構文」が使われます。ここでは、java.time.format.DateTimeFormatterクラスを参照してカスタムの日時フォーマットを指定しています。30行目〜33行目の更新日時も同様の処理をしています。
+                </p>
+                <p>
+                    36行目の「&lt;a
+                    th:href="@{/todos}"&gt;ToDo一覧へ&lt;/a&gt;」は、リンクをクリックすると「/todos」のURLに遷移し、ToDo一覧画面を表示します。
+                </p>
+
+                <h3>13-1-4 動作確認</h3>
+
+                <p>
+                    ToDo一覧表示処理とToDo詳細表示処理のプログラムが完了しました。Webアプリケーションを起動して、無事作成されているか動作確認を実施しましょう。
+                </p>
+
+                <h4>01 WebappApplicationの修正</h4>
+                <p>
+                    動作確認を実施する前に「webapp」の「src/main/java」フォルダ配下のパッケージ「com.example.webapp」、クラス「WebappApplication」を元に戻す必要があります。
+                </p>
+
+                <div class="code-block" data-filename="WebappApplication.java">
+                    <div class="code-content">
+                        <pre><span class="code-keyword">package</span> com.example.webapp;
+
+<span class="code-keyword">import</span> org.springframework.boot.SpringApplication;
+<span class="code-keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;
+
+<span class="code-annotation">@SpringBootApplication</span>
+<span class="code-keyword">public class</span> <span class="code-class">WebappApplication</span> {
+
+    <span class="code-keyword">public static void</span> <span class="code-method">main</span>(<span class="code-class">String</span>[] args) {
+        <span class="code-class">SpringApplication</span>.<span class="code-method">run</span>(<span class="code-class">WebappApplication</span>.<span class="code-keyword">class</span>, args);
+    }
+}</pre>
+                    </div>
+                </div>
+
+                <p>
+                    Spring
+                    BootでWebアプリケーションを作成する際、通常はこのクラスに修正を加える必要はありません。このクラスを実行すると、Spring
+                    Bootアプリケーションが起動し、Webサーバーが立ち上がります。これにより、アプリケーションがWebリクエストを受け付ける状態になります。
+                </p>
+
+                <h4>02 ToDo一覧表示の確認</h4>
+
+                <p>
+                    「Bootダッシュボード」で「webapp」を選択し、プロジェクトを起動します。ブラウザを立ち上げURL「http://localhost:8080/todos」を指定すると「ToDo一覧画面」が表示されます。
+                </p>
+
+                <div class="screen-preview">
+                    <div class="screen-preview-header">🌐 http://localhost:8080/todos</div>
+                    <div class="screen-preview-body">
+                        <h3 style="margin-bottom: 15px">ToDo一覧</h3>
+                        <table class="screen-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>ToDo</th>
+                                    <th>詳細</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>買い物</td>
+                                    <td><span class="link-style">詳細</span></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>図書館に行く</td>
+                                    <td><span class="link-style">詳細</span></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>ジムに行く</td>
+                                    <td><span class="link-style">詳細</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <h4>03 ToDo詳細表示の確認</h4>
+
+                <p>
+                    ToDo一覧画面にてID:2の行「詳細」リンクをクリックします。「http://localhost:8080/todos/2」がGETで送られ「ToDo詳細画面」が表示されます。
+                </p>
+
+                <div class="screen-preview">
+                    <div class="screen-preview-header">🌐 http://localhost:8080/todos/2</div>
+                    <div class="screen-preview-body">
+                        <h3 style="margin-bottom: 15px">ToDo詳細</h3>
+                        <table class="screen-table">
+                            <tr>
+                                <th style="width: 100px">ID</th>
+                                <td>2</td>
+                            </tr>
+                            <tr>
+                                <th>タイトル</th>
+                                <td>図書館に行く</td>
+                            </tr>
+                            <tr>
+                                <th>詳細</th>
+                                <td>本を借りる</td>
+                            </tr>
+                            <tr>
+                                <th>登録日時</th>
+                                <td>2023/12/24 14:31:52</td>
+                            </tr>
+                            <tr>
+                                <th>更新日時</th>
+                                <td>2023/12/24 14:31:52</td>
+                            </tr>
+                        </table>
+                        <p style="margin-top: 15px"><span class="link-style">ToDo一覧へ</span></p>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <h4>参照処理の完成</h4>
+                    <p>
+                        ToDo一覧表示処理とToDo詳細表示処理が正常に動作することを確認できました。次のセクションでは、「登録処理」と「更新処理」の作成に取り組みます。
+                    </p>
+                </div>
+            </div>
+
+            <!-- Section 13-2: 登録・更新処理 -->
+            <div class="content-card" id="section2">
+                <div class="section-badge">Section 13-2</div>
+                <h2>「ToDoアプリ」登録・更新処理を実装しよう</h2>
+
+                <div class="intro-box">
+                    <p>
+                        「一覧表示」と「詳細表示」のプログラム作成が完了したので、次は「登録処理」と「更新処理」の作成に取り組みます。まずは「画面のフォーム」に対応するFormクラスの作成です。
+                    </p>
+                </div>
+
+                <h3>13-2-1 Formの作成</h3>
+
+                <p>
+                    ToDoの登録・更新で使用するFormクラスを作成します。Formクラスは「画面のフォーム」を表現します。画面からの入力値を「Controller」に渡す場合や、「Controller」から画面に結果を出力する際などに使用します。
+                </p>
+
+                <div class="file-location">
+                    <span>ファイルの場所</span>
+                    <code>src/main/java/com/example/webapp/form/ToDoForm.java</code>
+                </div>
+
+                <div class="code-block" data-filename="ToDoForm.java">
+                    <div class="code-content">
+                        <pre><span class="code-keyword">package</span> com.example.webapp.form;
+
+<span class="code-keyword">import</span> lombok.AllArgsConstructor;
+<span class="code-keyword">import</span> lombok.Data;
+<span class="code-keyword">import</span> lombok.NoArgsConstructor;
+
+<span class="code-comment">/**
+ * すること：Form
+ */</span>
+<span class="code-annotation">@Data</span>
+<span class="code-annotation">@NoArgsConstructor</span>
+<span class="code-annotation">@AllArgsConstructor</span>
+<span class="code-keyword">public class</span> <span class="code-class">ToDoForm</span> {
+    <span class="code-comment">/** することID */</span>
+    <span class="code-keyword">private</span> <span class="code-class">Integer</span> id;
+    <span class="code-comment">/** すること */</span>
+    <span class="code-keyword">private</span> <span class="code-class">String</span> todo;
+    <span class="code-comment">/** すること詳細 */</span>
+    <span class="code-keyword">private</span> <span class="code-class">String</span> detail;
+    <span class="code-comment">/** 新規判定 */</span>
+    <span class="code-keyword">private</span> <span class="code-class">Boolean</span> isNew;
+}</pre>
+                    </div>
+                </div>
+
+                <p>
+                    注目点は、21行目「private Boolean
+                    isNew;」です。Trueの場合は新規登録処理を表し、Falseの場合は更新処理を表します。
+                </p>
+
+                <div class="concept-box">
+                    <h4>「Form」と「Entity」の違い</h4>
+                    <p>
+                        「Form」と「Entity」は、Webアプリケーション開発においてよく使われる概念ですが、役割が異なります。それぞれの定義・役割・特徴を見てみましょう。
+                    </p>
+                </div>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>項目</th>
+                            <th>Form（フォーム）</th>
+                            <th>Entity（エンティティ）</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>定義</strong></td>
+                            <td>ユーザーがWebページ上で入力するデータを受け取るためのオブジェクトです</td>
+                            <td>
+                                アプリケーションのビジネスロジックやデータベースのテーブルを表現するオブジェクトです
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>役割</strong></td>
+                            <td>ユーザーの入力を一時的に保持し、サーバーに送信するために使われます</td>
+                            <td>
+                                アプリケーションの核となるデータとビジネスルールを保持し、永続化（保存）の対象となります
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>特徴</strong></td>
+                            <td>入力検証（バリデーション）などのために使われることが多いです</td>
+                            <td>データベースのテーブルに対応し、データの永続性に重点を置きます</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Form vs Entity Diagram -->
+                <div class="diagram-container">
+                    <div class="diagram-title">🔄 FormとEntityの役割の違い</div>
+                    <svg viewBox="0 0 900 380" style="max-width: 100%; height: auto">
+                        <defs>
+                            <linearGradient id="formGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color: #e3f2fd" />
+                                <stop offset="100%" style="stop-color: #bbdefb" />
+                            </linearGradient>
+                            <linearGradient id="entityGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color: #e8f5e9" />
+                                <stop offset="100%" style="stop-color: #c8e6c9" />
+                            </linearGradient>
+                            <linearGradient id="helperGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color: #fff3e0" />
+                                <stop offset="100%" style="stop-color: #ffcc80" />
+                            </linearGradient>
+                            <marker id="arrowBlueRight" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#1976d2" />
+                            </marker>
+                            <marker id="arrowGreenLeft" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#4caf50" />
+                            </marker>
+                        </defs>
+
+                        <!-- Form Section -->
+                        <rect x="30" y="60" width="220" height="260" rx="15" fill="url(#formGrad)" stroke="#1976d2" stroke-width="2" />
+                        <text x="140" y="90" fill="#1976d2" font-size="18" font-weight="bold" text-anchor="middle">Form</text>
+                        <text x="140" y="110" fill="#1976d2" font-size="11" text-anchor="middle">（ToDoForm）</text>
+
+                        <!-- Form Icon -->
+                        <rect x="55" y="125" width="170" height="90" rx="8" fill="white" stroke="#1976d2" stroke-width="1" />
+                        <text x="140" y="145" fill="#1976d2" font-size="10" text-anchor="middle">入力フォーム</text>
+                        <rect x="70" y="155" width="140" height="20" rx="4" fill="#e3e3e3" />
+                        <text x="80" y="169" fill="#666" font-size="9">ToDo項目</text>
+                        <rect x="70" y="180" width="140" height="25" rx="4" fill="#e3e3e3" />
+                        <text x="80" y="196" fill="#666" font-size="9">詳細</text>
+
+                        <!-- Form Description -->
+                        <rect x="45" y="225" width="190" height="80" rx="8" fill="white" fill-opacity="0.7" />
+                        <text x="140" y="248" fill="#1976d2" font-size="11" font-weight="bold" text-anchor="middle">役割</text>
+                        <text x="140" y="268" fill="#333" font-size="10" text-anchor="middle">• ユーザー入力を受け取る</text>
+                        <text x="140" y="286" fill="#333" font-size="10" text-anchor="middle">• 画面表示用データを保持</text>
+
+                        <!-- Helper Section (中央) -->
+                        <rect x="290" y="100" width="160" height="180" rx="15" fill="url(#helperGrad)" stroke="#f57c00" stroke-width="2" />
+                        <text x="370" y="130" fill="#f57c00" font-size="16" font-weight="bold" text-anchor="middle">Helper</text>
+                        <text x="370" y="150" fill="#f57c00" font-size="10" text-anchor="middle">（ToDoHelper）</text>
+
+                        <!-- Helper Description -->
+                        <rect x="302" y="165" width="136" height="100" rx="8" fill="white" fill-opacity="0.7" />
+                        <text x="370" y="185" fill="#f57c00" font-size="10" font-weight="bold" text-anchor="middle">変換処理を担当</text>
+                        <text x="370" y="208" fill="#333" font-size="9" text-anchor="middle">Form → Entity</text>
+                        <text x="370" y="222" fill="#666" font-size="8" text-anchor="middle">（登録・更新時）</text>
+                        <text x="370" y="242" fill="#333" font-size="9" text-anchor="middle">Entity → Form</text>
+                        <text x="370" y="256" fill="#666" font-size="8" text-anchor="middle">（編集画面表示時）</text>
+
+                        <!-- Entity Section -->
+                        <rect x="490" y="60" width="220" height="260" rx="15" fill="url(#entityGrad)" stroke="#4caf50" stroke-width="2" />
+                        <text x="600" y="90" fill="#4caf50" font-size="18" font-weight="bold" text-anchor="middle">Entity</text>
+                        <text x="600" y="110" fill="#4caf50" font-size="11" text-anchor="middle">（ToDo）</text>
+
+                        <!-- Entity Icon -->
+                        <rect x="515" y="125" width="170" height="90" rx="8" fill="white" stroke="#4caf50" stroke-width="1" />
+                        <text x="600" y="145" fill="#4caf50" font-size="10" text-anchor="middle">データベーステーブル</text>
+                        <rect x="530" y="155" width="140" height="15" rx="2" fill="#c8e6c9" />
+                        <text x="600" y="166" fill="#333" font-size="8" text-anchor="middle">id | todo | detail</text>
+                        <rect x="530" y="173" width="140" height="13" rx="2" fill="#e8f5e9" />
+                        <text x="600" y="183" fill="#666" font-size="7" text-anchor="middle">1 | 買い物 | 牛乳を買う</text>
+                        <rect x="530" y="189" width="140" height="13" rx="2" fill="#e8f5e9" />
+                        <text x="600" y="199" fill="#666" font-size="7" text-anchor="middle">2 | 勉強 | Springの学習</text>
+
+                        <!-- Entity Description -->
+                        <rect x="505" y="225" width="190" height="80" rx="8" fill="white" fill-opacity="0.7" />
+                        <text x="600" y="248" fill="#4caf50" font-size="11" font-weight="bold" text-anchor="middle">役割</text>
+                        <text x="600" y="268" fill="#333" font-size="10" text-anchor="middle">• ビジネスロジックで使用</text>
+                        <text x="600" y="286" fill="#333" font-size="10" text-anchor="middle">• DBのデータを管理</text>
+
+                        <!-- Not Equal Symbol (FormとEntityの間・下部) -->
+                        <rect x="720" y="115" width="170" height="155" rx="10" fill="#ffebee" stroke="#e53935" stroke-width="2" stroke-dasharray="5,3" />
+                        <text x="805" y="145" fill="#e53935" font-size="11" font-weight="bold" text-anchor="middle">FormとEntityは</text>
+                        <text x="805" y="163" fill="#e53935" font-size="11" font-weight="bold" text-anchor="middle">役割が異なる</text>
+                        <text x="805" y="200" fill="#e53935" font-size="28" font-weight="bold" text-anchor="middle">≠</text>
+                        <text x="805" y="235" fill="#666" font-size="9" text-anchor="middle">直接変換せず</text>
+                        <text x="805" y="252" fill="#666" font-size="9" text-anchor="middle">Helperを経由する</text>
+
+                        <!-- Form → Helper → Entity (上を通る矢印) -->
+                        <text x="370" y="25" fill="#1976d2" font-size="11" font-weight="bold" text-anchor="middle">Form → Entity（登録・更新時）</text>
+                        <polyline points="140,60 140,40 600,40 600,60" stroke="#1976d2" stroke-width="2" fill="none" marker-end="url(#arrowBlueRight)" />
+                        <!-- Helperを経由する点 -->
+                        <circle cx="370" cy="40" r="5" fill="#f57c00" />
+                        <line x1="370" y1="45" x2="370" y2="100" stroke="#f57c00" stroke-width="2" stroke-dasharray="4,2" />
+
+                        <!-- Entity → Helper → Form (下を通る矢印) -->
+                        <text x="370" y="365" fill="#4caf50" font-size="11" font-weight="bold" text-anchor="middle">Entity → Form（編集画面表示時）</text>
+                        <polyline points="600,320 600,340 140,340 140,320" stroke="#4caf50" stroke-width="2" fill="none" marker-end="url(#arrowGreenLeft)" />
+                        <!-- Helperを経由する点 -->
+                        <circle cx="370" cy="340" r="5" fill="#f57c00" />
+                        <line x1="370" y1="335" x2="370" y2="280" stroke="#f57c00" stroke-width="2" stroke-dasharray="4,2" />
+                    </svg>
+                </div>
+
+                <p>
+                    Formはユーザーからの入力を扱うためのもので、Entityはアプリケーションのビジネスロジックやデータベースのデータを管理するためのものです。これらの違いを理解することで、適切な場面でFormとEntityを使い分けましょう。
+                </p>
+
+                <h3>13-2-2 Helperの作成</h3>
+
+                <p>コントローラは主に以下の2つの役割を担います：</p>
+                <ul style="margin-left: 25px; margin-bottom: 20px">
+                    <li>
+                        <strong>画面遷移の制御：</strong
+                        >リクエストに基づいて適切な画面に遷移し、処理結果に対応するビューを返却します。
+                    </li>
+                    <li><strong>ドメイン層のサービス呼び出し：</strong>リクエストに応じた業務処理を実行します。</li>
+                </ul>
+
+                <p>
+                    つまり、コントローラの主な役割はルーティング（URLマッピングと遷移先の返却）です。それ以外の処理が必要な場合は、別のクラスに切り出し、そこに処理を委譲することでコントローラの肥大化を防ぎます。本書では、コントローラを支援するクラスを「ヘルパークラス」と呼んでいます。今回のケースでは、「Form
+                    → Entity」と「Entity → Form」の変換処理をヘルパークラスに委譲します。
+                </p>
+
+                <div class="file-location">
+                    <span>ファイルの場所</span>
+                    <code>src/main/java/com/example/webapp/helper/ToDoHelper.java</code>
+                </div>
+
+                <div class="code-block" data-filename="ToDoHelper.java">
+                    <div class="code-content">
+                        <pre><span class="code-keyword">package</span> com.example.webapp.helper;
+
+<span class="code-keyword">import</span> com.example.webapp.entity.ToDo;
+<span class="code-keyword">import</span> com.example.webapp.form.ToDoForm;
+
+<span class="code-comment">/**
+ * ToDo：ヘルパー
+ */</span>
+<span class="code-keyword">public class</span> <span class="code-class">ToDoHelper</span> {
+    <span class="code-comment">/**
+     * ToDoへの変換
+     */</span>
+    <span class="code-keyword">public static</span> <span class="code-class">ToDo</span> <span class="code-method">convertToDo</span>(<span class="code-class">ToDoForm</span> form) {
+        <span class="code-class">ToDo</span> todo = <span class="code-keyword">new</span> <span class="code-class">ToDo</span>();
+        todo.<span class="code-method">setId</span>(form.<span class="code-method">getId</span>());
+        todo.<span class="code-method">setTodo</span>(form.<span class="code-method">getTodo</span>());
+        todo.<span class="code-method">setDetail</span>(form.<span class="code-method">getDetail</span>());
+        <span class="code-keyword">return</span> todo;
+    }
+
+    <span class="code-comment">/**
+     * ToDoFormへの変換
+     */</span>
+    <span class="code-keyword">public static</span> <span class="code-class">ToDoForm</span> <span class="code-method">convertToDoForm</span>(<span class="code-class">ToDo</span> todo) {
+        <span class="code-class">ToDoForm</span> form = <span class="code-keyword">new</span> <span class="code-class">ToDoForm</span>();
+        form.<span class="code-method">setId</span>(todo.<span class="code-method">getId</span>());
+        form.<span class="code-method">setTodo</span>(todo.<span class="code-method">getTodo</span>());
+        form.<span class="code-method">setDetail</span>(todo.<span class="code-method">getDetail</span>());
+        <span class="code-comment">// 更新画面設定</span>
+        form.<span class="code-method">setIsNew</span>(<span class="code-keyword">false</span>);
+        <span class="code-keyword">return</span> form;
+    }
+}</pre>
+                    </div>
+                </div>
+
+                <p>「Form → Entity」、「Entity → Form」の変換処理をstaticメソッドで記述しています。</p>
+
+                <h3>13-2-3 Controllerの修正（ToDoの登録、ToDoの更新）</h3>
+
+                <p>
+                    既に作成しているToDoControllerクラスに「すること」の登録・更新のリクエストハンドラメソッドを追加します。
+                </p>
+
+                <h4>URLマッピング一覧</h4>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>役割</th>
+                            <th>HTTPメソッド</th>
+                            <th>URL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>登録画面を表示する</td>
+                            <td><span class="method-badge method-get">GET</span></td>
+                            <td><span class="url-badge">/todos/form</span></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>登録処理を実行する</td>
+                            <td><span class="method-badge method-post">POST</span></td>
+                            <td><span class="url-badge">/todos/save</span></td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>更新画面を表示する</td>
+                            <td><span class="method-badge method-get">GET</span></td>
+                            <td><span class="url-badge">/todos/edit/{id}</span></td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>更新処理を実行する</td>
+                            <td><span class="method-badge method-post">POST</span></td>
+                            <td><span class="url-badge">/todos/update</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block" data-filename="ToDoController.java（追加分）">
+                    <div class="code-content">
+                        <pre><span class="code-comment">// === 登録・更新処理追加 ===</span>
+<span class="code-comment">/**
+ * 新規登録画面を表示します。
+ */</span>
+<span class="code-annotation">@GetMapping</span>(<span class="code-string">"/form"</span>)
+<span class="code-keyword">public</span> <span class="code-class">String</span> <span class="code-method">newToDo</span>(<span class="code-annotation">@ModelAttribute</span> <span class="code-class">ToDoForm</span> form) {
+    <span class="code-comment">// 新規登録画面の設定</span>
+    form.<span class="code-method">setIsNew</span>(<span class="code-keyword">true</span>);
+    <span class="code-keyword">return</span> <span class="code-string">"todo/form"</span>;
+}
+
+<span class="code-comment">/**
+ * 新規登録を実行します。
+ */</span>
+<span class="code-annotation">@PostMapping</span>(<span class="code-string">"/save"</span>)
+<span class="code-keyword">public</span> <span class="code-class">String</span> <span class="code-method">create</span>(<span class="code-class">ToDoForm</span> form, <span class="code-class">RedirectAttributes</span> attributes) {
+    <span class="code-comment">// エンティティへの変換</span>
+    <span class="code-class">ToDo</span> ToDo = <span class="code-class">ToDoHelper</span>.<span class="code-method">convertToDo</span>(form);
+    <span class="code-comment">// 登録実行</span>
+    toDoService.<span class="code-method">insertToDo</span>(ToDo);
+    <span class="code-comment">// フラッシュメッセージ</span>
+    attributes.<span class="code-method">addFlashAttribute</span>(<span class="code-string">"message"</span>, <span class="code-string">"新しいToDoが作成されました"</span>);
+    <span class="code-comment">// PRGパターン</span>
+    <span class="code-keyword">return</span> <span class="code-string">"redirect:/todos"</span>;
+}
+
+<span class="code-comment">/**
+ * 指定されたIDの修正画面を表示します。
+ */</span>
+<span class="code-annotation">@GetMapping</span>(<span class="code-string">"/edit/{id}"</span>)
+<span class="code-keyword">public</span> <span class="code-class">String</span> <span class="code-method">edit</span>(<span class="code-annotation">@PathVariable</span> <span class="code-class">Integer</span> id, <span class="code-class">Model</span> model, <span class="code-class">RedirectAttributes</span> attributes) {
+    <span class="code-comment">// IDに対応する「すること」を取得</span>
+    <span class="code-class">ToDo</span> target = toDoService.<span class="code-method">findByIdToDo</span>(id);
+    <span class="code-keyword">if</span> (target != <span class="code-keyword">null</span>) {
+        <span class="code-comment">// 対象データがある場合はFormへの変換</span>
+        <span class="code-class">ToDoForm</span> form = <span class="code-class">ToDoHelper</span>.<span class="code-method">convertToDoForm</span>(target);
+        <span class="code-comment">// モデルに格納</span>
+        model.<span class="code-method">addAttribute</span>(<span class="code-string">"toDoForm"</span>, form);
+        <span class="code-keyword">return</span> <span class="code-string">"todo/form"</span>;
+    } <span class="code-keyword">else</span> {
+        <span class="code-comment">// 対象データがない場合はフラッシュメッセージを設定</span>
+        attributes.<span class="code-method">addFlashAttribute</span>(<span class="code-string">"errorMessage"</span>, <span class="code-string">"対象データがありません"</span>);
+        <span class="code-comment">// 一覧画面へリダイレクト</span>
+        <span class="code-keyword">return</span> <span class="code-string">"redirect:/todos"</span>;
+    }
+}
+
+<span class="code-comment">/**
+ * 「すること」の情報を更新します。
+ */</span>
+<span class="code-annotation">@PostMapping</span>(<span class="code-string">"/update"</span>)
+<span class="code-keyword">public</span> <span class="code-class">String</span> <span class="code-method">update</span>(<span class="code-class">ToDoForm</span> form, <span class="code-class">RedirectAttributes</span> attributes) {
+    <span class="code-comment">// エンティティへの変換</span>
+    <span class="code-class">ToDo</span> ToDo = <span class="code-class">ToDoHelper</span>.<span class="code-method">convertToDo</span>(form);
+    <span class="code-comment">// 更新処理</span>
+    toDoService.<span class="code-method">updateToDo</span>(ToDo);
+    <span class="code-comment">// フラッシュメッセージ</span>
+    attributes.<span class="code-method">addFlashAttribute</span>(<span class="code-string">"message"</span>, <span class="code-string">"ToDoが更新されました"</span>);
+    <span class="code-comment">// PRGパターン</span>
+    <span class="code-keyword">return</span> <span class="code-string">"redirect:/todos"</span>;
+}</pre>
+                    </div>
+                </div>
+
+                <p>
+                    現時点では、登録・更新時のバリデーションチェックは設定していません。レイヤ化を意識した記述のため、Helperクラスで作成した「Form→Entity」への変換を19行目、57行目で実施し、「Entity→Form」への変換を38行目で実施しています。
+                </p>
+
+                <h3>13-2-4 Viewの作成（ToDoの登録、ToDoの更新）</h3>
+
+                <p>
+                    「templates」フォルダ配下「todo」フォルダへ、登録・更新画面用の「form.html」ファイルを作成します。
+                </p>
+
+                <div class="file-location">
+                    <span>ファイルの場所</span>
+                    <code>webapp/src/main/resources/templates/todo/form.html</code>
+                </div>
+
+                <div class="code-block" data-filename="form.html">
+                    <div class="code-content">
+                        <pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attr">xmlns:th</span>=<span class="attr-value">"http://www.thymeleaf.org"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;title&gt;</span>ToDoフォーム<span class="tag">&lt;/title&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+    <span class="code-comment">&lt;!-- タイトル：登録 or 編集 --&gt;</span>
+    <span class="tag">&lt;h2</span> <span class="attr">th:if</span>=<span class="attr-value">"${toDoForm.isNew}"</span><span class="tag">&gt;</span>新規ToDo登録<span class="tag">&lt;/h2&gt;</span>
+    <span class="tag">&lt;h2</span> <span class="attr">th:unless</span>=<span class="attr-value">"${toDoForm.isNew}"</span><span class="tag">&gt;</span>ToDo編集<span class="tag">&lt;/h2&gt;</span>
+    <span class="code-comment">&lt;!-- アクション：登録 or 編集 --&gt;</span>
+    <span class="tag">&lt;form</span> <span class="attr">th:action</span>=<span class="attr-value">"${toDoForm.isNew} ? @{/todos/save} : @{/todos/update}"</span>
+          <span class="attr">th:object</span>=<span class="attr-value">"${toDoForm}"</span>
+          <span class="attr">method</span>=<span class="attr-value">"post"</span><span class="tag">&gt;</span>
+        <span class="code-comment">&lt;!-- idは更新時に必要のため、hiddenで持つ --&gt;</span>
+        <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="attr-value">"hidden"</span> <span class="attr">th:field</span>=<span class="attr-value">"*{id}"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;table&gt;</span>
+            <span class="tag">&lt;tr&gt;</span>
+                <span class="tag">&lt;th&gt;</span>ToDo<span class="tag">&lt;/th&gt;</span>
+                <span class="tag">&lt;td&gt;</span>
+                    <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="attr-value">"text"</span> <span class="attr">th:field</span>=<span class="attr-value">"*{todo}"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;/td&gt;</span>
+            <span class="tag">&lt;/tr&gt;</span>
+            <span class="tag">&lt;tr&gt;</span>
+                <span class="tag">&lt;th&gt;</span>詳細<span class="tag">&lt;/th&gt;</span>
+                <span class="tag">&lt;td&gt;</span>
+                    <span class="tag">&lt;textarea</span> <span class="attr">rows</span>=<span class="attr-value">"5"</span> <span class="attr">cols</span>=<span class="attr-value">"30"</span> <span class="attr">th:field</span>=<span class="attr-value">"*{detail}"</span><span class="tag">&gt;&lt;/textarea&gt;</span>
+                <span class="tag">&lt;/td&gt;</span>
+            <span class="tag">&lt;/tr&gt;</span>
+        <span class="tag">&lt;/table&gt;</span>
+        <span class="code-comment">&lt;!-- ボタン：登録 or 編集 --&gt;</span>
+        <span class="tag">&lt;input</span> <span class="attr">th:if</span>=<span class="attr-value">"${toDoForm.isNew}"</span> <span class="attr">type</span>=<span class="attr-value">"submit"</span> <span class="attr">value</span>=<span class="attr-value">"登録"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;input</span> <span class="attr">th:unless</span>=<span class="attr-value">"${toDoForm.isNew}"</span> <span class="attr">type</span>=<span class="attr-value">"submit"</span> <span class="attr">value</span>=<span class="attr-value">"更新"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;/form&gt;</span>
+    <span class="tag">&lt;a</span> <span class="attr">th:href</span>=<span class="attr-value">"@{/todos}"</span><span class="tag">&gt;</span>戻る<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+                    </div>
+                </div>
+
+                <p>
+                    Formクラスで設定していた「isNew」フィールドを使用して、タイトルやボタン、アクションを「登録処理」と「更新処理」で分けています。8行目〜9行目で「th:if」と「th:unless」を使用して、toDoForm.isNewの値がtrueかfalseかによって表示するタイトルを切り替えています。toDoForm.isNewがtrueの場合、新規登録のタイトルが表示され、falseの場合は更新のタイトルが表示されます。
+                </p>
+                <p>
+                    31行目〜32行目も同じ処理をボタンの表示に適用しています。11行目で「th:action」に三項演算子を使用して、toDoForm.isNewがtrueの場合は新規登録のURL「/todos/save」、falseの場合は更新のURL「/todos/update」を設定することで、フォームの送信先（アクション）を動的に切り替えています。
+                </p>
+                <p>
+                    14行目の「&lt;input type="hidden"
+                    th:field="*{id}"&gt;」は、更新時には「すること」のIDが必要なため、type="hidden"のinputフィールドを使用してIDをフォームに含めています。hiddenは、ユーザーには見えませんが、フォームとしてデータを送信する際に含めることができるフィールドを作成します。
+                </p>
+
+                <h4>作成済みViewの修正</h4>
+
+                <p>新規登録や更新作業と紐づけるために、既に作成済みの2ファイルを修正します。</p>
+
+                <div class="code-block" data-filename="list.html（修正箇所）">
+                    <div class="code-content">
+                        <pre><span class="tag">&lt;body&gt;</span>
+    <span class="tag">&lt;h2&gt;</span>ToDo一覧<span class="tag">&lt;/h2&gt;</span>
+    <span class="code-comment">&lt;!-- Flashメッセージの表示 --&gt;</span>
+    <span class="tag">&lt;p</span> <span class="attr">th:if</span>=<span class="attr-value">"${message}"</span>
+       <span class="attr">th:text</span>=<span class="attr-value">"${message}"</span>
+       <span class="attr">style</span>=<span class="attr-value">"color: blue;"</span><span class="tag">&gt;</span>完了メッセージ<span class="tag">&lt;/p&gt;</span>
+    <span class="tag">&lt;p</span> <span class="attr">th:if</span>=<span class="attr-value">"${errorMessage}"</span>
+       <span class="attr">th:text</span>=<span class="attr-value">"${errorMessage}"</span>
+       <span class="attr">style</span>=<span class="attr-value">"color: red;"</span><span class="tag">&gt;</span>エラーメッセージ<span class="tag">&lt;/p&gt;</span>
+    ...
+    <span class="tag">&lt;/table&gt;</span>
+    <span class="tag">&lt;a</span> <span class="attr">th:href</span>=<span class="attr-value">"@{/todos/form}"</span><span class="tag">&gt;</span>新規登録<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;/body&gt;</span></pre>
+                    </div>
+                </div>
+
+                <p>
+                    4行目〜6行目「&lt;p th:if="${message}" th:text="${message}" style="color:
+                    blue;"&gt;完了メッセージ&lt;/p&gt;」で登録処理、更新処理の完了時に表示するフラッシュメッセージを設定しています。15行目の「&lt;a
+                    th:href="@{/todos/form}"&gt;新規登録&lt;/a&gt;」は、一覧画面から新規登録画面へ遷移するリンクを設定しています。
+                </p>
+
+                <div class="code-block" data-filename="detail.html（追加箇所）">
+                    <div class="code-content">
+                        <pre>...
+    <span class="tag">&lt;/table&gt;</span>
+    <span class="tag">&lt;a</span> <span class="attr">th:href</span>=<span class="attr-value">"@{/todos/edit/{id}(id=${todo.id})}"</span><span class="tag">&gt;</span>編集<span class="tag">&lt;/a&gt;</span>
+    <span class="tag">&lt;a</span> <span class="attr">th:href</span>=<span class="attr-value">"@{/todos}"</span><span class="tag">&gt;</span>ToDo一覧へ<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+                    </div>
+                </div>
+
+                <p>
+                    5行目「&lt;a
+                    th:href="@{/todos/edit/{id}(id=${todo.id})}"&gt;編集&lt;/a&gt;」の{id}の部分は、URLパラメータのプレースホルダ（置き換えられる箇所）です。「{id=${todo.id}}」の部分で、プレースホルダ{id}に挿入する値を指定しているREST形式です。${todo.id}は、todoオブジェクトのidプロパティの値を取得しています。
+                </p>
+
+                <h3>13-2-5 動作確認</h3>
+
+                <p>
+                    ToDo登録処理とToDo更新処理のプログラムが完了しました。Webアプリケーションを起動して、ブラウザを立ち上げURL「http://localhost:8080/todos」を指定します。登録・更新処理が無事作成されているか動作確認を実施しましょう。
+                </p>
+
+                <h4>01 ToDo登録処理の確認</h4>
+
+                <p>
+                    一覧画面にて「新規登録」リンクをクリックします。「http://localhost:8080/todos/form」がGETで送られ「新規ToDo登録画面」が表示されます。ToDo項目へ「学習」、詳細項目に「Springの学習」と値を設定して「登録」ボタンをクリックします。PRGパターンで登録処理が行われ「一覧画面」にフラッシュメッセージが表示されます。
+                </p>
+
+                <div class="screen-preview">
+                    <div class="screen-preview-header">🌐 http://localhost:8080/todos/form</div>
+                    <div class="screen-preview-body">
+                        <h3 style="margin-bottom: 15px">新規ToDo登録</h3>
+                        <div class="form-preview">
+                            <label>ToDo</label>
+                            <input type="text" value="学習" />
+                            <label>詳細</label>
+                            <textarea>Springの学習</textarea>
+                            <button>登録</button>
+                        </div>
+                        <p style="margin-top: 15px"><span class="link-style">戻る</span></p>
+                    </div>
+                </div>
+
+                <div class="screen-preview">
+                    <div class="screen-preview-header">🌐 http://localhost:8080/todos（登録後）</div>
+                    <div class="screen-preview-body">
+                        <h3 style="margin-bottom: 15px">ToDo一覧</h3>
+                        <div class="flash-message flash-success">新しいToDoが作成されました</div>
+                        <table class="screen-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>ToDo</th>
+                                    <th>詳細</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>買い物</td>
+                                    <td><span class="link-style">詳細</span></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>図書館に行く</td>
+                                    <td><span class="link-style">詳細</span></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>ジムに行く</td>
+                                    <td><span class="link-style">詳細</span></td>
+                                </tr>
+                                <tr style="background: #e8f5e9">
+                                    <td>4</td>
+                                    <td>学習</td>
+                                    <td><span class="link-style">詳細</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p style="margin-top: 15px"><span class="link-style">新規登録</span></p>
+                    </div>
+                </div>
+
+                <h4>02 ToDo更新処理の確認</h4>
+
+                <p>
+                    一覧画面にてID:4の行の「詳細」リンクをクリックして表示される詳細画面にて「編集」リンクをクリックします。「http://localhost:8080/todos/edit/4」がGETで送られ「ToDo編集画面」が表示されます。ToDo項目へ「プログラム学習」、詳細項目に「SpringMVCの学習」と値を修正して「更新」ボタンをクリックします。PRGパターンで更新処理が行われ「一覧画面」にフラッシュメッセージが表示されます。
+                </p>
+
+                <div class="screen-preview">
+                    <div class="screen-preview-header">🌐 http://localhost:8080/todos（更新後）</div>
+                    <div class="screen-preview-body">
+                        <h3 style="margin-bottom: 15px">ToDo一覧</h3>
+                        <div class="flash-message flash-success">ToDoが更新されました</div>
+                        <table class="screen-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>ToDo</th>
+                                    <th>詳細</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>買い物</td>
+                                    <td><span class="link-style">詳細</span></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>図書館に行く</td>
+                                    <td><span class="link-style">詳細</span></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>ジムに行く</td>
+                                    <td><span class="link-style">詳細</span></td>
+                                </tr>
+                                <tr style="background: #fff3e0">
+                                    <td>4</td>
+                                    <td>プログラム学習</td>
+                                    <td><span class="link-style">詳細</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p style="margin-top: 15px"><span class="link-style">新規登録</span></p>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <h4>登録・更新処理の完成</h4>
+                    <p>
+                        ToDo登録処理とToDo更新処理が正常に動作することを確認できました。次のセクションでは、最後の「削除処理」の作成に取り組みます。
+                    </p>
+                </div>
+            </div>
+
+            <!-- Section 13-3: 削除処理 -->
+            <div class="content-card" id="section3">
+                <div class="section-badge">Section 13-3</div>
+                <h2>「ToDoアプリ」削除処理を実装しよう</h2>
+
+                <div class="intro-box">
+                    <p>
+                        「登録処理」と「更新処理」のプログラム作成が完了したので、最後は「削除処理」の作成に取り組みます。
+                    </p>
+                </div>
+
+                <h3>13-3-1 Controllerの作成（ToDoの削除）</h3>
+
+                <p>
+                    ToDoControllerに「すること」の削除のリクエストハンドラメソッドをToDoControllerクラス内の末尾に追加します。
+                </p>
+
+                <h4>URLマッピング一覧</h4>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>役割</th>
+                            <th>HTTPメソッド</th>
+                            <th>URL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>削除処理を実行する</td>
+                            <td><span class="method-badge method-post">POST</span></td>
+                            <td><span class="url-badge">/todos/delete/{id}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block" data-filename="ToDoController.java（追加分）">
+                    <div class="code-content">
+                        <pre><span class="code-comment">/**
+ * 指定されたIDの「すること」を削除します。
+ */</span>
+<span class="code-annotation">@PostMapping</span>(<span class="code-string">"/delete/{id}"</span>)
+<span class="code-keyword">public</span> <span class="code-class">String</span> <span class="code-method">delete</span>(<span class="code-annotation">@PathVariable</span> <span class="code-class">Integer</span> id, <span class="code-class">RedirectAttributes</span> attributes) {
+    <span class="code-comment">// 削除処理</span>
+    toDoService.<span class="code-method">deleteToDo</span>(id);
+    <span class="code-comment">// フラッシュメッセージ</span>
+    attributes.<span class="code-method">addFlashAttribute</span>(<span class="code-string">"message"</span>, <span class="code-string">"ToDoが削除されました"</span>);
+    <span class="code-comment">// PRGパターン</span>
+    <span class="code-keyword">return</span> <span class="code-string">"redirect:/todos"</span>;
+}</pre>
+                    </div>
+                </div>
+
+                <p>
+                    ソースコードにコメントを詳細に記述しています。特に新しく説明する内容はありませんので、説明は割愛します。
+                </p>
+
+                <h3>13-3-2 Viewの作成（ToDoの削除）</h3>
+
+                <p>
+                    「templates」フォルダ配下の「todo」フォルダ配下の詳細画面用の「detail.html」ファイルにToDo削除ボタンを追加します。
+                </p>
+
+                <div class="code-block" data-filename="detail.html（追加箇所）">
+                    <div class="code-content">
+                        <pre>...
+    <span class="tag">&lt;/table&gt;</span>
+    <span class="tag">&lt;a</span> <span class="attr">th:href</span>=<span class="attr-value">"@{/todos/edit/{id}(id=${todo.id})}"</span><span class="tag">&gt;</span>編集<span class="tag">&lt;/a&gt;</span>
+    <span class="tag">&lt;form</span> <span class="attr">th:action</span>=<span class="attr-value">"@{/todos/delete/{id}(id=${todo.id})}"</span> <span class="attr">method</span>=<span class="attr-value">"post"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="attr-value">"submit"</span> <span class="attr">value</span>=<span class="attr-value">"削除"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;/form&gt;</span>
+    <span class="tag">&lt;a</span> <span class="attr">th:href</span>=<span class="attr-value">"@{/todos}"</span><span class="tag">&gt;</span>ToDo一覧へ<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+                    </div>
+                </div>
+
+                <p>
+                    6行目で、REST形式で詳細画面で表示されている「すること」のID値をプレースホルダ{id}に渡してaction属性に対応するURLを生成しています。
+                </p>
+
+                <h3>13-3-3 動作確認</h3>
+
+                <p>
+                    ToDo削除処理のプログラムが完了しました。Webアプリケーションを起動して、ブラウザを立ち上げURL「http://localhost:8080/todos」を指定します。削除処理が無事作成されているか動作確認を実施しましょう。
+                </p>
+
+                <h4>01 ToDo削除処理の確認</h4>
+
+                <p>
+                    一覧画面にてID:1の行の「詳細」リンクをクリックして表示される詳細画面にて「削除」ボタンをクリックします。「http://localhost:8080/todos/delete/1」がPOSTで送られ「ToDo削除処理」が実行されます。PRGパターンで削除処理が行われ「一覧画面」にフラッシュメッセージが表示されます。
+                </p>
+
+                <div class="screen-preview">
+                    <div class="screen-preview-header">🌐 http://localhost:8080/todos/1（詳細画面）</div>
+                    <div class="screen-preview-body">
+                        <h3 style="margin-bottom: 15px">ToDo詳細</h3>
+                        <table class="screen-table">
+                            <tr>
+                                <th style="width: 100px">ID</th>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <th>タイトル</th>
+                                <td>買い物</td>
+                            </tr>
+                            <tr>
+                                <th>詳細</th>
+                                <td>牛乳と卵</td>
+                            </tr>
+                        </table>
+                        <p style="margin-top: 15px">
+                            <span class="link-style">編集</span>
+                            <button
+                                class="danger"
+                                style="
+                                    margin-left: 10px;
+                                    padding: 5px 15px;
+                                    background: #ef5350;
+                                    color: white;
+                                    border: none;
+                                    border-radius: 4px;
+                                    cursor: pointer;
+                                "
+                            >
+                                削除
+                            </button>
+                        </p>
+                        <p><span class="link-style">ToDo一覧へ</span></p>
+                    </div>
+                </div>
+
+                <div class="screen-preview">
+                    <div class="screen-preview-header">🌐 http://localhost:8080/todos（削除後）</div>
+                    <div class="screen-preview-body">
+                        <h3 style="margin-bottom: 15px">ToDo一覧</h3>
+                        <div class="flash-message flash-success">ToDoが削除されました</div>
+                        <table class="screen-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>ToDo</th>
+                                    <th>詳細</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2</td>
+                                    <td>図書館に行く</td>
+                                    <td><span class="link-style">詳細</span></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>ジムに行く</td>
+                                    <td><span class="link-style">詳細</span></td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>プログラム学習</td>
+                                    <td><span class="link-style">詳細</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p style="margin-top: 15px"><span class="link-style">新規登録</span></p>
+                    </div>
+                </div>
+
+                <h4>02 ToDoデータが存在しない場合の確認</h4>
+
+                <p>
+                    動作確認の最後として、データベースに存在しない「すること」の動きを確認します。存在しないID:999を表示するように、ブラウザのアドレスバーに「http://localhost:8080/todos/999」を入力して、データが存在しない旨のメッセージが「一覧画面」に表示されます。
+                </p>
+
+                <div class="screen-preview">
+                    <div class="screen-preview-header">🌐 http://localhost:8080/todos（エラー時）</div>
+                    <div class="screen-preview-body">
+                        <h3 style="margin-bottom: 15px">ToDo一覧</h3>
+                        <div class="flash-message flash-error">対象データがありません</div>
+                        <table class="screen-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>ToDo</th>
+                                    <th>詳細</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2</td>
+                                    <td>図書館に行く</td>
+                                    <td><span class="link-style">詳細</span></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>ジムに行く</td>
+                                    <td><span class="link-style">詳細</span></td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>プログラム学習</td>
+                                    <td><span class="link-style">詳細</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p style="margin-top: 15px"><span class="link-style">新規登録</span></p>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <h4>CRUD処理の完成</h4>
+                    <p>
+                        ToDoアプリの正常系処理についてCRUD処理は、無事全て完了しました。「ステップ・バイ・ステップ（一歩ずつ）」を意識してプログラムを作成したことで、混乱せずに作成できたのではないでしょうか？
+                    </p>
+                </div>
+            </div>
+
+            <!-- Progress Summary -->
+            <div class="content-card">
+                <h2>📊 ここまでの進捗</h2>
+
+                <div class="diagram-container">
+                    <div class="diagram-title">ToDoアプリのレイヤー構成 - 完成状態</div>
+                    <svg viewBox="0 0 950 650" style="max-width: 100%; height: auto">
+                        <defs>
+                            <marker id="arrowComplete" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#666" />
+                            </marker>
+                        </defs>
+
+                        <!-- Title Banner -->
+                        <rect x="275" y="10" width="400" height="35" rx="8" fill="#4caf50" />
+                        <text x="475" y="33" fill="white" font-size="16" font-weight="bold" text-anchor="middle">🎉 全コンポーネント実装完了！</text>
+
+                        <!-- ==================== Application Layer ==================== -->
+                        <rect x="30" y="60" width="240" height="480" rx="15" fill="#e3f2fd" stroke="#1976d2" stroke-width="2" />
+                        <text x="150" y="90" fill="#1976d2" font-size="14" font-weight="bold" text-anchor="middle">アプリケーション層</text>
+
+                        <!-- View -->
+                        <rect x="55" y="120" width="190" height="60" rx="8" fill="#4caf50" />
+                        <text x="150" y="150" fill="white" font-size="12" font-weight="bold" text-anchor="middle">View</text>
+                        <text x="150" y="168" fill="rgba(255,255,255,0.8)" font-size="9" text-anchor="middle">list.html / detail.html</text>
+
+                        <!-- Controller -->
+                        <rect x="55" y="210" width="190" height="60" rx="8" fill="#4caf50" />
+                        <text x="150" y="240" fill="white" font-size="12" font-weight="bold" text-anchor="middle">Controller</text>
+                        <text x="150" y="258" fill="rgba(255,255,255,0.8)" font-size="9" text-anchor="middle">ToDoController</text>
+
+                        <!-- Form -->
+                        <rect x="55" y="300" width="190" height="60" rx="8" fill="#4caf50" />
+                        <text x="150" y="330" fill="white" font-size="12" font-weight="bold" text-anchor="middle">Form</text>
+                        <text x="150" y="348" fill="rgba(255,255,255,0.8)" font-size="9" text-anchor="middle">ToDoForm</text>
+
+                        <!-- Helper -->
+                        <rect x="55" y="390" width="190" height="60" rx="8" fill="#4caf50" />
+                        <text x="150" y="420" fill="white" font-size="12" font-weight="bold" text-anchor="middle">Helper</text>
+                        <text x="150" y="438" fill="rgba(255,255,255,0.8)" font-size="9" text-anchor="middle">ToDoHelper</text>
+
+                        <!-- App内矢印 -->
+                        <line x1="150" y1="180" x2="150" y2="208" stroke="#1976d2" stroke-width="2" marker-end="url(#arrowComplete)" />
+                        <line x1="150" y1="270" x2="150" y2="298" stroke="#1976d2" stroke-width="2" marker-end="url(#arrowComplete)" />
+                        <line x1="150" y1="360" x2="150" y2="388" stroke="#1976d2" stroke-width="2" marker-end="url(#arrowComplete)" />
+
+                        <!-- ==================== Domain Layer ==================== -->
+                        <rect x="355" y="60" width="240" height="480" rx="15" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="2" />
+                        <text x="475" y="90" fill="#7b1fa2" font-size="14" font-weight="bold" text-anchor="middle">ドメイン層</text>
+
+                        <!-- Service -->
+                        <rect x="380" y="120" width="190" height="60" rx="8" fill="#4caf50" />
+                        <text x="475" y="150" fill="white" font-size="12" font-weight="bold" text-anchor="middle">Service</text>
+                        <text x="475" y="168" fill="rgba(255,255,255,0.8)" font-size="9" text-anchor="middle">ToDoService（Interface）</text>
+
+                        <!-- ServiceImpl -->
+                        <rect x="380" y="210" width="190" height="60" rx="8" fill="#4caf50" />
+                        <text x="475" y="240" fill="white" font-size="12" font-weight="bold" text-anchor="middle">ServiceImpl</text>
+                        <text x="475" y="258" fill="rgba(255,255,255,0.8)" font-size="9" text-anchor="middle">ToDoServiceImpl</text>
+
+                        <!-- Entity -->
+                        <rect x="380" y="300" width="190" height="60" rx="8" fill="#4caf50" />
+                        <text x="475" y="330" fill="white" font-size="12" font-weight="bold" text-anchor="middle">Entity</text>
+                        <text x="475" y="348" fill="rgba(255,255,255,0.8)" font-size="9" text-anchor="middle">ToDo</text>
+
+                        <!-- Repository -->
+                        <rect x="380" y="390" width="190" height="60" rx="8" fill="#4caf50" />
+                        <text x="475" y="420" fill="white" font-size="12" font-weight="bold" text-anchor="middle">Repository</text>
+                        <text x="475" y="438" fill="rgba(255,255,255,0.8)" font-size="9" text-anchor="middle">ToDoMapper（Interface）</text>
+
+                        <!-- Domain内矢印 -->
+                        <line x1="475" y1="180" x2="475" y2="208" stroke="#7b1fa2" stroke-width="2" marker-end="url(#arrowComplete)" />
+                        <line x1="475" y1="270" x2="475" y2="298" stroke="#7b1fa2" stroke-width="2" marker-end="url(#arrowComplete)" />
+                        <line x1="475" y1="360" x2="475" y2="388" stroke="#7b1fa2" stroke-width="2" marker-end="url(#arrowComplete)" />
+
+                        <!-- ==================== Infrastructure Layer ==================== -->
+                        <rect x="680" y="60" width="240" height="480" rx="15" fill="#fff3e0" stroke="#f57c00" stroke-width="2" />
+                        <text x="800" y="90" fill="#f57c00" font-size="14" font-weight="bold" text-anchor="middle">インフラストラクチャ層</text>
+
+                        <!-- O/R Mapper -->
+                        <rect x="705" y="120" width="190" height="60" rx="8" fill="#4caf50" />
+                        <text x="800" y="150" fill="white" font-size="12" font-weight="bold" text-anchor="middle">O/R Mapper</text>
+                        <text x="800" y="168" fill="rgba(255,255,255,0.8)" font-size="9" text-anchor="middle">MyBatis</text>
+
+                        <!-- RepositoryImpl -->
+                        <rect x="705" y="210" width="190" height="60" rx="8" fill="#4caf50" />
+                        <text x="800" y="240" fill="white" font-size="12" font-weight="bold" text-anchor="middle">RepositoryImpl</text>
+                        <text x="800" y="258" fill="rgba(255,255,255,0.8)" font-size="9" text-anchor="middle">MyBatisが自動生成</text>
+
+                        <!-- Database -->
+                        <rect x="705" y="320" width="190" height="90" rx="8" fill="white" stroke="#4caf50" stroke-width="2" />
+                        <ellipse cx="800" cy="355" rx="70" ry="18" fill="#c8e6c9" stroke="#4caf50" stroke-width="1" />
+                        <text x="800" y="360" fill="#2e7d32" font-size="12" text-anchor="middle">Database</text>
+                        <text x="800" y="393" fill="#666" font-size="10" text-anchor="middle">MySQL</text>
+
+                        <!-- Infra内矢印 -->
+                        <line x1="800" y1="180" x2="800" y2="208" stroke="#f57c00" stroke-width="2" marker-end="url(#arrowComplete)" />
+                        <line x1="800" y1="270" x2="800" y2="318" stroke="#f57c00" stroke-width="2" marker-end="url(#arrowComplete)" />
+
+                        <!-- ==================== 層間の接続矢印 ==================== -->
+                        <!-- App -> Domain: Controller -> Service -->
+                        <polyline points="245,240 300,240 300,150 378,150" stroke="#333" stroke-width="3" fill="none" marker-end="url(#arrowComplete)" />
+                        <rect x="280" y="180" width="40" height="22" rx="4" fill="white" stroke="#333" stroke-width="1" />
+                        <text x="300" y="195" fill="#333" font-size="10" text-anchor="middle">呼出</text>
+
+                        <!-- Domain -> Infra: Repository -> RepositoryImpl -->
+                        <polyline points="570,420 625,420 625,240 703,240" stroke="#333" stroke-width="3" fill="none" marker-end="url(#arrowComplete)" />
+                        <rect x="605" y="315" width="40" height="22" rx="4" fill="white" stroke="#333" stroke-width="1" />
+                        <text x="625" y="330" fill="#333" font-size="10" text-anchor="middle">実装</text>
+
+                        <!-- ==================== User ==================== -->
+                        <circle cx="150" cy="570" r="28" fill="#333" />
+                        <circle cx="150" cy="556" r="11" fill="white" />
+                        <ellipse cx="150" cy="585" rx="17" ry="11" fill="white" />
+                        <text x="150" y="615" fill="#333" font-size="12" text-anchor="middle">ユーザー</text>
+
+                        <!-- User -> View -->
+                        <line x1="150" y1="542" x2="150" y2="452" stroke="#1976d2" stroke-width="3" marker-end="url(#arrowComplete)" />
+                        <text x="170" y="500" fill="#1976d2" font-size="10">リクエスト</text>
+
+                        <!-- ==================== Legend ==================== -->
+                        <rect x="355" y="560" width="240" height="45" rx="8" fill="#e8f5e9" stroke="#4caf50" stroke-width="1" />
+                        <rect x="375" y="575" width="25" height="18" rx="4" fill="#4caf50" />
+                        <text x="415" y="588" fill="#333" font-size="11">実装完了（全10個）</text>
+                        <text x="545" y="588" fill="#4caf50" font-size="16" font-weight="bold">✓</text>
+                    </svg>
+                </div>
+
+                <div class="warning-box">
+                    <h4>次のステップ：入力チェック</h4>
+                    <p>
+                        ただ現状の「ToDoアプリ」は、どんな値でも登録・更新されてしまう「ノーガード」状態です。登録・更新処理に対して「入力チェック」を設定し、不正な値から「ToDoアプリ」を守りましょう。
+                    </p>
+                </div>
+
+                <!-- Input Check Diagram -->
+                <div class="diagram-container">
+                    <div class="diagram-title">🛡️ 入力チェックの重要性</div>
+                    <svg viewBox="0 0 900 380" style="max-width: 100%; height: auto">
+                        <defs>
+                            <marker id="arrowDanger" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#c62828" />
+                            </marker>
+                            <marker id="arrowSafe" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#4caf50" />
+                            </marker>
+                        </defs>
+
+                        <!-- ===== Before Section ===== -->
+                        <rect x="30" y="50" width="400" height="310" rx="15" fill="#ffebee" stroke="#ef5350" stroke-width="2" />
+                        <rect x="130" y="30" width="200" height="35" rx="10" fill="#ef5350" />
+                        <text x="230" y="55" fill="white" font-size="16" font-weight="bold" text-anchor="middle">Before：ノーガード</text>
+
+                        <!-- User Input (Before) -->
+                        <rect x="60" y="90" width="140" height="240" rx="10" fill="white" stroke="#c62828" stroke-width="2" />
+                        <text x="130" y="115" fill="#c62828" font-size="12" font-weight="bold" text-anchor="middle">ユーザー入力</text>
+                        <rect x="75" y="130" width="110" height="35" rx="5" fill="#ffcdd2" />
+                        <text x="130" y="153" fill="#c62828" font-size="11" text-anchor="middle">空文字 ""</text>
+                        <rect x="75" y="180" width="110" height="35" rx="5" fill="#ffcdd2" />
+                        <text x="130" y="203" fill="#c62828" font-size="11" text-anchor="middle">1000文字超</text>
+                        <rect x="75" y="230" width="110" height="35" rx="5" fill="#ffcdd2" />
+                        <text x="130" y="253" fill="#c62828" font-size="11" text-anchor="middle">SQLインジェクション</text>
+                        <rect x="75" y="280" width="110" height="35" rx="5" fill="#ffcdd2" />
+                        <text x="130" y="303" fill="#c62828" font-size="11" text-anchor="middle">不正な文字列</text>
+
+                        <!-- Database (Before) -->
+                        <rect x="280" y="110" width="130" height="200" rx="10" fill="white" stroke="#c62828" stroke-width="2" />
+                        <ellipse cx="345" cy="135" rx="50" ry="15" fill="#ffcdd2" stroke="#c62828" stroke-width="1" />
+                        <text x="345" y="140" fill="#c62828" font-size="12" text-anchor="middle">Database</text>
+                        <text x="345" y="180" fill="#c62828" font-size="11" text-anchor="middle">不正データが</text>
+                        <text x="345" y="200" fill="#c62828" font-size="11" text-anchor="middle">そのまま保存</text>
+                        <text x="345" y="250" fill="#c62828" font-size="36" text-anchor="middle">😱</text>
+                        <text x="345" y="295" fill="#c62828" font-size="14" font-weight="bold" text-anchor="middle">危険！</text>
+
+                        <!-- ===== After Section ===== -->
+                        <rect x="470" y="50" width="400" height="310" rx="15" fill="#e8f5e9" stroke="#4caf50" stroke-width="2" />
+                        <rect x="570" y="30" width="200" height="35" rx="10" fill="#4caf50" />
+                        <text x="670" y="55" fill="white" font-size="16" font-weight="bold" text-anchor="middle">After：バリデーション</text>
+
+                        <!-- User Input (After) -->
+                        <rect x="500" y="90" width="110" height="240" rx="10" fill="white" stroke="#666" stroke-width="2" />
+                        <text x="555" y="115" fill="#666" font-size="11" font-weight="bold" text-anchor="middle">ユーザー入力</text>
+                        <rect x="515" y="130" width="80" height="30" rx="5" fill="#ffcdd2" />
+                        <text x="555" y="150" fill="#c62828" font-size="10" text-anchor="middle">空文字</text>
+                        <rect x="515" y="175" width="80" height="30" rx="5" fill="#ffcdd2" />
+                        <text x="555" y="195" fill="#c62828" font-size="10" text-anchor="middle">1000文字超</text>
+                        <rect x="515" y="220" width="80" height="30" rx="5" fill="#c8e6c9" stroke="#4caf50" stroke-width="1" />
+                        <text x="555" y="240" fill="#2e7d32" font-size="10" font-weight="bold" text-anchor="middle">正常値 ✓</text>
+                        <rect x="515" y="265" width="80" height="30" rx="5" fill="#ffcdd2" />
+                        <text x="555" y="285" fill="#c62828" font-size="10" text-anchor="middle">不正文字</text>
+
+                        <!-- Validation Shield -->
+                        <rect x="645" y="100" width="90" height="200" rx="10" fill="#4caf50" stroke="#2e7d32" stroke-width="2" />
+                        <text x="690" y="125" fill="white" font-size="11" font-weight="bold" text-anchor="middle">入力チェック</text>
+                        <text x="690" y="150" fill="white" font-size="10" text-anchor="middle">@NotBlank</text>
+                        <text x="690" y="172" fill="white" font-size="10" text-anchor="middle">@Size</text>
+                        <text x="690" y="194" fill="white" font-size="10" text-anchor="middle">@Pattern</text>
+                        <text x="690" y="245" fill="white" font-size="40" text-anchor="middle">🛡️</text>
+                        <text x="690" y="290" fill="white" font-size="10" text-anchor="middle">ブロック！</text>
+
+                        <!-- Database (After) -->
+                        <rect x="770" y="170" width="90" height="100" rx="10" fill="white" stroke="#4caf50" stroke-width="2" />
+                        <ellipse cx="815" cy="195" rx="35" ry="12" fill="#c8e6c9" stroke="#4caf50" stroke-width="1" />
+                        <text x="815" y="200" fill="#2e7d32" font-size="10" text-anchor="middle">Database</text>
+                        <text x="815" y="225" fill="#2e7d32" font-size="10" text-anchor="middle">正常データ</text>
+                        <text x="815" y="242" fill="#2e7d32" font-size="10" text-anchor="middle">のみ保存</text>
+                        <text x="815" y="263" fill="#2e7d32" font-size="16" text-anchor="middle">✓</text>
+
+                        <!-- ===== All arrows drawn last ===== -->
+
+                        <!-- Before: Arrows to DB (all pass through) -->
+                        <line x1="200" y1="147" x2="278" y2="147" stroke="#c62828" stroke-width="3" marker-end="url(#arrowDanger)" />
+                        <line x1="200" y1="197" x2="278" y2="197" stroke="#c62828" stroke-width="3" marker-end="url(#arrowDanger)" />
+                        <line x1="200" y1="247" x2="278" y2="247" stroke="#c62828" stroke-width="3" marker-end="url(#arrowDanger)" />
+                        <line x1="200" y1="297" x2="278" y2="297" stroke="#c62828" stroke-width="3" marker-end="url(#arrowDanger)" />
+
+                        <!-- After: Blocked arrows with X marks -->
+                        <line x1="595" y1="145" x2="643" y2="145" stroke="#c62828" stroke-width="3" marker-end="url(#arrowDanger)" />
+                        <circle cx="655" cy="145" r="10" fill="#c62828" />
+                        <text x="655" y="150" fill="white" font-size="14" font-weight="bold" text-anchor="middle">✗</text>
+
+                        <line x1="595" y1="190" x2="643" y2="190" stroke="#c62828" stroke-width="3" marker-end="url(#arrowDanger)" />
+                        <circle cx="655" cy="190" r="10" fill="#c62828" />
+                        <text x="655" y="195" fill="white" font-size="14" font-weight="bold" text-anchor="middle">✗</text>
+
+                        <line x1="595" y1="280" x2="643" y2="280" stroke="#c62828" stroke-width="3" marker-end="url(#arrowDanger)" />
+                        <circle cx="655" cy="280" r="10" fill="#c62828" />
+                        <text x="655" y="285" fill="white" font-size="14" font-weight="bold" text-anchor="middle">✗</text>
+
+                        <!-- After: Valid arrow goes through to Database -->
+                        <line x1="595" y1="235" x2="643" y2="235" stroke="#4caf50" stroke-width="3" marker-end="url(#arrowSafe)" />
+                        <circle cx="690" cy="235" r="12" fill="#4caf50" stroke="#2e7d32" stroke-width="2" />
+                        <text x="690" y="240" fill="white" font-size="14" font-weight="bold" text-anchor="middle">✓</text>
+                        <line x1="735" y1="235" x2="768" y2="220" stroke="#4caf50" stroke-width="3" marker-end="url(#arrowSafe)" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Chapter Summary -->
+            <div class="content-card">
+                <h2>📝 第13章のまとめ</h2>
+
+                <div class="highlight-box">
+                    <h4 style="margin-top: 0">この章で学んだこと</h4>
+                    <p>この章では、ToDoアプリのアプリケーション層を実装し、CRUD機能を完成させました。</p>
+                </div>
+
+                <h4>主要なトピック</h4>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>トピック</th>
+                            <th>説明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Controller</strong></td>
+                            <td>リクエストを処理し、Viewに結果を渡す制御の役割を担う</td>
+                        </tr>
+                        <tr>
+                            <td><strong>View</strong></td>
+                            <td>Thymeleafテンプレートで画面を作成し、動的なデータを表示</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Form</strong></td>
+                            <td>画面のフォーム入力を表現し、Controllerとの間でデータをやり取り</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Helper</strong></td>
+                            <td>FormとEntity間の変換処理を担当し、Controllerの肥大化を防ぐ</td>
+                        </tr>
+                        <tr>
+                            <td><strong>リダイレクト</strong></td>
+                            <td>HTTPステータス302でブラウザを別URLに自動転送</td>
+                        </tr>
+                        <tr>
+                            <td><strong>フラッシュメッセージ</strong></td>
+                            <td>リダイレクト時に一時的なメッセージを渡す仕組み</td>
+                        </tr>
+                        <tr>
+                            <td><strong>PRGパターン</strong></td>
+                            <td>Post→Redirect→Getでフォームの二重送信を防止</td>
+                        </tr>
+                        <tr>
+                            <td><strong>REST形式URL</strong></td>
+                            <td>URLにパラメータを埋め込む形式（例：/todos/{id}）</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>作成したファイル一覧</h4>
+                <div class="step-list">
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <strong>ToDoController.java</strong><br />
+                            <code>src/main/java/com/example/webapp/controller/</code>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <strong>ToDoForm.java</strong><br />
+                            <code>src/main/java/com/example/webapp/form/</code>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <strong>ToDoHelper.java</strong><br />
+                            <code>src/main/java/com/example/webapp/helper/</code>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <strong>list.html</strong><br />
+                            <code>src/main/resources/templates/todo/</code>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <strong>detail.html</strong><br />
+                            <code>src/main/resources/templates/todo/</code>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <strong>form.html</strong><br />
+                            <code>src/main/resources/templates/todo/</code>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <h4>おめでとうございます！</h4>
+                    <p>
+                        ToDoアプリの基本的なCRUD機能が完成しました。次の章では、入力チェック（バリデーション）を追加して、アプリケーションの品質を向上させていきましょう。
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>Spring Framework 入門チュートリアル</p>
+        </footer>
+
+        <div class="page-nav">
+            <a href="12service-tutorial.html" class="page-nav-btn prev">
+                <span>←</span>
+                <div>
+                    <div class="page-nav-label">前の章</div>
+                    <div class="page-nav-title">第12章</div>
+                </div>
+            </a>
+
+            <a href="14_validation.html" class="page-nav-btn next">
+                <div>
+                    <div class="page-nav-label">次の章</div>
+                    <div class="page-nav-title">第14章</div>
+                </div>
+                <span>→</span>
+            </a>
+        </div>
+
+        <script>
+            function toggleMenu() {
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+                toggle.classList.toggle("active");
+                menu.classList.toggle("active");
+            }
+
+            document.addEventListener("click", function (e) {
+                const nav = document.querySelector(".global-nav");
+                const toggle = document.querySelector(".nav-toggle");
+                const menu = document.querySelector(".nav-menu");
+
+                if (!nav.contains(e.target) && menu.classList.contains("active")) {
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+
+            window.addEventListener("resize", function () {
+                if (window.innerWidth >= 1024) {
+                    const toggle = document.querySelector(".nav-toggle");
+                    const menu = document.querySelector(".nav-menu");
+                    toggle.classList.remove("active");
+                    menu.classList.remove("active");
+                }
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>中級6 ページネーション</title>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="../style.css" />
+        <style>
+            .download-btn { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-left: auto; transition: all 0.2s ease; display: flex; align-items: center; gap: 4px; }
+            .download-btn:hover { background: linear-gradient(135deg, #16a34a, #15803d); transform: translateY(-1px); }
+            .code-header { display: flex; align-items: center; justify-content: space-between; }
+            .level-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; background: #fef9c3; color: #854d0e; margin-right: 8px; }
+            .pagination { display: flex; gap: 4px; justify-content: center; margin: 1rem 0; }
+            .pagination a, .pagination span { padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 4px; text-decoration: none; color: #64748b; }
+            .pagination a:hover { background: #f1f5f9; }
+            .pagination .active { background: #3b82f6; color: white; border-color: #3b82f6; }
+        </style>
+    </head>
+    <body>
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="../1spring-framework-tutorial.html" class="nav-logo"><span class="nav-logo-icon">🌱</span><span>Spring入門</span></a>
+                <button class="nav-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 中級レベル</div>
+                    <ul class="nav-list">
+                        <li class="nav-item"><a href="06_pagination.html" class="nav-link active"><span class="nav-chapter-num">6</span><span>ページネーション</span></a></li>
+                        <li class="nav-item"><a href="07_priority.html" class="nav-link"><span class="nav-chapter-num">7</span><span>優先度設定</span></a></li>
+                        <li class="nav-item"><a href="08_category.html" class="nav-link"><span class="nav-chapter-num">8</span><span>カテゴリ/タグ機能</span></a></li>
+                        <li class="nav-item"><a href="09_deadline.html" class="nav-link"><span class="nav-chapter-num">9</span><span>期限日と期限切れ警告</span></a></li>
+                        <li class="nav-item"><a href="10_bulk_delete.html" class="nav-link"><span class="nav-chapter-num">10</span><span>一括削除機能</span></a></li>
+                        <li class="nav-item"><a href="11_csv_export.html" class="nav-link"><span class="nav-chapter-num">11</span><span>CSVエクスポート</span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <header class="chapter-header">
+                <div class="chapter-badge"><span class="level-badge">中級</span>📘 Intermediate</div>
+                <div class="chapter-number">6</div>
+                <h1 class="chapter-title">ページネーション</h1>
+            </header>
+
+            <nav class="toc">
+                <h2 class="toc-title">📑 この章の内容</h2>
+                <ul class="toc-list">
+                    <li class="toc-item"><span class="toc-number">6-1</span><span>ページネーションとは</span></li>
+                    <li class="toc-item"><span class="toc-number">6-2</span><span>Pageableの使い方</span></li>
+                    <li class="toc-item"><span class="toc-number">6-3</span><span>ページャーUIの実装</span></li>
+                </ul>
+            </nav>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 6-1</span>
+                    <h2 class="section-title">ページネーションとは</h2>
+                </div>
+                <div class="intro-text">
+                    <p>大量のデータを<strong>ページ単位で分割表示</strong>する機能です。</p>
+                </div>
+                <h3>学習できるSpring技術</h3>
+                <div class="module-list">
+                    <div class="module-item"><div class="module-icon">📄</div><div class="module-content"><h4>Pageable</h4><p>ページング情報（ページ番号、サイズ）を受け取るインターフェース</p></div></div>
+                    <div class="module-item"><div class="module-icon">📦</div><div class="module-content"><h4>Page&lt;T&gt;</h4><p>ページング結果（データ、総ページ数等）を格納するクラス</p></div></div>
+                    <div class="module-item"><div class="module-icon">🔢</div><div class="module-content"><h4>ページャーUI</h4><p>「前へ」「次へ」やページ番号リンクの実装</p></div></div>
+                </div>
+                <h3>完成イメージ</h3>
+                <div class="pagination">
+                    <span>« 前へ</span>
+                    <a href="#">1</a>
+                    <span class="active">2</span>
+                    <a href="#">3</a>
+                    <a href="#">4</a>
+                    <a href="#">5</a>
+                    <a href="#">次へ »</a>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 6-2</span>
+                    <h2 class="section-title">Pageableの使い方</h2>
+                </div>
+                <div class="code-block" id="controller-page">
+                    <div class="code-header">
+                        <span class="code-title">TodoController.java</span>
+                        <button class="download-btn" onclick="downloadCode('controller-page', 'TodoController_page.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+
+@GetMapping
+public String index(@PageableDefault(size = 10, sort = "createdAt",
+                                     direction = Sort.Direction.DESC) Pageable pageable,
+                    Model model) {
+
+    Page&lt;Todo&gt; todoPage = todoService.findAll(pageable);
+
+    model.addAttribute("todoPage", todoPage);
+    model.addAttribute("todoList", todoPage.getContent());
+
+    return "todo/index";
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="repository-page">
+                    <div class="code-header">
+                        <span class="code-title">TodoRepository.java（Spring Data JPA）</span>
+                        <button class="download-btn" onclick="downloadCode('repository-page', 'TodoRepository_page.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface TodoRepository extends JpaRepository&lt;Todo, Integer&gt; {
+
+    // Spring Data JPAが自動でページング対応
+    Page&lt;Todo&gt; findAll(Pageable pageable);
+
+    // 検索 + ページング
+    Page&lt;Todo&gt; findByTitleContaining(String keyword, Pageable pageable);
+}</code></pre>
+                    </div>
+                </div>
+
+                <h3>Pageオブジェクトの主なメソッド</h3>
+                <table class="data-table">
+                    <thead><tr><th>メソッド</th><th>説明</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>getContent()</code></td><td>現在ページのデータリスト</td></tr>
+                        <tr><td><code>getTotalPages()</code></td><td>総ページ数</td></tr>
+                        <tr><td><code>getTotalElements()</code></td><td>総データ件数</td></tr>
+                        <tr><td><code>getNumber()</code></td><td>現在のページ番号（0始まり）</td></tr>
+                        <tr><td><code>hasNext()</code></td><td>次のページがあるか</td></tr>
+                        <tr><td><code>hasPrevious()</code></td><td>前のページがあるか</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 6-3</span>
+                    <h2 class="section-title">ページャーUIの実装</h2>
+                </div>
+                <div class="code-block" id="pager-html">
+                    <div class="code-header">
+                        <span class="code-title">index.html（ページャー）</span>
+                        <button class="download-btn" onclick="downloadCode('pager-html', 'index_pager.html')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>&lt;!-- ページャー --&gt;
+&lt;nav class="pagination" th:if="${todoPage.totalPages &gt; 1}"&gt;
+    &lt;!-- 前へ --&gt;
+    &lt;a th:if="${todoPage.hasPrevious()}"
+       th:href="@{/todo(page=${todoPage.number - 1})}"&gt;« 前へ&lt;/a&gt;
+    &lt;span th:unless="${todoPage.hasPrevious()}" class="disabled"&gt;« 前へ&lt;/span&gt;
+
+    &lt;!-- ページ番号 --&gt;
+    &lt;th:block th:each="i : ${#numbers.sequence(0, todoPage.totalPages - 1)}"&gt;
+        &lt;span th:if="${i == todoPage.number}" class="active" th:text="${i + 1}"&gt;&lt;/span&gt;
+        &lt;a th:unless="${i == todoPage.number}"
+           th:href="@{/todo(page=${i})}" th:text="${i + 1}"&gt;&lt;/a&gt;
+    &lt;/th:block&gt;
+
+    &lt;!-- 次へ --&gt;
+    &lt;a th:if="${todoPage.hasNext()}"
+       th:href="@{/todo(page=${todoPage.number + 1})}"&gt;次へ »&lt;/a&gt;
+    &lt;span th:unless="${todoPage.hasNext()}" class="disabled"&gt;次へ »&lt;/span&gt;
+&lt;/nav&gt;
+
+&lt;!-- 件数表示 --&gt;
+&lt;p class="page-info"&gt;
+    全 &lt;span th:text="${todoPage.totalElements}"&gt;&lt;/span&gt; 件中
+    &lt;span th:text="${todoPage.number * todoPage.size + 1}"&gt;&lt;/span&gt; -
+    &lt;span th:text="${todoPage.number * todoPage.size + todoPage.numberOfElements}"&gt;&lt;/span&gt; 件を表示
+&lt;/p&gt;</code></pre>
+                    </div>
+                </div>
+                <div class="info-box">
+                    <div class="info-box-header"><span class="info-box-icon">💡</span><span class="info-box-title">ページ番号の注意</span></div>
+                    <p>Spring Dataのページ番号は<strong>0始まり</strong>です。<br>表示時は+1して1始まりにしましょう。</p>
+                </div>
+            </section>
+        </div>
+
+        <footer class="footer"><p>Spring Framework 入門チュートリアル - 中級レベル</p></footer>
+
+        <div class="page-nav">
+            <a href="../16extends-todo.html" class="page-nav-btn prev"><span>←</span><div><div class="page-nav-label">戻る</div><div class="page-nav-title">機能追加提案</div></div></a>
+            <a href="07_priority.html" class="page-nav-btn next"><div><div class="page-nav-label">次の機能</div><div class="page-nav-title">優先度設定</div></div><span>→</span></a>
+        </div>
+
+        <script>
+            function toggleMenu() { document.querySelector(".nav-toggle").classList.toggle("active"); document.querySelector(".nav-menu").classList.toggle("active"); }
+            function downloadCode(id, filename) { const el = document.getElementById(id); const code = el.querySelector('code') || el.querySelector('pre'); const blob = new Blob([code.textContent], {type:'text/plain;charset=utf-8'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url); }
+        </script>
+    </body>
+</html>

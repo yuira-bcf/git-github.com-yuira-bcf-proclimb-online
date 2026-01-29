@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>上級15 REST API化</title>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="../style.css" />
+        <style>
+            .download-btn { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-left: auto; }
+            .code-header { display: flex; align-items: center; justify-content: space-between; }
+            .level-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; background: #fee2e2; color: #991b1b; margin-right: 8px; }
+            .http-get { color: #22c55e; font-weight: bold; }
+            .http-post { color: #3b82f6; font-weight: bold; }
+            .http-put { color: #f59e0b; font-weight: bold; }
+            .http-delete { color: #ef4444; font-weight: bold; }
+        </style>
+    </head>
+    <body>
+        <nav class="global-nav">
+            <div class="nav-container">
+                <a href="../1spring-framework-tutorial.html" class="nav-logo"><span class="nav-logo-icon">🌱</span><span>Spring入門</span></a>
+                <button class="nav-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">📚 上級レベル</div>
+                    <ul class="nav-list">
+                        <li class="nav-item"><a href="12_login.html" class="nav-link"><span class="nav-chapter-num">12</span><span>ログイン認証</span></a></li>
+                        <li class="nav-item"><a href="13_user_todo.html" class="nav-link"><span class="nav-chapter-num">13</span><span>ユーザー別ToDo管理</span></a></li>
+                        <li class="nav-item"><a href="14_role.html" class="nav-link"><span class="nav-chapter-num">14</span><span>ロール別権限制御</span></a></li>
+                        <li class="nav-item"><a href="15_rest_api.html" class="nav-link active"><span class="nav-chapter-num">15</span><span>REST API化</span></a></li>
+                        <li class="nav-item"><a href="16_exception.html" class="nav-link"><span class="nav-chapter-num">16</span><span>例外ハンドリング</span></a></li>
+                        <li class="nav-item"><a href="17_aop.html" class="nav-link"><span class="nav-chapter-num">17</span><span>AOPでログ出力</span></a></li>
+                        <li class="nav-item"><a href="18_transaction.html" class="nav-link"><span class="nav-chapter-num">18</span><span>トランザクション管理</span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <header class="chapter-header">
+                <div class="chapter-badge"><span class="level-badge">上級</span>📕 Advanced</div>
+                <div class="chapter-number">15</div>
+                <h1 class="chapter-title">REST API化</h1>
+            </header>
+
+            <nav class="toc">
+                <h2 class="toc-title">📑 この章の内容</h2>
+                <ul class="toc-list">
+                    <li class="toc-item"><span class="toc-number">15-1</span><span>@RestControllerの基本</span></li>
+                    <li class="toc-item"><span class="toc-number">15-2</span><span>RESTful APIの設計</span></li>
+                    <li class="toc-item"><span class="toc-number">15-3</span><span>レスポンスのカスタマイズ</span></li>
+                </ul>
+            </nav>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 15-1</span>
+                    <h2 class="section-title">@RestControllerの基本</h2>
+                </div>
+                <div class="intro-text">
+                    <p><strong>@RestController</strong>を使って、ToDoアプリをREST APIとして公開します。</p>
+                </div>
+
+                <div class="module-list">
+                    <div class="module-item"><div class="module-icon">🔄</div><div class="module-content"><h4>@RestController</h4><p>@Controller + @ResponseBody の組み合わせ</p></div></div>
+                    <div class="module-item"><div class="module-icon">📦</div><div class="module-content"><h4>@RequestBody</h4><p>リクエストボディをJavaオブジェクトに変換</p></div></div>
+                </div>
+
+                <div class="code-block" id="rest-controller">
+                    <div class="code-header">
+                        <span class="code-title">TodoApiController.java</span>
+                        <button class="download-btn" onclick="downloadCode('rest-controller', 'TodoApiController.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+
+@RestController
+@RequestMapping("/api/todos")
+public class TodoApiController {
+
+    private final TodoService todoService;
+
+    public TodoApiController(TodoService todoService) {
+        this.todoService = todoService;
+    }
+
+    /**
+     * 一覧取得
+     * GET /api/todos
+     */
+    @GetMapping
+    public List&lt;Todo&gt; getAll() {
+        return todoService.findAll();
+    }
+
+    /**
+     * 1件取得
+     * GET /api/todos/{id}
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity&lt;Todo&gt; getById(@PathVariable Integer id) {
+        Todo todo = todoService.findById(id);
+        if (todo == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(todo);
+    }
+
+    /**
+     * 新規作成
+     * POST /api/todos
+     */
+    @PostMapping
+    public ResponseEntity&lt;Todo&gt; create(@RequestBody Todo todo) {
+        Todo created = todoService.save(todo);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    /**
+     * 更新
+     * PUT /api/todos/{id}
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity&lt;Todo&gt; update(@PathVariable Integer id,
+                                         @RequestBody Todo todo) {
+        todo.setId(id);
+        Todo updated = todoService.update(todo);
+        return ResponseEntity.ok(updated);
+    }
+
+    /**
+     * 削除
+     * DELETE /api/todos/{id}
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity&lt;Void&gt; delete(@PathVariable Integer id) {
+        todoService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 15-2</span>
+                    <h2 class="section-title">RESTful APIの設計</h2>
+                </div>
+
+                <h3>HTTPメソッドとCRUD操作</h3>
+                <table class="data-table">
+                    <thead><tr><th>メソッド</th><th>パス</th><th>操作</th><th>説明</th></tr></thead>
+                    <tbody>
+                        <tr><td><span class="http-get">GET</span></td><td>/api/todos</td><td>Read</td><td>一覧取得</td></tr>
+                        <tr><td><span class="http-get">GET</span></td><td>/api/todos/{id}</td><td>Read</td><td>1件取得</td></tr>
+                        <tr><td><span class="http-post">POST</span></td><td>/api/todos</td><td>Create</td><td>新規作成</td></tr>
+                        <tr><td><span class="http-put">PUT</span></td><td>/api/todos/{id}</td><td>Update</td><td>更新</td></tr>
+                        <tr><td><span class="http-delete">DELETE</span></td><td>/api/todos/{id}</td><td>Delete</td><td>削除</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>HTTPステータスコード</h3>
+                <table class="data-table">
+                    <thead><tr><th>コード</th><th>意味</th><th>使用場面</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>200 OK</code></td><td>成功</td><td>GET, PUT成功時</td></tr>
+                        <tr><td><code>201 Created</code></td><td>作成成功</td><td>POST成功時</td></tr>
+                        <tr><td><code>204 No Content</code></td><td>成功（レスポンスなし）</td><td>DELETE成功時</td></tr>
+                        <tr><td><code>400 Bad Request</code></td><td>リクエスト不正</td><td>バリデーションエラー</td></tr>
+                        <tr><td><code>404 Not Found</code></td><td>見つからない</td><td>存在しないリソース</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">Section 15-3</span>
+                    <h2 class="section-title">レスポンスのカスタマイズ</h2>
+                </div>
+
+                <div class="code-block" id="api-response">
+                    <div class="code-header">
+                        <span class="code-title">ApiResponse.java（レスポンスラッパー）</span>
+                        <button class="download-btn" onclick="downloadCode('api-response', 'ApiResponse.java')">📥 ダウンロード</button>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>public class ApiResponse&lt;T&gt; {
+    private boolean success;
+    private String message;
+    private T data;
+
+    public static &lt;T&gt; ApiResponse&lt;T&gt; success(T data) {
+        ApiResponse&lt;T&gt; response = new ApiResponse&lt;&gt;();
+        response.success = true;
+        response.data = data;
+        return response;
+    }
+
+    public static &lt;T&gt; ApiResponse&lt;T&gt; error(String message) {
+        ApiResponse&lt;T&gt; response = new ApiResponse&lt;&gt;();
+        response.success = false;
+        response.message = message;
+        return response;
+    }
+
+    // getter/setter
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" id="json-response">
+                    <div class="code-header">
+                        <span class="code-title">JSONレスポンス例</span>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>// 成功時
+{
+    "success": true,
+    "message": null,
+    "data": {
+        "id": 1,
+        "title": "買い物に行く",
+        "author": "tanaka",
+        "createdAt": "2024-01-15T10:30:00"
+    }
+}
+
+// エラー時
+{
+    "success": false,
+    "message": "指定されたToDoが見つかりません",
+    "data": null
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-header"><span class="info-box-icon">💡</span><span class="info-box-title">Jackson設定</span></div>
+                    <p>日付フォーマットは<code>application.properties</code>で設定できます：<br>
+                    <code>spring.jackson.date-format=yyyy-MM-dd'T'HH:mm:ss</code></p>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-box-header"><span class="warning-box-icon">⚠️</span><span class="warning-box-title">CORS設定</span></div>
+                    <p>フロントエンドから呼び出す場合は、CORS設定が必要です。<br>
+                    <code>@CrossOrigin</code>アノテーションまたはグローバル設定で許可してください。</p>
+                </div>
+            </section>
+        </div>
+
+        <footer class="footer"><p>Spring Framework 入門チュートリアル - 上級レベル</p></footer>
+
+        <div class="page-nav">
+            <a href="14_role.html" class="page-nav-btn prev"><span>←</span><div><div class="page-nav-label">前の機能</div><div class="page-nav-title">ロール別権限制御</div></div></a>
+            <a href="16_exception.html" class="page-nav-btn next"><div><div class="page-nav-label">次の機能</div><div class="page-nav-title">例外ハンドリング</div></div><span>→</span></a>
+        </div>
+
+        <script>
+            function toggleMenu() { document.querySelector(".nav-toggle").classList.toggle("active"); document.querySelector(".nav-menu").classList.toggle("active"); }
+            function downloadCode(id, filename) { const el = document.getElementById(id); const code = el.querySelector('code') || el.querySelector('pre'); const blob = new Blob([code.textContent], {type:'text/plain;charset=utf-8'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url); }
+        </script>
+    </body>
+</html>
