@@ -257,6 +257,72 @@ class ErrorResponse {
                     <p>スタックトレースやシステム内部情報をユーザーに表示しないでください。<br>攻撃者に情報を与えてしまう可能性があります。</p>
                 </div>
             </section>
+
+            <!-- AIプロンプト例 -->
+            <section class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white; margin-top: 2rem;">
+                <div class="section-header" style="border-color: rgba(255,255,255,0.3);">
+                    <span class="section-number" style="background: rgba(255,255,255,0.2); color: white;">🤖 AI</span>
+                    <h2 class="section-title" style="color: white;">AIペアプログラミング</h2>
+                </div>
+
+                <div class="intro-text">
+                    <p style="color: rgba(255,255,255,0.9);">
+                        以下のプロンプトをAIアシスタント（Claude、ChatGPT等）に入力することで、この機能を実装できます。
+                    </p>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">📝 基本プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code>Spring Boot 3.xのToDoアプリに例外ハンドリング機能を追加してください。
+
+【要件】
+- @ControllerAdviceでグローバル例外ハンドリング
+- 404エラー用のカスタムエラーページ
+- 500エラー用のカスタムエラーページ
+- ビジネス例外（TodoNotFoundException等）の定義
+- REST APIの場合はJSON形式でエラーレスポンス
+- エラーログの出力
+
+【技術スタック】
+- Spring Boot 3.x (@ControllerAdvice, @ExceptionHandler)
+- Thymeleaf (error.html)
+- SLF4J (ログ出力)</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); margin-top: 1rem;">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">🎯 ステップ別プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code># Step 1: カスタム例外クラスの作成
+TodoNotFoundExceptionとBusinessExceptionを作成してください。HTTPステータスコードをアノテーションで指定してください。
+
+# Step 2: GlobalExceptionHandlerの作成
+@ControllerAdviceクラスを作成し、各例外タイプに対応する@ExceptionHandlerメソッドを実装してください。
+
+# Step 3: エラーページの作成
+templates/error/404.html, 500.htmlを作成し、ユーザーフレンドリーなエラー画面を表示してください。
+
+# Step 4: REST API用エラーハンドリング
+@RestControllerAdviceで/api/**パス用のJSON形式エラーレスポンスを実装してください。</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3);">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title" style="color: white;">プロンプトのコツ</span>
+                    </div>
+                    <p style="color: rgba(255,255,255,0.9);">
+                        「本番環境ではスタックトレースを隠し、開発環境では表示するようにしてください」のように、<br>
+                        環境別の要件を追加すると、実用的な実装が得られます。
+                    </p>
+                </div>
+            </section>
         </div>
 
         <footer class="footer"><p>Spring Framework 入門チュートリアル - 上級レベル</p></footer>

@@ -282,6 +282,74 @@ public class AuditService {
                     <p style="margin-top: 1rem;">これで<strong>ToDoアプリの機能追加チュートリアル</strong>は完了です！</p>
                 </div>
             </section>
+
+            <!-- AIプロンプト例 -->
+            <section class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white; margin-top: 2rem;">
+                <div class="section-header" style="border-color: rgba(255,255,255,0.3);">
+                    <span class="section-number" style="background: rgba(255,255,255,0.2); color: white;">🤖 AI</span>
+                    <h2 class="section-title" style="color: white;">AIペアプログラミング</h2>
+                </div>
+
+                <div class="intro-text">
+                    <p style="color: rgba(255,255,255,0.9);">
+                        以下のプロンプトをAIアシスタント（Claude、ChatGPT等）に入力することで、この機能を実装できます。
+                    </p>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">📝 基本プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code>Spring Boot 3.xのToDoアプリにトランザクション管理機能を追加してください。
+
+【要件】
+- TodoServiceに@Transactionalを適用してデータベース操作の整合性を保証
+- ToDoと履歴を同一トランザクションで保存し、どちらかで例外が発生したら両方ロールバック
+- 読み取り専用メソッドには@Transactional(readOnly = true)を適用
+- rollbackFor属性でチェック例外もロールバック対象に設定
+- 監査ログ記録にはREQUIRES_NEWを使用し、本体がロールバックしても監査ログは残す
+
+【技術スタック】
+- Spring Boot 3.x
+- Spring Transaction
+- MyBatis</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); margin-top: 1rem;">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">🎯 ステップ別プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code># Step 1: 基本的なトランザクション適用
+TodoServiceのcreate、update、deleteメソッドに@Transactionalを追加してください。
+
+# Step 2: 読み取り専用トランザクション
+findAll、findByIdなど読み取り専用メソッドに
+@Transactional(readOnly = true)を適用してください。
+
+# Step 3: ロールバック制御
+チェック例外でもロールバックするようrollbackFor = Exception.classを設定し、
+特定の業務例外ではロールバックしないようnoRollbackForを設定してください。
+
+# Step 4: トランザクション伝播の設定
+監査ログ記録サービスにPropagation.REQUIRES_NEWを設定し、
+本体のトランザクションとは独立して処理されるようにしてください。</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3);">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title" style="color: white;">プロンプトのコツ</span>
+                    </div>
+                    <p style="color: rgba(255,255,255,0.9);">
+                        「@Transactionalが同一クラス内のメソッド呼び出しで動作しない理由を解説して」のように、<br>
+                        プロキシの仕組みについて質問すると、トランザクションの理解が深まります。
+                    </p>
+                </div>
+            </section>
         </div>
 
         <footer class="footer"><p>Spring Framework 入門チュートリアル - 上級レベル</p></footer>

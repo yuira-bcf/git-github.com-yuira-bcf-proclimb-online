@@ -251,6 +251,71 @@ public class TodoService {
                     <p>権限がない場合は<code>AccessDeniedException</code>が発生します。<br>カスタムエラーページを用意しておくとユーザー体験が向上します。</p>
                 </div>
             </section>
+
+            <!-- AIプロンプト例 -->
+            <section class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white; margin-top: 2rem;">
+                <div class="section-header" style="border-color: rgba(255,255,255,0.3);">
+                    <span class="section-number" style="background: rgba(255,255,255,0.2); color: white;">🤖 AI</span>
+                    <h2 class="section-title" style="color: white;">AIペアプログラミング</h2>
+                </div>
+
+                <div class="intro-text">
+                    <p style="color: rgba(255,255,255,0.9);">
+                        以下のプロンプトをAIアシスタント（Claude、ChatGPT等）に入力することで、この機能を実装できます。
+                    </p>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">📝 基本プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code>Spring Boot 3.xのToDoアプリにロール別権限制御を追加してください。
+
+【要件】
+- ロール：ADMIN（管理者）とUSER（一般ユーザー）
+- ADMIN：全ユーザーのToDo閲覧・編集・削除可能、ユーザー管理可能
+- USER：自分のToDoのみ閲覧・編集・削除可能
+- 画面上でロールに応じたメニュー表示切り替え
+- URLレベルでのアクセス制御
+
+【技術スタック】
+- Spring Security (@PreAuthorize, hasRole)
+- Thymeleaf (sec:authorize)
+- Spring Boot 3.x</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); margin-top: 1rem;">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">🎯 ステップ別プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code># Step 1: SecurityConfigの修正
+/admin/**パスへのアクセスをROLE_ADMINのみに制限してください。
+
+# Step 2: メソッドセキュリティの有効化
+@EnableMethodSecurityを追加し、@PreAuthorize("hasRole('ADMIN')")でメソッドレベルの認可を実装してください。
+
+# Step 3: 画面の権限別表示
+Thymeleafでsec:authorize="hasRole('ADMIN')"を使用し、管理者のみに表示する要素を制御してください。
+
+# Step 4: ユーザー管理機能の実装
+管理者専用のユーザー一覧・編集画面を作成し、ロールの変更やアカウントの有効/無効を管理できるようにしてください。</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3);">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title" style="color: white;">プロンプトのコツ</span>
+                    </div>
+                    <p style="color: rgba(255,255,255,0.9);">
+                        「管理者が一般ユーザーのToDoを編集する場合は、編集履歴を残すようにしてください」のように、<br>
+                        監査要件を追加すると、より堅牢な実装が得られます。
+                    </p>
+                </div>
+            </section>
         </div>
 
         <footer class="footer"><p>Spring Framework 入門チュートリアル - 上級レベル</p></footer>

@@ -249,6 +249,74 @@ INFO  LoggingAspect - 【終了】save 戻り値: Todo{id=3, title='買い物'}<
                     <p>AOPはプロキシベースで動作するため、同一クラス内でのメソッド呼び出しには適用されません。<br><code>this.method()</code>ではなく、Springから注入されたBeanを経由する必要があります。</p>
                 </div>
             </section>
+
+            <!-- AIプロンプト例 -->
+            <section class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white; margin-top: 2rem;">
+                <div class="section-header" style="border-color: rgba(255,255,255,0.3);">
+                    <span class="section-number" style="background: rgba(255,255,255,0.2); color: white;">🤖 AI</span>
+                    <h2 class="section-title" style="color: white;">AIペアプログラミング</h2>
+                </div>
+
+                <div class="intro-text">
+                    <p style="color: rgba(255,255,255,0.9);">
+                        以下のプロンプトをAIアシスタント（Claude、ChatGPT等）に入力することで、この機能を実装できます。
+                    </p>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">📝 基本プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code>Spring Boot 3.xのToDoアプリにAOP（アスペクト指向プログラミング）でログ出力機能を追加してください。
+
+【要件】
+- spring-boot-starter-aopの依存関係を追加
+- LoggingAspectクラスを作成し、Serviceクラスの全メソッドを対象にログ出力
+- @Before: メソッド実行前に「メソッド名」と「引数」をログ出力
+- @AfterReturning: メソッド正常終了後に「メソッド名」と「戻り値」をログ出力
+- @AfterThrowing: 例外発生時に「メソッド名」と「エラーメッセージ」をログ出力
+- PerformanceAspectクラスを作成し、@Aroundで実行時間を計測
+
+【技術スタック】
+- Spring Boot 3.x
+- Spring AOP
+- SLF4J（ロギング）</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); margin-top: 1rem;">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">🎯 ステップ別プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code># Step 1: 依存関係の追加
+pom.xmlにspring-boot-starter-aopの依存関係を追加してください。
+
+# Step 2: LoggingAspectの作成
+@Aspect、@Componentを付与したLoggingAspectクラスを作成し、
+Serviceクラスの全メソッドを対象にPointcutを定義してください。
+
+# Step 3: Before/After Adviceの実装
+@Before、@AfterReturning、@AfterThrowingアノテーションを使って、
+メソッドの開始・終了・例外発生時にログを出力する処理を実装してください。
+
+# Step 4: 実行時間計測Aspectの作成
+@Aroundを使ってメソッドの実行時間を計測するPerformanceAspectを作成してください。</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3);">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title" style="color: white;">プロンプトのコツ</span>
+                    </div>
+                    <p style="color: rgba(255,255,255,0.9);">
+                        「Pointcut式 execution(* com.example.service.*.*(..)) の意味を解説して」のように、<br>
+                        AOPの式の意味を質問すると、より深く理解できます。
+                    </p>
+                </div>
+            </section>
         </div>
 
         <footer class="footer"><p>Spring Framework 入門チュートリアル - 上級レベル</p></footer>

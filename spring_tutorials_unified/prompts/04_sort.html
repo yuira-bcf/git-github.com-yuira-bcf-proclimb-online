@@ -495,6 +495,69 @@ order=${sort == 'id' and order == 'asc'} ? 'desc' : 'asc'
             </section>
         </div>
 
+            <!-- AIプロンプト例 -->
+            <section class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white; margin-top: 2rem;">
+                <div class="section-header" style="border-color: rgba(255,255,255,0.3);">
+                    <span class="section-number" style="background: rgba(255,255,255,0.2); color: white;">🤖 AI</span>
+                    <h2 class="section-title" style="color: white;">AIペアプログラミング</h2>
+                </div>
+
+                <div class="intro-text">
+                    <p style="color: rgba(255,255,255,0.9);">
+                        以下のプロンプトをAIアシスタント（Claude、ChatGPT等）に入力することで、この機能を実装できます。
+                    </p>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">📝 基本プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code>Spring Boot 3.xのToDoアプリにソート機能を追加してください。
+
+【要件】
+- テーブルヘッダーをクリックでソート可能にする
+- ソート対象：作成日、タイトル、ステータス
+- 昇順/降順の切り替えが可能
+- 現在のソート状態を視覚的に表示（▲▼アイコン）
+- URLパラメータでソート状態を保持
+
+【技術スタック】
+- Spring Boot 3.x (@RequestParam)
+- MyBatis (ORDER BY動的SQL)
+- Thymeleaf</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); margin-top: 1rem;">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">🎯 ステップ別プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code># Step 1: Mapperの修正
+TodoMapper.xmlのSELECT文にORDER BY句を動的に追加してください。sortとdirectionパラメータを受け取るようにしてください。
+
+# Step 2: Controllerの修正
+TodoControllerに@RequestParamでsortとdirectionを受け取り、Serviceに渡すようにしてください。
+
+# Step 3: ビューの修正
+テーブルヘッダーにソートリンクを追加し、現在のソート状態に応じてアイコンを表示してください。</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3);">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title" style="color: white;">プロンプトのコツ</span>
+                    </div>
+                    <p style="color: rgba(255,255,255,0.9);">
+                        「ORDER BY句にはホワイトリスト方式で安全なカラム名のみ許可してください」のように、<br>
+                        セキュリティ要件を明示すると、SQLインジェクション対策済みの実装が得られます。
+                    </p>
+                </div>
+            </section>
+        </div>
+
         <footer class="footer">
             <p>Spring Framework 入門チュートリアル - 初級レベル</p>
         </footer>

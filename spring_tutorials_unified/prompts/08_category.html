@@ -186,6 +186,71 @@ public void setCategories(List&lt;Category&gt; categories) {
                     </tbody>
                 </table>
             </section>
+
+            <!-- AIプロンプト例 -->
+            <section class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white; margin-top: 2rem;">
+                <div class="section-header" style="border-color: rgba(255,255,255,0.3);">
+                    <span class="section-number" style="background: rgba(255,255,255,0.2); color: white;">🤖 AI</span>
+                    <h2 class="section-title" style="color: white;">AIペアプログラミング</h2>
+                </div>
+
+                <div class="intro-text">
+                    <p style="color: rgba(255,255,255,0.9);">
+                        以下のプロンプトをAIアシスタント（Claude、ChatGPT等）に入力することで、この機能を実装できます。
+                    </p>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">📝 基本プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code>Spring Boot 3.xのToDoアプリにカテゴリ/タグ機能を追加してください。
+
+【要件】
+- カテゴリマスタテーブルを作成（id, name, color）
+- ToDoにカテゴリを紐付け（多対1の関係）
+- 入力フォームでカテゴリをselectで選択
+- 一覧画面でカテゴリ名をバッジ表示（色付き）
+- カテゴリでのフィルタリングが可能
+
+【技術スタック】
+- Spring Boot 3.x
+- MyBatis (JOINクエリ)
+- Thymeleaf</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); margin-top: 1rem;">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">🎯 ステップ別プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code># Step 1: カテゴリテーブルの作成
+categoryテーブル（id, name, color）を作成し、Categoryエンティティを定義してください。
+
+# Step 2: リレーションの設定
+todoテーブルにcategory_idを追加し、TodoエンティティにCategoryを関連付けてください。
+
+# Step 3: カテゴリ選択の実装
+フォームにカテゴリ選択用のselectタグを追加し、Controllerでカテゴリ一覧をModelに渡してください。
+
+# Step 4: フィルタリングの実装
+一覧画面にカテゴリフィルターを追加し、選択したカテゴリのToDoのみ表示できるようにしてください。</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3);">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title" style="color: white;">プロンプトのコツ</span>
+                    </div>
+                    <p style="color: rgba(255,255,255,0.9);">
+                        「N+1問題を避けるため、JOINを使用してカテゴリ情報も一緒に取得してください」のように、<br>
+                        パフォーマンス要件を明示すると、効率的な実装が得られます。
+                    </p>
+                </div>
+            </section>
         </div>
 
         <footer class="footer"><p>Spring Framework 入門チュートリアル - 中級レベル</p></footer>

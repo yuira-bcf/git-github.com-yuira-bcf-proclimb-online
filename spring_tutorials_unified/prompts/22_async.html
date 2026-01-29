@@ -450,6 +450,78 @@ public class AsyncExceptionHandler implements AsyncConfigurer {
                     </ul>
                 </div>
             </section>
+
+            <!-- AIプロンプト例 -->
+            <section class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white; margin-top: 2rem;">
+                <div class="section-header" style="border-color: rgba(255,255,255,0.3);">
+                    <span class="section-number" style="background: rgba(255,255,255,0.2); color: white;">🤖 AI</span>
+                    <h2 class="section-title" style="color: white;">AIペアプログラミング</h2>
+                </div>
+
+                <div class="intro-text">
+                    <p style="color: rgba(255,255,255,0.9);">
+                        以下のプロンプトをAIアシスタント（Claude、ChatGPT等）に入力することで、この機能を実装できます。
+                    </p>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">📝 基本プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code>Spring Boot 3.xのToDoアプリに非同期処理機能を追加してください。
+
+【要件】
+- @EnableAsyncで非同期処理を有効化
+- @Asyncでメソッドを非同期実行（メール送信、レポート生成など）
+- CompletableFutureで非同期処理の結果を取得
+- タイムアウト付きの結果待ち（future.get(timeout, unit)）
+- カスタムスレッドプールの設定（ThreadPoolTaskExecutor）
+- 用途別の複数スレッドプール（taskExecutor、emailExecutor）
+- AsyncUncaughtExceptionHandlerで非同期処理の例外ハンドリング
+
+【技術スタック】
+- Spring Boot 3.x
+- Spring Async
+- CompletableFuture
+- ThreadPoolTaskExecutor</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); margin-top: 1rem;">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">🎯 ステップ別プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code># Step 1: 非同期処理の有効化
+Application.javaに@EnableAsyncを追加し、
+NotificationServiceに@Asyncメソッドを作成してください。
+
+# Step 2: CompletableFutureの実装
+戻り値としてCompletableFuture&lt;T&gt;を返す非同期メソッドを作成し、
+呼び出し側でget()やallOf()で結果を取得してください。
+
+# Step 3: スレッドプール設定
+AsyncConfigクラスを作成し、ThreadPoolTaskExecutorで
+corePoolSize、maxPoolSize、queueCapacityを設定してください。
+
+# Step 4: 例外ハンドリング
+AsyncConfigurerを実装し、AsyncUncaughtExceptionHandlerで
+非同期処理の例外をログ出力・通知する処理を実装してください。</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3);">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title" style="color: white;">プロンプトのコツ</span>
+                    </div>
+                    <p style="color: rgba(255,255,255,0.9);">
+                        「@Asyncが同一クラス内で動作しない理由と、その回避方法を教えて」のように、<br>
+                        AOPプロキシの制限について質問すると、より深い理解が得られます。
+                    </p>
+                </div>
+            </section>
         </div>
 
         <footer class="footer"><p>Spring Framework 入門チュートリアル - 発展レベル</p></footer>

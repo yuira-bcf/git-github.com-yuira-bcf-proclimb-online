@@ -575,6 +575,79 @@ public class AuditLogController {
                     さらに学習を進めたい場合は、Docker, CI/CD, マイクロサービスなどに挑戦してみましょう。</p>
                 </div>
             </section>
+
+            <!-- AIプロンプト例 -->
+            <section class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white; margin-top: 2rem;">
+                <div class="section-header" style="border-color: rgba(255,255,255,0.3);">
+                    <span class="section-number" style="background: rgba(255,255,255,0.2); color: white;">🤖 AI</span>
+                    <h2 class="section-title" style="color: white;">AIペアプログラミング</h2>
+                </div>
+
+                <div class="intro-text">
+                    <p style="color: rgba(255,255,255,0.9);">
+                        以下のプロンプトをAIアシスタント（Claude、ChatGPT等）に入力することで、この機能を実装できます。
+                    </p>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">📝 基本プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code>Spring Boot 3.xのToDoアプリに監査ログ機能を追加してください。
+
+【要件】
+- audit_logsテーブルで操作履歴を記録（action, entity_type, entity_id, user_id, old_value, new_value, ip_address等）
+- AuditLogエンティティとAuditLogServiceを作成
+- カスタムアノテーション@Auditableを作成し、監査対象メソッドに付与
+- @Aspect（AuditAspect）で@Auditable付きメソッドの前後をインターセプト
+- 変更前・変更後の値をJSON形式で記録
+- Propagation.REQUIRES_NEWで本体がロールバックしても監査ログは残す
+- 管理者向けの監査ログ検索・表示画面
+
+【技術スタック】
+- Spring Boot 3.x
+- Spring AOP
+- MyBatis
+- Jackson（JSON変換）
+- Spring Security（ユーザー情報取得）</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); margin-top: 1rem;">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">🎯 ステップ別プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code># Step 1: テーブルとエンティティ
+audit_logsテーブルのDDLを作成し、
+AuditLogエンティティとMapperを作成してください。
+
+# Step 2: AuditLogServiceの作成
+監査ログを記録するAuditLogServiceを作成し、
+REQUIRES_NEWで独立したトランザクションで保存してください。
+
+# Step 3: カスタムアノテーションとAspect
+@Auditableアノテーションを作成し、AuditAspectで
+@Around処理を実装して変更前後の値を記録してください。
+
+# Step 4: 管理画面の作成
+@PreAuthorize("hasRole('ADMIN')")で管理者のみアクセス可能な
+監査ログ検索・表示画面をControllerとThymeleafで作成してください。</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3);">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title" style="color: white;">プロンプトのコツ</span>
+                    </div>
+                    <p style="color: rgba(255,255,255,0.9);">
+                        「監査ログで変更前後の差分をハイライト表示する方法を教えて」のように、<br>
+                        UIの改善についても質問すると、より使いやすい機能が実装できます。
+                    </p>
+                </div>
+            </section>
         </div>
 
         <footer class="footer"><p>Spring Framework 入門チュートリアル - 発展レベル</p></footer>

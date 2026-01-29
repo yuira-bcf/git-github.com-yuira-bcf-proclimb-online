@@ -526,6 +526,71 @@ public void toggleCompleted(Integer id) {
                     文字色をグレーにすることで視覚的に区別しています。</p>
                 </div>
             </section>
+
+            <!-- AIプロンプト例 -->
+            <section class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white; margin-top: 2rem;">
+                <div class="section-header" style="border-color: rgba(255,255,255,0.3);">
+                    <span class="section-number" style="background: rgba(255,255,255,0.2); color: white;">🤖 AI</span>
+                    <h2 class="section-title" style="color: white;">AIペアプログラミング</h2>
+                </div>
+
+                <div class="intro-text">
+                    <p style="color: rgba(255,255,255,0.9);">
+                        以下のプロンプトをAIアシスタント（Claude、ChatGPT等）に入力することで、この機能を実装できます。
+                    </p>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">📝 基本プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code>Spring Boot 3.xのToDoアプリに完了/未完了ステータス機能を追加してください。
+
+【要件】
+- todoテーブルにcompleted（BOOLEAN）カラムを追加
+- TodoエンティティにcompletedフィールドとisCompleted()メソッドを追加
+- 一覧画面にステータス表示（完了/未完了のバッジ）を追加
+- ボタンクリックでステータスを切り替えられる機能を実装
+- 完了したタスクは背景色をグレーにして視覚的に区別
+
+【技術スタック】
+- Spring Boot 3.x
+- MyBatis
+- Thymeleaf (th:if, th:unless, th:classappend)</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); margin-top: 1rem;">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">🎯 ステップ別プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code># Step 1: データベース変更
+schema.sqlにcompleted BOOLEAN DEFAULT FALSEカラムを追加してください。
+
+# Step 2: Entityの修正
+Todo.javaにcompletedフィールドとgetter/setter、isCompleted()メソッドを追加してください。
+
+# Step 3: ステータス切り替え機能
+TodoControllerにPOST /{id}/toggleエンドポイントを追加し、ステータスを反転させる機能を実装してください。
+
+# Step 4: 一覧画面の修正
+index.htmlにth:if/th:unlessで完了/未完了バッジを表示し、切り替えボタンを追加してください。</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3);">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title" style="color: white;">プロンプトのコツ</span>
+                    </div>
+                    <p style="color: rgba(255,255,255,0.9);">
+                        「th:classappendを使って、completedがtrueの行にcompleted-rowクラスを追加してください」のように、<br>
+                        使用したい技術を具体的に指定すると、期待通りの実装が得られます。
+                    </p>
+                </div>
+            </section>
         </div>
 
         <footer class="footer">

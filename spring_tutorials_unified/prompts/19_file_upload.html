@@ -375,6 +375,78 @@ public class TodoController {
                     </ul>
                 </div>
             </section>
+
+            <!-- AIプロンプト例 -->
+            <section class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white; margin-top: 2rem;">
+                <div class="section-header" style="border-color: rgba(255,255,255,0.3);">
+                    <span class="section-number" style="background: rgba(255,255,255,0.2); color: white;">🤖 AI</span>
+                    <h2 class="section-title" style="color: white;">AIペアプログラミング</h2>
+                </div>
+
+                <div class="intro-text">
+                    <p style="color: rgba(255,255,255,0.9);">
+                        以下のプロンプトをAIアシスタント（Claude、ChatGPT等）に入力することで、この機能を実装できます。
+                    </p>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">📝 基本プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code>Spring Boot 3.xのToDoアプリにファイル添付機能を追加してください。
+
+【要件】
+- MultipartFileを使用してファイルをアップロード
+- application.propertiesでファイルサイズ上限（10MB）を設定
+- TodoAttachmentエンティティで添付ファイルのメタ情報を管理
+- FileStorageServiceでファイル保存（UUID形式のファイル名に変換）
+- ファイル名のサニタイズ（パストラバーサル対策）
+- ダウンロード機能（Content-Dispositionヘッダーでファイル名を指定）
+- 添付ファイルの削除機能
+
+【技術スタック】
+- Spring Boot 3.x
+- MultipartFile
+- MyBatis
+- Thymeleaf</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); margin-top: 1rem;">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">🎯 ステップ別プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code># Step 1: 設定とエンティティ
+application.propertiesにファイルアップロード設定を追加し、
+TodoAttachmentエンティティとMapperを作成してください。
+
+# Step 2: FileStorageServiceの実装
+MultipartFileを受け取り、UUIDファイル名でサーバーに保存する
+FileStorageServiceを作成してください。ファイル名のサニタイズも実装。
+
+# Step 3: アップロード機能の実装
+TodoControllerにファイルアップロードのエンドポイントを追加し、
+enctype="multipart/form-data"のフォームを作成してください。
+
+# Step 4: ダウンロード・削除機能
+ResponseEntity&lt;Resource&gt;を返すダウンロードエンドポイントと、
+添付ファイルを削除する機能を実装してください。</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3);">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title" style="color: white;">プロンプトのコツ</span>
+                    </div>
+                    <p style="color: rgba(255,255,255,0.9);">
+                        「ファイルアップロードのセキュリティ対策（許可するファイル種類の制限、ウイルスチェック等）を追加して」のように、<br>
+                        セキュリティ要件を具体的に指定すると、より安全な実装が得られます。
+                    </p>
+                </div>
+            </section>
         </div>
 
         <footer class="footer"><p>Spring Framework 入門チュートリアル - 発展レベル</p></footer>

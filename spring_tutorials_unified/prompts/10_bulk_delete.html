@@ -198,6 +198,72 @@ document.addEventListener('DOMContentLoaded', function() {
                     <p>一部だけ選択された状態を<code>indeterminate</code>プロパティで表現できます。<br>ブラウザで「−」マークが表示されます。</p>
                 </div>
             </section>
+
+            <!-- AIプロンプト例 -->
+            <section class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white; margin-top: 2rem;">
+                <div class="section-header" style="border-color: rgba(255,255,255,0.3);">
+                    <span class="section-number" style="background: rgba(255,255,255,0.2); color: white;">🤖 AI</span>
+                    <h2 class="section-title" style="color: white;">AIペアプログラミング</h2>
+                </div>
+
+                <div class="intro-text">
+                    <p style="color: rgba(255,255,255,0.9);">
+                        以下のプロンプトをAIアシスタント（Claude、ChatGPT等）に入力することで、この機能を実装できます。
+                    </p>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">📝 基本プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code>Spring Boot 3.xのToDoアプリに一括削除機能を追加してください。
+
+【要件】
+- 各行にチェックボックスを追加
+- 「全選択」チェックボックスで全てのチェックをON/OFF
+- 「選択した項目を削除」ボタンを配置
+- 削除前に確認ダイアログを表示
+- 選択されたIDをリストで送信して一括削除
+
+【技術スタック】
+- Spring Boot 3.x (@RequestParam List)
+- JavaScript (チェックボックス制御)
+- MyBatis (IN句で一括削除)
+- Thymeleaf</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); margin-top: 1rem;">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">🎯 ステップ別プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code># Step 1: チェックボックスの追加
+一覧テーブルの各行にチェックボックス（name="ids" value="${todo.id}"）を追加してください。
+
+# Step 2: 全選択機能の実装
+JavaScriptで「全選択」チェックボックスをクリックすると、全行のチェックボックスがON/OFFされる機能を追加してください。
+
+# Step 3: Controllerの実装
+POST /todo/bulk-deleteエンドポイントを作成し、@RequestParam List&lt;Integer&gt; idsで選択されたIDを受け取ってください。
+
+# Step 4: Mapperの実装
+MyBatisでDELETE文にIN句を使用し、複数IDを一括削除するSQLを作成してください。</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3);">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title" style="color: white;">プロンプトのコツ</span>
+                    </div>
+                    <p style="color: rgba(255,255,255,0.9);">
+                        「チェックが1件も選択されていない場合は削除ボタンを無効化してください」のように、<br>
+                        バリデーション要件を追加すると、ユーザビリティの高い実装が得られます。
+                    </p>
+                </div>
+            </section>
         </div>
 
         <footer class="footer"><p>Spring Framework 入門チュートリアル - 中級レベル</p></footer>

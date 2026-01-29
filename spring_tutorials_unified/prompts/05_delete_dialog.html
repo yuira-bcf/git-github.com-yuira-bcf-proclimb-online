@@ -551,6 +551,68 @@ document.getElementById('deleteModal').addEventListener('click', function(e) {
             </section>
         </div>
 
+            <!-- AIプロンプト例 -->
+            <section class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white; margin-top: 2rem;">
+                <div class="section-header" style="border-color: rgba(255,255,255,0.3);">
+                    <span class="section-number" style="background: rgba(255,255,255,0.2); color: white;">🤖 AI</span>
+                    <h2 class="section-title" style="color: white;">AIペアプログラミング</h2>
+                </div>
+
+                <div class="intro-text">
+                    <p style="color: rgba(255,255,255,0.9);">
+                        以下のプロンプトをAIアシスタント（Claude、ChatGPT等）に入力することで、この機能を実装できます。
+                    </p>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">📝 基本プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code>Spring Boot 3.xのToDoアプリに削除確認ダイアログを追加してください。
+
+【要件】
+- 削除ボタンクリック時にJavaScriptで確認ダイアログを表示
+- 「本当に削除しますか？」というメッセージを表示
+- OKで削除実行、キャンセルで何もしない
+- 可能であればモーダルダイアログで実装
+
+【技術スタック】
+- JavaScript (confirm() または カスタムモーダル)
+- Thymeleaf
+- Spring Boot 3.x (DELETE処理)</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); margin-top: 1rem;">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">🎯 ステップ別プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code># Step 1: 簡易版（confirm使用）
+削除ボタンにonclick="return confirm('本当に削除しますか？')"を追加してください。
+
+# Step 2: モーダル版
+カスタムモーダルダイアログを作成してください。削除対象のタイトルを表示し、確認・キャンセルボタンを配置してください。
+
+# Step 3: 削除処理
+TodoControllerにDELETE /{id}エンドポイントを追加し、削除後は一覧画面にリダイレクトしてください。</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3);">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title" style="color: white;">プロンプトのコツ</span>
+                    </div>
+                    <p style="color: rgba(255,255,255,0.9);">
+                        「アクセシビリティを考慮し、ESCキーでモーダルを閉じられるようにしてください」のように、<br>
+                        UX要件を追加すると、より使いやすい実装が得られます。
+                    </p>
+                </div>
+            </section>
+        </div>
+
         <footer class="footer">
             <p>Spring Framework 入門チュートリアル - 初級レベル</p>
         </footer>

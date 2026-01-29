@@ -187,6 +187,71 @@ public interface TodoRepository extends JpaRepository&lt;Todo, Integer&gt; {
                     <p>Spring Dataのページ番号は<strong>0始まり</strong>です。<br>表示時は+1して1始まりにしましょう。</p>
                 </div>
             </section>
+
+            <!-- AIプロンプト例 -->
+            <section class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white; margin-top: 2rem;">
+                <div class="section-header" style="border-color: rgba(255,255,255,0.3);">
+                    <span class="section-number" style="background: rgba(255,255,255,0.2); color: white;">🤖 AI</span>
+                    <h2 class="section-title" style="color: white;">AIペアプログラミング</h2>
+                </div>
+
+                <div class="intro-text">
+                    <p style="color: rgba(255,255,255,0.9);">
+                        以下のプロンプトをAIアシスタント（Claude、ChatGPT等）に入力することで、この機能を実装できます。
+                    </p>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">📝 基本プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code>Spring Boot 3.xのToDoアプリにページネーション機能を追加してください。
+
+【要件】
+- 1ページあたり10件表示
+- 「前へ」「次へ」ボタンを配置
+- ページ番号リンクを表示（1, 2, 3...）
+- 現在のページをハイライト表示
+- 総件数と表示範囲を表示（例：全50件中 1-10件）
+
+【技術スタック】
+- Spring Boot 3.x (Pageable, Page)
+- MyBatis (LIMIT, OFFSET)
+- Thymeleaf</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); margin-top: 1rem;">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">🎯 ステップ別プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code># Step 1: Controllerの修正
+TodoControllerに@PageableDefault(size = 10)を追加し、Page&lt;Todo&gt;を返すようにしてください。
+
+# Step 2: Mapperの修正
+TodoMapper.xmlにLIMITとOFFSETを使用したページング用SQLを追加してください。総件数取得用のCOUNTクエリも追加してください。
+
+# Step 3: ページャーUIの実装
+Thymeleafでページ番号リンクを生成し、現在のページにactiveクラスを付与してください。
+
+# Step 4: 表示範囲の表示
+「全{totalElements}件中 {start}-{end}件を表示」のような情報を追加してください。</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3);">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title" style="color: white;">プロンプトのコツ</span>
+                    </div>
+                    <p style="color: rgba(255,255,255,0.9);">
+                        「検索条件とページネーションを組み合わせて、検索結果もページングできるようにしてください」のように、<br>
+                        既存機能との連携を指定すると、統合された実装が得られます。
+                    </p>
+                </div>
+            </section>
         </div>
 
         <footer class="footer"><p>Spring Framework 入門チュートリアル - 中級レベル</p></footer>

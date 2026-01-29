@@ -422,6 +422,79 @@ class TodoMapperTest {
                     </ul>
                 </div>
             </section>
+
+            <!-- AIプロンプト例 -->
+            <section class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white; margin-top: 2rem;">
+                <div class="section-header" style="border-color: rgba(255,255,255,0.3);">
+                    <span class="section-number" style="background: rgba(255,255,255,0.2); color: white;">🤖 AI</span>
+                    <h2 class="section-title" style="color: white;">AIペアプログラミング</h2>
+                </div>
+
+                <div class="intro-text">
+                    <p style="color: rgba(255,255,255,0.9);">
+                        以下のプロンプトをAIアシスタント（Claude、ChatGPT等）に入力することで、この機能を実装できます。
+                    </p>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">📝 基本プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code>Spring Boot 3.xのToDoアプリに単体テストを追加してください。
+
+【要件】
+- JUnit5とMockitoを使用したTodoServiceの単体テスト
+- @Mock でTodoMapperをモック化し、@InjectMocksでサービスに注入
+- when().thenReturn()でモックの振る舞いを定義
+- verify()でメソッド呼び出しを検証
+- @SpringBootTestとMockMvcを使用したControllerの統合テスト
+- @MybatisTestを使用したMapperのテスト
+- @Transactionalでテスト後のロールバック
+
+【技術スタック】
+- JUnit5
+- Mockito
+- Spring Boot Test
+- MockMvc
+- MyBatis Spring Boot Starter Test</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); margin-top: 1rem;">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">🎯 ステップ別プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code># Step 1: 基本的な単体テスト
+TodoServiceTestクラスを作成し、create、findById、deleteメソッドの
+基本的なテストケースを@Test、@DisplayNameを使って実装してください。
+
+# Step 2: Mockitoによるモックテスト
+@ExtendWith(MockitoExtension.class)を使い、TodoMapperをモック化した
+TodoServiceのテストを作成してください。when/verify を使用。
+
+# Step 3: MockMvcによる統合テスト
+@SpringBootTest、@AutoConfigureMockMvcを使ったControllerの統合テストを作成し、
+GET/POSTリクエストの検証、ステータスコード、ビュー名の確認を行ってください。
+
+# Step 4: Mapperテスト
+@MybatisTestを使ってTodoMapperのCRUD操作をテストしてください。
+テスト後は@Transactionalでロールバック。</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3);">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title" style="color: white;">プロンプトのコツ</span>
+                    </div>
+                    <p style="color: rgba(255,255,255,0.9);">
+                        「既存のTodoService.javaを読み込んで、全メソッドのテストケースを自動生成して」のように、<br>
+                        既存コードを指定すると、カバレッジの高いテストが得られます。
+                    </p>
+                </div>
+            </section>
         </div>
 
         <footer class="footer"><p>Spring Framework 入門チュートリアル - 発展レベル</p></footer>

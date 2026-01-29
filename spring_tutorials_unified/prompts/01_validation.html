@@ -501,6 +501,73 @@ public class TodoController {
                     各フィールドの下にエラーメッセージが表示されることを確認しましょう。</p>
                 </div>
             </section>
+
+            <!-- AIプロンプト例 -->
+            <section class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white; margin-top: 2rem;">
+                <div class="section-header" style="border-color: rgba(255,255,255,0.3);">
+                    <span class="section-number" style="background: rgba(255,255,255,0.2); color: white;">🤖 AI</span>
+                    <h2 class="section-title" style="color: white;">AIペアプログラミング</h2>
+                </div>
+
+                <div class="intro-text">
+                    <p style="color: rgba(255,255,255,0.9);">
+                        以下のプロンプトをAIアシスタント（Claude、ChatGPT等）に入力することで、この機能を実装できます。
+                    </p>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">📝 基本プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code>Spring Boot 3.xのToDoアプリに入力バリデーション機能を追加してください。
+
+【要件】
+- TodoFormクラスを作成し、以下のバリデーションを実装
+  - author: 必須、50文字以内
+  - title: 必須、100文字以内
+  - detail: 任意、500文字以内
+- Controllerで@ValidとBindingResultを使用してバリデーション実行
+- エラー時は入力画面に戻り、エラーメッセージを表示
+- Thymeleafでエラーメッセージを各フィールドの下に赤字で表示
+
+【技術スタック】
+- Spring Boot 3.x
+- Thymeleaf
+- Jakarta Validation (jakarta.validation.constraints)</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); margin-top: 1rem;">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">🎯 ステップ別プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code># Step 1: 依存関係の追加
+pom.xmlにspring-boot-starter-validationの依存関係を追加してください。
+
+# Step 2: Formクラスの作成
+TodoFormクラスを作成し、@NotBlank、@Sizeアノテーションでバリデーションルールを定義してください。
+
+# Step 3: Controllerの修正
+TodoControllerのPOSTメソッドに@ValidとBindingResultを追加し、エラー時は入力画面に戻るようにしてください。
+
+# Step 4: ビューの修正
+Thymeleafテンプレートにth:errorsでエラーメッセージを表示する機能を追加してください。</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3);">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title" style="color: white;">プロンプトのコツ</span>
+                    </div>
+                    <p style="color: rgba(255,255,255,0.9);">
+                        「既存のTodoController.javaを読み込んで、バリデーション機能を追加してください」のように、<br>
+                        既存ファイルを指定すると、プロジェクトに合わせた実装が得られます。
+                    </p>
+                </div>
+            </section>
         </div>
 
         <footer class="footer">

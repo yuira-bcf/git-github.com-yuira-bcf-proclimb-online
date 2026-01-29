@@ -417,6 +417,78 @@ public class MailService {
                     </ul>
                 </div>
             </section>
+
+            <!-- AIプロンプト例 -->
+            <section class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white; margin-top: 2rem;">
+                <div class="section-header" style="border-color: rgba(255,255,255,0.3);">
+                    <span class="section-number" style="background: rgba(255,255,255,0.2); color: white;">🤖 AI</span>
+                    <h2 class="section-title" style="color: white;">AIペアプログラミング</h2>
+                </div>
+
+                <div class="intro-text">
+                    <p style="color: rgba(255,255,255,0.9);">
+                        以下のプロンプトをAIアシスタント（Claude、ChatGPT等）に入力することで、この機能を実装できます。
+                    </p>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">📝 基本プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code>Spring Boot 3.xのToDoアプリにメール送信通知機能を追加してください。
+
+【要件】
+- spring-boot-starter-mailの依存関係を追加
+- application.propertiesでSMTPサーバー設定（Gmail対応）
+- JavaMailSenderでテキストメール・HTMLメール送信
+- MimeMessageHelperでHTMLメールとマルチパートメール対応
+- ThymeleafテンプレートでHTMLメール本文を生成
+- @Scheduledで定期実行（毎日9時に期限リマインダー送信）
+- @Asyncで非同期メール送信（ユーザーを待たせない）
+
+【技術スタック】
+- Spring Boot 3.x
+- JavaMailSender
+- Thymeleaf（メールテンプレート）
+- Spring Scheduling</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); margin-top: 1rem;">
+                    <div class="code-header">
+                        <span class="code-title" style="color: #a5f3fc;">🎯 ステップ別プロンプト</span>
+                    </div>
+                    <div class="code-content">
+                        <pre style="color: #e2e8f0; background: transparent;"><code># Step 1: メール設定
+pom.xmlにspring-boot-starter-mailを追加し、
+application.propertiesでGmail SMTPサーバーの設定を行ってください。
+
+# Step 2: MailServiceの作成
+SimpleMailMessageでテキストメールを送信するMailServiceを作成し、
+ToDo作成時の通知メールを実装してください。
+
+# Step 3: HTMLメール対応
+MimeMessageHelperを使ってHTMLメールを送信する機能を追加し、
+Thymeleafテンプレートでメール本文を生成してください。
+
+# Step 4: 定期実行リマインダー
+@EnableSchedulingを追加し、@Scheduledで毎日9時に
+期限間近のToDoをユーザーにメール通知する機能を実装してください。</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3);">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">💡</span>
+                        <span class="info-box-title" style="color: white;">プロンプトのコツ</span>
+                    </div>
+                    <p style="color: rgba(255,255,255,0.9);">
+                        「開発環境ではメールを実際に送信せず、ログに出力するだけにする方法を教えて」のように、<br>
+                        環境ごとの設定方法について質問すると、実用的な実装が得られます。
+                    </p>
+                </div>
+            </section>
         </div>
 
         <footer class="footer"><p>Spring Framework 入門チュートリアル - 発展レベル</p></footer>
