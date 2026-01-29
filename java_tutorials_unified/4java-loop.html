@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第4章 繰り返しと制御文の組み合わせ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- グローバルナビゲーション -->
+    <nav class="global-nav">
+        <div class="nav-container">
+            <a href="1java-overview.html" class="nav-logo">
+                <span class="nav-logo-icon">&#9749;</span>
+                <span>Java入門</span>
+            </a>
+            <button class="nav-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+            <div class="nav-menu">
+                <div class="nav-menu-title">&#128218; 章を選択</div>
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="1java-overview.html" class="nav-link"><span class="nav-chapter-num">1</span><span>Javaの概要</span></a></li>
+                    <li class="nav-item"><a href="2java-datatype.html" class="nav-link"><span class="nav-chapter-num">2</span><span>基本データ型と文字列</span></a></li>
+                    <li class="nav-item"><a href="3java-operator.html" class="nav-link"><span class="nav-chapter-num">3</span><span>演算子と条件分岐</span></a></li>
+                    <li class="nav-item"><a href="4java-loop.html" class="nav-link active"><span class="nav-chapter-num">4</span><span>繰り返しと制御文</span></a></li>
+                    <li class="nav-item"><a href="5java-class.html" class="nav-link"><span class="nav-chapter-num">5</span><span>クラスとインスタンス</span></a></li>
+                    <li class="nav-item"><a href="6java-inheritance.html" class="nav-link"><span class="nav-chapter-num">6</span><span>継承とインタフェース</span></a></li>
+                    <li class="nav-item"><a href="7java-exception.html" class="nav-link"><span class="nav-chapter-num">7</span><span>例外処理</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="chapter-header">
+            <div class="chapter-badge">&#128214; Chapter</div>
+            <div class="chapter-number">4</div>
+            <h1 class="chapter-title">繰り返しと制御文の組み合わせ</h1>
+        </header>
+
+        <nav class="toc">
+            <h2 class="toc-title">&#128209; この章の内容</h2>
+            <ul class="toc-list">
+                <li class="toc-item"><span class="toc-number">4-1</span><span>whileによる繰り返し</span></li>
+                <li class="toc-item"><span class="toc-number">4-2</span><span>forによる繰り返し</span></li>
+                <li class="toc-item"><span class="toc-number">4-3</span><span>制御文の組み合わせ</span></li>
+                <li class="toc-item"><span class="toc-number">4-4</span><span>繰り返しの制御</span></li>
+            </ul>
+        </nav>
+
+        <!-- セクション 4-1 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 4-1</span>
+                <h2 class="section-title">whileによる繰り返し</h2>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">1.1 while文</h3>
+                <div class="content-block">
+                    <p>条件がtrueの間、処理を繰り返します。</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">while文</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>int i = 0;
+while (i &lt; 5) {
+    System.out.println(i);  // 0, 1, 2, 3, 4
+    i++;
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">1.2 do-while文</h3>
+                <div class="content-block">
+                    <p>最低1回は処理を実行し、その後条件を判定します。</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">do-while文</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>int i = 0;
+do {
+    System.out.println(i);  // 0, 1, 2, 3, 4
+    i++;
+} while (i &lt; 5);
+
+// 条件がfalseでも1回は実行
+int j = 10;
+do {
+    System.out.println(j);  // 10（1回は実行）
+} while (j &lt; 5);</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 4-2 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 4-2</span>
+                <h2 class="section-title">forによる繰り返し</h2>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">2.1 for文</h3>
+                <div class="content-block">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">基本的なfor文</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>// 構文: for (初期化; 条件; 更新) { 処理 }
+for (int i = 0; i &lt; 5; i++) {
+    System.out.println(i);  // 0, 1, 2, 3, 4
+}
+
+// 複数の変数を使用
+for (int i = 0, j = 10; i &lt; j; i++, j--) {
+    System.out.println(i + " " + j);
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">2.2 拡張for文（for-each）</h3>
+                <div class="content-block">
+                    <p>配列やコレクションの全要素を順番に処理します。</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">拡張for文</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>// 配列の処理
+int[] numbers = {1, 2, 3, 4, 5};
+for (int num : numbers) {
+    System.out.println(num);
+}
+
+// リストの処理
+List&lt;String&gt; names = Arrays.asList("Alice", "Bob", "Charlie");
+for (String name : names) {
+    System.out.println(name);
+}</code></pre>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-header">
+                            <span class="warning-box-icon">&#9888;&#65039;</span>
+                            <span class="warning-box-title">拡張for文の制限</span>
+                        </div>
+                        <p>拡張for文ではインデックスを取得できません。また、ループ中に要素を削除すると<code>ConcurrentModificationException</code>が発生します。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 4-3 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 4-3</span>
+                <h2 class="section-title">制御文の組み合わせ</h2>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">3.1 制御文のネストと変数のスコープ</h3>
+                <div class="content-block">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">変数のスコープ</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>for (int i = 0; i &lt; 3; i++) {
+    int temp = i * 2;  // ループ内でのみ有効
+    System.out.println(temp);
+}
+// System.out.println(i);     // エラー：iはスコープ外
+// System.out.println(temp);  // エラー：tempもスコープ外</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">3.2 繰り返し文のネスト</h3>
+                <div class="content-block">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">二重ループ（九九表）</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>for (int i = 1; i &lt;= 9; i++) {
+    for (int j = 1; j &lt;= 9; j++) {
+        System.out.printf("%3d", i * j);
+    }
+    System.out.println();
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 4-4 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 4-4</span>
+                <h2 class="section-title">繰り返しの制御</h2>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">4.1 無限ループ</h3>
+                <div class="content-block">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">無限ループの書き方</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>// while版
+while (true) {
+    // 処理
+    if (条件) break;  // 終了条件でbreak
+}
+
+// for版
+for (;;) {
+    // 処理
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">4.2 break文</h3>
+                <div class="content-block">
+                    <p>ループを即座に終了します。</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">break文</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>for (int i = 0; i &lt; 10; i++) {
+    if (i == 5) {
+        break;  // i==5でループ終了
+    }
+    System.out.println(i);  // 0, 1, 2, 3, 4
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">4.3 continue文</h3>
+                <div class="content-block">
+                    <p>現在の反復をスキップし、次の反復に進みます。</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">continue文</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>for (int i = 0; i &lt; 5; i++) {
+    if (i == 2) {
+        continue;  // i==2をスキップ
+    }
+    System.out.println(i);  // 0, 1, 3, 4
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">4.4 ラベルによる制御</h3>
+                <div class="content-block">
+                    <p>ネストしたループで外側のループを制御する場合に使用します。</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">ラベル付きbreak/continue</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>outer:
+for (int i = 0; i &lt; 3; i++) {
+    for (int j = 0; j &lt; 3; j++) {
+        if (i == 1 &amp;&amp; j == 1) {
+            break outer;  // 外側のループを終了
+        }
+        System.out.println(i + ", " + j);
+    }
+}
+// 出力: 0,0  0,1  0,2  1,0</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 練習問題・解答 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Exercise</span>
+                <h2 class="section-title">4章 練習問題</h2>
+            </div>
+            <div class="exercise-list">
+                <div class="exercise-item">
+                    <div class="exercise-number">Q1</div>
+                    <div class="exercise-content">
+                        <p>以下のコードの出力回数は何回ですか？</p>
+                        <div class="code-block">
+                            <pre class="code-content"><code>int i = 10;
+do {
+    System.out.println(i);
+    i++;
+} while (i &lt; 5);</code></pre>
+                        </div>
+                        <ol type="A"><li>0回</li><li>1回</li><li>5回</li><li>10回</li></ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Answer</span>
+                <h2 class="section-title">4章 解説・解答</h2>
+            </div>
+            <div class="answer-list">
+                <div class="answer-item">
+                    <div class="answer-header">Q1の解答: B</div>
+                    <div class="answer-content">
+                        <p>do-while文は条件判定前に最低1回処理を実行します。iは10から始まり、条件(i &lt; 5)はfalseですが、1回は出力されます。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer"><p>Java Silver 試験対策 教科書</p></footer>
+
+    <div class="page-nav">
+        <a href="3java-operator.html" class="page-nav-btn prev"><span>&#8592;</span><div><div class="page-nav-label">前の章</div><div class="page-nav-title">第3章</div></div></a>
+        <a href="5java-class.html" class="page-nav-btn next"><div><div class="page-nav-label">次の章</div><div class="page-nav-title">第5章</div></div><span>&#8594;</span></a>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            const toggle = document.querySelector('.nav-toggle');
+            const menu = document.querySelector('.nav-menu');
+            toggle.classList.toggle('active');
+            menu.classList.toggle('active');
+        }
+        document.addEventListener('click', function(e) {
+            const nav = document.querySelector('.global-nav');
+            const toggle = document.querySelector('.nav-toggle');
+            const menu = document.querySelector('.nav-menu');
+            if (!nav.contains(e.target) && menu.classList.contains('active')) {
+                toggle.classList.remove('active');
+                menu.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

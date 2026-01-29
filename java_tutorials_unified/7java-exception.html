@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第7章 例外処理</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="global-nav">
+        <div class="nav-container">
+            <a href="1java-overview.html" class="nav-logo"><span class="nav-logo-icon">&#9749;</span><span>Java入門</span></a>
+            <button class="nav-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+            <div class="nav-menu">
+                <div class="nav-menu-title">&#128218; 章を選択</div>
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="1java-overview.html" class="nav-link"><span class="nav-chapter-num">1</span><span>Javaの概要</span></a></li>
+                    <li class="nav-item"><a href="2java-datatype.html" class="nav-link"><span class="nav-chapter-num">2</span><span>基本データ型と文字列</span></a></li>
+                    <li class="nav-item"><a href="3java-operator.html" class="nav-link"><span class="nav-chapter-num">3</span><span>演算子と条件分岐</span></a></li>
+                    <li class="nav-item"><a href="4java-loop.html" class="nav-link"><span class="nav-chapter-num">4</span><span>繰り返しと制御文</span></a></li>
+                    <li class="nav-item"><a href="5java-class.html" class="nav-link"><span class="nav-chapter-num">5</span><span>クラスとインスタンス</span></a></li>
+                    <li class="nav-item"><a href="6java-inheritance.html" class="nav-link"><span class="nav-chapter-num">6</span><span>継承とインタフェース</span></a></li>
+                    <li class="nav-item"><a href="7java-exception.html" class="nav-link active"><span class="nav-chapter-num">7</span><span>例外処理</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="chapter-header">
+            <div class="chapter-badge">&#128214; Chapter</div>
+            <div class="chapter-number">7</div>
+            <h1 class="chapter-title">例外処理</h1>
+        </header>
+
+        <nav class="toc">
+            <h2 class="toc-title">&#128209; この章の内容</h2>
+            <ul class="toc-list">
+                <li class="toc-item"><span class="toc-number">7-1</span><span>例外発生の仕組みと例外処理</span></li>
+                <li class="toc-item"><span class="toc-number">7-2</span><span>try-catchによる例外のキャッチ</span></li>
+                <li class="toc-item"><span class="toc-number">7-3</span><span>try-with-resourcesによるリソースのクローズ</span></li>
+                <li class="toc-item"><span class="toc-number">7-4</span><span>throwsによる例外の転送</span></li>
+            </ul>
+        </nav>
+
+        <!-- セクション 7-1 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 7-1</span>
+                <h2 class="section-title">例外発生の仕組みと例外処理</h2>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">1.1 例外の発生</h3>
+                <div class="content-block">
+                    <p>例外とは、プログラム実行中に発生するエラーのことです。</p>
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-title">例外の発生例</span><span class="code-lang">Java</span></div>
+                        <pre class="code-content"><code>int[] arr = {1, 2, 3};
+System.out.println(arr[5]);  // ArrayIndexOutOfBoundsException
+
+String str = null;
+str.length();  // NullPointerException
+
+int result = 10 / 0;  // ArithmeticException</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">1.2 例外の種類</h3>
+                <div class="content-block">
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>分類</th><th>説明</th><th>例</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>検査例外</strong><br>(Checked)</td>
+                                <td>コンパイル時にチェックされる<br>必ずcatchまたはthrows必要</td>
+                                <td>IOException<br>SQLException</td>
+                            </tr>
+                            <tr>
+                                <td><strong>非検査例外</strong><br>(Unchecked)</td>
+                                <td>RuntimeExceptionのサブクラス<br>catchは任意</td>
+                                <td>NullPointerException<br>ArrayIndexOutOfBoundsException</td>
+                            </tr>
+                            <tr>
+                                <td><strong>エラー</strong></td>
+                                <td>重大なエラー<br>通常catchしない</td>
+                                <td>OutOfMemoryError<br>StackOverflowError</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">1.3 カスタム例外</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-title">カスタム例外の作成</span><span class="code-lang">Java</span></div>
+                    <pre class="code-content"><code>// 検査例外
+public class MyCheckedException extends Exception {
+    public MyCheckedException(String message) {
+        super(message);
+    }
+}
+
+// 非検査例外
+public class MyUncheckedException extends RuntimeException {
+    public MyUncheckedException(String message) {
+        super(message);
+    }
+}</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 7-2 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 7-2</span>
+                <h2 class="section-title">try-catchによる例外のキャッチ</h2>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">2.1 try-catch-finally</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-title">基本的なtry-catch</span><span class="code-lang">Java</span></div>
+                    <pre class="code-content"><code>try {
+    int result = 10 / 0;
+    System.out.println(result);
+} catch (ArithmeticException e) {
+    System.out.println("0で割ることはできません");
+    System.out.println("エラー: " + e.getMessage());
+} finally {
+    System.out.println("必ず実行される");
+}</code></pre>
+                </div>
+                <div class="info-box">
+                    <div class="info-box-header"><span class="info-box-icon">&#128161;</span><span class="info-box-title">finallyブロック</span></div>
+                    <p>finallyは例外の有無に関わらず必ず実行されます。リソースの解放などに使用します。</p>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">2.2 複数のcatchブロック</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-title">複数のcatch</span><span class="code-lang">Java</span></div>
+                    <pre class="code-content"><code>try {
+    // 処理
+} catch (FileNotFoundException e) {
+    System.out.println("ファイルが見つかりません");
+} catch (IOException e) {
+    System.out.println("入出力エラー");
+} catch (Exception e) {
+    System.out.println("その他のエラー");
+}</code></pre>
+                </div>
+                <div class="warning-box">
+                    <div class="warning-box-header"><span class="warning-box-icon">&#9888;&#65039;</span><span class="warning-box-title">catchの順序</span></div>
+                    <p>より具体的な例外（サブクラス）を先に、汎用的な例外（親クラス）を後に記述します。順序を逆にするとコンパイルエラーになります。</p>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">2.3 multi-catch（Java 7以降）</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-title">multi-catch</span><span class="code-lang">Java</span></div>
+                    <pre class="code-content"><code>try {
+    // 処理
+} catch (IOException | SQLException e) {
+    // 複数の例外を同じブロックで処理
+    System.out.println("エラー: " + e.getMessage());
+}</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 7-3 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 7-3</span>
+                <h2 class="section-title">try-with-resourcesによるリソースのクローズ</h2>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">3.1 try-with-resources</h3>
+                <div class="content-block">
+                    <p>AutoCloseableインタフェースを実装したリソースを自動的にクローズします。</p>
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-title">try-with-resources</span><span class="code-lang">Java</span></div>
+                        <pre class="code-content"><code>// 従来の方法
+BufferedReader reader = null;
+try {
+    reader = new BufferedReader(new FileReader("file.txt"));
+    String line = reader.readLine();
+} finally {
+    if (reader != null) reader.close();
+}
+
+// try-with-resources（Java 7以降）
+try (BufferedReader reader = new BufferedReader(new FileReader("file.txt"))) {
+    String line = reader.readLine();
+}  // 自動的にclose()が呼ばれる
+
+// 複数のリソース
+try (
+    FileInputStream fis = new FileInputStream("input.txt");
+    FileOutputStream fos = new FileOutputStream("output.txt")
+) {
+    // 処理
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">3.2 try-with-resourcesの実行順</h3>
+                <div class="content-block">
+                    <ol class="numbered-list">
+                        <li>tryブロックの処理が実行される</li>
+                        <li>リソースのclose()が自動的に呼ばれる（宣言の逆順）</li>
+                        <li>catchブロックが実行される（例外があれば）</li>
+                        <li>finallyブロックが実行される（あれば）</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 7-4 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 7-4</span>
+                <h2 class="section-title">throwsによる例外の転送</h2>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">4.1 throws</h3>
+                <div class="content-block">
+                    <p>メソッド内で処理せず、呼び出し元に例外を転送します。</p>
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-title">throws宣言</span><span class="code-lang">Java</span></div>
+                        <pre class="code-content"><code>public void readFile(String filename) throws IOException {
+    BufferedReader reader = new BufferedReader(new FileReader(filename));
+    // IOExceptionが発生する可能性があるが、呼び出し元で処理させる
+}
+
+// 呼び出し側
+try {
+    readFile("test.txt");
+} catch (IOException e) {
+    System.out.println("ファイル読み込みエラー");
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">4.2 throws指定されたメソッドのオーバーライド</h3>
+                <div class="content-block">
+                    <p>オーバーライド時のthrows制約：</p>
+                    <ul class="bullet-list">
+                        <li>同じ例外またはそのサブクラスをthrowsできる</li>
+                        <li>例外を減らすまたは削除できる</li>
+                        <li>新しい検査例外を追加できない</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">4.3 例外の再スロー</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-title">例外の再スロー</span><span class="code-lang">Java</span></div>
+                    <pre class="code-content"><code>public void process() throws Exception {
+    try {
+        // 処理
+    } catch (IOException e) {
+        System.out.println("ログ: " + e.getMessage());
+        throw e;  // 再スロー
+    }
+}
+
+// 例外をラップして再スロー
+public void process() throws CustomException {
+    try {
+        // 処理
+    } catch (IOException e) {
+        throw new CustomException("処理に失敗", e);  // 原因を保持
+    }
+}</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- 練習問題・解答 -->
+        <section class="section">
+            <div class="section-header"><span class="section-number">Exercise</span><h2 class="section-title">7章 練習問題</h2></div>
+            <div class="exercise-list">
+                <div class="exercise-item">
+                    <div class="exercise-number">Q1</div>
+                    <div class="exercise-content">
+                        <p>検査例外（Checked Exception）として正しいものはどれですか？</p>
+                        <ol type="A"><li>NullPointerException</li><li>ArrayIndexOutOfBoundsException</li><li>IOException</li><li>ArithmeticException</li></ol>
+                    </div>
+                </div>
+                <div class="exercise-item">
+                    <div class="exercise-number">Q2</div>
+                    <div class="exercise-content">
+                        <p>try-with-resourcesで自動的にclose()が呼ばれるために必要なインタフェースは？</p>
+                        <ol type="A"><li>Closeable</li><li>AutoCloseable</li><li>Serializable</li><li>Comparable</li></ol>
+                    </div>
+                </div>
+                <div class="exercise-item">
+                    <div class="exercise-number">Q3</div>
+                    <div class="exercise-content">
+                        <p>以下のコードの出力は何ですか？</p>
+                        <div class="code-block">
+                            <pre class="code-content"><code>try {
+    System.out.println("A");
+    throw new RuntimeException();
+} catch (RuntimeException e) {
+    System.out.println("B");
+} finally {
+    System.out.println("C");
+}</code></pre>
+                        </div>
+                        <ol type="A"><li>A</li><li>A B</li><li>A B C</li><li>A C</li></ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-header"><span class="section-number">Answer</span><h2 class="section-title">7章 解説・解答</h2></div>
+            <div class="answer-list">
+                <div class="answer-item">
+                    <div class="answer-header">Q1の解答: C</div>
+                    <div class="answer-content"><p>IOExceptionは検査例外です。他の選択肢はすべてRuntimeExceptionのサブクラス（非検査例外）です。</p></div>
+                </div>
+                <div class="answer-item">
+                    <div class="answer-header">Q2の解答: B</div>
+                    <div class="answer-content"><p>AutoCloseableインタフェースを実装したリソースがtry-with-resourcesで自動クローズされます。CloseableはAutoCloseableを継承しています。</p></div>
+                </div>
+                <div class="answer-item">
+                    <div class="answer-header">Q3の解答: C</div>
+                    <div class="answer-content"><p>「A」が出力され、例外がスローされ、catchで「B」が出力され、finallyは必ず実行されるので「C」が出力されます。</p></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer"><p>Java Silver 試験対策 教科書</p></footer>
+
+    <div class="page-nav">
+        <a href="6java-inheritance.html" class="page-nav-btn prev"><span>&#8592;</span><div><div class="page-nav-label">前の章</div><div class="page-nav-title">第6章</div></div></a>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            const toggle = document.querySelector('.nav-toggle');
+            const menu = document.querySelector('.nav-menu');
+            toggle.classList.toggle('active');
+            menu.classList.toggle('active');
+        }
+        document.addEventListener('click', function(e) {
+            const nav = document.querySelector('.global-nav');
+            const toggle = document.querySelector('.nav-toggle');
+            const menu = document.querySelector('.nav-menu');
+            if (!nav.contains(e.target) && menu.classList.contains('active')) {
+                toggle.classList.remove('active');
+                menu.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

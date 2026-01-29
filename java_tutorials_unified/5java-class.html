@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第5章 クラスの宣言とインスタンス化</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="global-nav">
+        <div class="nav-container">
+            <a href="1java-overview.html" class="nav-logo"><span class="nav-logo-icon">&#9749;</span><span>Java入門</span></a>
+            <button class="nav-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+            <div class="nav-menu">
+                <div class="nav-menu-title">&#128218; 章を選択</div>
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="1java-overview.html" class="nav-link"><span class="nav-chapter-num">1</span><span>Javaの概要</span></a></li>
+                    <li class="nav-item"><a href="2java-datatype.html" class="nav-link"><span class="nav-chapter-num">2</span><span>基本データ型と文字列</span></a></li>
+                    <li class="nav-item"><a href="3java-operator.html" class="nav-link"><span class="nav-chapter-num">3</span><span>演算子と条件分岐</span></a></li>
+                    <li class="nav-item"><a href="4java-loop.html" class="nav-link"><span class="nav-chapter-num">4</span><span>繰り返しと制御文</span></a></li>
+                    <li class="nav-item"><a href="5java-class.html" class="nav-link active"><span class="nav-chapter-num">5</span><span>クラスとインスタンス</span></a></li>
+                    <li class="nav-item"><a href="6java-inheritance.html" class="nav-link"><span class="nav-chapter-num">6</span><span>継承とインタフェース</span></a></li>
+                    <li class="nav-item"><a href="7java-exception.html" class="nav-link"><span class="nav-chapter-num">7</span><span>例外処理</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="chapter-header">
+            <div class="chapter-badge">&#128214; Chapter</div>
+            <div class="chapter-number">5</div>
+            <h1 class="chapter-title">クラスの宣言とインスタンス化</h1>
+        </header>
+
+        <nav class="toc">
+            <h2 class="toc-title">&#128209; この章の内容</h2>
+            <ul class="toc-list">
+                <li class="toc-item"><span class="toc-number">5-1</span><span>クラスとオブジェクト</span></li>
+                <li class="toc-item"><span class="toc-number">5-2</span><span>クラスの作成</span></li>
+                <li class="toc-item"><span class="toc-number">5-3</span><span>オブジェクトの生成とアクセス</span></li>
+                <li class="toc-item"><span class="toc-number">5-4</span><span>アクセス修飾子の使用</span></li>
+                <li class="toc-item"><span class="toc-number">5-5</span><span>メソッドのオーバーロード</span></li>
+                <li class="toc-item"><span class="toc-number">5-6</span><span>オブジェクトの初期化</span></li>
+                <li class="toc-item"><span class="toc-number">5-7</span><span>static変数とstaticメソッド</span></li>
+                <li class="toc-item"><span class="toc-number">5-8</span><span>オブジェクトの扱い</span></li>
+            </ul>
+        </nav>
+
+        <!-- セクション 5-1 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 5-1</span>
+                <h2 class="section-title">クラスとオブジェクト</h2>
+            </div>
+            <div class="content-block">
+                <p><strong>クラス</strong>はオブジェクトの設計図（テンプレート）です。<strong>オブジェクト</strong>はクラスから生成された実体（インスタンス）です。</p>
+                <div class="info-box">
+                    <div class="info-box-header"><span class="info-box-icon">&#128161;</span><span class="info-box-title">クラスとオブジェクトの関係</span></div>
+                    <p>クラス = 設計図（例：「車」の定義）<br>オブジェクト = 実際の製品（例：「私の赤い車」「隣の青い車」）</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 5-2 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 5-2</span>
+                <h2 class="section-title">クラスの作成</h2>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">2.1 クラス宣言</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-title">クラスの基本構造</span><span class="code-lang">Java</span></div>
+                    <pre class="code-content"><code>public class Person {
+    // メンバ変数（フィールド）
+    private String name;
+    private int age;
+
+    // コンストラクタ
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    // メソッド
+    public void introduce() {
+        System.out.println("私は" + name + "、" + age + "歳です");
+    }
+}</code></pre>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">2.2 メンバ変数</h3>
+                <div class="content-block">
+                    <p>クラス内で宣言された変数。オブジェクトの状態を保持します。</p>
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-title">メンバ変数</span><span class="code-lang">Java</span></div>
+                        <pre class="code-content"><code>public class Product {
+    String name;           // デフォルト（パッケージプライベート）
+    private int price;     // プライベート
+    public String category; // パブリック
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">2.3 メンバメソッド</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-title">メソッドの定義</span><span class="code-lang">Java</span></div>
+                    <pre class="code-content"><code>public class Calculator {
+    // 戻り値あり
+    public int add(int a, int b) {
+        return a + b;
+    }
+
+    // 戻り値なし（void）
+    public void printResult(int result) {
+        System.out.println("結果: " + result);
+    }
+}</code></pre>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">2.4 変数のスコープとthis</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-title">thisキーワード</span><span class="code-lang">Java</span></div>
+                    <pre class="code-content"><code>public class Person {
+    private String name;
+
+    public void setName(String name) {
+        this.name = name;  // this.name = メンバ変数、name = 引数
+    }
+}</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 5-3 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 5-3</span>
+                <h2 class="section-title">オブジェクトの生成とアクセス</h2>
+            </div>
+            <div class="code-block">
+                <div class="code-header"><span class="code-title">オブジェクトの生成</span><span class="code-lang">Java</span></div>
+                <pre class="code-content"><code>// オブジェクトの生成
+Person person = new Person("田中", 25);
+
+// メンバへのアクセス
+person.introduce();  // メソッド呼び出し
+String name = person.getName();  // getter</code></pre>
+            </div>
+        </section>
+
+        <!-- セクション 5-4 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 5-4</span>
+                <h2 class="section-title">アクセス修飾子の使用</h2>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">4.1 アクセス修飾子</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr><th>修飾子</th><th>同クラス</th><th>同パッケージ</th><th>サブクラス</th><th>全て</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>public</code></td><td>○</td><td>○</td><td>○</td><td>○</td></tr>
+                        <tr><td><code>protected</code></td><td>○</td><td>○</td><td>○</td><td>×</td></tr>
+                        <tr><td>（なし）</td><td>○</td><td>○</td><td>×</td><td>×</td></tr>
+                        <tr><td><code>private</code></td><td>○</td><td>×</td><td>×</td><td>×</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">4.2 カプセル化</h3>
+                <div class="content-block">
+                    <p>フィールドをprivateにし、getter/setterでアクセスを制御します。</p>
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-title">カプセル化</span><span class="code-lang">Java</span></div>
+                        <pre class="code-content"><code>public class BankAccount {
+    private int balance;  // privateで保護
+
+    public int getBalance() {  // getter
+        return balance;
+    }
+
+    public void deposit(int amount) {  // setter的役割
+        if (amount > 0) {
+            balance += amount;
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 5-5 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 5-5</span>
+                <h2 class="section-title">メソッドのオーバーロード</h2>
+            </div>
+            <div class="content-block">
+                <p>同じ名前で引数の型や数が異なるメソッドを定義できます。</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-title">オーバーロード</span><span class="code-lang">Java</span></div>
+                    <pre class="code-content"><code>public class Printer {
+    public void print(int value) {
+        System.out.println("整数: " + value);
+    }
+
+    public void print(String value) {
+        System.out.println("文字列: " + value);
+    }
+
+    public void print(int a, int b) {
+        System.out.println("2つの整数: " + a + ", " + b);
+    }
+}</code></pre>
+                </div>
+                <div class="warning-box">
+                    <div class="warning-box-header"><span class="warning-box-icon">&#9888;&#65039;</span><span class="warning-box-title">注意</span></div>
+                    <p>戻り値の型だけが異なるメソッドはオーバーロードできません。引数リストが異なる必要があります。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 5-6 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 5-6</span>
+                <h2 class="section-title">オブジェクトの初期化</h2>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">6.2 コンストラクタ</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-title">コンストラクタ</span><span class="code-lang">Java</span></div>
+                    <pre class="code-content"><code>public class Person {
+    private String name;
+    private int age;
+
+    // コンストラクタ（クラス名と同じ、戻り値なし）
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    // デフォルトコンストラクタ
+    public Person() {
+        this("Unknown", 0);  // 他のコンストラクタを呼び出し
+    }
+}</code></pre>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">6.3 デフォルトコンストラクタ</h3>
+                <div class="info-box">
+                    <div class="info-box-header"><span class="info-box-icon">&#128161;</span><span class="info-box-title">デフォルトコンストラクタ</span></div>
+                    <p>コンストラクタを1つも定義しない場合、引数なしのデフォルトコンストラクタが自動生成されます。1つでもコンストラクタを定義すると、自動生成されません。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 5-7 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 5-7</span>
+                <h2 class="section-title">static変数とstaticメソッド</h2>
+            </div>
+            <div class="content-block">
+                <p><code>static</code>メンバはクラスに属し、インスタンスを作成せずにアクセスできます。</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-title">staticメンバ</span><span class="code-lang">Java</span></div>
+                    <pre class="code-content"><code>public class Counter {
+    private static int count = 0;  // クラス変数
+
+    public Counter() {
+        count++;  // インスタンス生成ごとにカウント
+    }
+
+    public static int getCount() {  // クラスメソッド
+        return count;
+    }
+}
+
+// 使用例
+Counter c1 = new Counter();
+Counter c2 = new Counter();
+System.out.println(Counter.getCount());  // 2</code></pre>
+                </div>
+                <div class="warning-box">
+                    <div class="warning-box-header"><span class="warning-box-icon">&#9888;&#65039;</span><span class="warning-box-title">staticメソッドの制限</span></div>
+                    <p>staticメソッド内では、thisキーワードや非staticメンバに直接アクセスできません。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 5-8 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 5-8</span>
+                <h2 class="section-title">オブジェクトの扱い</h2>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">8.1 値のコピーと参照情報のコピー</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-title">参照のコピー</span><span class="code-lang">Java</span></div>
+                    <pre class="code-content"><code>Person p1 = new Person("Alice", 25);
+Person p2 = p1;  // 参照のコピー（同じオブジェクトを指す）
+
+p2.setName("Bob");
+System.out.println(p1.getName());  // "Bob"（p1も変更される）</code></pre>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">8.2 ガベージコレクション</h3>
+                <div class="content-block">
+                    <p>どこからも参照されなくなったオブジェクトは、ガベージコレクタによって自動的にメモリから解放されます。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 練習問題・解答 -->
+        <section class="section">
+            <div class="section-header"><span class="section-number">Exercise</span><h2 class="section-title">5章 練習問題</h2></div>
+            <div class="exercise-list">
+                <div class="exercise-item">
+                    <div class="exercise-number">Q1</div>
+                    <div class="exercise-content">
+                        <p>staticメソッド内で使用できないものはどれですか？</p>
+                        <ol type="A"><li>staticフィールド</li><li>this</li><li>ローカル変数</li><li>staticメソッド</li></ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-header"><span class="section-number">Answer</span><h2 class="section-title">5章 解説・解答</h2></div>
+            <div class="answer-list">
+                <div class="answer-item">
+                    <div class="answer-header">Q1の解答: B</div>
+                    <div class="answer-content"><p>staticメソッドはインスタンスに属さないため、thisキーワードは使用できません。</p></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer"><p>Java Silver 試験対策 教科書</p></footer>
+
+    <div class="page-nav">
+        <a href="4java-loop.html" class="page-nav-btn prev"><span>&#8592;</span><div><div class="page-nav-label">前の章</div><div class="page-nav-title">第4章</div></div></a>
+        <a href="6java-inheritance.html" class="page-nav-btn next"><div><div class="page-nav-label">次の章</div><div class="page-nav-title">第6章</div></div><span>&#8594;</span></a>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            const toggle = document.querySelector('.nav-toggle');
+            const menu = document.querySelector('.nav-menu');
+            toggle.classList.toggle('active');
+            menu.classList.toggle('active');
+        }
+        document.addEventListener('click', function(e) {
+            const nav = document.querySelector('.global-nav');
+            const toggle = document.querySelector('.nav-toggle');
+            const menu = document.querySelector('.nav-menu');
+            if (!nav.contains(e.target) && menu.classList.contains('active')) {
+                toggle.classList.remove('active');
+                menu.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

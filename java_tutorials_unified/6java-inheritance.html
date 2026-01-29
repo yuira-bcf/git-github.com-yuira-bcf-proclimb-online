@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第6章 継承とインタフェース</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="global-nav">
+        <div class="nav-container">
+            <a href="1java-overview.html" class="nav-logo"><span class="nav-logo-icon">&#9749;</span><span>Java入門</span></a>
+            <button class="nav-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+            <div class="nav-menu">
+                <div class="nav-menu-title">&#128218; 章を選択</div>
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="1java-overview.html" class="nav-link"><span class="nav-chapter-num">1</span><span>Javaの概要</span></a></li>
+                    <li class="nav-item"><a href="2java-datatype.html" class="nav-link"><span class="nav-chapter-num">2</span><span>基本データ型と文字列</span></a></li>
+                    <li class="nav-item"><a href="3java-operator.html" class="nav-link"><span class="nav-chapter-num">3</span><span>演算子と条件分岐</span></a></li>
+                    <li class="nav-item"><a href="4java-loop.html" class="nav-link"><span class="nav-chapter-num">4</span><span>繰り返しと制御文</span></a></li>
+                    <li class="nav-item"><a href="5java-class.html" class="nav-link"><span class="nav-chapter-num">5</span><span>クラスとインスタンス</span></a></li>
+                    <li class="nav-item"><a href="6java-inheritance.html" class="nav-link active"><span class="nav-chapter-num">6</span><span>継承とインタフェース</span></a></li>
+                    <li class="nav-item"><a href="7java-exception.html" class="nav-link"><span class="nav-chapter-num">7</span><span>例外処理</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="chapter-header">
+            <div class="chapter-badge">&#128214; Chapter</div>
+            <div class="chapter-number">6</div>
+            <h1 class="chapter-title">継承とインタフェース</h1>
+        </header>
+
+        <nav class="toc">
+            <h2 class="toc-title">&#128209; この章の内容</h2>
+            <ul class="toc-list">
+                <li class="toc-item"><span class="toc-number">6-1</span><span>継承</span></li>
+                <li class="toc-item"><span class="toc-number">6-2</span><span>メソッドのオーバーライド</span></li>
+                <li class="toc-item"><span class="toc-number">6-3</span><span>継承関係におけるコンストラクタ</span></li>
+                <li class="toc-item"><span class="toc-number">6-4</span><span>Objectクラスとレコードクラス</span></li>
+                <li class="toc-item"><span class="toc-number">6-5</span><span>抽象クラス</span></li>
+                <li class="toc-item"><span class="toc-number">6-6</span><span>インタフェース</span></li>
+                <li class="toc-item"><span class="toc-number">6-7</span><span>シールクラス</span></li>
+                <li class="toc-item"><span class="toc-number">6-8</span><span>参照型の型変換とポリモーフィズム</span></li>
+                <li class="toc-item"><span class="toc-number">6-9</span><span>コレクションフレームワーク</span></li>
+            </ul>
+        </nav>
+
+        <!-- セクション 6-1 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 6-1</span>
+                <h2 class="section-title">継承</h2>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">1.1 クラスの継承関係</h3>
+                <div class="content-block">
+                    <p>継承により、既存クラスの機能を引き継いだ新しいクラスを作成できます。</p>
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-title">継承の基本</span><span class="code-lang">Java</span></div>
+                        <pre class="code-content"><code>// スーパークラス（親クラス）
+public class Animal {
+    protected String name;
+
+    public void eat() {
+        System.out.println(name + "が食事中");
+    }
+}
+
+// サブクラス（子クラス）
+public class Dog extends Animal {
+    public void bark() {
+        System.out.println(name + "がワンワン！");
+    }
+}</code></pre>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-header"><span class="info-box-icon">&#128161;</span><span class="info-box-title">Javaの継承</span></div>
+                        <p>Javaは単一継承のみ対応。1つのクラスは1つのクラスしか継承できません。複数の機能を持たせたい場合はインタフェースを使用します。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 6-2 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 6-2</span>
+                <h2 class="section-title">メソッドのオーバーライド</h2>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">2.1 オーバーライドとsuper</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-title">オーバーライド</span><span class="code-lang">Java</span></div>
+                    <pre class="code-content"><code>public class Animal {
+    public void speak() {
+        System.out.println("動物の声");
+    }
+}
+
+public class Cat extends Animal {
+    @Override
+    public void speak() {
+        super.speak();  // 親クラスのメソッドを呼び出し
+        System.out.println("ニャー");
+    }
+}</code></pre>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">2.2 @Overrideアノテーション</h3>
+                <div class="content-block">
+                    <p><code>@Override</code>を付けると、正しくオーバーライドされているかコンパイラがチェックします。付け忘れ防止に推奨。</p>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">2.4 finalメソッドとfinalクラス</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-title">final</span><span class="code-lang">Java</span></div>
+                    <pre class="code-content"><code>// finalメソッド：オーバーライド不可
+public final void cannotOverride() { }
+
+// finalクラス：継承不可
+public final class CannotExtend { }</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 6-3 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 6-3</span>
+                <h2 class="section-title">継承関係におけるコンストラクタ</h2>
+            </div>
+            <div class="code-block">
+                <div class="code-header"><span class="code-title">superによるコンストラクタ呼び出し</span><span class="code-lang">Java</span></div>
+                <pre class="code-content"><code>public class Animal {
+    protected String name;
+
+    public Animal(String name) {
+        this.name = name;
+    }
+}
+
+public class Dog extends Animal {
+    private String breed;
+
+    public Dog(String name, String breed) {
+        super(name);  // 親クラスのコンストラクタを呼び出し（必須）
+        this.breed = breed;
+    }
+}</code></pre>
+            </div>
+            <div class="warning-box">
+                <div class="warning-box-header"><span class="warning-box-icon">&#9888;&#65039;</span><span class="warning-box-title">super()の位置</span></div>
+                <p><code>super()</code>はコンストラクタの最初の行に記述する必要があります。</p>
+            </div>
+        </section>
+
+        <!-- セクション 6-4 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 6-4</span>
+                <h2 class="section-title">Objectクラスとレコードクラス</h2>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">4.1 Objectクラス</h3>
+                <div class="content-block">
+                    <p>すべてのクラスは<code>java.lang.Object</code>を継承しています。主要メソッド：</p>
+                    <ul class="bullet-list">
+                        <li><code>toString()</code> - 文字列表現を返す</li>
+                        <li><code>equals(Object)</code> - 等価性を比較</li>
+                        <li><code>hashCode()</code> - ハッシュコードを返す</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">4.2 レコードクラス（Java 16以降）</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-title">レコードクラス</span><span class="code-lang">Java</span></div>
+                    <pre class="code-content"><code>// データ保持用クラスを簡潔に定義
+public record Person(String name, int age) { }
+
+// 使用例
+Person p = new Person("Alice", 25);
+System.out.println(p.name());  // Alice
+System.out.println(p);  // Person[name=Alice, age=25]</code></pre>
+                </div>
+                <p>レコードはイミュータブルで、equals/hashCode/toStringが自動生成されます。</p>
+            </div>
+        </section>
+
+        <!-- セクション 6-5 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 6-5</span>
+                <h2 class="section-title">抽象クラス</h2>
+            </div>
+            <div class="code-block">
+                <div class="code-header"><span class="code-title">抽象クラス</span><span class="code-lang">Java</span></div>
+                <pre class="code-content"><code>public abstract class Shape {
+    protected String color;
+
+    // 抽象メソッド（実装なし）
+    public abstract double getArea();
+
+    // 通常のメソッド
+    public void printColor() {
+        System.out.println("色: " + color);
+    }
+}
+
+public class Circle extends Shape {
+    private double radius;
+
+    @Override
+    public double getArea() {
+        return Math.PI * radius * radius;
+    }
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- セクション 6-6 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 6-6</span>
+                <h2 class="section-title">インタフェース</h2>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">6.1 インタフェースの作成と実装</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-title">インタフェース</span><span class="code-lang">Java</span></div>
+                    <pre class="code-content"><code>public interface Printable {
+    void print();  // 抽象メソッド（public abstract省略可）
+}
+
+public interface Saveable {
+    void save();
+}
+
+// 複数のインタフェースを実装可能
+public class Document implements Printable, Saveable {
+    @Override
+    public void print() {
+        System.out.println("印刷中...");
+    }
+
+    @Override
+    public void save() {
+        System.out.println("保存中...");
+    }
+}</code></pre>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">6.4 defaultメソッド（Java 8以降）</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-title">defaultメソッド</span><span class="code-lang">Java</span></div>
+                    <pre class="code-content"><code>public interface Greeting {
+    default void sayHello() {
+        System.out.println("Hello!");
+    }
+
+    static void printVersion() {
+        System.out.println("Version 1.0");
+    }
+}</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 6-8 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 6-8</span>
+                <h2 class="section-title">参照型の型変換とポリモーフィズム</h2>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">8.1 アップキャストとダウンキャスト</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-title">型変換</span><span class="code-lang">Java</span></div>
+                    <pre class="code-content"><code>Animal animal = new Dog("ポチ");  // アップキャスト（暗黙）
+animal.eat();  // OK
+
+// animal.bark();  // エラー：Animal型にはbarkがない
+
+if (animal instanceof Dog) {
+    Dog dog = (Dog) animal;  // ダウンキャスト（明示）
+    dog.bark();  // OK
+}
+
+// パターンマッチング（Java 16以降）
+if (animal instanceof Dog dog) {
+    dog.bark();  // キャスト不要
+}</code></pre>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">8.6 ポリモーフィズム</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-title">ポリモーフィズム</span><span class="code-lang">Java</span></div>
+                    <pre class="code-content"><code>List&lt;Animal&gt; animals = new ArrayList&lt;&gt;();
+animals.add(new Dog("ポチ"));
+animals.add(new Cat("タマ"));
+
+for (Animal animal : animals) {
+    animal.speak();  // 実際の型に応じたメソッドが呼ばれる
+}</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 6-9 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 6-9</span>
+                <h2 class="section-title">コレクションフレームワーク</h2>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">9.2 ArrayList</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-title">ArrayList</span><span class="code-lang">Java</span></div>
+                    <pre class="code-content"><code>List&lt;String&gt; list = new ArrayList&lt;&gt;();
+list.add("A");
+list.add("B");
+list.get(0);       // "A"
+list.size();       // 2
+list.remove(0);    // "A"を削除</code></pre>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">9.4 HashMap</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-title">HashMap</span><span class="code-lang">Java</span></div>
+                    <pre class="code-content"><code>Map&lt;String, Integer&gt; map = new HashMap&lt;&gt;();
+map.put("Alice", 25);
+map.put("Bob", 30);
+map.get("Alice");  // 25
+map.containsKey("Bob");  // true</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- 練習問題・解答 -->
+        <section class="section">
+            <div class="section-header"><span class="section-number">Exercise</span><h2 class="section-title">6章 練習問題</h2></div>
+            <div class="exercise-list">
+                <div class="exercise-item">
+                    <div class="exercise-number">Q1</div>
+                    <div class="exercise-content">
+                        <p>インタフェースに定義できないものはどれですか？</p>
+                        <ol type="A"><li>抽象メソッド</li><li>defaultメソッド</li><li>コンストラクタ</li><li>staticメソッド</li></ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-header"><span class="section-number">Answer</span><h2 class="section-title">6章 解説・解答</h2></div>
+            <div class="answer-list">
+                <div class="answer-item">
+                    <div class="answer-header">Q1の解答: C</div>
+                    <div class="answer-content"><p>インタフェースはインスタンス化できないため、コンストラクタを持つことはできません。</p></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer"><p>Java Silver 試験対策 教科書</p></footer>
+
+    <div class="page-nav">
+        <a href="5java-class.html" class="page-nav-btn prev"><span>&#8592;</span><div><div class="page-nav-label">前の章</div><div class="page-nav-title">第5章</div></div></a>
+        <a href="7java-exception.html" class="page-nav-btn next"><div><div class="page-nav-label">次の章</div><div class="page-nav-title">第7章</div></div><span>&#8594;</span></a>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            const toggle = document.querySelector('.nav-toggle');
+            const menu = document.querySelector('.nav-menu');
+            toggle.classList.toggle('active');
+            menu.classList.toggle('active');
+        }
+        document.addEventListener('click', function(e) {
+            const nav = document.querySelector('.global-nav');
+            const toggle = document.querySelector('.nav-toggle');
+            const menu = document.querySelector('.nav-menu');
+            if (!nav.contains(e.target) && menu.classList.contains('active')) {
+                toggle.classList.remove('active');
+                menu.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第1章 Javaの概要と簡単なJavaプログラムの作成</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- グローバルナビゲーション -->
+    <nav class="global-nav">
+        <div class="nav-container">
+            <a href="1java-overview.html" class="nav-logo">
+                <span class="nav-logo-icon">&#9749;</span>
+                <span>Java入門</span>
+            </a>
+            <button class="nav-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+            <div class="nav-menu">
+                <div class="nav-menu-title">&#128218; 章を選択</div>
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="1java-overview.html" class="nav-link active"><span class="nav-chapter-num">1</span><span>Javaの概要</span></a></li>
+                    <li class="nav-item"><a href="2java-datatype.html" class="nav-link"><span class="nav-chapter-num">2</span><span>基本データ型と文字列</span></a></li>
+                    <li class="nav-item"><a href="3java-operator.html" class="nav-link"><span class="nav-chapter-num">3</span><span>演算子と条件分岐</span></a></li>
+                    <li class="nav-item"><a href="4java-loop.html" class="nav-link"><span class="nav-chapter-num">4</span><span>繰り返しと制御文</span></a></li>
+                    <li class="nav-item"><a href="5java-class.html" class="nav-link"><span class="nav-chapter-num">5</span><span>クラスとインスタンス</span></a></li>
+                    <li class="nav-item"><a href="6java-inheritance.html" class="nav-link"><span class="nav-chapter-num">6</span><span>継承とインタフェース</span></a></li>
+                    <li class="nav-item"><a href="7java-exception.html" class="nav-link"><span class="nav-chapter-num">7</span><span>例外処理</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- ヘッダー -->
+        <header class="chapter-header">
+            <div class="chapter-badge">&#128214; Chapter</div>
+            <div class="chapter-number">1</div>
+            <h1 class="chapter-title">Javaの概要と簡単なJavaプログラムの作成</h1>
+        </header>
+
+        <!-- 目次 -->
+        <nav class="toc">
+            <h2 class="toc-title">&#128209; この章の内容</h2>
+            <ul class="toc-list">
+                <li class="toc-item"><span class="toc-number">1-1</span><span>Javaの概要</span></li>
+                <li class="toc-item"><span class="toc-number">1-2</span><span>Java環境とJDK</span></li>
+                <li class="toc-item"><span class="toc-number">1-3</span><span>コマンドラインでのJavaプログラムのコンパイルと実行</span></li>
+                <li class="toc-item"><span class="toc-number">1-4</span><span>パッケージ宣言とインポート</span></li>
+            </ul>
+        </nav>
+
+        <!-- セクション 1-1 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 1-1</span>
+                <h2 class="section-title">Javaの概要</h2>
+            </div>
+
+            <div class="intro-text">
+                <p>Javaは1995年にサン・マイクロシステムズ（現Oracle）によって開発されたプログラミング言語です。「Write Once, Run Anywhere（一度書けばどこでも動く）」をスローガンに、プラットフォームに依存しない実行環境を提供しています。</p>
+            </div>
+
+            <!-- 1.1 Java言語の特徴 -->
+            <div class="subsection">
+                <h3 class="subsection-title">1.1 Java言語の特徴</h3>
+
+                <div class="content-block">
+                    <p>Javaには以下のような特徴があります：</p>
+
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="feature-icon">&#128187;</div>
+                            <div class="feature-content">
+                                <h4>オブジェクト指向</h4>
+                                <p>クラスとオブジェクトを基本単位としてプログラムを構成します。継承、カプセル化、ポリモーフィズムといった概念を活用できます。</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">&#128274;</div>
+                            <div class="feature-content">
+                                <h4>型安全性</h4>
+                                <p>静的型付け言語であり、コンパイル時に型チェックが行われます。これにより実行時エラーを未然に防ぐことができます。</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">&#128230;</div>
+                            <div class="feature-content">
+                                <h4>ガベージコレクション</h4>
+                                <p>メモリ管理を自動的に行うため、プログラマがメモリの解放を意識する必要がありません。</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">&#127760;</div>
+                            <div class="feature-content">
+                                <h4>プラットフォーム非依存</h4>
+                                <p>Java仮想マシン（JVM）上で動作するため、OSに依存せずプログラムを実行できます。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1.2 実行環境の特徴 -->
+            <div class="subsection">
+                <h3 class="subsection-title">1.2 実行環境の特徴</h3>
+
+                <div class="content-block">
+                    <p>Javaプログラムは、以下の流れで実行されます：</p>
+
+                    <div class="step-list">
+                        <div class="step-item">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>ソースコードの作成</h4>
+                                <p><code>.java</code>拡張子のファイルにJavaのソースコードを記述します。</p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>コンパイル</h4>
+                                <p><code>javac</code>コマンドでソースコードをバイトコード（<code>.class</code>ファイル）に変換します。</p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>実行</h4>
+                                <p><code>java</code>コマンドでJVMがバイトコードを解釈・実行します。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-header">
+                            <span class="info-box-icon">&#128161;</span>
+                            <span class="info-box-title">バイトコードとは</span>
+                        </div>
+                        <p>バイトコードは、JVMが理解できる中間コードです。ネイティブコード（機械語）とは異なり、どのプラットフォームのJVMでも実行可能な形式になっています。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 1-2 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 1-2</span>
+                <h2 class="section-title">Java環境とJDK</h2>
+            </div>
+
+            <!-- 2.1 Java環境とは -->
+            <div class="subsection">
+                <h3 class="subsection-title">2.1 Java環境とは</h3>
+
+                <div class="content-block">
+                    <p>Javaの開発・実行には、以下の環境が必要です：</p>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>環境</th>
+                                <th>正式名称</th>
+                                <th>用途</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>JDK</strong></td>
+                                <td>Java Development Kit</td>
+                                <td>開発に必要なツール一式（コンパイラ、デバッガなど）</td>
+                            </tr>
+                            <tr>
+                                <td><strong>JRE</strong></td>
+                                <td>Java Runtime Environment</td>
+                                <td>実行に必要な環境（JVMとライブラリ）</td>
+                            </tr>
+                            <tr>
+                                <td><strong>JVM</strong></td>
+                                <td>Java Virtual Machine</td>
+                                <td>バイトコードを解釈・実行する仮想マシン</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="warning-box">
+                        <div class="warning-box-header">
+                            <span class="warning-box-icon">&#9888;&#65039;</span>
+                            <span class="warning-box-title">注意</span>
+                        </div>
+                        <p>Java 11以降、JREは単独で配布されなくなりました。JDKにJREが含まれているため、開発者はJDKをインストールすれば開発と実行の両方が可能です。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2.2 環境セットアップ -->
+            <div class="subsection">
+                <h3 class="subsection-title">2.2 環境セットアップ</h3>
+
+                <div class="content-block">
+                    <p>JDKのインストール手順：</p>
+
+                    <ol class="numbered-list">
+                        <li>Oracle公式サイトまたはAdoptium（旧AdoptOpenJDK）からJDKをダウンロード</li>
+                        <li>インストーラーを実行してJDKをインストール</li>
+                        <li>環境変数<code>JAVA_HOME</code>を設定</li>
+                        <li>環境変数<code>PATH</code>に<code>%JAVA_HOME%\bin</code>を追加</li>
+                        <li>コマンドプロンプトで<code>java -version</code>を実行して確認</li>
+                    </ol>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">バージョン確認コマンド</span>
+                            <span class="code-lang">Terminal</span>
+                        </div>
+                        <pre class="code-content"><code>$ java -version
+java version "21.0.1" 2023-10-17 LTS
+Java(TM) SE Runtime Environment (build 21.0.1+12-LTS-29)
+Java HotSpot(TM) 64-Bit Server VM (build 21.0.1+12-LTS-29, mixed mode, sharing)</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 1-3 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 1-3</span>
+                <h2 class="section-title">コマンドラインでのJavaプログラムのコンパイルと実行</h2>
+            </div>
+
+            <!-- 3.1 プログラム実行までの流れ -->
+            <div class="subsection">
+                <h3 class="subsection-title">3.1 プログラム実行までの流れ</h3>
+
+                <div class="flow-diagram">
+                    <div class="flow-item">
+                        <div class="flow-box">ソースファイル<br><code>.java</code></div>
+                        <div class="flow-arrow">&#8594;</div>
+                    </div>
+                    <div class="flow-item">
+                        <div class="flow-box">コンパイル<br><code>javac</code></div>
+                        <div class="flow-arrow">&#8594;</div>
+                    </div>
+                    <div class="flow-item">
+                        <div class="flow-box">クラスファイル<br><code>.class</code></div>
+                        <div class="flow-arrow">&#8594;</div>
+                    </div>
+                    <div class="flow-item">
+                        <div class="flow-box">実行<br><code>java</code></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3.2 ソースファイルの作成 -->
+            <div class="subsection">
+                <h3 class="subsection-title">3.2 ソースファイルの作成</h3>
+
+                <div class="content-block">
+                    <p>最も基本的なJavaプログラム「Hello World」を作成してみましょう：</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">HelloWorld.java</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-header">
+                            <span class="info-box-icon">&#128161;</span>
+                            <span class="info-box-title">ファイル名の規則</span>
+                        </div>
+                        <p>publicクラスを含むファイルは、クラス名と同じファイル名にする必要があります。上記の場合、<code>HelloWorld.java</code>という名前で保存します。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3.3 コンパイル -->
+            <div class="subsection">
+                <h3 class="subsection-title">3.3 コンパイル</h3>
+
+                <div class="content-block">
+                    <p><code>javac</code>コマンドを使ってソースファイルをコンパイルします：</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">コンパイルコマンド</span>
+                            <span class="code-lang">Terminal</span>
+                        </div>
+                        <pre class="code-content"><code>$ javac HelloWorld.java</code></pre>
+                    </div>
+
+                    <p>コンパイルが成功すると、<code>HelloWorld.class</code>というバイトコードファイルが生成されます。</p>
+                </div>
+            </div>
+
+            <!-- 3.4 クラスの実行 -->
+            <div class="subsection">
+                <h3 class="subsection-title">3.4 クラスの実行</h3>
+
+                <div class="content-block">
+                    <p><code>java</code>コマンドでプログラムを実行します：</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">実行コマンド</span>
+                            <span class="code-lang">Terminal</span>
+                        </div>
+                        <pre class="code-content"><code>$ java HelloWorld
+Hello, World!</code></pre>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-header">
+                            <span class="warning-box-icon">&#9888;&#65039;</span>
+                            <span class="warning-box-title">注意</span>
+                        </div>
+                        <p>実行時には<code>.class</code>拡張子を付けません。クラス名のみを指定します。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3.5 ソースファイルとクラスファイルの関係 -->
+            <div class="subsection">
+                <h3 class="subsection-title">3.5 ソースファイルとクラスファイルの関係</h3>
+
+                <div class="content-block">
+                    <ul class="bullet-list">
+                        <li>1つのソースファイルには複数のクラスを定義できますが、<strong>publicクラスは1つだけ</strong></li>
+                        <li>ソースファイル内の各クラスに対して、それぞれのクラスファイルが生成される</li>
+                        <li>内部クラスがある場合は<code>外部クラス$内部クラス.class</code>という名前で生成される</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 3.6 ソースファイルモードでの実行 -->
+            <div class="subsection">
+                <h3 class="subsection-title">3.6 ソースファイルモードでの実行</h3>
+
+                <div class="content-block">
+                    <p>Java 11以降では、コンパイルせずに直接ソースファイルを実行できます：</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">ソースファイルモード（Java 11以降）</span>
+                            <span class="code-lang">Terminal</span>
+                        </div>
+                        <pre class="code-content"><code>$ java HelloWorld.java
+Hello, World!</code></pre>
+                    </div>
+
+                    <p>この機能は単一ファイルのプログラムをテストする際に便利です。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 1-4 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 1-4</span>
+                <h2 class="section-title">パッケージ宣言とインポート</h2>
+            </div>
+
+            <!-- 4.1 パッケージ -->
+            <div class="subsection">
+                <h3 class="subsection-title">4.1 パッケージ</h3>
+
+                <div class="content-block">
+                    <p>パッケージは、関連するクラスをグループ化するための仕組みです。名前空間を提供し、クラス名の衝突を防ぎます。</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">パッケージ宣言</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>package com.example.myapp;
+
+public class MyClass {
+    // クラスの内容
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4.2 パッケージ化 -->
+            <div class="subsection">
+                <h3 class="subsection-title">4.2 パッケージ化</h3>
+
+                <div class="content-block">
+                    <p>パッケージ化するには：</p>
+                    <ul class="bullet-list">
+                        <li>ソースファイルの先頭に<code>package</code>文を記述</li>
+                        <li>パッケージ名に対応するディレクトリ構造にファイルを配置</li>
+                    </ul>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">ディレクトリ構造の例</span>
+                            <span class="code-lang">Directory</span>
+                        </div>
+                        <pre class="code-content"><code>src/
+  └── com/
+      └── example/
+          └── myapp/
+              └── MyClass.java</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4.3 パッケージ化されたクラスのコンパイルと実行 -->
+            <div class="subsection">
+                <h3 class="subsection-title">4.3 パッケージ化されたクラスのコンパイルと実行</h3>
+
+                <div class="content-block">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">コンパイルと実行</span>
+                            <span class="code-lang">Terminal</span>
+                        </div>
+                        <pre class="code-content"><code># コンパイル（srcディレクトリで実行）
+$ javac com/example/myapp/MyClass.java
+
+# 実行（完全修飾クラス名を指定）
+$ java com.example.myapp.MyClass</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4.4 クラスパス -->
+            <div class="subsection">
+                <h3 class="subsection-title">4.4 クラスパス</h3>
+
+                <div class="content-block">
+                    <p>クラスパスは、JVMがクラスファイルを検索する場所を指定します。</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">クラスパスの指定</span>
+                            <span class="code-lang">Terminal</span>
+                        </div>
+                        <pre class="code-content"><code># -cpまたは-classpathオプションで指定
+$ java -cp ./classes com.example.myapp.MyClass
+
+# 複数のパスを指定（Windowsは;、Unix系は:で区切る）
+$ java -cp ./classes:./lib/* com.example.myapp.MyClass</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4.5 インポート -->
+            <div class="subsection">
+                <h3 class="subsection-title">4.5 インポート</h3>
+
+                <div class="content-block">
+                    <p>他のパッケージのクラスを使用するには、<code>import</code>文を使います。</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">インポート文</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>// 特定のクラスをインポート
+import java.util.ArrayList;
+
+// パッケージ内の全クラスをインポート（ワイルドカード）
+import java.util.*;
+
+// staticメンバのインポート
+import static java.lang.Math.PI;
+import static java.lang.Math.*;</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-header">
+                            <span class="info-box-icon">&#128161;</span>
+                            <span class="info-box-title">java.langパッケージ</span>
+                        </div>
+                        <p><code>java.lang</code>パッケージのクラス（<code>String</code>、<code>System</code>など）は自動的にインポートされるため、明示的なimport文は不要です。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4.6 標準APIのパッケージ -->
+            <div class="subsection">
+                <h3 class="subsection-title">4.6 標準APIのパッケージ</h3>
+
+                <div class="content-block">
+                    <p>Javaの標準ライブラリには多くのパッケージが含まれています：</p>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>パッケージ</th>
+                                <th>説明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>java.lang</code></td>
+                                <td>基本クラス（String、Math、Systemなど）</td>
+                            </tr>
+                            <tr>
+                                <td><code>java.util</code></td>
+                                <td>ユーティリティクラス（List、Map、Dateなど）</td>
+                            </tr>
+                            <tr>
+                                <td><code>java.io</code></td>
+                                <td>入出力処理（File、InputStreamなど）</td>
+                            </tr>
+                            <tr>
+                                <td><code>java.nio</code></td>
+                                <td>新しい入出力API（Path、Filesなど）</td>
+                            </tr>
+                            <tr>
+                                <td><code>java.sql</code></td>
+                                <td>データベース接続（Connection、Statementなど）</td>
+                            </tr>
+                            <tr>
+                                <td><code>java.time</code></td>
+                                <td>日時API（LocalDate、LocalTimeなど）</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 練習問題 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Exercise</span>
+                <h2 class="section-title">1章 練習問題</h2>
+            </div>
+
+            <div class="exercise-list">
+                <div class="exercise-item">
+                    <div class="exercise-number">Q1</div>
+                    <div class="exercise-content">
+                        <p>Javaプログラムの実行手順として正しいものを選んでください。</p>
+                        <ol type="A">
+                            <li>実行 → コンパイル → ソースファイル作成</li>
+                            <li>ソースファイル作成 → コンパイル → 実行</li>
+                            <li>コンパイル → ソースファイル作成 → 実行</li>
+                            <li>ソースファイル作成 → 実行 → コンパイル</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="exercise-item">
+                    <div class="exercise-number">Q2</div>
+                    <div class="exercise-content">
+                        <p>以下のコードを実行するためのコマンドとして正しいものはどれですか？</p>
+                        <div class="code-block">
+                            <pre class="code-content"><code>package com.example;
+public class Sample { }</code></pre>
+                        </div>
+                        <ol type="A">
+                            <li><code>java Sample</code></li>
+                            <li><code>java Sample.class</code></li>
+                            <li><code>java com.example.Sample</code></li>
+                            <li><code>java com/example/Sample</code></li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="exercise-item">
+                    <div class="exercise-number">Q3</div>
+                    <div class="exercise-content">
+                        <p>JDK、JRE、JVMの関係として正しいものを選んでください。</p>
+                        <ol type="A">
+                            <li>JVM ⊃ JRE ⊃ JDK</li>
+                            <li>JDK ⊃ JRE ⊃ JVM</li>
+                            <li>JRE ⊃ JDK ⊃ JVM</li>
+                            <li>すべて独立した関係</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 解答 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Answer</span>
+                <h2 class="section-title">1章 解説・解答</h2>
+            </div>
+
+            <div class="answer-list">
+                <div class="answer-item">
+                    <div class="answer-header">Q1の解答: B</div>
+                    <div class="answer-content">
+                        <p>Javaプログラムは「ソースファイル作成 → コンパイル → 実行」の順序で実行されます。ソースファイル（.java）をjavacでコンパイルしてクラスファイル（.class）を生成し、javaコマンドで実行します。</p>
+                    </div>
+                </div>
+
+                <div class="answer-item">
+                    <div class="answer-header">Q2の解答: C</div>
+                    <div class="answer-content">
+                        <p>パッケージ化されたクラスを実行するには、完全修飾クラス名（パッケージ名を含むクラス名）を指定します。パス区切りは<code>/</code>ではなく<code>.</code>を使用します。</p>
+                    </div>
+                </div>
+
+                <div class="answer-item">
+                    <div class="answer-header">Q3の解答: B</div>
+                    <div class="answer-content">
+                        <p>JDKはJREを含み、JREはJVMを含んでいます。JDK ⊃ JRE ⊃ JVMの関係です。JDKは開発ツール、JREは実行環境、JVMは仮想マシンです。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <p>Java Silver 試験対策 教科書</p>
+    </footer>
+
+    <div class="page-nav">
+        <a href="2java-datatype.html" class="page-nav-btn next">
+            <div>
+                <div class="page-nav-label">次の章</div>
+                <div class="page-nav-title">第2章</div>
+            </div>
+            <span>&#8594;</span>
+        </a>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            const toggle = document.querySelector('.nav-toggle');
+            const menu = document.querySelector('.nav-menu');
+            toggle.classList.toggle('active');
+            menu.classList.toggle('active');
+        }
+
+        document.addEventListener('click', function(e) {
+            const nav = document.querySelector('.global-nav');
+            const toggle = document.querySelector('.nav-toggle');
+            const menu = document.querySelector('.nav-menu');
+
+            if (!nav.contains(e.target) && menu.classList.contains('active')) {
+                toggle.classList.remove('active');
+                menu.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

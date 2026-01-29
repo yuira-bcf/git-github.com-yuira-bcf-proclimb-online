@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第2章 Javaの基本データ型と文字列の操作</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- グローバルナビゲーション -->
+    <nav class="global-nav">
+        <div class="nav-container">
+            <a href="1java-overview.html" class="nav-logo">
+                <span class="nav-logo-icon">&#9749;</span>
+                <span>Java入門</span>
+            </a>
+            <button class="nav-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+            <div class="nav-menu">
+                <div class="nav-menu-title">&#128218; 章を選択</div>
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="1java-overview.html" class="nav-link"><span class="nav-chapter-num">1</span><span>Javaの概要</span></a></li>
+                    <li class="nav-item"><a href="2java-datatype.html" class="nav-link active"><span class="nav-chapter-num">2</span><span>基本データ型と文字列</span></a></li>
+                    <li class="nav-item"><a href="3java-operator.html" class="nav-link"><span class="nav-chapter-num">3</span><span>演算子と条件分岐</span></a></li>
+                    <li class="nav-item"><a href="4java-loop.html" class="nav-link"><span class="nav-chapter-num">4</span><span>繰り返しと制御文</span></a></li>
+                    <li class="nav-item"><a href="5java-class.html" class="nav-link"><span class="nav-chapter-num">5</span><span>クラスとインスタンス</span></a></li>
+                    <li class="nav-item"><a href="6java-inheritance.html" class="nav-link"><span class="nav-chapter-num">6</span><span>継承とインタフェース</span></a></li>
+                    <li class="nav-item"><a href="7java-exception.html" class="nav-link"><span class="nav-chapter-num">7</span><span>例外処理</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- ヘッダー -->
+        <header class="chapter-header">
+            <div class="chapter-badge">&#128214; Chapter</div>
+            <div class="chapter-number">2</div>
+            <h1 class="chapter-title">Javaの基本データ型と文字列の操作</h1>
+        </header>
+
+        <!-- 目次 -->
+        <nav class="toc">
+            <h2 class="toc-title">&#128209; この章の内容</h2>
+            <ul class="toc-list">
+                <li class="toc-item"><span class="toc-number">2-1</span><span>リテラル</span></li>
+                <li class="toc-item"><span class="toc-number">2-2</span><span>変数や定数の宣言と初期化</span></li>
+                <li class="toc-item"><span class="toc-number">2-3</span><span>ローカル変数の型推論</span></li>
+                <li class="toc-item"><span class="toc-number">2-4</span><span>配列</span></li>
+                <li class="toc-item"><span class="toc-number">2-5</span><span>コマンドライン引数の利用</span></li>
+                <li class="toc-item"><span class="toc-number">2-6</span><span>文字列の操作</span></li>
+            </ul>
+        </nav>
+
+        <!-- セクション 2-1 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 2-1</span>
+                <h2 class="section-title">リテラル</h2>
+            </div>
+
+            <div class="intro-text">
+                <p>リテラルとは、ソースコード中に直接記述される値のことです。数値、文字、文字列などがあります。</p>
+            </div>
+
+            <!-- 1.1 数値リテラル -->
+            <div class="subsection">
+                <h3 class="subsection-title">1.1 数値リテラル</h3>
+
+                <div class="content-block">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>種類</th>
+                                <th>例</th>
+                                <th>説明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>整数（10進数）</td>
+                                <td><code>123</code></td>
+                                <td>通常の整数表記</td>
+                            </tr>
+                            <tr>
+                                <td>整数（2進数）</td>
+                                <td><code>0b1010</code></td>
+                                <td>0bまたは0Bで始まる</td>
+                            </tr>
+                            <tr>
+                                <td>整数（8進数）</td>
+                                <td><code>0755</code></td>
+                                <td>0で始まる</td>
+                            </tr>
+                            <tr>
+                                <td>整数（16進数）</td>
+                                <td><code>0xFF</code></td>
+                                <td>0xまたは0Xで始まる</td>
+                            </tr>
+                            <tr>
+                                <td>long型</td>
+                                <td><code>123L</code></td>
+                                <td>末尾にLまたはlを付ける</td>
+                            </tr>
+                            <tr>
+                                <td>浮動小数点（double）</td>
+                                <td><code>3.14</code></td>
+                                <td>デフォルトはdouble型</td>
+                            </tr>
+                            <tr>
+                                <td>浮動小数点（float）</td>
+                                <td><code>3.14f</code></td>
+                                <td>末尾にFまたはfを付ける</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="info-box">
+                        <div class="info-box-header">
+                            <span class="info-box-icon">&#128161;</span>
+                            <span class="info-box-title">アンダースコア区切り</span>
+                        </div>
+                        <p>Java 7以降、数値リテラルにアンダースコアを入れて読みやすくできます：<code>1_000_000</code></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1.2 文字と文字列リテラル -->
+            <div class="subsection">
+                <h3 class="subsection-title">1.2 文字と文字列リテラル</h3>
+
+                <div class="content-block">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">文字と文字列</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>// 文字リテラル（シングルクォート）
+char c = 'A';
+
+// 文字列リテラル（ダブルクォート）
+String s = "Hello";
+
+// エスケープシーケンス
+String newline = "Line1\nLine2";  // 改行
+String tab = "Column1\tColumn2";  // タブ
+String quote = "He said \"Hello\"";  // ダブルクォート</code></pre>
+                    </div>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>エスケープシーケンス</th>
+                                <th>意味</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><code>\n</code></td><td>改行</td></tr>
+                            <tr><td><code>\t</code></td><td>タブ</td></tr>
+                            <tr><td><code>\\</code></td><td>バックスラッシュ</td></tr>
+                            <tr><td><code>\"</code></td><td>ダブルクォート</td></tr>
+                            <tr><td><code>\'</code></td><td>シングルクォート</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 1.3 テキストブロック -->
+            <div class="subsection">
+                <h3 class="subsection-title">1.3 テキストブロック</h3>
+
+                <div class="content-block">
+                    <p>Java 15で正式導入されたテキストブロックを使うと、複数行の文字列を簡単に記述できます。</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">テキストブロック（Java 15以降）</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>String html = """
+    &lt;html&gt;
+        &lt;body&gt;
+            &lt;p&gt;Hello, World!&lt;/p&gt;
+        &lt;/body&gt;
+    &lt;/html&gt;
+    """;</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1.4 その他のリテラル -->
+            <div class="subsection">
+                <h3 class="subsection-title">1.4 その他のリテラル</h3>
+
+                <div class="content-block">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">真偽値とnull</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>// 真偽値リテラル
+boolean flag1 = true;
+boolean flag2 = false;
+
+// nullリテラル（参照型の「何も参照していない」状態）
+String str = null;</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 2-2 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 2-2</span>
+                <h2 class="section-title">変数や定数の宣言と初期化</h2>
+            </div>
+
+            <!-- 2.1 変数と命名規則 -->
+            <div class="subsection">
+                <h3 class="subsection-title">2.1 変数と命名規則</h3>
+
+                <div class="content-block">
+                    <p>変数名のルール：</p>
+                    <ul class="bullet-list">
+                        <li>英字、数字、アンダースコア、ドル記号が使用可能</li>
+                        <li>数字で始めることはできない</li>
+                        <li>予約語は使用できない</li>
+                        <li>大文字と小文字は区別される</li>
+                    </ul>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">命名の例</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>// 有効な変数名
+int age;
+String firstName;
+double _value;
+int $amount;
+
+// 無効な変数名
+// int 1stPlace;  // 数字で始まる
+// int class;     // 予約語</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2.2 データ型 -->
+            <div class="subsection">
+                <h3 class="subsection-title">2.2 データ型</h3>
+
+                <div class="content-block">
+                    <p>Javaのデータ型は<strong>基本データ型（プリミティブ型）</strong>と<strong>参照型</strong>に分類されます。</p>
+
+                    <h4>基本データ型（8種類）</h4>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>分類</th>
+                                <th>型</th>
+                                <th>サイズ</th>
+                                <th>範囲/説明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td rowspan="4">整数</td>
+                                <td><code>byte</code></td>
+                                <td>1バイト</td>
+                                <td>-128 ～ 127</td>
+                            </tr>
+                            <tr>
+                                <td><code>short</code></td>
+                                <td>2バイト</td>
+                                <td>-32,768 ～ 32,767</td>
+                            </tr>
+                            <tr>
+                                <td><code>int</code></td>
+                                <td>4バイト</td>
+                                <td>約-21億 ～ 約21億</td>
+                            </tr>
+                            <tr>
+                                <td><code>long</code></td>
+                                <td>8バイト</td>
+                                <td>約-922京 ～ 約922京</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2">浮動小数点</td>
+                                <td><code>float</code></td>
+                                <td>4バイト</td>
+                                <td>単精度浮動小数点</td>
+                            </tr>
+                            <tr>
+                                <td><code>double</code></td>
+                                <td>8バイト</td>
+                                <td>倍精度浮動小数点</td>
+                            </tr>
+                            <tr>
+                                <td>文字</td>
+                                <td><code>char</code></td>
+                                <td>2バイト</td>
+                                <td>Unicode文字（0～65,535）</td>
+                            </tr>
+                            <tr>
+                                <td>真偽値</td>
+                                <td><code>boolean</code></td>
+                                <td>-</td>
+                                <td>true または false</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 2.3 変数宣言と値の代入 -->
+            <div class="subsection">
+                <h3 class="subsection-title">2.3 変数宣言と値の代入</h3>
+
+                <div class="content-block">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">変数の宣言と初期化</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>// 宣言と初期化を分ける
+int number;
+number = 10;
+
+// 宣言と初期化を同時に
+int age = 25;
+
+// 複数の変数を同時に宣言
+int a, b, c;
+int x = 1, y = 2, z = 3;</code></pre>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-header">
+                            <span class="warning-box-icon">&#9888;&#65039;</span>
+                            <span class="warning-box-title">ローカル変数の初期化</span>
+                        </div>
+                        <p>ローカル変数は使用前に必ず初期化が必要です。初期化されていない変数を使用するとコンパイルエラーになります。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2.4 定数 -->
+            <div class="subsection">
+                <h3 class="subsection-title">2.4 定数</h3>
+
+                <div class="content-block">
+                    <p><code>final</code>キーワードを使って定数を宣言します。定数は一度値を設定すると変更できません。</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">定数の宣言</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>// 定数（慣習的に大文字とアンダースコアで命名）
+final double PI = 3.14159;
+final int MAX_SIZE = 100;
+
+// PI = 3.14;  // コンパイルエラー：再代入不可</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2.5 文字列の型 -->
+            <div class="subsection">
+                <h3 class="subsection-title">2.5 文字列の型</h3>
+
+                <div class="content-block">
+                    <p><code>String</code>は参照型ですが、特別な扱いを受けます。</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">String型</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>// 文字列リテラルで初期化
+String s1 = "Hello";
+
+// newキーワードで初期化（非推奨）
+String s2 = new String("Hello");
+
+// 文字列の連結
+String greeting = "Hello" + " " + "World";</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 2-3 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 2-3</span>
+                <h2 class="section-title">ローカル変数の型推論</h2>
+            </div>
+
+            <div class="content-block">
+                <p>Java 10以降、<code>var</code>キーワードを使ってローカル変数の型を推論できます。</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">varによる型推論（Java 10以降）</span>
+                        <span class="code-lang">Java</span>
+                    </div>
+                    <pre class="code-content"><code>// varを使った宣言
+var number = 10;           // int型と推論
+var name = "Alice";        // String型と推論
+var list = new ArrayList&lt;String&gt;();  // ArrayList&lt;String&gt;型と推論
+
+// varが使えない場合
+// var x;                  // 初期化が必要
+// var y = null;           // 型が推論できない
+// var z = {1, 2, 3};      // 配列初期化子は不可</code></pre>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-header">
+                        <span class="info-box-icon">&#128161;</span>
+                        <span class="info-box-title">varの使用場面</span>
+                    </div>
+                    <p>varはローカル変数にのみ使用可能です。フィールド、メソッドの引数、戻り値の型には使用できません。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 2-4 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 2-4</span>
+                <h2 class="section-title">配列</h2>
+            </div>
+
+            <!-- 4.1 1次元配列 -->
+            <div class="subsection">
+                <h3 class="subsection-title">4.1 1次元配列</h3>
+
+                <div class="content-block">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">配列の宣言と初期化</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>// 配列の宣言
+int[] numbers;
+String[] names;
+
+// 配列の生成
+numbers = new int[5];  // 要素数5の配列
+
+// 宣言と生成を同時に
+int[] scores = new int[3];
+
+// 初期化子を使った初期化
+int[] values = {1, 2, 3, 4, 5};
+int[] data = new int[]{10, 20, 30};
+
+// 配列の要素にアクセス
+values[0] = 100;  // 最初の要素に代入
+int first = values[0];  // 最初の要素を取得
+
+// 配列の長さ
+int length = values.length;  // 5</code></pre>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-header">
+                            <span class="warning-box-icon">&#9888;&#65039;</span>
+                            <span class="warning-box-title">配列の初期値</span>
+                        </div>
+                        <p>配列を<code>new</code>で生成すると、要素は自動的にデフォルト値で初期化されます（int:0、boolean:false、参照型:null）。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4.2 多次元配列 -->
+            <div class="subsection">
+                <h3 class="subsection-title">4.2 多次元配列</h3>
+
+                <div class="content-block">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">2次元配列</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>// 2次元配列の宣言と生成
+int[][] matrix = new int[3][4];  // 3行4列
+
+// 初期化子を使った初期化
+int[][] grid = {
+    {1, 2, 3},
+    {4, 5, 6},
+    {7, 8, 9}
+};
+
+// 要素へのアクセス
+matrix[0][0] = 10;  // 0行0列目
+int value = grid[1][2];  // 1行2列目（値は6）
+
+// ジャグ配列（各行の長さが異なる配列）
+int[][] jagged = new int[3][];
+jagged[0] = new int[2];
+jagged[1] = new int[4];
+jagged[2] = new int[3];</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 2-5 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 2-5</span>
+                <h2 class="section-title">コマンドライン引数の利用</h2>
+            </div>
+
+            <div class="content-block">
+                <p><code>main</code>メソッドの引数<code>String[] args</code>でコマンドライン引数を受け取れます。</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">コマンドライン引数</span>
+                        <span class="code-lang">Java</span>
+                    </div>
+                    <pre class="code-content"><code>public class CommandLineDemo {
+    public static void main(String[] args) {
+        // 引数の数を確認
+        System.out.println("引数の数: " + args.length);
+
+        // 各引数を表示
+        for (int i = 0; i &lt; args.length; i++) {
+            System.out.println("args[" + i + "] = " + args[i]);
+        }
+    }
+}</code></pre>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">実行例</span>
+                        <span class="code-lang">Terminal</span>
+                    </div>
+                    <pre class="code-content"><code>$ java CommandLineDemo Hello World 123
+引数の数: 3
+args[0] = Hello
+args[1] = World
+args[2] = 123</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 2-6 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 2-6</span>
+                <h2 class="section-title">文字列の操作</h2>
+            </div>
+
+            <!-- 6.1 Stringクラスの特徴 -->
+            <div class="subsection">
+                <h3 class="subsection-title">6.1 Stringクラスの特徴</h3>
+
+                <div class="content-block">
+                    <p>Stringクラスの重要な特徴：</p>
+                    <ul class="bullet-list">
+                        <li><strong>イミュータブル（不変）</strong>：一度作成された文字列は変更できない</li>
+                        <li><strong>文字列プール</strong>：同じ文字列リテラルは共有される</li>
+                    </ul>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">Stringの不変性</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>String s = "Hello";
+s.toUpperCase();  // 元の文字列は変更されない
+System.out.println(s);  // "Hello"
+
+s = s.toUpperCase();  // 新しい文字列を代入
+System.out.println(s);  // "HELLO"</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6.2 Stringクラスのメソッド -->
+            <div class="subsection">
+                <h3 class="subsection-title">6.2 Stringクラスのメソッド</h3>
+
+                <div class="content-block">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>メソッド</th>
+                                <th>説明</th>
+                                <th>例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>length()</code></td>
+                                <td>文字列の長さ</td>
+                                <td><code>"Hello".length()</code> → 5</td>
+                            </tr>
+                            <tr>
+                                <td><code>charAt(int)</code></td>
+                                <td>指定位置の文字</td>
+                                <td><code>"Hello".charAt(0)</code> → 'H'</td>
+                            </tr>
+                            <tr>
+                                <td><code>substring(int)</code></td>
+                                <td>部分文字列</td>
+                                <td><code>"Hello".substring(2)</code> → "llo"</td>
+                            </tr>
+                            <tr>
+                                <td><code>indexOf(String)</code></td>
+                                <td>文字列の位置</td>
+                                <td><code>"Hello".indexOf("l")</code> → 2</td>
+                            </tr>
+                            <tr>
+                                <td><code>toUpperCase()</code></td>
+                                <td>大文字変換</td>
+                                <td><code>"Hello".toUpperCase()</code> → "HELLO"</td>
+                            </tr>
+                            <tr>
+                                <td><code>toLowerCase()</code></td>
+                                <td>小文字変換</td>
+                                <td><code>"Hello".toLowerCase()</code> → "hello"</td>
+                            </tr>
+                            <tr>
+                                <td><code>trim()</code></td>
+                                <td>前後の空白除去</td>
+                                <td><code>" Hi ".trim()</code> → "Hi"</td>
+                            </tr>
+                            <tr>
+                                <td><code>replace(old, new)</code></td>
+                                <td>置換</td>
+                                <td><code>"Hello".replace('l', 'L')</code> → "HeLLo"</td>
+                            </tr>
+                            <tr>
+                                <td><code>equals(Object)</code></td>
+                                <td>等価比較</td>
+                                <td><code>"Hello".equals("Hello")</code> → true</td>
+                            </tr>
+                            <tr>
+                                <td><code>contains(String)</code></td>
+                                <td>含むか判定</td>
+                                <td><code>"Hello".contains("ell")</code> → true</td>
+                            </tr>
+                            <tr>
+                                <td><code>startsWith(String)</code></td>
+                                <td>先頭判定</td>
+                                <td><code>"Hello".startsWith("He")</code> → true</td>
+                            </tr>
+                            <tr>
+                                <td><code>split(String)</code></td>
+                                <td>分割</td>
+                                <td><code>"a,b,c".split(",")</code> → ["a","b","c"]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 6.3 テキストブロックの操作 -->
+            <div class="subsection">
+                <h3 class="subsection-title">6.3 テキストブロックの操作</h3>
+
+                <div class="content-block">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">テキストブロックのメソッド</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>String text = """
+    Hello
+    World
+    """;
+
+// インデントの調整
+String stripped = text.stripIndent();
+
+// フォーマット
+String formatted = """
+    Name: %s
+    Age: %d
+    """.formatted("Alice", 25);</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6.4 StringBuilderクラス -->
+            <div class="subsection">
+                <h3 class="subsection-title">6.4 StringBuilderクラス</h3>
+
+                <div class="content-block">
+                    <p>頻繁に文字列を変更する場合は、<code>StringBuilder</code>を使用すると効率的です。</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">StringBuilder</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>StringBuilder sb = new StringBuilder();
+
+// 文字列の追加
+sb.append("Hello");
+sb.append(" ");
+sb.append("World");
+
+// メソッドチェーン
+sb.append("!").append(" ").append("Java");
+
+// 挿入
+sb.insert(0, "[");  // 先頭に挿入
+
+// 削除
+sb.delete(0, 1);    // 範囲削除
+
+// 置換
+sb.replace(0, 5, "Hi");
+
+// 反転
+sb.reverse();
+
+// Stringに変換
+String result = sb.toString();</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-header">
+                            <span class="info-box-icon">&#128161;</span>
+                            <span class="info-box-title">StringBufferとの違い</span>
+                        </div>
+                        <p><code>StringBuffer</code>はスレッドセーフですが、<code>StringBuilder</code>より遅いです。シングルスレッド環境では<code>StringBuilder</code>を推奨します。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 練習問題 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Exercise</span>
+                <h2 class="section-title">2章 練習問題</h2>
+            </div>
+
+            <div class="exercise-list">
+                <div class="exercise-item">
+                    <div class="exercise-number">Q1</div>
+                    <div class="exercise-content">
+                        <p>次のうち、有効な変数宣言はどれですか？（複数選択）</p>
+                        <ol type="A">
+                            <li><code>int 2ndValue = 10;</code></li>
+                            <li><code>String _name = "test";</code></li>
+                            <li><code>double $price = 100.0;</code></li>
+                            <li><code>boolean class = true;</code></li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="exercise-item">
+                    <div class="exercise-number">Q2</div>
+                    <div class="exercise-content">
+                        <p>以下のコードの出力は何ですか？</p>
+                        <div class="code-block">
+                            <pre class="code-content"><code>String s = "Hello";
+s.toUpperCase();
+System.out.println(s);</code></pre>
+                        </div>
+                        <ol type="A">
+                            <li>HELLO</li>
+                            <li>Hello</li>
+                            <li>hello</li>
+                            <li>コンパイルエラー</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="exercise-item">
+                    <div class="exercise-number">Q3</div>
+                    <div class="exercise-content">
+                        <p><code>int[] arr = new int[3];</code>で生成された配列の各要素の初期値は何ですか？</p>
+                        <ol type="A">
+                            <li>null</li>
+                            <li>0</li>
+                            <li>未定義（ランダム）</li>
+                            <li>コンパイルエラー</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 解答 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Answer</span>
+                <h2 class="section-title">2章 解説・解答</h2>
+            </div>
+
+            <div class="answer-list">
+                <div class="answer-item">
+                    <div class="answer-header">Q1の解答: B, C</div>
+                    <div class="answer-content">
+                        <p>A: 変数名は数字で始められません。D: <code>class</code>は予約語です。B: アンダースコアで始まる名前は有効です。C: ドル記号で始まる名前も有効です。</p>
+                    </div>
+                </div>
+
+                <div class="answer-item">
+                    <div class="answer-header">Q2の解答: B</div>
+                    <div class="answer-content">
+                        <p>Stringはイミュータブル（不変）なので、<code>toUpperCase()</code>は新しい文字列を返しますが、元の変数<code>s</code>は変更されません。結果を反映するには<code>s = s.toUpperCase();</code>とする必要があります。</p>
+                    </div>
+                </div>
+
+                <div class="answer-item">
+                    <div class="answer-header">Q3の解答: B</div>
+                    <div class="answer-content">
+                        <p>int型配列を<code>new</code>で生成すると、各要素はデフォルト値の0で初期化されます。参照型の場合はnull、booleanの場合はfalseになります。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <p>Java Silver 試験対策 教科書</p>
+    </footer>
+
+    <div class="page-nav">
+        <a href="1java-overview.html" class="page-nav-btn prev">
+            <span>&#8592;</span>
+            <div>
+                <div class="page-nav-label">前の章</div>
+                <div class="page-nav-title">第1章</div>
+            </div>
+        </a>
+        <a href="3java-operator.html" class="page-nav-btn next">
+            <div>
+                <div class="page-nav-label">次の章</div>
+                <div class="page-nav-title">第3章</div>
+            </div>
+            <span>&#8594;</span>
+        </a>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            const toggle = document.querySelector('.nav-toggle');
+            const menu = document.querySelector('.nav-menu');
+            toggle.classList.toggle('active');
+            menu.classList.toggle('active');
+        }
+
+        document.addEventListener('click', function(e) {
+            const nav = document.querySelector('.global-nav');
+            const toggle = document.querySelector('.nav-toggle');
+            const menu = document.querySelector('.nav-menu');
+
+            if (!nav.contains(e.target) && menu.classList.contains('active')) {
+                toggle.classList.remove('active');
+                menu.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

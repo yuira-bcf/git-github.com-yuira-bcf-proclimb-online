@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第3章 演算子と条件分岐</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- グローバルナビゲーション -->
+    <nav class="global-nav">
+        <div class="nav-container">
+            <a href="1java-overview.html" class="nav-logo">
+                <span class="nav-logo-icon">&#9749;</span>
+                <span>Java入門</span>
+            </a>
+            <button class="nav-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+            <div class="nav-menu">
+                <div class="nav-menu-title">&#128218; 章を選択</div>
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="1java-overview.html" class="nav-link"><span class="nav-chapter-num">1</span><span>Javaの概要</span></a></li>
+                    <li class="nav-item"><a href="2java-datatype.html" class="nav-link"><span class="nav-chapter-num">2</span><span>基本データ型と文字列</span></a></li>
+                    <li class="nav-item"><a href="3java-operator.html" class="nav-link active"><span class="nav-chapter-num">3</span><span>演算子と条件分岐</span></a></li>
+                    <li class="nav-item"><a href="4java-loop.html" class="nav-link"><span class="nav-chapter-num">4</span><span>繰り返しと制御文</span></a></li>
+                    <li class="nav-item"><a href="5java-class.html" class="nav-link"><span class="nav-chapter-num">5</span><span>クラスとインスタンス</span></a></li>
+                    <li class="nav-item"><a href="6java-inheritance.html" class="nav-link"><span class="nav-chapter-num">6</span><span>継承とインタフェース</span></a></li>
+                    <li class="nav-item"><a href="7java-exception.html" class="nav-link"><span class="nav-chapter-num">7</span><span>例外処理</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- ヘッダー -->
+        <header class="chapter-header">
+            <div class="chapter-badge">&#128214; Chapter</div>
+            <div class="chapter-number">3</div>
+            <h1 class="chapter-title">演算子と条件分岐</h1>
+        </header>
+
+        <!-- 目次 -->
+        <nav class="toc">
+            <h2 class="toc-title">&#128209; この章の内容</h2>
+            <ul class="toc-list">
+                <li class="toc-item"><span class="toc-number">3-1</span><span>演算子と優先順位</span></li>
+                <li class="toc-item"><span class="toc-number">3-2</span><span>データの比較</span></li>
+                <li class="toc-item"><span class="toc-number">3-3</span><span>基本データ型の型変換</span></li>
+                <li class="toc-item"><span class="toc-number">3-4</span><span>基本データ型から参照型への型変換</span></li>
+                <li class="toc-item"><span class="toc-number">3-5</span><span>条件分岐</span></li>
+                <li class="toc-item"><span class="toc-number">3-6</span><span>ifによる分岐</span></li>
+                <li class="toc-item"><span class="toc-number">3-7</span><span>switchによる分岐</span></li>
+            </ul>
+        </nav>
+
+        <!-- セクション 3-1 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 3-1</span>
+                <h2 class="section-title">演算子と優先順位</h2>
+            </div>
+
+            <!-- 1.1 算術演算子と単項演算子 -->
+            <div class="subsection">
+                <h3 class="subsection-title">1.1 算術演算子と単項演算子</h3>
+
+                <div class="content-block">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>演算子</th>
+                                <th>説明</th>
+                                <th>例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><code>+</code></td><td>加算</td><td><code>5 + 3</code> → 8</td></tr>
+                            <tr><td><code>-</code></td><td>減算</td><td><code>5 - 3</code> → 2</td></tr>
+                            <tr><td><code>*</code></td><td>乗算</td><td><code>5 * 3</code> → 15</td></tr>
+                            <tr><td><code>/</code></td><td>除算</td><td><code>5 / 3</code> → 1（整数除算）</td></tr>
+                            <tr><td><code>%</code></td><td>剰余</td><td><code>5 % 3</code> → 2</td></tr>
+                            <tr><td><code>++</code></td><td>インクリメント</td><td><code>i++</code>, <code>++i</code></td></tr>
+                            <tr><td><code>--</code></td><td>デクリメント</td><td><code>i--</code>, <code>--i</code></td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">前置と後置の違い</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>int a = 5;
+int b = a++;  // b = 5, a = 6（代入後にインクリメント）
+
+int c = 5;
+int d = ++c;  // d = 6, c = 6（インクリメント後に代入）</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1.2 代入演算子と複合代入演算子 -->
+            <div class="subsection">
+                <h3 class="subsection-title">1.2 代入演算子と複合代入演算子</h3>
+
+                <div class="content-block">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">複合代入演算子</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>int x = 10;
+x += 5;   // x = x + 5  → 15
+x -= 3;   // x = x - 3  → 12
+x *= 2;   // x = x * 2  → 24
+x /= 4;   // x = x / 4  → 6
+x %= 4;   // x = x % 4  → 2</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1.3 関係演算子 -->
+            <div class="subsection">
+                <h3 class="subsection-title">1.3 関係演算子</h3>
+
+                <div class="content-block">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>演算子</th>
+                                <th>説明</th>
+                                <th>例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><code>==</code></td><td>等しい</td><td><code>5 == 5</code> → true</td></tr>
+                            <tr><td><code>!=</code></td><td>等しくない</td><td><code>5 != 3</code> → true</td></tr>
+                            <tr><td><code>&lt;</code></td><td>より小さい</td><td><code>3 &lt; 5</code> → true</td></tr>
+                            <tr><td><code>&gt;</code></td><td>より大きい</td><td><code>5 &gt; 3</code> → true</td></tr>
+                            <tr><td><code>&lt;=</code></td><td>以下</td><td><code>5 &lt;= 5</code> → true</td></tr>
+                            <tr><td><code>&gt;=</code></td><td>以上</td><td><code>5 &gt;= 3</code> → true</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 1.4 論理演算子 -->
+            <div class="subsection">
+                <h3 class="subsection-title">1.4 論理演算子</h3>
+
+                <div class="content-block">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>演算子</th>
+                                <th>説明</th>
+                                <th>例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><code>&amp;&amp;</code></td><td>論理AND（短絡評価）</td><td><code>true &amp;&amp; false</code> → false</td></tr>
+                            <tr><td><code>||</code></td><td>論理OR（短絡評価）</td><td><code>true || false</code> → true</td></tr>
+                            <tr><td><code>!</code></td><td>論理NOT</td><td><code>!true</code> → false</td></tr>
+                            <tr><td><code>&amp;</code></td><td>論理AND（完全評価）</td><td><code>true &amp; false</code> → false</td></tr>
+                            <tr><td><code>|</code></td><td>論理OR（完全評価）</td><td><code>true | false</code> → true</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="info-box">
+                        <div class="info-box-header">
+                            <span class="info-box-icon">&#128161;</span>
+                            <span class="info-box-title">短絡評価とは</span>
+                        </div>
+                        <p><code>&amp;&amp;</code>は左辺がfalseなら右辺を評価しません。<code>||</code>は左辺がtrueなら右辺を評価しません。これにより効率的な評価とNullPointerExceptionの回避ができます。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1.5 条件演算子 -->
+            <div class="subsection">
+                <h3 class="subsection-title">1.5 条件演算子（三項演算子）</h3>
+
+                <div class="content-block">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">条件演算子</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>// 構文: 条件 ? 真の場合の値 : 偽の場合の値
+int a = 10, b = 20;
+int max = (a > b) ? a : b;  // max = 20
+
+String status = (score >= 60) ? "合格" : "不合格";</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 3-2 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 3-2</span>
+                <h2 class="section-title">データの比較</h2>
+            </div>
+
+            <!-- 2.1 基本データ型と参照型の比較 -->
+            <div class="subsection">
+                <h3 class="subsection-title">2.1 基本データ型と参照型の比較</h3>
+
+                <div class="content-block">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">==演算子の動作</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>// 基本データ型：値を比較
+int a = 10;
+int b = 10;
+System.out.println(a == b);  // true
+
+// 参照型：参照（アドレス）を比較
+String s1 = new String("Hello");
+String s2 = new String("Hello");
+System.out.println(s1 == s2);  // false（異なるオブジェクト）
+System.out.println(s1.equals(s2));  // true（内容が同じ）</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2.2 Stringクラスの特徴と文字列の比較 -->
+            <div class="subsection">
+                <h3 class="subsection-title">2.2 Stringクラスの特徴と文字列の比較</h3>
+
+                <div class="content-block">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">文字列プール</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>// 文字列リテラルは文字列プールで共有される
+String s1 = "Hello";
+String s2 = "Hello";
+System.out.println(s1 == s2);  // true（同じオブジェクト）
+
+// newで作成すると新しいオブジェクト
+String s3 = new String("Hello");
+System.out.println(s1 == s3);  // false
+
+// 文字列比較には必ずequals()を使用
+System.out.println(s1.equals(s3));  // true</code></pre>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-header">
+                            <span class="warning-box-icon">&#9888;&#65039;</span>
+                            <span class="warning-box-title">重要</span>
+                        </div>
+                        <p>文字列の比較には常に<code>equals()</code>メソッドを使用してください。<code>==</code>は参照の比較であり、意図しない結果になることがあります。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2.4 nullの比較 -->
+            <div class="subsection">
+                <h3 class="subsection-title">2.4 nullの比較</h3>
+
+                <div class="content-block">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">nullの扱い</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>String str = null;
+
+// nullとの比較は==を使用
+if (str == null) {
+    System.out.println("strはnullです");
+}
+
+// nullに対してメソッドを呼ぶとNullPointerException
+// str.length();  // 実行時エラー
+
+// 安全な比較方法
+if (str != null &amp;&amp; str.length() > 0) {
+    // 短絡評価により、strがnullの場合length()は呼ばれない
+}
+
+// Objects.equals()を使う方法（Java 7以降）
+import java.util.Objects;
+Objects.equals(str, "Hello");  // strがnullでもOK</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 3-3 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 3-3</span>
+                <h2 class="section-title">基本データ型の型変換</h2>
+            </div>
+
+            <!-- 3.1 暗黙の型変換 -->
+            <div class="subsection">
+                <h3 class="subsection-title">3.1 暗黙の型変換（拡大変換）</h3>
+
+                <div class="content-block">
+                    <p>小さい型から大きい型への変換は自動的に行われます。</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">暗黙の型変換</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>byte b = 10;
+int i = b;      // byte → int（自動変換）
+
+int n = 100;
+long l = n;     // int → long（自動変換）
+
+float f = 3.14f;
+double d = f;   // float → double（自動変換）</code></pre>
+                    </div>
+
+                    <p><strong>変換の順序:</strong> <code>byte → short → int → long → float → double</code></p>
+                </div>
+            </div>
+
+            <!-- 3.2 キャストによる型変換 -->
+            <div class="subsection">
+                <h3 class="subsection-title">3.2 キャストによる型変換（縮小変換）</h3>
+
+                <div class="content-block">
+                    <p>大きい型から小さい型への変換は明示的なキャストが必要です。</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">キャスト</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>int i = 100;
+byte b = (byte) i;  // int → byte（明示的キャスト）
+
+double d = 3.14;
+int n = (int) d;    // double → int（小数部切り捨て）→ 3
+
+long l = 1000L;
+int x = (int) l;    // long → int（明示的キャスト）</code></pre>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-header">
+                            <span class="warning-box-icon">&#9888;&#65039;</span>
+                            <span class="warning-box-title">データ損失に注意</span>
+                        </div>
+                        <p>縮小変換では値が失われる可能性があります。例：<code>(byte) 128</code> は -128 になります（オーバーフロー）。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3.4 型変換の注意点 -->
+            <div class="subsection">
+                <h3 class="subsection-title">3.4 型変換の注意点</h3>
+
+                <div class="content-block">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">演算時の型変換</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>// 整数同士の除算は整数結果
+int a = 5, b = 2;
+System.out.println(a / b);  // 2（小数部切り捨て）
+
+// 一方をdoubleにすると小数結果
+System.out.println((double) a / b);  // 2.5
+System.out.println(a / (double) b);  // 2.5
+
+// byte/short/charの演算結果はintになる
+byte x = 10, y = 20;
+// byte z = x + y;  // コンパイルエラー
+int z = x + y;      // OK
+byte w = (byte)(x + y);  // キャストが必要</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 3-4 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 3-4</span>
+                <h2 class="section-title">基本データ型から参照型への型変換</h2>
+            </div>
+
+            <!-- 4.1 ラッパークラス -->
+            <div class="subsection">
+                <h3 class="subsection-title">4.1 ラッパークラス</h3>
+
+                <div class="content-block">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>基本データ型</th>
+                                <th>ラッパークラス</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>byte</td><td>Byte</td></tr>
+                            <tr><td>short</td><td>Short</td></tr>
+                            <tr><td>int</td><td>Integer</td></tr>
+                            <tr><td>long</td><td>Long</td></tr>
+                            <tr><td>float</td><td>Float</td></tr>
+                            <tr><td>double</td><td>Double</td></tr>
+                            <tr><td>char</td><td>Character</td></tr>
+                            <tr><td>boolean</td><td>Boolean</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 4.2 ボクシングとアンボクシング -->
+            <div class="subsection">
+                <h3 class="subsection-title">4.2 ボクシングとアンボクシング</h3>
+
+                <div class="content-block">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">オートボクシング/アンボクシング</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>// オートボクシング（基本型 → ラッパー）
+Integer num = 100;  // int → Integer
+
+// オートアンボクシング（ラッパー → 基本型）
+int n = num;  // Integer → int
+
+// 明示的な変換
+Integer i1 = Integer.valueOf(10);  // ボクシング
+int i2 = i1.intValue();            // アンボクシング</code></pre>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-header">
+                            <span class="warning-box-icon">&#9888;&#65039;</span>
+                            <span class="warning-box-title">nullに注意</span>
+                        </div>
+                        <p>ラッパークラスはnullを持てます。nullをアンボクシングするとNullPointerExceptionが発生します。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4.3 文字列の変換 -->
+            <div class="subsection">
+                <h3 class="subsection-title">4.3 文字列の変換</h3>
+
+                <div class="content-block">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">文字列と数値の変換</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>// 文字列 → 数値
+int i = Integer.parseInt("123");
+double d = Double.parseDouble("3.14");
+
+// 数値 → 文字列
+String s1 = String.valueOf(123);
+String s2 = Integer.toString(123);
+String s3 = "" + 123;  // 文字列連結を利用</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 3-5, 3-6 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 3-5, 3-6</span>
+                <h2 class="section-title">条件分岐とifによる分岐</h2>
+            </div>
+
+            <!-- 6.1 if文 -->
+            <div class="subsection">
+                <h3 class="subsection-title">6.1 if文</h3>
+
+                <div class="content-block">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">基本的なif文</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>int score = 85;
+
+if (score >= 60) {
+    System.out.println("合格です");
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6.2 if-else文 -->
+            <div class="subsection">
+                <h3 class="subsection-title">6.2 if-else文</h3>
+
+                <div class="content-block">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">if-else文</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>int score = 45;
+
+if (score >= 60) {
+    System.out.println("合格です");
+} else {
+    System.out.println("不合格です");
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6.3 if-else if文 -->
+            <div class="subsection">
+                <h3 class="subsection-title">6.3 if-else if文</h3>
+
+                <div class="content-block">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">複数条件の分岐</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>int score = 75;
+String grade;
+
+if (score >= 90) {
+    grade = "A";
+} else if (score >= 80) {
+    grade = "B";
+} else if (score >= 70) {
+    grade = "C";
+} else if (score >= 60) {
+    grade = "D";
+} else {
+    grade = "F";
+}
+System.out.println("評価: " + grade);  // 評価: C</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6.4 if文のネスト -->
+            <div class="subsection">
+                <h3 class="subsection-title">6.4 if文のネスト</h3>
+
+                <div class="content-block">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">入れ子のif文</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>int age = 25;
+boolean hasLicense = true;
+
+if (age >= 18) {
+    if (hasLicense) {
+        System.out.println("運転可能です");
+    } else {
+        System.out.println("免許を取得してください");
+    }
+} else {
+    System.out.println("18歳以上になってから");
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション 3-7 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Section 3-7</span>
+                <h2 class="section-title">switchによる分岐</h2>
+            </div>
+
+            <!-- 7.1 switch文 -->
+            <div class="subsection">
+                <h3 class="subsection-title">7.1 switch文</h3>
+
+                <div class="content-block">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">従来のswitch文</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>int day = 3;
+String dayName;
+
+switch (day) {
+    case 1:
+        dayName = "月曜日";
+        break;
+    case 2:
+        dayName = "火曜日";
+        break;
+    case 3:
+        dayName = "水曜日";
+        break;
+    case 4:
+        dayName = "木曜日";
+        break;
+    case 5:
+        dayName = "金曜日";
+        break;
+    default:
+        dayName = "週末";
+        break;
+}
+System.out.println(dayName);  // 水曜日</code></pre>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-header">
+                            <span class="warning-box-icon">&#9888;&#65039;</span>
+                            <span class="warning-box-title">break忘れに注意</span>
+                        </div>
+                        <p>breakを忘れると次のcaseも実行されます（フォールスルー）。意図的でない限りbreakを忘れないようにしましょう。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7.2 アロー構文 -->
+            <div class="subsection">
+                <h3 class="subsection-title">7.2 ->を使用したswitchのラベル（Java 14以降）</h3>
+
+                <div class="content-block">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">アロー構文のswitch</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>int day = 3;
+String dayName;
+
+switch (day) {
+    case 1 -> dayName = "月曜日";
+    case 2 -> dayName = "火曜日";
+    case 3 -> dayName = "水曜日";
+    case 4 -> dayName = "木曜日";
+    case 5 -> dayName = "金曜日";
+    case 6, 7 -> dayName = "週末";  // 複数のcase
+    default -> dayName = "不正な値";
+}</code></pre>
+                    </div>
+
+                    <p>アロー構文では<strong>breakは不要</strong>で、フォールスルーは発生しません。</p>
+                </div>
+            </div>
+
+            <!-- 7.3 switch式 -->
+            <div class="subsection">
+                <h3 class="subsection-title">7.3 switch式（Java 14以降）</h3>
+
+                <div class="content-block">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-title">switch式</span>
+                            <span class="code-lang">Java</span>
+                        </div>
+                        <pre class="code-content"><code>int day = 3;
+
+// switch式は値を返す
+String dayName = switch (day) {
+    case 1 -> "月曜日";
+    case 2 -> "火曜日";
+    case 3 -> "水曜日";
+    case 4 -> "木曜日";
+    case 5 -> "金曜日";
+    case 6, 7 -> "週末";
+    default -> "不正な値";
+};
+
+// 複数行の場合はyieldで値を返す
+String description = switch (day) {
+    case 1, 2, 3, 4, 5 -> {
+        System.out.println("平日です");
+        yield "仕事の日";
+    }
+    case 6, 7 -> {
+        System.out.println("休日です");
+        yield "休みの日";
+    }
+    default -> "不正";
+};</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 練習問題 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Exercise</span>
+                <h2 class="section-title">3章 練習問題</h2>
+            </div>
+
+            <div class="exercise-list">
+                <div class="exercise-item">
+                    <div class="exercise-number">Q1</div>
+                    <div class="exercise-content">
+                        <p>以下のコードの出力は何ですか？</p>
+                        <div class="code-block">
+                            <pre class="code-content"><code>int a = 5;
+int b = a++;
+System.out.println(a + " " + b);</code></pre>
+                        </div>
+                        <ol type="A">
+                            <li>5 5</li>
+                            <li>6 5</li>
+                            <li>5 6</li>
+                            <li>6 6</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="exercise-item">
+                    <div class="exercise-number">Q2</div>
+                    <div class="exercise-content">
+                        <p>文字列の比較として正しいものはどれですか？</p>
+                        <ol type="A">
+                            <li><code>str1 == str2</code></li>
+                            <li><code>str1.equals(str2)</code></li>
+                            <li><code>str1.compareTo(str2) == 0</code></li>
+                            <li>BとCの両方</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="exercise-item">
+                    <div class="exercise-number">Q3</div>
+                    <div class="exercise-content">
+                        <p>以下のコードの出力は何ですか？</p>
+                        <div class="code-block">
+                            <pre class="code-content"><code>int x = 5 / 2;
+double y = 5 / 2;
+System.out.println(x + " " + y);</code></pre>
+                        </div>
+                        <ol type="A">
+                            <li>2 2.5</li>
+                            <li>2.5 2.5</li>
+                            <li>2 2.0</li>
+                            <li>2.5 2.0</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 解答 -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-number">Answer</span>
+                <h2 class="section-title">3章 解説・解答</h2>
+            </div>
+
+            <div class="answer-list">
+                <div class="answer-item">
+                    <div class="answer-header">Q1の解答: B</div>
+                    <div class="answer-content">
+                        <p>後置インクリメント<code>a++</code>は、現在の値を返してからインクリメントします。したがって、bには5が代入され、その後aが6になります。</p>
+                    </div>
+                </div>
+
+                <div class="answer-item">
+                    <div class="answer-header">Q2の解答: D</div>
+                    <div class="answer-content">
+                        <p><code>equals()</code>は内容の等価性を比較します。<code>compareTo()</code>が0を返す場合も内容が等しいことを意味します。<code>==</code>は参照の比較なので文字列の比較には適していません。</p>
+                    </div>
+                </div>
+
+                <div class="answer-item">
+                    <div class="answer-header">Q3の解答: C</div>
+                    <div class="answer-content">
+                        <p>整数同士の除算<code>5 / 2</code>は整数結果の2になります。これをdoubleに代入しても2.0です。2.5にするには<code>5.0 / 2</code>や<code>(double)5 / 2</code>とする必要があります。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <p>Java Silver 試験対策 教科書</p>
+    </footer>
+
+    <div class="page-nav">
+        <a href="2java-datatype.html" class="page-nav-btn prev">
+            <span>&#8592;</span>
+            <div>
+                <div class="page-nav-label">前の章</div>
+                <div class="page-nav-title">第2章</div>
+            </div>
+        </a>
+        <a href="4java-loop.html" class="page-nav-btn next">
+            <div>
+                <div class="page-nav-label">次の章</div>
+                <div class="page-nav-title">第4章</div>
+            </div>
+            <span>&#8594;</span>
+        </a>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            const toggle = document.querySelector('.nav-toggle');
+            const menu = document.querySelector('.nav-menu');
+            toggle.classList.toggle('active');
+            menu.classList.toggle('active');
+        }
+
+        document.addEventListener('click', function(e) {
+            const nav = document.querySelector('.global-nav');
+            const toggle = document.querySelector('.nav-toggle');
+            const menu = document.querySelector('.nav-menu');
+
+            if (!nav.contains(e.target) && menu.classList.contains('active')) {
+                toggle.classList.remove('active');
+                menu.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
